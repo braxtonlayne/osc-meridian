@@ -1,0 +1,292 @@
+/* Assurance app. Tokens only (src/design/tokens.css); marking colours arrive inline via markingStyle(). */
+.asr-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.asr-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  border-top: 1px solid var(--chrome-shadow);
+}
+.asr-nav {
+  flex: 0 0 210px;
+  overflow: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--chrome-shadow);
+}
+.asr-main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  background: var(--surface);
+}
+.asr-handnav {
+  padding: var(--sp-2) var(--sp-3);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.asr-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  min-width: 0;
+}
+.asr-viewhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+  padding-bottom: var(--sp-3);
+}
+.asr-h1 {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-lg);
+  font-weight: var(--fw-semibold);
+}
+.asr-sub {
+  color: var(--text-2);
+  max-width: 70ch;
+}
+.asr-mono,
+.asr-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.asr-num {
+  text-align: right;
+}
+.asr-caps {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-weight: var(--fw-semibold);
+}
+.asr-dim {
+  color: var(--text-3);
+}
+.asr-note {
+  margin: var(--sp-3) 0 0;
+  color: var(--text-2);
+  max-width: 90ch;
+}
+.asr-hint {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.asr-pad {
+  padding: var(--sp-3);
+}
+.asr-loading {
+  padding: var(--sp-5);
+  color: var(--text-2);
+}
+.asr-refusal {
+  height: 100%;
+  min-height: 320px;
+}
+.asr-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.asr-btns--left {
+  margin-top: var(--sp-3);
+}
+.asr-filter,
+.asr-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  align-items: center;
+}
+.asr-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-3);
+  font-family: var(--font-mono);
+}
+.asr-label {
+  font-family: var(--font-ui);
+  color: var(--text-2);
+  min-width: 80px;
+}
+.asr-list {
+  margin: 0;
+  padding-left: var(--sp-6);
+}
+.asr-sites {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: center;
+}
+.asr-doc {
+  border-top: 1px solid var(--row-rule);
+  padding-top: var(--sp-3);
+}
+
+/* plain reference tables */
+.asr-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.asr-table th,
+.asr-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--sp-1) var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+}
+.asr-table thead th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+.asr-table tbody tr:nth-child(even) {
+  background: var(--zebra);
+}
+.asr-wrap {
+  min-width: 24ch;
+}
+
+/* marking swatches: a banner specimen in the marking's own colours */
+.asr-swatch {
+  display: inline-block;
+  min-width: 26ch;
+  padding: 1px var(--sp-4);
+  background: var(--mark-bg);
+  color: var(--mark-fg);
+  border: 1px solid var(--chrome-outer);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-caps);
+  text-align: center;
+  white-space: nowrap;
+}
+.asr-swatch--sm {
+  min-width: 0;
+  font-size: var(--fs-sm);
+}
+
+/* compartment matrix */
+.asr-matrix-wrap {
+  overflow: auto;
+  max-height: 420px;
+  border: 1px solid var(--chrome-shadow);
+  margin-top: var(--sp-3);
+}
+.asr-matrix-wrap:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 2px;
+}
+.asr-matrix {
+  border-collapse: collapse;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+}
+.asr-matrix th,
+.asr-matrix td {
+  border: 1px solid var(--row-rule);
+  padding: 0;
+  text-align: center;
+}
+.asr-matrix thead th {
+  position: sticky;
+  background: var(--th-bg);
+  z-index: 1;
+}
+.asr-matrix thead tr:first-child th {
+  top: 0;
+}
+.asr-matrix thead tr:nth-child(2) th {
+  top: 14px;
+}
+.asr-matrix-class {
+  font-weight: var(--fw-semibold);
+  height: 14px;
+}
+.asr-matrix-site {
+  width: 15px;
+  min-width: 15px;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-regular);
+}
+.asr-matrix-site--rx {
+  color: var(--text-3);
+}
+.asr-matrix tbody th {
+  position: sticky;
+  left: 0;
+  background: var(--th-bg);
+  padding: 0 var(--sp-2);
+  text-align: left;
+  font-weight: var(--fw-regular);
+}
+.asr-matrix-corner {
+  left: 0;
+  z-index: 2 !important;
+}
+.asr-matrix-cell {
+  height: 14px;
+}
+.asr-matrix-cell--rx {
+  background: var(--redact);
+  border-color: var(--redact);
+}
+.asr-matrix tbody tr.is-sel th,
+.asr-matrix tbody tr.is-sel td:not(.asr-matrix-cell--rx) {
+  background: var(--row-hover);
+}
+.asr-matrix .asr-num {
+  padding: 0 var(--sp-2);
+}
+.asr-mark {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--text-1);
+  vertical-align: middle;
+}
+.asr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-3);
+  color: var(--text-2);
+  align-items: center;
+}
+.asr-legend-rx {
+  display: inline-block;
+  width: 12px;
+  height: 10px;
+  background: var(--redact);
+  vertical-align: middle;
+}
+
+/* the operator's own lines appended to a ticket's access log */
+.asr-own-access td {
+  font-weight: var(--fw-semibold);
+}
+
+/* handheld / narrow */
+.asr-app--compact .asr-view {
+  padding: var(--sp-3);
+}
+.asr-app--compact .asr-swatch {
+  min-width: 0;
+  white-space: normal;
+}
+.asr-app--compact .asr-table {
+  display: block;
+  overflow-x: auto;
+}
+.asr-table td.asr-mono {
+  white-space: nowrap;
+}
