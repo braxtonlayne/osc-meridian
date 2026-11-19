@@ -40,6 +40,9 @@
     --st-nominal: #2E6B3F;
     --st-degraded: #A86A00;
     --st-fault: #9B1C1C;
+
+    /* ---- Chart palette (data graphics only; never a status colour) ---- */
+    --chart-ochre: #B78A3C; /* ledger category slot 3; the flat mix of --st-degraded 70% / --paper-edge it replaced */
     --st-offline: #5B5A56;
 
     /* ---- Interaction ---- */

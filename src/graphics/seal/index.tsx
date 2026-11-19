@@ -23,7 +23,7 @@ export interface SealProps {
   legend?: string;
   /** Founding line around the bottom of the ring. */
   founded?: string;
-  /** Number of marks in the inner band: one per registered facility. Pass canon.headline.facilities. */
+  /** Number of marks in the inner band: one per registered facility. Defaults to canon.headline.facilities (see setSealCanon). */
   marks?: number;
   class?: string;
 }
@@ -51,8 +51,30 @@ const FONT_ATTR = 'Arial, Helvetica, sans-serif';
 const FONT_STYLE = 'var(--font-ui, Arial), Arial, Helvetica, sans-serif';
 
 const DEFAULT_LEGEND = 'OFFICE OF STRATEGIC CONTINUITY';
-const DEFAULT_FOUNDED = 'ESTABLISHED MMI';
-const DEFAULT_MARKS = 47;
+/**
+ * Defaults for the founding line and the facility band. The module does not import canon
+ * (the seal is in the shell's initial chunk; canon loads lazily), so the shell sets these
+ * from canon with setSealCanon() once canon has loaded: founded from the first programme
+ * phase's start year (canon.phases[0].startYear), marks from canon.headline.facilities.
+ * The literals below are only the pre-canon fallback and equal the canon values.
+ */
+let DEFAULT_FOUNDED = 'ESTABLISHED MMI';
+let DEFAULT_MARKS = 47;
+
+/** 2001 -> "MMI". */
+export function romanYear(year: number): string {
+  const table: [number, string][] = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  let n = Math.max(0, Math.floor(year));
+  let out = '';
+  for (const [v, s] of table) for (; n >= v; n -= v) out += s;
+  return out;
+}
+
+/** Set the seal's canon-derived defaults (shell, after canon loads). */
+export function setSealCanon(c: { foundedYear?: number | null; facilities?: number | null }): void {
+  if (c.foundedYear) DEFAULT_FOUNDED = `ESTABLISHED ${romanYear(c.foundedYear)}`;
+  if (c.facilities) DEFAULT_MARKS = c.facilities;
+}
 
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 

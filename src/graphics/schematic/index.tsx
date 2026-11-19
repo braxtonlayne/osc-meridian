@@ -76,6 +76,12 @@ export interface LineDiagramProps {
   selected?: string | null;
   onSelectLink?: (key: string) => void;
   onSelectNode?: (id: string) => void;
+  /**
+   * Per-link block count override, keyed by link key ("01".."06" or "FROM>TO"),
+   * e.g. the transit content's signalling blocks { '01': 6, '02': 22, ... }.
+   * Links not named keep the drafting-convention count from SCHEMATIC_LAYOUT.
+   */
+  blockCounts?: Readonly<Record<string, number>>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -140,7 +146,7 @@ const HEAD_H = 16;
 const pathD = (pts: readonly Pt[]) =>
   pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
 
-function buildGeometry(width: number, height: number): Geometry {
+function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
   const L = SCHEMATIC_LAYOUT;
   const s = Math.max(0.2, Math.min(width / L.width, height / L.height));
   const ox = Math.round((width - L.width * s) / 2);
@@ -153,7 +159,8 @@ function buildGeometry(width: number, height: number): Geometry {
 
   const links = L.links.map((link): LinkGeom => {
     const poly = makePoly(link.pts.map(px));
-    const n = link.blocks;
+    const override = blockCounts?.[link.key];
+    const n = override && override > 0 ? Math.round(override) : link.blocks;
     const blocks: BlockGeom[] = [];
     let ticks = '';
     const tickHalf = link.kind === 'RAIL' ? sz.railO / 2 + 3 : 3;
@@ -713,8 +720,10 @@ function TrainLayer({ g, trains, network }: { g: Geometry; trains: SchematicTrai
 
 const NO_TRAINS: SchematicTrain[] = [];
 
-export function LineDiagram({ width, height, network = 'ALL', trains = NO_TRAINS, occupancy, selected = null, onSelectLink, onSelectNode }: LineDiagramProps) {
-  const g = useMemo(() => buildGeometry(width, height), [width, height]);
+export function LineDiagram({ width, height, network = 'ALL', trains = NO_TRAINS, occupancy, selected = null, onSelectLink, onSelectNode, blockCounts }: LineDiagramProps) {
+  // Keyed by value so an inline object literal does not rebuild the geometry each render.
+  const countsKey = blockCounts ? JSON.stringify(blockCounts) : '';
+  const g = useMemo(() => buildGeometry(width, height, blockCounts), [width, height, countsKey]);
   const uid = useId();
   const hatch = `sc-hatch-${uid.replace(/[^A-Za-z0-9_-]/g, '')}`;
 

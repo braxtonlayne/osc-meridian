@@ -73,12 +73,32 @@ export function ClassificationBanner({ marking, position }: ClassificationBanner
   );
 }
 
-export interface MarkingStripProps {
-  marking: Marking;
+/**
+ * Canon markings used to resolve a MarkingId passed to MarkingStrip. The shell
+ * registers them once canon has loaded (kept out of this module so the initial
+ * chunk does not carry canon); a `markings` prop overrides the registry.
+ */
+let registeredMarkings: readonly Marking[] = [];
+export function registerMarkings(markings: readonly Marking[]): void {
+  registeredMarkings = markings;
 }
 
-/** Thin strip that sits directly under a window title bar. */
-export function MarkingStrip({ marking }: MarkingStripProps) {
+/** Resolve a marking id against the given list (or the registered canon markings). */
+export function resolveMarking(marking: Marking | MarkingId, markings: readonly Marking[] = registeredMarkings): Marking | null {
+  if (typeof marking !== 'string') return marking;
+  return markings.find((m) => m.id === marking) ?? null;
+}
+
+export interface MarkingStripProps {
+  /** A canon Marking, or its id (resolved against `markings` or the registered canon markings). */
+  marking: Marking | MarkingId;
+  markings?: readonly Marking[];
+}
+
+/** Thin strip that sits directly under a window title bar. Renders nothing for an unknown id. */
+export function MarkingStrip(props: MarkingStripProps) {
+  const marking = resolveMarking(props.marking, props.markings);
+  if (!marking) return null;
   return (
     <div class="mk-strip" data-marking={marking.id} style={markingVars(marking)} aria-label={`Window marking: ${marking.label}`}>
       <span class="mk-strip__label">{marking.label}</span>

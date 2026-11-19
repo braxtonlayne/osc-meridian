@@ -7,9 +7,13 @@ import { buildPlant } from '@graphics/reactor/model';
 import type { Reading, SiteSeed, TelemetryIn, TelemetryOut } from '@sim/telemetry.worker';
 import { canon } from './shared';
 
-/** Seed for one site: posted staff, berthing and, where fitted, the reactor plant model. */
+/**
+ * Seed for one site: posted staff, berthing and, where fitted, the reactor plant model.
+ * No seed when the client canon withholds the site's figures (DELTA): nothing is
+ * simulated from a withheld value.
+ */
 export function seedFor(f: Facility): SiteSeed | null {
-  if (f.class === 'DELTA') return null;
+  if (f.class === 'DELTA' || f.staff === null || f.capacity === null) return null;
   const seed: SiteSeed = {
     id: f.id,
     cls: f.class,

@@ -21,7 +21,15 @@ describe('strength lines', () => {
   it('canon lines agree with the canon totals they sit under', () => {
     expect(tierLines(canon).reduce((a, t) => a + t.count, 0)).toBe(canon.headline.staffTotal);
     expect(classLines(canon).reduce((a, c) => a + c.posted, 0)).toBe(canon.headline.staffPosted);
-    expect(facilityLines(canon).reduce((a, f) => a + f.posted, 0)).toBe(canon.headline.staffPosted);
+    // Withheld site figures (DELTA) are null, never zero: released lines plus the stated
+    // totals of classes whose site figures are withheld give the headline.
+    const lines = facilityLines(canon);
+    const withheld = new Set(lines.filter((f) => f.posted === null).map((f) => f.cls));
+    expect([...withheld]).toEqual(['DELTA']);
+    expect(lines.filter((f) => f.cls === 'DELTA').every((f) => f.posted === null && f.berthing === null && f.fillPct === null)).toBe(true);
+    const released = lines.reduce((a, f) => a + (f.posted ?? 0), 0);
+    const stated = classLines(canon).filter((k) => withheld.has(k.id)).reduce((a, k) => a + k.posted, 0);
+    expect(released + stated).toBe(canon.headline.staffPosted);
   });
 });
 

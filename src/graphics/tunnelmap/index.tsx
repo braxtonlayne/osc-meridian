@@ -114,14 +114,19 @@ const TB_W = 320;
 const TB_H = 134;
 const LG_W = 304;
 
-interface Layout {
+/** Sheet layout of a TunnelMap at a given size: frame, map box (projection target), title block. */
+export interface TunnelMapLayout {
   frame: Box;
   mapBox: Box;
   unit: number;
   tb: Rect;
 }
 
-function layoutFor(width: number, height: number): Layout {
+/**
+ * Layout the map uses at width x height. Overlays drawn over a TunnelMap pass
+ * `mapBox` to tunnelProjection() so their geometry lines up with the map.
+ */
+export function tunnelMapLayout(width: number, height: number): TunnelMapLayout {
   const inset = OUTER + BAND;
   const frame: Box = { x0: inset, y0: inset, x1: width - inset, y1: height - inset };
   const unit = Math.max(0.55, Math.min(1, width / 1100));
@@ -424,7 +429,7 @@ export function TunnelMap({ width, height, layer, highlight, onSelect }: TunnelM
   const [hover, setHover] = useState<LinkId | null>(null);
 
   const scene = useMemo(() => {
-    const layout = layoutFor(width, height);
+    const layout = tunnelMapLayout(width, height);
     const base = buildBase(layout.mapBox, layout.frame);
     const links = allLinkGeometry(base.projection);
     return { layout, base, links };

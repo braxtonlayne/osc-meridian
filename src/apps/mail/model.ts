@@ -210,7 +210,7 @@ export function resolveRecipient(input: string, dir: DirEntry[], isRedacted: (s:
   return { status: 'unknown', input };
 }
 
-/** "m.okafor@a03.rd.mer" -> "M. OKAFOR"; "food.service@..." -> "FOOD SERVICE". */
+/** "initial.surname@site..." -> "I. SURNAME"; "word.word@..." -> "WORD WORD". */
 export function displayFromAddress(address: string): string {
   const local = address.split('@')[0] ?? address;
   const parts = local.split(/[._-]/).filter(Boolean);

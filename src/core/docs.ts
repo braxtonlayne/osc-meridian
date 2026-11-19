@@ -18,6 +18,27 @@ import { asset } from './base';
 const generated = import.meta.glob<RouteEntry[]>('../../.generated/routes.json', { eager: true, import: 'default' });
 const GENERATED_ROUTES: RouteEntry[] = Object.values(generated)[0] ?? [];
 
+/* Dev only: when the content build rewrites routes.json, Vite would otherwise re-run this
+ * module and every importer up to the nearest HMR boundary (the shell's .tsx components),
+ * leaving a fresh services module with an empty route table. Accepting the JSON here keeps
+ * every module instance (and the session, windows and audit state) and hands the new list
+ * to the listeners (the shell re-indexes its routes). An empty or unreadable list, as seen
+ * mid-write, is ignored. Changes to docs.ts itself still go through normal HMR. */
+const routeListeners = new Set<(routes: RouteEntry[]) => void>();
+
+/** Subscribe to dev-time route table rebuilds. Returns unsubscribe. No-op in production. */
+export function onRoutesRebuilt(fn: (routes: RouteEntry[]) => void): () => void {
+  routeListeners.add(fn);
+  return () => routeListeners.delete(fn);
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept('../../.generated/routes.json', (mod) => {
+    const next = (mod as { default?: RouteEntry[] } | undefined)?.default;
+    if (Array.isArray(next) && next.length) for (const fn of routeListeners) fn(next);
+  });
+}
+
 export interface DocsDeps {
   satisfies: (key: ReleaseKey) => boolean;
   /** Defaults to .generated/routes.json bundled at build time. */
@@ -29,6 +50,8 @@ export interface DocsDeps {
 export type DocsService = Services['docs'] & {
   /** Drop cached DocJson/release files (tests, or after a content hot reload). */
   clearCache(): void;
+  /** Replace the route table (dev route rebuilds; see onRoutesRebuilt). Clears the caches. */
+  setRoutes(next: RouteEntry[]): void;
 };
 
 export function isTier1Key(key: string): boolean {
@@ -87,12 +110,19 @@ async function defaultFetchJson(url: string): Promise<unknown> {
 }
 
 export function createDocs(deps: DocsDeps): DocsService {
-  const routes = [...(deps.routes ?? GENERATED_ROUTES)];
-  const byRouteMap = new Map(routes.map((r) => [r.route, r]));
-  // routes.json entries may carry `aliases` (other docNos the page answers for); primary docNo wins.
+  let routes: RouteEntry[] = [];
+  const byRouteMap = new Map<string, RouteEntry>();
   const byDocNoMap = new Map<string, RouteEntry>();
-  for (const r of routes) for (const a of (r as RouteEntry & { aliases?: string[] }).aliases ?? []) byDocNoMap.set(a, r);
-  for (const r of routes) byDocNoMap.set(r.docNo, r);
+  const index = (list: RouteEntry[]) => {
+    routes = [...list];
+    byRouteMap.clear();
+    byDocNoMap.clear();
+    for (const r of routes) byRouteMap.set(r.route, r);
+    // routes.json entries may carry `aliases` (other docNos the page answers for); primary docNo wins.
+    for (const r of routes) for (const a of (r as RouteEntry & { aliases?: string[] }).aliases ?? []) byDocNoMap.set(a, r);
+    for (const r of routes) byDocNoMap.set(r.docNo, r);
+  };
+  index(deps.routes ?? GENERATED_ROUTES);
   const fetchJson = deps.fetchJson ?? defaultFetchJson;
   const docCache = new Map<string, Promise<DocJson>>();
   const releaseCache = new Map<string, Promise<Record<string, string>>>();
@@ -137,6 +167,11 @@ export function createDocs(deps: DocsDeps): DocsService {
     byDocNo: (docNo: string) => byDocNoMap.get(docNo),
     all: () => routes.slice(),
     clearCache() {
+      docCache.clear();
+      releaseCache.clear();
+    },
+    setRoutes(next: RouteEntry[]) {
+      index(next);
       docCache.clear();
       releaseCache.clear();
     },

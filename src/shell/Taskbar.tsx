@@ -14,27 +14,36 @@ import type { Win } from './wm';
 import { MenuList, openMenu, SEP } from './Menu';
 import type { MenuItem } from './Menu';
 import { runOpen, searchOpen, doLock, doLogoff } from './state';
+import { seg04 } from '@narrative/seg04';
 
 export const directoryOpen = signal(false);
 const trayPopup = signal<'links' | 'session' | null>(null);
 
 /* ------------------------------------------------------------ hub links */
 
-export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED';
+export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED' | 'BUSY';
+
+/** Hub at the far end of segment 04 (the narrative movement runs ALPHA-05 to ALPHA-03). */
+const SEG04_HUB = 'ALPHA-05';
 
 /**
  * Link state from this workstation (ALPHA-03) to each ALPHA hub. Deterministic:
  * the QKD link to each remote hub re-keys for three minutes each hour, offset
  * per hub; during re-key the link is reported DEGRADED. Otherwise NOMINAL.
+ * While the segment 04 movement is running (narrative engine, start..end) the
+ * ALPHA-05 link reports BUSY: the hub is carrying the unbooked movement's traffic.
  */
 export function hubLinks(now: number): { id: string; state: LinkState; note: string }[] {
   const minute = new Date(now).getUTCMinutes();
+  const ev = seg04.value;
+  const segActive = !!ev && now >= ev.start && now <= ev.end;
   const hubs = canonNow()
     .facilities.filter((f) => f.class === 'ALPHA')
     .map((f) => f.id)
     .sort();
   return hubs.map((id, i) => {
     if (id === session.site.value) return { id, state: 'LOCAL' as const, note: 'This site' };
+    if (segActive && id === SEG04_HUB) return { id, state: 'BUSY' as const, note: 'Link saturated; segment 04 movement traffic. Controlled mail queued' };
     const start = (i * 13 + 7) % 60;
     const inRekey = (minute - start + 60) % 60 < 3;
     return inRekey
@@ -43,7 +52,7 @@ export function hubLinks(now: number): { id: string; state: LinkState; note: str
   });
 }
 
-const stClass = (s: LinkState) => (s === 'DEGRADED' ? 'st-degraded' : 'st-nominal');
+const stClass = (s: LinkState) => (s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
 
 /* --------------------------------------------------------------- clock */
 

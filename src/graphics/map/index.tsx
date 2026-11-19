@@ -537,7 +537,7 @@ interface SiteLabel {
   from: [number, number];
 }
 
-const fmt = (n: number): string => n.toLocaleString('en-US');
+const fmt = (n: number | null): string => (n == null ? 'withheld' : n.toLocaleString('en-US')); // null: withheld in the client canon
 
 function className(id: ClassId): string {
   return canon.classes.find((k) => k.id === id)?.name ?? '';

@@ -44,11 +44,15 @@ describe('telemetry worker model', () => {
   });
 
   it('follows the canon reactor status', () => {
-    const b08 = seedFor(canon.facilities.find((f) => f.id === 'BETA-08')!)!;
-    expect(sample(b08, T0).power.source).toBe('DIESEL AND SURFACE');
-    expect(sample(b08, T0).power.diesel).toBe('RUNNING');
     const a03 = seedFor(canon.facilities.find((f) => f.id === 'ALPHA-03')!)!;
     expect(sample(a03, T0).power.source).toBe('REACTOR UNIT');
+    // A unit shut down (RX-B08 in canon) carries the station on diesel and surface supply.
+    const off = { ...a03, reactor: { ...a03.reactor!, status: 'OFFLINE' as const } };
+    expect(sample(off, T0).power.source).toBe('DIESEL AND SURFACE');
+    expect(sample(off, T0).power.diesel).toBe('RUNNING');
+    // The client canon withholds which BETA site RX-B08 serves, so no plant is seeded for it.
+    expect(canon.reactors.find((r) => r.id === 'RX-B08')!.site).not.toBe('BETA-08');
+    expect(seedFor(canon.facilities.find((f) => f.id === 'BETA-08')!)!.reactor).toBeUndefined();
     const g = seedFor(canon.facilities.find((f) => f.class === 'GAMMA')!)!;
     expect(sample(g, T0).power.source).toBe('UTILITY SERVICE');
   });

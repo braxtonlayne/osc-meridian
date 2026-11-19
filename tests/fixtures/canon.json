@@ -1,37 +1,288 @@
 {
-  "meta": { "environment": "MERIDIAN Workstation Environment", "release": "4.1.7", "agency": "Office of Strategic Continuity", "inWorldDate": "2008-05-31", "sourceDocNo": "OSC-INV-2008-Q2", "sourceRevision": "2008-Q2" },
+  "meta": {
+    "environment": "MERIDIAN Workstation Environment",
+    "release": "4.1.7",
+    "agency": "Office of Strategic Continuity",
+    "inWorldDate": "2008-05-31",
+    "sourceDocNo": "OSC-INV-2008-Q2",
+    "sourceRevision": "2008-Q2"
+  },
   "headline": {
-    "facilities": 47, "hubs": 5, "capacitySustained": 23400, "capacitySurge": 34700,
-    "staffTotal": 3847, "staffPosted": 3057, "staffUnposted": 790, "utilizationPct": 16.4,
-    "programCostB": 287, "tunnelCertifiedMi": 847, "railEngineeringMi": 6074, "tramEngineeringMi": 10538, "tramLinkSumMi": 10611
+    "facilities": 47,
+    "hubs": 5,
+    "capacitySustained": 23400,
+    "capacitySurge": 34700,
+    "staffTotal": 3847,
+    "staffPosted": 3057,
+    "staffUnposted": 790,
+    "utilizationPct": 16.4,
+    "programCostB": 287,
+    "tunnelCertifiedMi": 847,
+    "railEngineeringMi": 6074,
+    "tramEngineeringMi": 10538,
+    "tramLinkSumMi": 10611
   },
   "markings": [
-    { "id": "UMBRA-U", "label": "UMBRA//OSC UNRESTRICTED", "sourceLabel": "UMBRA/OSC UNRESTRICTED", "rank": 0, "bannerBg": "#2E6B3F", "bannerFg": "#FFFFFF", "usage": "fixture" },
-    { "id": "UMBRA-C", "label": "UMBRA//OSC COMPARTMENTED", "sourceLabel": "UMBRA/OSC COMPARTMENTED", "rank": 2, "bannerBg": "#1F3552", "bannerFg": "#FFFFFF", "usage": "fixture" }
+    {
+      "id": "UMBRA-U",
+      "label": "UMBRA//OSC UNRESTRICTED",
+      "sourceLabel": "UMBRA/OSC UNRESTRICTED",
+      "rank": 0,
+      "bannerBg": "#2E6B3F",
+      "bannerFg": "#FFFFFF",
+      "usage": "fixture"
+    },
+    {
+      "id": "UMBRA-C",
+      "label": "UMBRA//OSC COMPARTMENTED",
+      "sourceLabel": "UMBRA/OSC COMPARTMENTED",
+      "rank": 2,
+      "bannerBg": "#1F3552",
+      "bannerFg": "#FFFFFF",
+      "usage": "fixture"
+    }
   ],
   "facilities": [
-    { "id": "ALPHA-03", "class": "ALPHA", "codename": "FIXTURE ONE", "anchor": { "city": "Testville", "state": "KY", "cityLat": 38, "cityLon": -84 }, "depthFt": 1400, "completed": "2003-11", "capacity": 2400, "staff": 412, "network": "EASTERN", "reactor": true, "staffBreakdown": [{ "role": "Records", "count": 12 }] },
-    { "id": "BETA-07", "class": "BETA", "codename": null, "anchor": { "city": "Sampleton", "state": "OH", "cityLat": 40, "cityLon": -82 }, "depthFt": 600, "completed": "2005-02", "capacity": 900, "staff": 88, "network": "EASTERN", "reactor": false, "staffBreakdown": [] },
-    { "id": "BETA-08", "class": "BETA", "codename": null, "anchor": { "city": "Exampleburg", "state": "PA", "cityLat": 41, "cityLon": -77 }, "depthFt": 640, "completed": "2005-09", "capacity": 950, "staff": 91, "network": "EASTERN", "reactor": false, "staffBreakdown": [] }
+    {
+      "id": "ALPHA-03",
+      "class": "ALPHA",
+      "codename": "FIXTURE ONE",
+      "anchor": {
+        "city": "Testville",
+        "state": "KY",
+        "cityLat": 38,
+        "cityLon": -84
+      },
+      "depthFt": 1400,
+      "completed": "2003-11",
+      "capacity": 2400,
+      "staff": 412,
+      "network": "EASTERN",
+      "reactor": true,
+      "staffBreakdown": [
+        {
+          "role": "Records",
+          "count": 12
+        }
+      ],
+      "locationText": "14 miles NE of Testville, KY",
+      "levels": [
+        {
+          "n": 0,
+          "name": "Level 0: Surface Depot",
+          "topFt": 0,
+          "heightFt": 30,
+          "tier": 4,
+          "notes": "Cover facility"
+        },
+        {
+          "n": 3,
+          "name": "Level 3: Cistern Gallery Kappa",
+          "topFt": 900,
+          "heightFt": 40,
+          "tier": 2,
+          "notes": "Tier two gallery notes"
+        },
+        {
+          "n": 7,
+          "name": "Level 7: Sealed Annex Omicron",
+          "topFt": 1300,
+          "heightFt": 60,
+          "tier": 1,
+          "notes": "Tier one annex notes"
+        }
+      ]
+    },
+    {
+      "id": "BETA-07",
+      "class": "BETA",
+      "codename": null,
+      "anchor": {
+        "city": "Sampleton",
+        "state": "OH",
+        "cityLat": 40,
+        "cityLon": -82
+      },
+      "depthFt": 600,
+      "completed": "2005-02",
+      "capacity": 900,
+      "staff": 88,
+      "network": "EASTERN",
+      "reactor": false,
+      "staffBreakdown": []
+    },
+    {
+      "id": "BETA-08",
+      "class": "BETA",
+      "codename": null,
+      "anchor": {
+        "city": "Exampleburg",
+        "state": "PA",
+        "cityLat": 41,
+        "cityLon": -77
+      },
+      "depthFt": 640,
+      "completed": "2005-09",
+      "capacity": 950,
+      "staff": 91,
+      "network": "EASTERN",
+      "reactor": false,
+      "staffBreakdown": []
+    },
+    {
+      "id": "DELTA-01",
+      "class": "DELTA",
+      "codename": "FIXTURE DELTA",
+      "locationText": "Corridor beneath Marbleford",
+      "anchor": {
+        "miles": 30,
+        "bearing": "W",
+        "city": "Marbleford",
+        "state": "NM",
+        "cityLat": 35,
+        "cityLon": -106
+      },
+      "terrain": "Fixture mesa terrain",
+      "coverIdentity": "Fixture Cover Mining Co",
+      "coverStory": null,
+      "depthFt": 300,
+      "completed": "2006-01",
+      "capacity": 200,
+      "staff": 10,
+      "network": null,
+      "reactor": false,
+      "staffBreakdown": []
+    }
   ],
   "railSegments": [
-    { "no": "04", "a": "ALPHA-02", "b": "ALPHA-05", "routeNote": "fixture", "miles": 1210, "hours": 6.7, "completed": "2007-03", "status": "NOT IN REVENUE SERVICE" }
+    {
+      "no": "04",
+      "a": "ALPHA-02",
+      "b": "ALPHA-05",
+      "routeNote": "fixture",
+      "miles": 1210,
+      "hours": 6.7,
+      "completed": "2007-03",
+      "status": "NOT IN REVENUE SERVICE"
+    }
   ],
   "tramNetworks": [
-    { "id": "EASTERN", "name": "Eastern", "hubs": ["ALPHA-03"], "statedTotalMi": 2900, "links": [
-      { "from": "ALPHA-03", "to": "BETA-07", "label": "(Ohio)", "miles": 210, "hours": 2.3, "kind": "BETA" }
-    ] }
+    {
+      "id": "EASTERN",
+      "name": "Eastern",
+      "hubs": [
+        "ALPHA-03"
+      ],
+      "statedTotalMi": 2900,
+      "links": [
+        {
+          "from": "ALPHA-03",
+          "to": "BETA-07",
+          "label": "(Ohio)",
+          "miles": 210,
+          "hours": 2.3,
+          "kind": "BETA"
+        }
+      ]
+    }
   ],
   "compartments": [
-    { "id": "KESTREL", "name": "KESTREL", "scope": "fixture", "briefingDocNo": "OSC-DIR-0001" },
-    { "id": "HOLLOW", "name": "HOLLOW", "scope": "fixture", "briefingDocNo": "OSC-DIR-0001" }
+    {
+      "id": "KESTREL",
+      "name": "KESTREL",
+      "scope": "fixture",
+      "briefingDocNo": "OSC-DIR-0001"
+    },
+    {
+      "id": "HOLLOW",
+      "name": "HOLLOW",
+      "scope": "fixture",
+      "briefingDocNo": "OSC-DIR-0001"
+    },
+    {
+      "id": "SEXTANT",
+      "name": "SEXTANT",
+      "scope": "fixture",
+      "briefingDocNo": "OSC-DIR-0001"
+    }
   ],
   "phases": [
-    { "n": 1, "years": "2001-2003", "startYear": 2001, "endYear": 2003, "title": "Fixture phase", "status": "COMPLETE", "recruited": 1200, "cumulative": 1200, "targetPct": null, "targetCount": null, "items": [] }
+    {
+      "n": 1,
+      "years": "2001-2003",
+      "startYear": 2001,
+      "endYear": 2003,
+      "title": "Fixture phase",
+      "status": "COMPLETE",
+      "recruited": 1200,
+      "cumulative": 1200,
+      "targetPct": null,
+      "targetCount": null,
+      "items": []
+    }
   ],
   "roster": [
-    { "pn": "1-0001", "name": "Fixture Director Alpha", "rank": null, "role": "Director", "tier": 1, "site": "ALPHA-03", "divisionId": "RD", "email": "f.alpha@a03.rd.mer", "notes": "" },
-    { "pn": "2-0102", "name": "Fixture Deputy Bravo", "rank": null, "role": "Deputy Commander", "tier": 2, "site": "ALPHA-03", "divisionId": "RD", "email": "f.bravo@a03.rd.mer", "notes": "" },
-    { "pn": "3-1147", "name": "Fixture Analyst Charlie", "rank": null, "role": "Analyst", "tier": 3, "site": "ALPHA-03", "divisionId": "RD", "email": "f.charlie@a03.rd.mer", "notes": "" }
-  ]
+    {
+      "pn": "1-0001",
+      "name": "Fixture Director Alpha",
+      "rank": null,
+      "role": "Director",
+      "tier": 1,
+      "site": "ALPHA-03",
+      "divisionId": "RD",
+      "email": "f.alpha@a03.rd.mer",
+      "notes": ""
+    },
+    {
+      "pn": "2-0102",
+      "name": "Fixture Deputy Bravo",
+      "rank": null,
+      "role": "Deputy Commander",
+      "tier": 2,
+      "site": "ALPHA-03",
+      "divisionId": "RD",
+      "email": "f.bravo@a03.rd.mer",
+      "notes": ""
+    },
+    {
+      "pn": "3-1147",
+      "name": "Fixture Analyst Charlie",
+      "rank": null,
+      "role": "Analyst",
+      "tier": 3,
+      "site": "ALPHA-03",
+      "divisionId": "RD",
+      "email": "f.charlie@a03.rd.mer",
+      "notes": ""
+    }
+  ],
+  "budget": {
+    "lineItems": [
+      {
+        "no": "LI-001",
+        "department": "DOD",
+        "sourceId": "s1",
+        "categoryId": "c1",
+        "title": "Alternate Operating Facility Construction",
+        "account": "97-0100",
+        "amountM": 1200,
+        "fy": {
+          "FY2001": 400,
+          "FY2003": 800
+        }
+      },
+      {
+        "no": "LI-002",
+        "department": "DOE",
+        "sourceId": "s1",
+        "categoryId": "c1",
+        "title": "Site Characterization Support",
+        "account": "89-0222",
+        "amountM": 300,
+        "fy": {
+          "FY2001": 300
+        }
+      }
+    ]
+  }
 }

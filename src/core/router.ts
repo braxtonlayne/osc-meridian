@@ -37,14 +37,27 @@ export function toUrl(path: string): string {
   return BASE + (p === '/' ? '' : encodeURI(p.slice(1)));
 }
 
-export function pushPath(path: string): void {
-  const url = toUrl(path);
-  if (url !== location.pathname) history.pushState({ meridian: normalize(path) }, '', url);
+/** "#para-6" from "/directives/dir-0233#para-6"; "" when the path has no fragment. */
+export function hashOf(path: string): string {
+  const i = path.indexOf('#');
+  return i < 0 || i === path.length - 1 ? '' : path.slice(i);
 }
 
-export function replacePath(path: string): void {
+/**
+ * Push a history entry for a path. A fragment ("#para-6") in `path` or `hash`
+ * is kept in the address bar so in-app anchors (directive paragraphs) resolve.
+ */
+export function pushPath(path: string, hash = hashOf(path)): void {
   const url = toUrl(path);
-  if (url !== location.pathname) history.replaceState({ meridian: normalize(path) }, '', url);
+  if (url !== location.pathname) history.pushState({ meridian: normalize(path) }, '', url + hash);
+  // Same document, new fragment: no extra history entry (matches the path-only behaviour).
+  else if (hash && hash !== location.hash) history.replaceState({ meridian: normalize(path) }, '', url + hash);
+}
+
+/** Replace the current entry. Without a fragment, an existing one on the same path is left alone. */
+export function replacePath(path: string, hash = hashOf(path)): void {
+  const url = toUrl(path);
+  if (url !== location.pathname || (hash && hash !== location.hash)) history.replaceState({ meridian: normalize(path) }, '', url + hash);
 }
 
 export function onPop(fn: (path: string) => void): () => void {

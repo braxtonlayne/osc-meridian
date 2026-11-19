@@ -123,6 +123,19 @@ export function cell<T>(f: Facility, field: Field, value: T, viewer: Viewer, dis
   return { v: value };
 }
 
+/**
+ * Resolve a figure the full canon always carries (berthing, posted staff, reactor fitted) but
+ * the client canon may withhold as null. A null is never a value: it is a bar, keyed T1 for
+ * DELTA (the client canon's key for nulled DELTA figures) and otherwise to the plan's key.
+ */
+export function figureCell<T>(f: Facility, field: Field, value: T | null, viewer: Viewer): Cell<T> {
+  if (value === null) {
+    const key = f.class === 'DELTA' ? 'T1' : (requirementFor(f, field, viewer.adjacent) ?? 'T1');
+    return { rx: { key, len: 4 } };
+  }
+  return cell(f, field, value, viewer);
+}
+
 export const fmtInt = (n: number): string => n.toLocaleString('en-US');
 
 /** "24 mi S of Lexington, KY" / the area label for GAMMA sites / the source text otherwise. */
@@ -179,10 +192,10 @@ export function buildRows(canon: Canon, viewer: Viewer): RegRow[] {
     fn: cell(f, 'function', f.function, viewer),
     network: cell(f, 'network', networkName(canon, f.network), viewer),
     depth: cell(f, 'depth', f.depthFt, viewer),
-    capacity: cell(f, 'capacity', f.capacity, viewer),
-    staff: cell(f, 'staff', f.staff, viewer),
+    capacity: figureCell(f, 'capacity', f.capacity, viewer),
+    staff: figureCell(f, 'staff', f.staff, viewer),
     completed: cell(f, 'completed', f.completed, viewer),
-    reactor: cell(f, 'reactor', f.reactor, viewer),
+    reactor: figureCell(f, 'reactor', f.reactor, viewer),
   }));
 }
 

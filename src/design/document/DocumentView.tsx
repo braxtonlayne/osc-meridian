@@ -65,8 +65,10 @@ const TEMPLATE_NAMES: Record<Template, string> = {
 };
 
 const NUMERIC = /^[\s(]*[-−+]?[$]?\s?\d[\d,]*(\.\d+)?\s*(%|[A-Z]{1,3})?\)?\s*$/;
-const DATEISH = /(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/i;
+const DATEISH = /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\b/i;
 const TOTAL = /^(sub-?total|total|grand total|net|balance)\b/i;
+/** Cell that opens with an OSC date ("16 MAY 2008", "16 MAY 2008 1330Z (0930 EDT)"): kept on one line. */
+const DATE_LEAD = /^\d{1,2} (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC) \d{4}\b/;
 
 /** Post-process body HTML once per render of new HTML: redaction bars, numeric cells, totals rows. */
 function enhanceBody(root: HTMLElement, redactions: RedactionInfo[]) {
@@ -92,6 +94,13 @@ function enhanceBody(root: HTMLElement, redactions: RedactionInfo[]) {
   });
   root.querySelectorAll<HTMLTableElement>('table').forEach((t) => {
     t.classList.add('doc-table');
+    // Wide tables scroll sideways inside the sheet rather than crushing their columns.
+    if (!t.parentElement?.classList.contains('doc-table-scroll')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'doc-table-scroll';
+      t.before(wrap);
+      wrap.append(t);
+    }
     const rows = Array.from(t.rows);
     const numericCols = new Map<number, { num: number; all: number }>();
     rows.forEach((tr) => {
@@ -101,6 +110,7 @@ function enhanceBody(root: HTMLElement, redactions: RedactionInfo[]) {
         if (c.tagName !== 'TD') return;
         const txt = (c.textContent ?? '').trim();
         if (!txt) return;
+        if (DATE_LEAD.test(txt)) c.classList.add('is-date');
         const s = numericCols.get(ci) ?? { num: 0, all: 0 };
         s.all++;
         if (NUMERIC.test(txt) && !DATEISH.test(txt)) {

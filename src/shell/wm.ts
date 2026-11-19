@@ -207,7 +207,8 @@ export function openWindow(o: OpenOptions): Win {
     setTitle: (title, docNo) =>
       batch(() => {
         win.title.value = title;
-        if (docNo !== undefined) win.docNo.value = docNo;
+        // No docNo (undefined or '') clears it: the window no longer shows a document.
+        win.docNo.value = docNo ?? '';
       }),
     setMarking: (m) => (win.marking.value = m),
     setStatus: (t) => (win.status.value = t),

@@ -9,7 +9,7 @@ import { appById, isAppId } from '@apps/index';
 import { DepthPreview, DepthViewerPane } from './DepthPanel';
 import { DocPane, type DocLoad } from './DocPane';
 import { MapInset, useSize } from './MapView';
-import { cell, connectionsLabel, dossierRoute, facilityFromRoute, isOpen, locationLabel, networkName, staffingBars, sustainmentText, type Viewer, type Withheld } from './model';
+import { cell, connectionsLabel, dossierRoute, figureCell, facilityFromRoute, isOpen, locationLabel, networkName, staffingBars, sustainmentText, type Viewer, type Withheld } from './model';
 import { Bar, CellView, RxText, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 import type { TelemetryState } from './telemetry';
 
@@ -135,8 +135,8 @@ function SidePanel(p: DossierProps & { panels: PanelModule | null; reactorRx: Wi
     { label: 'Location', value: <CellView c={position} id={`${f.id}:location`} audit={audit} /> },
     { label: 'Cover identity', value: <CellView c={c('cover', f.coverIdentity)} id={`${f.id}:cover`} audit={audit} /> },
     { label: 'Depth', value: <CellView c={c('depth', f.depthFt)} id={`${f.id}:depth`} audit={audit} fmt={(v) => (v == null ? '' : `${fmt(v)} ft`)} />, mono: true },
-    { label: 'Berthing (surge)', value: <CellView c={c('capacity', f.capacity)} id={`${f.id}:capacity`} audit={audit} fmt={fmt} />, mono: true },
-    { label: 'Posted staff', value: <CellView c={c('staff', f.staff)} id={`${f.id}:staff`} audit={audit} fmt={fmt} />, mono: true },
+    { label: 'Berthing (surge)', value: <CellView c={figureCell(f, 'capacity', f.capacity, viewer)} id={`${f.id}:capacity`} audit={audit} fmt={fmt} />, mono: true },
+    { label: 'Posted staff', value: <CellView c={figureCell(f, 'staff', f.staff, viewer)} id={`${f.id}:staff`} audit={audit} fmt={fmt} />, mono: true },
     { label: 'Sustainment', value: sustainmentText(canon, f) },
     { label: 'Completed', value: <CellView c={c('completed', f.completed)} id={`${f.id}:completed`} audit={audit} fmt={(v) => (v ? fmtMonth(v) : '')} />, mono: true },
     { label: 'Network', value: <CellView c={c('network', networkName(canon, f.network))} id={`${f.id}:network`} audit={audit} /> },

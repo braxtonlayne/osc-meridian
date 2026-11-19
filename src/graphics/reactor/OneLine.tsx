@@ -19,6 +19,11 @@ const canon = canonJson as unknown as Canon;
 export interface ReactorOneLineProps {
   reactorId: string;
   live?: LiveInput;
+  /**
+   * Shown in place of the site id and codename (title block and accessible name) when the
+   * site identity is not released to the operator, e.g. "BETA SITE". Omit to show the site.
+   */
+  siteMask?: string;
   class?: string;
 }
 
@@ -232,7 +237,7 @@ function Frame() {
   );
 }
 
-export function ReactorOneLine({ reactorId, live, class: cls }: ReactorOneLineProps) {
+export function ReactorOneLine({ reactorId, live, siteMask, class: cls }: ReactorOneLineProps) {
   const plant = buildPlant(canon, reactorId);
   if (!plant) {
     return (
@@ -257,7 +262,7 @@ export function ReactorOneLine({ reactorId, live, class: cls }: ReactorOneLinePr
     const span = 340;
     return x0 + (span / n) * (i + 0.5);
   };
-  const siteName = `${r.site}${f?.codename ? ` ${f.codename}` : ''}`;
+  const siteName = siteMask ?? `${r.site}${f?.codename ? ` ${f.codename}` : ''}`;
   const fe = canon.divisions.find((d) => d.id === 'FE');
   const noteLines = wrap(r.statusNote.toUpperCase(), 75).slice(0, 3);
   const pct = Math.round(plant.loadFraction * 100);

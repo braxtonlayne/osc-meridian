@@ -245,7 +245,7 @@ export interface RefusalStateProps {
   /** Withholding authority, e.g. "Records Division" or "OIA". */
   authority: string;
   /** Reference under which the control is applied, e.g. "DIR-0412". */
-  ref: string;
+  reference: string;
   /** One in-world sentence: why this operator cannot open it. */
   reason: string;
   /** What would satisfy the control, e.g. "Tier 2 compartment briefing". */
@@ -270,7 +270,7 @@ const REQUEST_LABEL = 'Request access (OSC Form 21)…';
 export function RefusalState(props: RefusalStateProps): JSX.Element {
   const {
     authority,
-    ref: reference,
+    reference,
     reason,
     requirement,
     docNo,
@@ -637,7 +637,7 @@ export interface RedactionBarProps {
   /** Length of the withheld text in characters. The text itself is never passed. */
   chars: number;
   authority?: string;
-  ref?: string;
+  reference?: string;
   /**
    * inline: one unbroken bar (a word, a name, a number).
    * field: one bar filling the available cell or field width; `chars` is ignored for width.
@@ -677,7 +677,7 @@ function sentencePieces(chars: number, seed: number): number[] {
 export function RedactionBar({
   chars,
   authority,
-  ref: reference,
+  reference,
   variant = 'inline',
   class: className,
 }: RedactionBarProps): JSX.Element {
@@ -717,7 +717,7 @@ export function RedactionBar({
 
 export interface WithheldBlockProps {
   authority: string;
-  ref: string;
+  reference: string;
   /** Number of text lines the withheld section occupied. */
   lines: number;
   /** Optional heading of the withheld section, if the heading itself is releasable. */
@@ -764,7 +764,7 @@ export function withheldLines(seedText: string, lines: number): WithheldLine[] {
  */
 export function WithheldBlock({
   authority,
-  ref: reference,
+  reference,
   lines,
   label,
   class: className,

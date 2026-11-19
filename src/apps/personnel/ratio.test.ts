@@ -46,17 +46,26 @@ describe('computeEstablishment', () => {
   });
   it('defaults to the posted strength of a site and sums exactly', () => {
     const f = fac('ALPHA-03');
-    const r = computeEstablishment(rows, f.capacity, f.staff);
-    expect(r.establishment).toBe(f.staff);
-    expect(r.lines.reduce((a, l) => a + l.posts, 0)).toBe(f.staff);
-    expect(r.fillPct).toBeCloseTo((f.staff / f.capacity) * 100, 10);
+    const [cap, staff] = [f.capacity!, f.staff!];
+    const r = computeEstablishment(rows, cap, staff);
+    expect(r.establishment).toBe(staff);
+    expect(r.lines.reduce((a, l) => a + l.posts, 0)).toBe(staff);
+    expect(r.fillPct).toBeCloseTo((staff / cap) * 100, 10);
   });
   it('clamps the establishment to berthing and to zero', () => {
-    const f = fac('DELTA-06');
-    expect(computeEstablishment(rows, f.capacity, f.capacity * 10).establishment).toBe(f.capacity);
-    const z = computeEstablishment(rows, f.capacity, -3);
+    const cap = fac('GAMMA-06').capacity!;
+    expect(computeEstablishment(rows, cap, cap * 10).establishment).toBe(cap);
+    const z = computeEstablishment(rows, cap, -3);
     expect(z.establishment).toBe(0);
     expect(z.supportToCommand).toBeNull();
+  });
+  it('has no basis at a site whose berthing the client canon withholds', () => {
+    // DELTA berthing and staff are Tier 1 and arrive as null; the calculator does not offer them.
+    for (const f of canon.facilities.filter((x) => x.class === 'DELTA')) {
+      expect(f.capacity).toBeNull();
+      expect(f.staff).toBeNull();
+    }
+    for (const f of canon.facilities.filter((x) => x.class !== 'DELTA')) expect(typeof f.capacity).toBe('number');
   });
   it('reports the support-to-command ratio from the command line', () => {
     const r = computeEstablishment(rows, canon.ratioModel.capacity, canon.ratioModel.capacity);

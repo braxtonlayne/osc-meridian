@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'preact/hooks';
 import type { RouteEntry } from '@core/contracts';
 import type { Contractor, CoverCatalogueEntry } from '@core/canon-types';
+import { isRx, rxInfo } from '@core/rx';
 import { useServices } from '@core/services';
 import { WORKSTATION_ID } from '@core/audit';
 import { DataTable, GroupBox, PropertyGrid, StatusLight, Tabs, formatNumber, formatOscDate, markingStyle, type Column } from '@design/index';
@@ -192,16 +193,19 @@ export function CoverPanel({ entry }: { entry: RouteEntry }) {
   const released = useMemo(() => releasedSites(canon.operator.site, canon.facilities), []);
   const [sel, setSel] = useState<string | null>(canon.operator.site);
   const open = (c: CoverCatalogueEntry) => sextant || released.has(c.facility);
-  const bar = (text: string) => <Withheld len={text.length} docNo={entry.docNo} auth={CVO_RX.auth} reference={CVO_RX.ref} />;
+  // Bars are sized to the withheld text; a client-canon sentinel carries that length itself.
+  const bar = (text: string) => <Withheld len={rxInfo(text)?.len ?? text.length} docNo={entry.docNo} auth={CVO_RX.auth} reference={CVO_RX.ref} />;
+  // A value the client canon withholds (sentinel or null) stays a bar even when SEXTANT is held.
+  const txt = (c: CoverCatalogueEntry, v: string, show = (s: string): string => s) => (open(c) && !isRx(v) ? show(v) : bar(isRx(v) ? v : show(v)));
   const cols: Column<CoverCatalogueEntry>[] = [
     { key: 'f', header: 'Facility', width: 80, mono: true, sortValue: (c) => c.facility, render: (c) => c.facility },
-    { key: 'a', header: 'Cover agency', wrap: true, render: (c) => (open(c) ? c.coverAgency : bar(c.coverAgency)) },
-    { key: 't', header: 'Cover facility type', wrap: true, render: (c) => (open(c) ? c.coverFacilityType : bar(c.coverFacilityType)) },
-    { key: 's', header: 'Surface staff', width: 84, align: 'right', mono: true, render: (c) => (open(c) ? formatNumber(c.visibleSurfaceStaff) : bar(String(c.visibleSurfaceStaff))) },
-    { key: 'r', header: 'Last review', width: 96, mono: true, render: (c) => (open(c) ? formatOscDate(c.lastCoverReview) : bar(formatOscDate(c.lastCoverReview))) },
+    { key: 'a', header: 'Cover agency', wrap: true, render: (c) => txt(c, c.coverAgency) },
+    { key: 't', header: 'Cover facility type', wrap: true, render: (c) => txt(c, c.coverFacilityType) },
+    { key: 's', header: 'Surface staff', width: 84, align: 'right', mono: true, render: (c) => (c.visibleSurfaceStaff === null ? bar('0000') : open(c) ? formatNumber(c.visibleSurfaceStaff) : bar(String(c.visibleSurfaceStaff))) },
+    { key: 'r', header: 'Last review', width: 96, mono: true, render: (c) => txt(c, c.lastCoverReview, formatOscDate) },
   ];
   const row = canon.coverCatalogue.find((c) => c.facility === sel);
-  const shown = canon.coverCatalogue.filter(open).length;
+  const shown = canon.coverCatalogue.filter((c) => open(c) && !isRx(c.coverAgency)).length;
   return (
     <GroupBox title={`Cover identities: ${shown} of ${canon.coverCatalogue.length} entries released to this operator`} on="surface">
       <DataTable
@@ -218,7 +222,7 @@ export function CoverPanel({ entry }: { entry: RouteEntry }) {
       {row && (
         <PropertyGrid
           caption={`${row.facility}: public records posture`}
-          rows={[{ label: 'Public records', value: open(row) ? row.publicRecordsPosture : <Withheld len={row.publicRecordsPosture.length} docNo={entry.docNo} auth={CVO_RX.auth} reference={CVO_RX.ref} /> }]}
+          rows={[{ label: 'Public records', value: txt(row, row.publicRecordsPosture) }]}
         />
       )}
     </GroupBox>

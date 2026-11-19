@@ -139,8 +139,12 @@ describe('UsMap', () => {
   };
 
   it('draws no DELTA marker unless revealDelta is set', () => {
+    // Baseline (client canon): only sites whose position is released are drawn (22).
     const hidden = mount(<UsMap width={900} height={570} />);
-    expect(hidden.querySelectorAll('.um-marker').length).toBe(35);
+    expect(hidden.querySelectorAll('.um-marker').length).toBe(client.facilities.filter((f) => typeof f.lat === 'number').length);
+    expect(hidden.querySelectorAll('.um-marker').length).toBe(22);
+    const sextant = mount(<UsMap width={900} height={570} facilities={canon.facilities} />);
+    expect(sextant.querySelectorAll('.um-marker').length).toBe(35);
     expect(hidden.querySelectorAll('.um-marker[data-id^="DELTA"]').length).toBe(0);
     // The client canon has no DELTA positions: revealing draws nothing for them and does not throw.
     const bare = mount(<UsMap width={900} height={570} revealDelta />);
@@ -152,7 +156,7 @@ describe('UsMap', () => {
   });
 
   it('marks the selected site, labels it with a plate, and exposes one tab stop', () => {
-    const el = mount(<UsMap width={900} height={570} selected="ALPHA-03" classes={['ALPHA', 'BETA']} />);
+    const el = mount(<UsMap width={900} height={570} selected="ALPHA-03" classes={['ALPHA', 'BETA']} facilities={canon.facilities} />);
     expect(el.querySelectorAll('.um-marker').length).toBe(17);
     expect(el.querySelectorAll('.um-selbox').length).toBe(1);
     expect(el.querySelector('.um-plate')?.textContent).toContain('ARCHIVE SITE TANGO');
@@ -163,7 +167,7 @@ describe('UsMap', () => {
   });
 
   it('draws each marker at projectionFor of its canon lat/lon', () => {
-    const el = mount(<UsMap width={900} height={570} />);
+    const el = mount(<UsMap width={900} height={570} facilities={canon.facilities} />);
     const p = projectionFor(900, 570);
     for (const id of ['ALPHA-03', 'BETA-07', 'GAMMA-06']) {
       const f = site(id);

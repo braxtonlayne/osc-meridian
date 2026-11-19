@@ -55,7 +55,7 @@ departments `$161.52B`, line items `$412M` / `$4,023M`, axes `$50B`.
 
 Tokens only (see the header of `ledger.css`). Five palette slots in canon
 category order: `--title-active-bg` (navy), `--title-inactive-bg` (slate), a
-flat `color-mix` of `--st-degraded` and `--paper-edge` (ochre),
+the `--chart-ochre` chart-palette token (ochre),
 `--chrome-dark` (charcoal), a flat mix of `--chrome-shadow` and `--surface`
 (light grey). Set `--lg-bg` on a container that is not `--surface` so label
 halos match the background.

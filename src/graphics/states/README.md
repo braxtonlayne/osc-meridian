@@ -12,18 +12,18 @@ import { RefusalState, EmptyState, ErrorState, PathNotFound, WithheldBlock, Reda
 
 | Export | Props | Use |
 |---|---|---|
-| `RefusalState` | `authority, ref, reason, requirement?, docNo?, onRequestAccess?, compact?, heading?` | Window content when `access` is not satisfied. Fills its container. The "Request access (OSC Form 21)…" button appears only when `onRequestAccess` is given. `compact` is a one-row inline form for lists and table cells. |
+| `RefusalState` | `authority, reference, reason, requirement?, docNo?, onRequestAccess?, compact?, heading?` | Window content when `access` is not satisfied. Fills its container. The "Request access (OSC Form 21)…" button appears only when `onRequestAccess` is given. `compact` is a one-row inline form for lists and table cells. |
 | `EmptyState` | `title, body?, icon?` | Quiet "nothing here" for list panes. `icon` is `'tray'` (default), `'folder'`, `'search'`, `'printer'`, `'mail'`, or any node. |
 | `EmptyFolder` `EmptySearchResults` `EmptyPrintQueue` `EmptyMailFolder` | `name?` / `query?` / `device?` / `folder?` | Ready-worded variants. |
 | `ErrorState` | `code, title, body, detail?, defaultOpen?, actions?` | In-world system error. "Details >>" discloses a mono trace (`detail`, or one derived from `code` by `traceForCode`). The code sits in a read-only field with a Copy button. |
 | `PathNotFound` | `path, onSearch?, onHome?` | Answer to an unknown deep link. Buttons appear only when their handlers are given. |
-| `WithheldBlock` | `authority, ref, lines, label?` | A whole section withheld: `lines` rows of black bars. The bar plan is seeded from authority + ref + lines, so it is identical on every render and in prerendered HTML. |
-| `RedactionBar` | `chars, authority?, ref?, variant?` | One black bar sized by character count. `variant`: `inline` (default), `field` (fills the cell), `sentence` (word-length pieces that wrap with the paragraph). |
+| `WithheldBlock` | `authority, reference, lines, label?` | A whole section withheld: `lines` rows of black bars. The bar plan is seeded from authority + reference + lines, so it is identical on every render and in prerendered HTML. |
+| `RedactionBar` | `chars, authority?, reference?, variant?` | One black bar sized by character count. `variant`: `inline` (default), `field` (fills the cell), `sentence` (word-length pieces that wrap with the paragraph). |
 | `StateGlyph` | `id, size?` | The drawn glyphs: `locked tray folder search printer mail error path`. |
 | `StateButton` | `onClick, children, primary?, small?` | Bevelled push button, for `ErrorState`'s `actions` slot. |
 | `traceForCode`, `withheldLines` | | The deterministic generators, exported for tests. |
 
-`ref` is an ordinary string prop here (Preact 11 passes `ref` through to function components).
+The reference prop is named `reference` (`ref` is reserved by Preact).
 
 ## Notes for integrators
 

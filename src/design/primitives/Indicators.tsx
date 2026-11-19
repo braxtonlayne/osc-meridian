@@ -103,7 +103,7 @@ export interface PropertyGridProps {
 
 /** Key/value identity block: grey key column, white value column, ruled rows. */
 export function PropertyGrid({ rows, columns = 1, caption }: PropertyGridProps) {
-  return (
+  const grid = (
     <dl class={cx('pgrid', columns === 2 && 'pgrid--cols-2')}>
       {caption ? <div class="pgrid__caption">{caption}</div> : null}
       {rows.map((r, i) => (
@@ -114,6 +114,8 @@ export function PropertyGrid({ rows, columns = 1, caption }: PropertyGridProps) 
       ))}
     </dl>
   );
+  // Two pairs per row reflow to one below ~560px of available width (container query on the host).
+  return columns === 2 ? <div class="pgrid-host">{grid}</div> : grid;
 }
 
 /* ---------------- GroupBox ---------------- */

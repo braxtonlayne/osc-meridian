@@ -5,7 +5,8 @@ import type { StaffLine } from '@core/canon-types';
 import { OrgChart } from '@graphics/org';
 import { canon, divisionName, facilityById, fmt, personByPn, SPONSORABLE, UNPOSTED } from '../model';
 import { dirPreset, orgPreset } from '../state';
-import { CellView, RxText, usePer } from '../ui';
+import { rxPlain } from '@core/rx';
+import { CellView, Figure, RxText, usePer } from '../ui';
 import { buildRow } from '../directory';
 
 type Sel = { kind: 'person'; pn: string } | { kind: 'unit'; id: string } | null;
@@ -70,11 +71,11 @@ function UnitDetail({ id }: { id: string }) {
     return (
       <>
         <PropertyGrid
-          caption={`${fac.id}${fac.codename ? ` ${fac.codename}` : ''}`}
+          caption={`${fac.id}${fac.codename ? ` ${rxPlain(fac.codename)}` : ''}`}
           rows={[
             { label: 'Class', value: fac.class },
-            { label: 'Berthing', value: fmt(fac.capacity), mono: true },
-            { label: 'Posted staff', value: fmt(fac.staff), mono: true },
+            { label: 'Berthing', value: <Figure n={fac.capacity} />, mono: true },
+            { label: 'Posted staff', value: <Figure n={fac.staff} />, mono: true },
             { label: 'Commander PN', value: fac.commanderId ?? 'Not appointed', mono: true },
           ]}
         />
@@ -88,7 +89,9 @@ function UnitDetail({ id }: { id: string }) {
           footer={
             <tr>
               <td>Total posted staff</td>
-              <td class="is-right is-mono">{fmt(fac.staff)}</td>
+              <td class="is-right is-mono">
+                <Figure n={fac.staff} />
+              </td>
             </tr>
           }
         />

@@ -121,7 +121,7 @@ function facilityNode(f: Facility, withResidentDivisions: boolean): OrgNode {
     person: cmd,
     nameText: cmd ? '' : 'No commander of record',
     mono: cmd ? cmd.pn : '',
-    meta: `Posted ${fmt(f.staff)}`,
+    meta: f.staff == null ? 'Posted strength withheld' : `Posted ${fmt(f.staff)}`,
     unitId: f.id,
     children,
     stackRows: 6,
@@ -131,7 +131,8 @@ function facilityNode(f: Facility, withResidentDivisions: boolean): OrgNode {
 function classNode(id: ClassId): OrgNode {
   const cls = canon.classes.find((c) => c.id === id);
   const sites = canon.facilities.filter((f) => f.class === id);
-  const posted = sites.reduce((s, f) => s + f.staff, 0);
+  // Per-site staff is withheld for DELTA in the client canon: fall back to the class total.
+  const posted = sites.some((f) => f.staff == null) ? (cls?.statedStaff ?? 0) : sites.reduce((s, f) => s + (f.staff ?? 0), 0);
   return node({
     id: `c:${id}`,
     kind: 'class',

@@ -1,22 +1,35 @@
 /** Standard facility personnel ratios, and the staffing calculator built on them. */
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Button, DataTable, FieldGroup, FieldMessage, Fieldset, PropertyGrid, Select, TextField, type Column } from '@design/index';
-import type { StaffLine } from '@core/canon-types';
-import { canon, facilityById, fmt } from '../model';
+import type { Facility, StaffLine } from '@core/canon-types';
+import { rxPlain } from '@core/rx';
+import { canon, fmt } from '../model';
 import { computeEstablishment, fillForHeadcount, formatRatio, headcountForFill, isCommandFunction, parseFill, parseHeadcount, supportRatio, type RatioLine } from '../ratio';
 import { calcPreset } from '../state';
 import { Section, usePer } from '../ui';
 
 const DEFAULT_FACILITY = 'ALPHA-03';
 
+/** A facility whose berthing and posted staff are both held in clear. */
+type Calculable = Facility & { capacity: number; staff: number };
+const calculable = (f: Facility | undefined): f is Calculable => !!f && f.capacity !== null && f.staff !== null;
+
+/**
+ * Sites the calculator offers. The client canon withholds DELTA berthing and staff
+ * (Tier 1), so there is nothing to compute an establishment against; those sites are
+ * not offered rather than computed from zero.
+ */
+const CALC_FACILITIES = canon.facilities.filter(calculable);
+const calcById = new Map<string, Calculable>(CALC_FACILITIES.map((f) => [f.id, f]));
+
 const fillText = (capacity: number, n: number) => fmt(fillForHeadcount(capacity, n), 2).replace(/,/g, '');
 
 export function RatioView() {
   const per = usePer();
   const preset = calcPreset.peek();
-  const startFac = facilityById.get(preset?.facility ?? '') ?? facilityById.get(DEFAULT_FACILITY) ?? canon.facilities[0]!;
+  const startFac = calcById.get(preset?.facility ?? '') ?? calcById.get(DEFAULT_FACILITY) ?? CALC_FACILITIES[0]!;
   const [facId, setFacId] = useState<string>(startFac.id);
-  const fac = facilityById.get(facId) ?? startFac;
+  const fac = calcById.get(facId) ?? startFac;
   const [head, setHead] = useState<number>(Math.min(fac.capacity, preset?.headcount ?? fac.staff));
   const [fillRaw, setFillRaw] = useState<string>(fillText(fac.capacity, head));
   const [headRaw, setHeadRaw] = useState<string>(String(head));
@@ -44,7 +57,7 @@ export function RatioView() {
   };
 
   const onFacility = (id: string) => {
-    const f = facilityById.get(id);
+    const f = calcById.get(id);
     if (!f) return;
     setFacId(id);
     setAll(f.staff, f.capacity);
@@ -98,9 +111,7 @@ export function RatioView() {
   ];
 
   const options = canon.classes.flatMap((k) =>
-    canon.facilities
-      .filter((f) => f.class === k.id)
-      .map((f) => ({ value: f.id, label: `${f.id}${f.codename ? ` ${f.codename}` : ''} (berthing ${fmt(f.capacity)})` })),
+    CALC_FACILITIES.filter((f) => f.class === k.id).map((f) => ({ value: f.id, label: `${f.id}${f.codename ? ` ${rxPlain(f.codename)}` : ''} (berthing ${fmt(f.capacity)})` })),
   );
 
   return (

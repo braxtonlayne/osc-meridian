@@ -7,7 +7,7 @@ import type { RouteEntry } from '@core/contracts';
 import type { CalendarEvent, Compartment } from '@core/canon-types';
 import canon from '@canon';
 import { WORKSTATION_ID } from '@core/audit';
-import { handheldActive, mailState, printQueue } from '@core/services';
+import { handheldActive, printQueue } from '@core/services';
 import * as session from '@core/session';
 import { DataTable, GroupBox, PropertyGrid, StatusLight, Tabs, formatOscDate, type Column, type OperStatus } from '@design/index';
 import { EmptyPrintQueue } from '@graphics/states';
@@ -74,7 +74,7 @@ function Links() {
   const today = session.inWorldDate(d).toISOString().slice(0, 10);
   const nowMin = d.getUTCHours() * 60 + d.getUTCMinutes();
   const rows: LinkRow[] = hubLinks(now);
-  const st = (s: string): OperStatus => (s === 'DEGRADED' ? 'DEGRADED' : 'NOMINAL');
+  const st = (s: string): OperStatus => (s === 'DEGRADED' || s === 'BUSY' ? 'DEGRADED' : 'NOMINAL');
   const cols: Column<LinkRow>[] = [
     { key: 'id', header: 'Hub', width: 100, mono: true },
     { key: 'state', header: 'Link state', width: 130, render: (r) => <StatusLight status={st(r.state)} word={r.state} /> },
@@ -116,7 +116,7 @@ function ServicesTab() {
   const entries = services.audit.entries.value;
   const last = entries[entries.length - 1];
   const jobs = printQueue.value;
-  const delivered = mailState.delivered.value.length;
+  const delivered = services.mail.delivered.value.length;
   const unread = services.mail.unread.value;
   const lockMin = Math.round(session.IDLE_TIMEOUT_MS / 60000);
   const routes = services.docs.all().length;

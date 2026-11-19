@@ -88,6 +88,14 @@ interface FacRow {
   window: string;
 }
 
+/** A site figure; null is withheld by the client canon (DELTA, Tier 1), never zero. */
+function figure(n: number | null) {
+  return n === null ? <Bar len={4} rxKey="T1" /> : fmtN(n);
+}
+
+/** Occupancy offered when a site is chosen; a site with withheld berths starts at one. */
+const defaultOccupancy = (f: Facility): string => String(f.capacity ?? 1);
+
 export function FacilityTable({ onOpen }: { onOpen: (f: Facility) => void }) {
   const { satisfies, narrow } = useRsv();
   const tallow = satisfies('TALLOW');
@@ -103,8 +111,8 @@ export function FacilityTable({ onOpen }: { onOpen: (f: Facility) => void }) {
   const columns: Column<FacRow>[] = [
     { key: 'id', header: 'Facility', width: 82, mono: true, sortValue: (r) => r.f.id, render: (r) => r.f.id },
     { key: 'class', header: 'Class', width: 56, sortValue: (r) => r.f.class, render: (r) => r.f.class },
-    { key: 'cap', header: 'Berths', width: 64, align: 'right', mono: true, sortValue: (r) => r.f.capacity, render: (r) => fmtN(r.f.capacity) },
-    { key: 'staff', header: 'Posted', width: 60, align: 'right', mono: true, sortValue: (r) => r.f.staff, render: (r) => fmtN(r.f.staff) },
+    { key: 'cap', header: 'Berths', width: 64, align: 'right', mono: true, sortValue: (r) => r.f.capacity, render: (r) => figure(r.f.capacity) },
+    { key: 'staff', header: 'Posted', width: 60, align: 'right', mono: true, sortValue: (r) => r.f.staff, render: (r) => figure(r.f.staff) },
     {
       key: 'fill',
       header: 'Occupancy',
@@ -112,8 +120,8 @@ export function FacilityTable({ onOpen }: { onOpen: (f: Facility) => void }) {
       align: 'right',
       mono: true,
       title: 'Posted staff as a percentage of berths',
-      sortValue: (r) => r.f.staff / r.f.capacity,
-      render: (r) => `${((r.f.staff / r.f.capacity) * 100).toFixed(1)}%`,
+      sortValue: (r) => (r.f.staff === null || r.f.capacity === null ? null : r.f.staff / r.f.capacity),
+      render: (r) => (r.f.staff === null || r.f.capacity === null ? <Bar len={5} rxKey="T1" /> : `${((r.f.staff / r.f.capacity) * 100).toFixed(1)}%`),
     },
     { key: 'window', header: 'Sustainment window', wrap: true, sortValue: (r) => r.window, render: (r) => r.window },
     {
@@ -121,7 +129,14 @@ export function FacilityTable({ onOpen }: { onOpen: (f: Facility) => void }) {
       header: 'Reactor',
       width: 64,
       sortable: false,
-      render: (r) => (siteReleased(r.f.id, satisfies) ? (r.f.reactor ? 'Yes' : 'No') : <Bar len={3} rxKey="SEXTANT" />),
+      render: (r) =>
+        !siteReleased(r.f.id, satisfies) || r.f.reactor === null ? (
+          <Bar len={3} rxKey={r.f.class === 'DELTA' ? 'T1' : 'SEXTANT'} />
+        ) : r.f.reactor ? (
+          'Yes'
+        ) : (
+          'No'
+        ),
     },
     {
       key: 'stock',
@@ -156,7 +171,7 @@ export interface CalcState {
 
 export function initialCalc(): CalcState {
   const f = canon.facilities[0]!;
-  return { population: String(canon.headline.capacitySustained), meals: '3', site: f.id, occupancy: String(f.capacity) };
+  return { population: String(canon.headline.capacitySustained), meals: '3', site: f.id, occupancy: defaultOccupancy(f) };
 }
 
 export function Calculator({ state, onChange }: { state: CalcState; onChange: (s: CalcState) => void }) {
@@ -178,8 +193,13 @@ export function Calculator({ state, onChange }: { state: CalcState; onChange: (s
   const lines = pop.ok && meals.ok ? networkSustainment(canon, pop.value, meals.value) : [];
 
   const fac = canon.facilities.find((f) => f.id === state.site) ?? canon.facilities[0]!;
-  const occ = parseWhole(state.occupancy, '4', 'Occupancy', 1, fac.capacity, `the berths at ${fac.id}`);
-  const win = occ.ok ? facilityWindow(fac, canon.classes.find((c) => c.id === fac.class), occ.value) : null;
+  const facCls = canon.classes.find((c) => c.id === fac.class);
+  // Withheld berths (DELTA): the class's stated berthing is the only bound held in clear.
+  const occ =
+    fac.capacity !== null
+      ? parseWhole(state.occupancy, '4', 'Occupancy', 1, fac.capacity, `the berths at ${fac.id}`)
+      : parseWhole(state.occupancy, '4', 'Occupancy', 1, facCls?.statedCapacity ?? 1, `the ${fac.class} class berthing`);
+  const win = occ.ok ? facilityWindow(fac, facCls, occ.value) : null;
 
   const set = (p: Partial<CalcState>) => onChange({ ...state, ...p });
 
@@ -258,7 +278,7 @@ export function Calculator({ state, onChange }: { state: CalcState; onChange: (s
             options={canon.facilities.map((f) => ({ value: f.id, label: `${f.id}${f.codename && !rxInfo(f.codename) ? ` ${f.codename}` : ''}` }))}
             onChange={(v) => {
               const f = canon.facilities.find((x) => x.id === v);
-              if (f) set({ site: f.id, occupancy: String(f.capacity) });
+              if (f) set({ site: f.id, occupancy: defaultOccupancy(f) });
             }}
           />
           <TextField
@@ -270,7 +290,15 @@ export function Calculator({ state, onChange }: { state: CalcState; onChange: (s
             value={state.occupancy}
             onInput={(v) => set({ occupancy: v })}
             error={occ.ok ? null : occ.error}
-            hint={`Berths at ${fac.id}: ${fmtN(fac.capacity)}`}
+            hint={
+              fac.capacity === null ? (
+                <>
+                  Berths at {fac.id}: <Bar len={4} rxKey="T1" /> ({fac.class} class: {fmtN(facCls?.statedCapacity ?? 0)})
+                </>
+              ) : (
+                `Berths at ${fac.id}: ${fmtN(fac.capacity)}`
+              )
+            }
             required
           />
         </FieldGroup>

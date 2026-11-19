@@ -14,12 +14,12 @@ import { signal } from '@preact/signals';
 import type { Canon, CompartmentId, Marking, MarkingId } from '@core/canon-types';
 import type { DocJson, RouteEntry } from '@core/contracts';
 import { BASE as PIPELINE_BASE, asset as pipelineAsset } from '@core/base';
-import { createDocs } from '@core/docs';
+import { createDocs, onRoutesRebuilt } from '@core/docs';
 import type { DocsService } from '@core/docs';
-import { Seal as GSeal } from '@graphics/seal';
+import { Seal as GSeal, setSealCanon } from '@graphics/seal';
 import { Icon as GIcon } from '@graphics/icons';
 import type { IconId } from '@graphics/icons';
-import { ClassificationBanner as GBanner, MarkingStrip as GStrip } from '@graphics/banners';
+import { ClassificationBanner as GBanner, MarkingStrip as GStrip, registerMarkings } from '@graphics/banners';
 import { AccessCard as GAccessCard, SmartToken as GSmartToken, DesktopWatermark as GWatermark } from '@graphics/lock';
 import { RefusalState as GRefusal, PathNotFound as GPathNotFound } from '@graphics/states';
 
@@ -85,6 +85,8 @@ export async function loadCanon(): Promise<ShellCanon> {
     full: c,
   };
   canonSig.value = sc;
+  registerMarkings(c.markings);
+  setSealCanon({ foundedYear: c.phases[0]?.startYear, facilities: c.headline.facilities });
   return sc;
 }
 
@@ -108,6 +110,14 @@ let docsSvc: DocsService | null = null;
 export function docsService(satisfies: (key: string) => boolean): DocsService {
   docsSvc ??= createDocs({ satisfies });
   return docsSvc;
+}
+
+/** Dev: follow route table rebuilds (content build rewriting routes.json) without a reload. */
+export function followRouteRebuilds(apply: (routes: RouteEntry[]) => void): () => void {
+  return onRoutesRebuilt((next) => {
+    docsSvc?.setRoutes(next);
+    apply(next);
+  });
 }
 
 export function loadRoutes(): RouteEntry[] {
@@ -190,21 +200,7 @@ export const AccessCard = GAccessCard;
 export const SmartToken = GSmartToken;
 export const DesktopWatermark = GWatermark;
 
-/**
- * RefusalState's reference prop is named `ref` in the contract, which collides
- * with Preact's reserved `ref` in JSX typing. The shell passes `reference`; this
- * wrapper hands it on as `ref` (Preact 11 forwards `ref` to function components
- * as an ordinary prop). Proposed contract change: rename it `reference`.
- */
-export function RefusalState(p: { authority: string; reference: string; reason: string; requirement?: string; docNo?: string }) {
-  return h(GRefusal as unknown as ComponentType<Record<string, unknown>>, {
-    authority: p.authority,
-    ref: p.reference,
-    reason: p.reason,
-    requirement: p.requirement,
-    docNo: p.docNo,
-  });
-}
+export const RefusalState = GRefusal;
 
 export const PathNotFound = GPathNotFound;
 

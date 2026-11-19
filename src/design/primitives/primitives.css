@@ -1091,6 +1091,17 @@
   .pgrid--cols-2 .pgrid__k {
     border-left: 1px solid var(--row-rule);
   }
+  .pgrid-host {
+    container: pgrid / inline-size;
+  }
+  @container pgrid (max-width: 560px) {
+    .pgrid--cols-2 {
+      grid-template-columns: max-content minmax(0, 1fr);
+    }
+    .pgrid--cols-2 .pgrid__k {
+      border-left: 0;
+    }
+  }
   .pgrid__caption {
     grid-column: 1 / -1;
     padding: var(--sp-1) var(--sp-3);

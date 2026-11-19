@@ -9,8 +9,9 @@
  *     (OSC-TRN-TT-08-02), parsed by `parseTimetable` from its tables and text. Paths the
  *     operator cannot read (network geography withheld) are not run on the board.
  *   - Possessions: canon `calendar` entries of category TRANSIT.
- *   - Block sections: the line diagram's drafting convention (SCHEMATIC_LAYOUT); each drawn
- *     rail section is three signalling blocks, so segment 04's four sections are blocks 04-01..04-12.
+ *   - Block sections: signalling blocks from the segment engineering sheets (withBlockSheets);
+ *     the line diagram draws the same counts (LineDiagram `blockCounts`), so segment 04 shows
+ *     blocks 04-01..04-12. SCHEMATIC_LAYOUT sections are only the fallback before sheets load.
  *
  * Consists move at the canon line speed, so arrival differs from the booked time where the
  * segment sheet's running time and the speed basis disagree. The board shows the difference.
@@ -190,10 +191,18 @@ export function blockSpan(link: SimLink, n: number): [number, number] {
   return link.fromA ? [lo, hi] : [1 - hi, 1 - lo];
 }
 
-/** Drawn section of the line diagram (1-based from the a end) that holds the middle of block n. */
-export function sectionOf(link: SimLink, n: number): number {
-  const [lo, hi] = blockSpan(link, n);
-  return Math.min(link.sections, Math.floor(((lo + hi) / 2) * link.sections) + 1);
+/**
+ * Drawn block on the line diagram (1-based from the canon a end) for signalling block n.
+ * The board passes each link's signalling block count to LineDiagram (`blockCounts`), so
+ * drawn and signalling blocks correspond one to one; only the numbering end can differ.
+ */
+export function drawnBlockOf(link: SimLink, n: number): number {
+  return link.fromA ? n : link.blocks + 1 - n;
+}
+
+/** LineDiagram `blockCounts` for a model: signalling blocks per link key. */
+export function diagramBlockCounts(model: SimModel): Record<string, number> {
+  return Object.fromEntries(model.links.map((l) => [l.key, l.blocks]));
 }
 
 /* -------------------------------------------------------------- timetable */
@@ -563,7 +572,7 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
     const n = blockAt(link, pos);
     const id = blockId(link, n);
     blocks[id] = 'OCCUPIED';
-    occupancy[`${link.key}#${sectionOf(link, n)}`] = 'OCCUPIED';
+    occupancy[`${link.key}#${drawnBlockOf(link, n)}`] = 'OCCUPIED';
     trains.push({
       id: m.key,
       kind: link.kind,
@@ -611,7 +620,7 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
     if (ph.active) {
       for (const n of ph.lit) {
         blocks[seg04BlockId(n)] = 'OCCUPIED';
-        occupancy[`${SEG04_NO}#${sectionOf(seg, n)}`] = 'OCCUPIED';
+        occupancy[`${SEG04_NO}#${drawnBlockOf(seg, n)}`] = 'OCCUPIED';
       }
       trains.push({
         id: 'SEG04-UNBOOKED',

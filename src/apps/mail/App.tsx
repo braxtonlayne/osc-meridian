@@ -1,16 +1,16 @@
 /**
  * Message Traffic: the MERIDIAN mail client.
  *
- * Mailbox contents come from the shell's delivery state (`mailState.delivered`, fed by the
+ * Mailbox contents come from the shell's delivery state (`services.mail.delivered`, fed by the
  * narrative layer through services.mail.deliver) and the message pages' `message:` frontmatter.
- * Read state is recorded by logging `mail.read` (the shell keeps `mailState.read` from the audit
+ * Read state is recorded by logging `mail.read` (the shell keeps `services.mail.read` from the audit
  * trail). Outgoing traffic is logged as `mail.send`; Sent Items and delivery reports are rebuilt
  * from those audit entries, so nothing is stored outside services.
  */
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
-import { mailState, useServices } from '@core/services';
+import { useServices } from '@core/services';
 import { tick } from '@core/session';
 import {
   DataTable,
@@ -149,8 +149,8 @@ export default function App({ win, route }: AppProps) {
   const findRef = useRef<HTMLInputElement>(null);
 
   // signals read during render subscribe this component
-  const delivered = mailState.delivered.value;
-  const readIds = mailState.read.value;
+  const delivered = services.mail.delivered.value;
+  const readIds = services.mail.read.value;
   const entries = services.audit.entries.value;
   const now = tick.value;
   const operator = services.session.operatorId.value;
@@ -906,10 +906,9 @@ export default function App({ win, route }: AppProps) {
   if (denied && route) {
     return (
       <div class="mt-root" ref={rootRef}>
-        {/* @graphics/states still names the reference prop `ref`; Preact 11 passes it through as a prop. */}
         <RefusalState
           authority="Classification Control, Office of Internal Assurance"
-          ref={route.docNo as never}
+          reference={route.docNo}
           reason={`Requires Tier ${route.access!.tier} access determination${route.access!.compartment ? ` and ${route.access!.compartment} compartment briefing` : ''}. Display of ${route.docNo} to this operator is not authorised.`}
           docNo={route.docNo}
         />

@@ -1,4 +1,4 @@
-import { h, type ComponentChildren, type ComponentType } from 'preact';
+import { h, type ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
 import canon from '@canon';
 import type { Marking, MarkingId } from '@core/canon-types';
@@ -43,12 +43,9 @@ export function Strip({ marking }: { marking: MarkingId }) {
   return m ? <MarkingStrip marking={m} /> : null;
 }
 
-/**
- * RefusalState's reference prop is `ref` in the graphics contract (proposed rename: `reference`).
- * Both names are passed so the panel reads correctly either way.
- */
+/** @graphics/states RefusalState with the app's prop shape. */
 export function Refusal(p: { authority: string; reference: string; reason: string; requirement?: string; docNo?: string }) {
-  return h(RefusalState as unknown as ComponentType<Record<string, unknown>>, { ...p, ref: p.reference });
+  return h(RefusalState, p);
 }
 
 /* ------------------------------------------------------------ notices */

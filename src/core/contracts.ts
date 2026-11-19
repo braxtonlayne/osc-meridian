@@ -53,6 +53,7 @@ export interface DocJson extends RouteEntry {
 
 export interface WindowHandle {
   id: string;
+  /** Window title and document number; omitting docNo (or passing undefined/"") clears it. */
   setTitle(title: string, docNo?: string): void;
   setMarking(marking: MarkingId): void;
   setStatus(text: string): void;
@@ -151,6 +152,10 @@ export interface Services {
   mail: {
     deliver(msgId: string, opts?: MailDeliverOptions): void;
     unread: ReadonlySignal<number>;
+    /** Delivered message ids (RouteEntry ids), oldest first; a re-delivery moves the id to the end. */
+    delivered: ReadonlySignal<string[]>;
+    /** Message ids the operator has read (kept from `mail.read` audit entries and `deliver({ read: true })`). */
+    read: ReadonlySignal<string[]>;
     /** Delivery time and slot values per delivered message id. */
     meta: ReadonlySignal<Record<string, MailMeta>>;
   };

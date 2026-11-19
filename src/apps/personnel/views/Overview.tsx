@@ -7,7 +7,7 @@ import { DataTable, PropertyGrid, StatusLight, type Column } from '@design/index
 import { formatOscDate } from '@design/index';
 import { canon, fmt, UNPOSTED } from '../model';
 import { classLines, facilityLines, reconciliation, tierLines, type ClassLine, type FacilityLine, type TierLine } from '../strength';
-import { Bar, RouteLink, RxText, Section, usePer } from '../ui';
+import { Bar, Figure, RouteLink, RxText, Section, usePer } from '../ui';
 
 const td = (n: number) => <td class="is-right is-mono">{fmt(n)}</td>;
 
@@ -118,10 +118,10 @@ export function StrengthByFacility() {
   const cols: Column<FacilityLine>[] = [
     { key: 'id', header: 'Facility', width: 84, mono: true, sortValue: (x) => x.id },
     { key: 'cls', header: 'Class', width: 56, sortValue: (x) => x.cls },
-    { key: 'codename', header: 'Codename', render: (x) => x.codename ?? '' },
-    { key: 'berthing', header: 'Berthing', align: 'right', mono: true, sortValue: (x) => x.berthing, render: (x) => fmt(x.berthing) },
-    { key: 'posted', header: 'Posted', align: 'right', mono: true, sortValue: (x) => x.posted, render: (x) => fmt(x.posted) },
-    { key: 'fill', header: 'Fill %', align: 'right', mono: true, sortValue: (x) => x.fillPct, render: (x) => fmt(x.fillPct, 1) },
+    { key: 'codename', header: 'Codename', render: (x) => <RxText s={x.codename} /> },
+    { key: 'berthing', header: 'Berthing', align: 'right', mono: true, sortValue: (x) => x.berthing, render: (x) => <Figure n={x.berthing} /> },
+    { key: 'posted', header: 'Posted', align: 'right', mono: true, sortValue: (x) => x.posted, render: (x) => <Figure n={x.posted} /> },
+    { key: 'fill', header: 'Fill %', align: 'right', mono: true, sortValue: (x) => x.fillPct, render: (x) => <Figure n={x.fillPct} digits={1} /> },
     { key: 'cmd', header: 'Commander PN', mono: true, render: (x) => x.commanderPn ?? 'Not appointed' },
   ];
   return (

@@ -12,8 +12,8 @@ type SealVariant, DivisionCode, SealProps, DivisionMarkProps
 ```
 
 - `title` sets `role="img"` and `aria-label`. Without it the seal is `aria-hidden` (use that for the watermark). Division marks default to the division's full name.
-- `marks` is the number of ticks in the inner band, one per registered facility. It defaults to 47; callers with canon loaded should pass `canon.headline.facilities`.
-- `legend` and `founded` default to `OFFICE OF STRATEGIC CONTINUITY` and `ESTABLISHED MMI`. Canon carries no founding year, so `MMI` is this module's choice (the earliest year in the source inventory); override `founded` if canon later fixes one.
+- `marks` is the number of ticks in the inner band, one per registered facility. It defaults to `canon.headline.facilities`, set by the shell through `setSealCanon()` once canon loads (47 before that).
+- `legend` and `founded` default to `OFFICE OF STRATEGIC CONTINUITY` and `ESTABLISHED <year>`, the year being the start of canon programme phase 1 (`canon.phases[0].startYear`, 2001 = `MMI`), set through `setSealCanon()`; `romanYear()` is exported.
 
 ## Design
 

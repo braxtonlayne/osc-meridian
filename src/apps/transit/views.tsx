@@ -10,7 +10,7 @@ import { RefusalState } from '@graphics/states';
 import { LineDiagram, type DiagramNetwork, type SchematicTrain } from '@graphics/schematic';
 import type { Services } from '@core/contracts';
 import { SEG04_LABEL } from '@sim/seg04';
-import { blockId, envReading, incNo, stamp, type BoardState, type LogEntry, type Movement, type MoveStatus, type PossessionState, type SimLink, type SimModel, type TrainState } from '@sim/transit-model';
+import { blockId, diagramBlockCounts, envReading, incNo, stamp, type BoardState, type LogEntry, type Movement, type MoveStatus, type PossessionState, type SimLink, type SimModel, type TrainState } from '@sim/transit-model';
 import { durText, hhmmZ } from '@sim/time';
 import type { TimetableDoc } from './board';
 
@@ -97,6 +97,7 @@ export function DiagramView(p: DiagramProps) {
             network={p.network}
             trains={trainsForDiagram(p.state)}
             occupancy={p.state?.occupancy ?? {}}
+            blockCounts={diagramBlockCounts(p.model)}
             selected={p.selected}
             onSelectLink={(k) => p.onSelect(k)}
             onSelectNode={(id) => p.onSelect(id)}
@@ -363,7 +364,7 @@ export function EnvironmentView({ model, state, services, segment, onSegment }: 
     return (
       <RefusalState
         authority="Transit Operations"
-        ref="OSC-CB-011"
+        reference="OSC-CB-011"
         reason="Tunnel environmental readings by block are transit engineering data and are not displayed to this operator."
         requirement="KESTREL compartment briefing. Reference DIR-0412."
       />

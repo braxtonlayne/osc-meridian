@@ -142,19 +142,30 @@ export interface Accession {
   status: string;
 }
 
-const MUNDANE: { origin: string; desc: string }[] = [
-  { origin: 'FE/ALPHA-03 Drawing Office', desc: 'Superseded HVAC drawings, AHU-1 to AHU-6' },
-  { origin: 'MS/ALPHA-03 Clinic', desc: 'Closed visit registers, calendar 2005' },
-  { origin: 'LR/ALPHA-03 Stores', desc: 'Issue vouchers, FY2006' },
-  { origin: 'RD/ALPHA-03 Reading Room', desc: 'Sign-in ledgers, 2006' },
-  { origin: 'SFC/ALPHA-03 Portal Security', desc: 'Visitor escort logs, 2005 to 2006' },
-  { origin: 'PV/ALPHA-03 Personnel Office', desc: 'Training attendance sheets, 2006' },
-  { origin: 'FE/ALPHA-03 Plant Office', desc: 'Generator test records, 2005' },
-  { origin: 'LR/ALPHA-03 Food Service', desc: 'Menu cycles and supplier dockets, 2006' },
-  { origin: 'CMS/ALPHA-03 Message Centre', desc: 'Routine traffic logs, superseded, 2005' },
-];
-
-const RECEIVED_DAYS = ['18 MAR 2008', '19 MAR 2008', '21 MAR 2008', '24 MAR 2008', '26 MAR 2008', '31 MAR 2008', '02 APR 2008', '07 APR 2008', '11 APR 2008'];
+/**
+ * Stacks C queue as tabled in the tasking message (msg-08-04470), which is
+ * authoritative: received date, sending office and description per accession.
+ * 00412 (held) is built separately below.
+ */
+const QUEUE: Record<number, { received: string; origin: string; desc: string; status?: string }> = {
+  398: { received: '03 MAR 2008', origin: 'FE/ALPHA-03', desc: 'Work order files, FY06 (closed), 2 boxes' },
+  399: { received: '05 MAR 2008', origin: 'MS/ALPHA-03', desc: 'Clinic appointment registers, 2006, 1 box' },
+  400: { received: '05 MAR 2008', origin: 'LR/ALPHA-03', desc: 'Ration rotation returns, FY07, 3 boxes' },
+  401: { received: '11 MAR 2008', origin: 'CMD/ALPHA-03', desc: 'Command Section routine correspondence, 2006, 4 boxes' },
+  402: { received: '11 MAR 2008', origin: 'PV/ALPHA-01', desc: 'Leave cards, ALPHA-03 personnel, 2005 to 2006, 1 box' },
+  403: { received: '14 MAR 2008', origin: 'CMS/ALPHA-02', desc: 'Superseded workstation accreditation certificates, 1 folder' },
+  404: { received: '14 MAR 2008', origin: 'FE/ALPHA-03', desc: 'Air handling maintenance logs, 2007, 2 binders' },
+  405: { received: '18 MAR 2008', origin: 'SFC/ALPHA-03', desc: 'Superseded access rosters, JUL to DEC 2007, 1 box', status: 'DESTROYED 14 MAY 2008 (certificate to file).' },
+  406: { received: '18 MAR 2008', origin: 'RD/ALPHA-03', desc: 'Seed collection accession cards, 2005 duplicates, 1 tray' },
+  407: { received: '20 MAR 2008', origin: 'LR/ALPHA-05', desc: 'Food service cycle menus and supplier substitutions, FY07, 1 box' },
+  408: { received: '20 MAR 2008', origin: 'MS/ALPHA-05', desc: 'Medical readiness records, personnel transferred to ALPHA-03, 1 box' },
+  409: { received: '21 MAR 2008', origin: 'FE/ALPHA-02', desc: 'Drawing register supplement, Levels 0 to 5, 1 binder' },
+  410: { received: '24 MAR 2008', origin: 'PV/ALPHA-01', desc: 'Pay and strength returns, ALPHA-03, FY05, 2 boxes' },
+  411: { received: '24 MAR 2008', origin: 'PV/ALPHA-01', desc: 'Pay and strength returns, ALPHA-03, FY06, 2 boxes' },
+  413: { received: '02 APR 2008', origin: 'RD/ALPHA-03', desc: 'Reading room request slips, JAN to MAR 2008, 1 box' },
+  414: { received: '15 APR 2008', origin: 'LR/ALPHA-03', desc: 'Dining hall stores issue vouchers, Q2 FY08, 1 box' },
+  415: { received: '28 APR 2008', origin: 'FE/ALPHA-03', desc: 'Filter change records, AHU-07 to AHU-12, 2007, 1 binder' },
+};
 
 export function accessionNo(n: number): string {
   return `RD-ACC-08-${String(n).padStart(5, '0')}`;
@@ -167,7 +178,7 @@ export function accession(n: number): Accession | null {
   if (n === ACCESSION_HELD) {
     return {
       no,
-      description: 'Superseded registry media (consignment)',
+      description: 'Superseded registry media, 1 carton',
       hops: [
         { date: '', from: '', to: 'Consignment, superseded registry media', receipt: '' },
         { date: '24 MAR 2008', from: 'Consignment', to: 'RD/ALPHA-03 Stacks C', receipt: 'CR-08-0412' },
@@ -175,16 +186,15 @@ export function accession(n: number): Accession | null {
       status: 'HELD (OIA-08-031). Do not process.',
     };
   }
-  const i = n - ACCESSION_FIRST;
-  const m = MUNDANE[i % MUNDANE.length]!;
-  const day = RECEIVED_DAYS[i % RECEIVED_DAYS.length]!;
+  const q = QUEUE[n];
+  if (!q) return null;
   return {
     no,
-    description: m.desc,
+    description: q.desc,
     hops: [
-      { date: day, from: m.origin, to: 'RD/ALPHA-03 Accessions counter', receipt: `CR-08-${String(n).padStart(4, '0')}` },
-      { date: day, from: 'RD/ALPHA-03 Accessions counter', to: 'RD/ALPHA-03 Stacks C', receipt: 'Internal' },
+      { date: q.received, from: q.origin, to: 'RD/ALPHA-03 Accessions counter', receipt: `CR-08-${String(n).padStart(4, '0')}` },
+      { date: q.received, from: 'RD/ALPHA-03 Accessions counter', to: 'RD/ALPHA-03 Stacks C', receipt: 'Internal' },
     ],
-    status: 'Queued for review, Accessions & Review Branch.',
+    status: q.status ?? 'Queued for review, Accessions & Review Branch.',
   };
 }

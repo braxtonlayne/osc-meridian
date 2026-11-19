@@ -1,4 +1,4 @@
-import type { ComponentChildren, HTMLAttributes, TargetedKeyboardEvent, TargetedPointerEvent } from 'preact';
+import type { ComponentChildren, TargetedKeyboardEvent } from 'preact';
 import { useId, useRef } from 'preact/hooks';
 import './primitives.css';
 import { cx, useControllable } from '../util';

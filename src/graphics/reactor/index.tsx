@@ -6,7 +6,8 @@ export { ReactorOneLine } from './OneLine';
 export type { ReactorOneLineProps } from './OneLine';
 export { Gauge, ReadoutRow, SealStateIndicator, StatusWord } from './gauges';
 export type { GaugeProps, Limit, ReadoutRowProps, SealState } from './gauges';
-export { TelemetryChart } from './TelemetryChart';
+// Lazy: uPlot loads with the first chart, not with the index (see LazyTelemetryChart.tsx).
+export { TelemetryChart } from './LazyTelemetryChart';
 export type { TelemetryChartProps, TelemetrySeries } from './TelemetryChart';
 export { buildPlant, solve } from './model';
 export type { BreakerState, LiveInput, Plant, Solved, StatusId } from './model';

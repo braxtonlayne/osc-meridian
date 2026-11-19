@@ -6,7 +6,7 @@
  *
  * Colours come only from design tokens. The chart palette is five slots in
  * canon category order, each a token or a flat mix of two tokens:
- *   --title-active-bg --title-inactive-bg --st-degraded --paper-edge
+ *   --title-active-bg --title-inactive-bg --chart-ochre
  *   --chrome-dark --chrome-shadow --chrome-outer --ws-bg --surface
  *   --row-rule --row-hover --text-1 --text-2 --text-3
  *   --tooltip-bg --tooltip-fg --tooltip-border --focus-ring
@@ -17,7 +17,7 @@
   --lg-bg: var(--surface);
   --lg-cat-0: var(--title-active-bg); /* muted navy */
   --lg-cat-1: var(--title-inactive-bg); /* slate */
-  --lg-cat-2: color-mix(in srgb, var(--st-degraded) 70%, var(--paper-edge)); /* ochre */
+  --lg-cat-2: var(--chart-ochre); /* ochre */
   --lg-cat-3: var(--chrome-dark); /* charcoal */
   --lg-cat-4: color-mix(in srgb, var(--chrome-shadow) 62%, var(--surface)); /* light grey */
   --lg-struct: var(--ws-bg);

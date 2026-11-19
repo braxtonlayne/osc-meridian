@@ -543,12 +543,3 @@
   }
 }
 
-/* Narrow windows: a two-pair property grid becomes one pair per row. */
-@container reg (max-width: 640px) {
-  .reg-doc .pgrid--cols-2 {
-    grid-template-columns: max-content minmax(0, 1fr);
-  }
-  .reg-doc .pgrid--cols-2 .pgrid__k {
-    border-left: 0;
-  }
-}

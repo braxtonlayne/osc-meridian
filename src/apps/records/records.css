@@ -316,10 +316,6 @@
   white-space: normal;
 }
 
-/* The scan kit's page is an inline-size container; give it a definite width in this viewer. */
-.rec-doc__scroll .scan-page {
-  width: 100%;
-}
 .rec-props td.rec__mono {
   white-space: nowrap;
 }

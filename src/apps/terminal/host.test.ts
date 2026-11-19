@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import canonJson from '@canon';
 import type { Canon } from '@core/canon-types';
 import type { AuditEntry, RouteEntry } from '@core/contracts';
+import { rxInfo } from '@core/rx';
 import { COMPARTMENT_MARKING, auditLine, complete, findDoc, formatConsist, formatFind, normalizeFacility, parse, run, tokenize, wrap } from './host';
 import type { HostContext } from './host';
 
@@ -85,15 +86,34 @@ describe('documented commands', () => {
   it('sites lists every facility from canon', () => {
     const r = run('sites', ctx());
     expect(r.lines.length).toBe(canon.facilities.length + 2);
-    expect(text(r.lines)).toContain(canon.headline.staffPosted.toLocaleString('en-US'));
+    // The total is the canon headline, not a sum that reads withheld DELTA figures as zero.
+    expect(text(r.lines)).toContain(`Posted staff ${canon.headline.staffPosted.toLocaleString('en-US')}.`);
+    expect(text(r.lines)).toContain('withheld (T1)');
+    const d01 = text(r.lines.filter((l) => l.startsWith('DELTA-01')));
+    expect(d01).toContain('████');
+    expect(d01).not.toMatch(/\s0\s|--/);
   });
   it('site shows the home site and withholds non-adjacent geography without SEXTANT', () => {
     expect(text(run('site alpha-03', ctx()).lines)).toContain('Lexington');
     const far = text(run('site ALPHA-04', ctx()).lines);
     expect(far).toContain('(SEXTANT)');
     expect(far).not.toContain(canon.facilities.find((f) => f.id === 'ALPHA-04')!.anchor.city);
+    // The client canon carries ALPHA-04 geography only as sentinels: with SEXTANT the host
+    // prints a bar of the withheld length, never the sentinel text.
+    const a04 = canon.facilities.find((f) => f.id === 'ALPHA-04')!;
     const sx = text(run('site ALPHA-04', ctx({ compartments: ['LANTERN', 'SEXTANT'] })).lines);
-    expect(sx).toContain(canon.facilities.find((f) => f.id === 'ALPHA-04')!.anchor.city);
+    expect(sx).not.toContain('[[RX:');
+    expect(sx).toContain('█'.repeat(Math.min(rxInfo(a04.locationText)!.len, 40)));
+  });
+  it('site prints withheld DELTA figures as bars, never as zero', () => {
+    const d = text(run('site delta-01', ctx({ compartments: ['LANTERN', 'SEXTANT'] })).lines);
+    expect(d).toMatch(/BERTHS\s+█+ Withheld \(T1\)/);
+    expect(d).toMatch(/POSTED STAFF\s+█+ Withheld \(T1\)/);
+    expect(d).toMatch(/DEPTH\s+█+ Withheld \(T1\)/);
+    expect(d).toMatch(/REACTOR\s+█+ Withheld \(T1\)/);
+    expect(d).not.toContain('[[RX:');
+    // A BETA site whose reactor link the client canon withholds is not reported as having none.
+    expect(text(run('site beta-03', ctx()).lines)).toMatch(/REACTOR\s+█+ Withheld \(SEXTANT\)/);
   });
   it('rail status reports segment 04 not in revenue service', () => {
     const t = text(run('rail status', ctx()).lines);
@@ -168,8 +188,12 @@ describe('division utilities (docs/NARRATIVE.md §5)', () => {
     expect(text(r.lines)).toContain('HELD (OIA-08-031)');
     expect(text(r.lines)).toContain('Withheld (SEXTANT/BRIAR)');
     expect(r.effects).toEqual([]);
-    const n = run('trace 00405', ctx());
+    const n = run('trace 00406', ctx());
     expect(text(n.lines)).toContain('Queued for review');
+    expect(text(n.lines)).toContain('18 MAR 2008');
+    expect(text(n.lines)).toContain('Seed collection accession cards');
+    expect(text(run('trace 00405', ctx()).lines)).toContain('DESTROYED 14 MAY 2008');
+    expect(text(run('trace 00398', ctx()).lines)).toContain('03 MAR 2008 FE/ALPHA-03');
     expect(run('trace 00500', ctx()).lines[0]).toContain('no custody record');
   });
   it('strength unposted prints the category total, with the breakdown only under HOLLOW', () => {
@@ -183,7 +207,13 @@ describe('division utilities (docs/NARRATIVE.md §5)', () => {
     const h = run('strength unposted', ctx({ compartments: ['LANTERN', 'HOLLOW'] }));
     const t = text(h.lines);
     for (const pn of ['P-3-06-0977', 'P-4-07-0219', 'P-3-05-0142']) expect(t).toContain(pn);
-    expect(t).toContain('DIMMICK, C. A.');
+    // HOLLOW opens the breakdown, but the client canon carries the names only as sentinels:
+    // each prints as a bar of the withheld length, never as text or as the sentinel.
+    expect(t).not.toContain('[[RX:');
+    for (const x of canon.roster.filter((p) => p.site === 'DETACHED / UNPOSTED')) {
+      const line = h.lines.find((l) => l.startsWith(x.pn))!;
+      expect(line).toContain(` ${'█'.repeat(rxInfo(x.name)!.len)} `);
+    }
     expect(t).toContain(`${(canon.headline.staffUnposted - 3).toLocaleString('en-US')} further entries  [NOT RELEASED]`);
     expect(t).toContain('Category change effective 31 MAY 2008: count withheld.');
     expect(h.marking).toBe(COMPARTMENT_MARKING);
@@ -192,6 +222,15 @@ describe('division utilities (docs/NARRATIVE.md §5)', () => {
     const a03 = canon.facilities.find((f) => f.id === 'ALPHA-03')!;
     expect(text(run('strength alpha-03', ctx()).lines)).toMatch(new RegExp(`Posted\\s+${a03.staff}`));
     expect(text(run('strength all', ctx()).lines)).toContain(canon.headline.staffTotal.toLocaleString('en-US'));
+    // DELTA site figures are withheld: the class prints its stated total and sites print bars.
+    const delta = canon.classes.find((k) => k.id === 'DELTA')!;
+    const all = text(run('strength all', ctx()).lines);
+    expect(all).toMatch(new RegExp(`DELTA .*\\s${delta.count}\\s+${delta.statedStaff}`));
+    expect(all).toMatch(new RegExp(`Posted\\s+${canon.headline.staffPosted.toLocaleString('en-US')}`));
+    const dc = text(run('strength delta', ctx()).lines);
+    expect(dc).toMatch(new RegExp(`Posted \\(class stated total\\)\\s+${delta.statedStaff}`));
+    expect(dc).toContain('████');
+    expect(text(run('strength delta-01', ctx()).lines)).toMatch(/Posted\s+█+/);
     expect(run('strength beta', ctx()).lines.length).toBe(canon.facilities.filter((f) => f.class === 'BETA').length + 2);
   });
   it('consist R04 suppressed IDs return NO RECORD; others need KESTREL', () => {

@@ -73,7 +73,7 @@ function Sheet(): JSX.Element {
       <Frame id="refusal" title="OSC-DIR-0412 - Directives" status="Record not opened">
         <RefusalState
           authority="Records Division (RD/ALPHA-03)"
-          ref="DIR-0412"
+          reference="DIR-0412"
           reason="This record is released only to operators who have received the Tier 2 compartment briefing."
           requirement="Tier 2 compartment briefing"
           docNo="OSC-DIR-0412"
@@ -82,7 +82,7 @@ function Sheet(): JSX.Element {
       </Frame>
 
       <Frame id="refusal-min" title="Personnel" status="Record not opened">
-        <RefusalState authority="OIA" ref="OIA-08-114" reason="Requires Tier 3. Reference OIA-08-114." />
+        <RefusalState authority="OIA" reference="OIA-08-114" reason="Requires Tier 3. Reference OIA-08-114." />
       </Frame>
 
       <Frame id="refusal-compact" title="Records - Folder contents" status="3 items">
@@ -107,7 +107,7 @@ function Sheet(): JSX.Element {
                   <RefusalState
                     compact
                     authority="RD"
-                    ref="DIR-0412"
+                    reference="DIR-0412"
                     reason="Requires Tier 2 compartment briefing."
                     onRequestAccess={noop}
                   />
@@ -116,7 +116,7 @@ function Sheet(): JSX.Element {
               <tr>
                 <td class="st-mono">OSC-DIR-0398</td>
                 <td colSpan={2}>
-                  <RefusalState compact authority="CSO" ref="CSO-07-031" reason="Requires Tier 3." />
+                  <RefusalState compact authority="CSO" reference="CSO-07-031" reason="Requires Tier 3." />
                 </td>
               </tr>
             </tbody>
@@ -165,11 +165,11 @@ function Sheet(): JSX.Element {
         <div class="ck-doc">
           <p>
             3. The difference between posted strength and tier totals was raised with{' '}
-            <RedactionBar chars={17} authority="OIA" ref="OIA-08-114" /> on 14 April. The reply stated that{' '}
-            <RedactionBar chars={96} authority="OIA" ref="OIA-08-114" variant="sentence" /> and that the query
+            <RedactionBar chars={17} authority="OIA" reference="OIA-08-114" /> on 14 April. The reply stated that{' '}
+            <RedactionBar chars={96} authority="OIA" reference="OIA-08-114" variant="sentence" /> and that the query
             should be regarded as closed.
           </p>
-          <WithheldBlock authority="CSO" ref="CSO-08-022" lines={7} label="4. Disposition of unposted personnel" />
+          <WithheldBlock authority="CSO" reference="CSO-08-022" lines={7} label="4. Disposition of unposted personnel" />
           <table class="ck-doc__tbl">
             <tbody>
               <tr>
@@ -179,13 +179,13 @@ function Sheet(): JSX.Element {
               <tr>
                 <th>Carried by</th>
                 <td>
-                  <RedactionBar chars={20} authority="CSO" ref="CSO-08-022" variant="field" />
+                  <RedactionBar chars={20} authority="CSO" reference="CSO-08-022" variant="field" />
                 </td>
               </tr>
               <tr>
                 <th>Account</th>
                 <td class="st-mono">
-                  LN-<RedactionBar chars={6} authority="CSO" ref="CSO-08-022" />
+                  LN-<RedactionBar chars={6} authority="CSO" reference="CSO-08-022" />
                   -08
                 </td>
               </tr>

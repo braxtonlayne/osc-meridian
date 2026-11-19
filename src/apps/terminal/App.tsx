@@ -412,7 +412,7 @@ export default function App({ win, route }: AppProps) {
       <div class="term-app">
         <RefusalState
           authority="Classification Control, Office of Internal Assurance"
-          ref={'DIR-0412' as never}
+          reference="DIR-0412"
           reason={`Display of ${refusal.docNo} at ${HOST} to this operator is not authorised.`}
           requirement={`Tier ${refusal.access!.tier}${refusal.access!.compartment ? ` and ${refusal.access!.compartment} compartment briefing` : ''}`}
           docNo={refusal.docNo}

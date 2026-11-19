@@ -3,7 +3,7 @@ import canonJson from '@canon';
 import type { Canon, FacilityId } from '@core/canon-types';
 import { canonModel, createSim } from '@sim/transit-sim';
 import { seg04Phase } from '@sim/seg04';
-import { blockAt, blockId, expandDay, firstSerialOn, incNo, parseBlockSheet, parseTimetable, sectionOf, speedOf, statusOf, withBlockSheets, type BlockSheet, type TimetableInput } from '@sim/transit-model';
+import { blockAt, blockId, expandDay, firstSerialOn, incNo, parseBlockSheet, parseTimetable, drawnBlockOf, diagramBlockCounts, speedOf, statusOf, withBlockSheets, type BlockSheet, type TimetableInput } from '@sim/transit-model';
 import { hhmmLocal, parseZ, zoneForState } from '@sim/time';
 
 const canon = canonJson as unknown as Canon;
@@ -60,8 +60,10 @@ describe('transit model', () => {
     // chainage from the ALPHA-05 (b) end
     expect(blockAt(s, 0.99)).toBe(1);
     expect(blockAt(s, 0)).toBe(12);
-    expect(sectionOf(s, 1)).toBe(4);
-    expect(sectionOf(s, 12)).toBe(1);
+    // drawn from the canon a end: block 1 (ALPHA-05 end) is the last drawn block
+    expect(drawnBlockOf(s, 1)).toBe(12);
+    expect(drawnBlockOf(s, 12)).toBe(1);
+    expect(diagramBlockCounts(withBlockSheets(model, SHEETS))['04']).toBe(12);
   });
 
   it('parses the working timetable', () => {

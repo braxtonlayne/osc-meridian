@@ -613,7 +613,7 @@ export default function App({ win, route }: AppProps) {
       body = (
         <div class="rec__scroll">
           <RefusalState
-            {...({ ref: briefing ?? 'DIR-0412' } as { ref: string })}
+            reference={briefing ?? 'DIR-0412'}
             authority="Classification Control, Office of Internal Assurance"
             reason={`Display of ${route.docNo} to this operator is not authorised. Access is determined under DIR-0412.`}
             requirement={accessWords(route.access) + (comp ? ' compartment briefing' : ' access determination')}

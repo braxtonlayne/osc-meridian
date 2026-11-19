@@ -1,6 +1,6 @@
 /** Small shared pieces for the Ledger app: canon text with redaction sentinels, sizing hook, links. */
 import { h } from "preact";
-import type { ComponentChildren, ComponentType, JSX, RefObject } from "preact";
+import type { ComponentChildren, JSX, RefObject } from "preact";
 import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 import { Redaction } from "@design/index";
 import { RefusalState } from "@graphics/states";
@@ -132,16 +132,9 @@ interface RefusalProps {
   requirement?: string;
   docNo?: string;
 }
-/**
- * @graphics/states RefusalState. Its reference prop is named `ref` in the current
- * module (reserved by Preact's JSX typing) and is being renamed `reference`; both
- * are passed so the notice shows the reference either way.
- */
+/** @graphics/states RefusalState with the app's prop shape. */
 export function Refusal(p: RefusalProps) {
-  return h(RefusalState as unknown as ComponentType<Record<string, unknown>>, {
-    ...p,
-    ref: p.reference,
-  });
+  return h(RefusalState, p);
 }
 
 export interface SimpleColumn<T> {

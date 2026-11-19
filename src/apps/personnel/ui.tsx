@@ -1,7 +1,7 @@
 /**
  * Personnel System: shared UI pieces (context, redaction cells, document pane, refusal).
  */
-import { createContext, h, type ComponentChildren, type ComponentType } from 'preact';
+import { createContext, h, type ComponentChildren } from 'preact';
 import { useContext, useEffect, useRef, useState } from 'preact/hooks';
 import type { DocJson, RouteEntry, Services, WindowHandle } from '@core/contracts';
 import { splitRx } from '@core/rx';
@@ -11,7 +11,7 @@ import { RefusalState as GRefusal, EmptyState, ErrorState } from '@graphics/stat
 import { ScanPage } from '@graphics/scan';
 import { MarkingStrip, Stamp } from '@graphics/banners';
 import { Seal } from '@graphics/seal';
-import { PERSONNEL_AUTHORITY, canon, withholdingRef } from './model';
+import { PERSONNEL_AUTHORITY, canon, fmt, withholdingRef } from './model';
 import type { Cell } from './directory';
 
 export interface RefusalSpec {
@@ -56,6 +56,14 @@ export function Bar({ k, len }: { k: string; len: number }) {
   );
 }
 
+/**
+ * A canon figure. Null is a figure the client canon withholds (DELTA berthing and staff,
+ * Tier 1): it is drawn as a bar, never as zero.
+ */
+export function Figure({ n, digits = 0, k = 'T1' }: { n: number | null; digits?: number; k?: string }) {
+  return n === null ? <Bar k={k} len={4} /> : <>{fmt(n, digits)}</>;
+}
+
 /** A directory cell. */
 export function CellView({ c }: { c: Cell }) {
   return 'text' in c ? <RxText s={c.text} /> : <Bar k={c.rx.key} len={c.rx.len} />;
@@ -73,19 +81,9 @@ export function RxText({ s }: { s: string | null | undefined }) {
   );
 }
 
-/**
- * RefusalState names its reference prop `ref`, which Preact's JSX typing reserves.
- * Forward it untyped (Preact 11 passes `ref` to function components as a prop).
- */
+/** @graphics/states RefusalState with the app's prop shape. */
 export function Refusal(p: { authority: string; reference: string; reason: string; requirement?: string; docNo?: string }) {
-  return h(GRefusal as unknown as ComponentType<Record<string, unknown>>, {
-    authority: p.authority,
-    ref: p.reference,
-    reference: p.reference,
-    reason: p.reason,
-    requirement: p.requirement,
-    docNo: p.docNo,
-  });
+  return h(GRefusal, p);
 }
 
 /* ------------------------------------------------------------ documents */

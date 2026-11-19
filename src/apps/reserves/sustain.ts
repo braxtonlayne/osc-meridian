@@ -155,10 +155,11 @@ export interface FacilityWindow {
  *  - GAMMA: the class window (days min..max) at the facility's berths, pro rata.
  *  - DELTA: the class maximum, stated in hours; not scaled (it is a ceiling, not a stock).
  *  - BETA: no figure is given in canon; the class statement is returned.
+ *  Berths withheld by the client canon (null) are never scaled from: the class statement is returned.
  */
 export function facilityWindow(f: Facility, cls: FacilityClass | undefined, occupancy: number): FacilityWindow {
   const berths = f.capacity;
-  if (f.class === 'ALPHA' && typeof f.sustainedMonths === 'number') {
+  if (f.class === 'ALPHA' && berths !== null && typeof f.sustainedMonths === 'number') {
     const d = scaledDays(f.sustainedMonths * DAYS_PER_MONTH, berths, occupancy);
     return {
       facility: f.id,
@@ -169,7 +170,7 @@ export function facilityWindow(f: Facility, cls: FacilityClass | undefined, occu
       scaled: true,
     };
   }
-  if (cls && f.class === 'GAMMA' && typeof cls.sustainDaysMin === 'number' && typeof cls.sustainDaysMax === 'number') {
+  if (cls && f.class === 'GAMMA' && berths !== null && typeof cls.sustainDaysMin === 'number' && typeof cls.sustainDaysMax === 'number') {
     return {
       facility: f.id,
       minDays: scaledDays(cls.sustainDaysMin, berths, occupancy),

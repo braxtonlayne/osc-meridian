@@ -1,7 +1,7 @@
-import type { ComponentChildren, HTMLAttributes, TargetedKeyboardEvent, TargetedPointerEvent } from 'preact';
+import type { ComponentChildren, TargetedKeyboardEvent } from 'preact';
 import { useEffect, useId, useMemo, useRef, useState } from 'preact/hooks';
 import './primitives.css';
-import { cx, useControllable } from '../util';
+import { cx, scrollIntoViewWithin, useControllable } from '../util';
 
 export type SortDir = 'asc' | 'desc';
 export interface SortState {
@@ -121,10 +121,16 @@ export function DataTable<T>(props: DataTableProps<T>) {
     if (cursor > sorted.length - 1) setCursor(Math.max(0, sorted.length - 1));
   }, [sorted.length]);
 
-  // Keep the cursor row in view.
+  // Keep the cursor row in view: inside the table's own scroller, and not on mount
+  // (scrollIntoView would also scroll the window body or page that holds the table).
+  const cursorMounted = useRef(false);
   useEffect(() => {
-    const el = wellRef.current?.querySelector<HTMLElement>(`#${CSS.escape(`${baseId}-r${cursor}`)}`);
-    el?.scrollIntoView({ block: 'nearest' });
+    if (!cursorMounted.current) {
+      cursorMounted.current = true;
+      return;
+    }
+    const well = wellRef.current;
+    scrollIntoViewWithin(well, well?.querySelector<HTMLElement>(`#${CSS.escape(`${baseId}-r${cursor}`)}`));
   }, [cursor]);
 
   const sel = new Set(selected);
@@ -164,7 +170,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
   const onKeyDown = (e: TargetedKeyboardEvent<HTMLTableElement>) => {
     if (!sorted.length) return;
-    let next = cursor;
+    let next: number;
     switch (e.key) {
       case 'ArrowDown':
         next = Math.min(sorted.length - 1, cursor + 1);

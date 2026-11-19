@@ -144,7 +144,7 @@ function Refused({ route, win }: { route: RouteEntry; win: AppProps['win'] }) {
     <div class="fx-root">
       <RefusalState
         authority="Classification Control, Office of Internal Assurance"
-        ref="OSC-DIR-0412"
+        reference="OSC-DIR-0412"
         docNo={route.docNo}
         requirement={`Tier ${route.access!.tier}${route.access!.compartment ? ` and ${route.access!.compartment} briefing` : ''}`}
         reason={`This form is issued only to operators holding the access shown. Reference DIR-0412.`}

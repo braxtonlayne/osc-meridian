@@ -1,5 +1,25 @@
 import { useCallback, useRef, useState } from 'preact/hooks';
 
+/**
+ * Bring `el` into view inside `scroller` only (block: nearest), without scrolling any
+ * ancestor of the scroller or the page, which `Element.scrollIntoView` would do.
+ */
+export function scrollIntoViewWithin(scroller: HTMLElement | null | undefined, el: HTMLElement | null | undefined): void {
+  if (!scroller || !el) return;
+  // The component may not scroll itself (a tree in a pane): use its nearest scrolling ancestor.
+  let box: HTMLElement | null = scroller;
+  while (box && box !== document.body && !(box.scrollHeight > box.clientHeight && /(auto|scroll)/.test(getComputedStyle(box).overflowY))) box = box.parentElement;
+  if (!box || box === document.body) return;
+  scroller = box;
+  const s = scroller.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  // Account for a sticky header inside the scroller.
+  const head = scroller.querySelector<HTMLElement>('thead');
+  const top = s.top + (head && head.contains(el) === false ? head.getBoundingClientRect().height : 0);
+  if (r.top < top) scroller.scrollTop -= top - r.top;
+  else if (r.bottom > s.bottom) scroller.scrollTop += r.bottom - s.bottom;
+}
+
 /** Join class names, skipping falsy entries. */
 export function cx(...parts: (string | false | null | undefined | 0)[]): string {
   return parts.filter(Boolean).join(' ');

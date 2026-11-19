@@ -1,26 +1,14 @@
 /**
  * Geographic view: the engineering tunnel map with the board's live layer drawn over it
  * (consist positions and occupied blocks on segment 04). The overlay uses the map's own
- * projection and link curves (@graphics/tunnelmap/geometry) and repeats the map's sheet
- * layout (frame band, title block share) so both line up.
+ * projection and link curves (@graphics/tunnelmap/geometry) on the map box from
+ * tunnelMapLayout(), so both line up.
  */
 import { useMemo } from 'preact/hooks';
-import { TunnelMap, type TunnelLayer } from '@graphics/tunnelmap';
-import { allLinkGeometry, tunnelProjection, type Box, type Pt } from '@graphics/tunnelmap/geometry';
+import { TunnelMap, tunnelMapLayout, type TunnelLayer } from '@graphics/tunnelmap';
+import { allLinkGeometry, tunnelProjection, type Pt } from '@graphics/tunnelmap/geometry';
 import { blockSpan, type SimModel } from '@sim/transit-model';
 import { useSize, type Snapshot } from './views';
-
-/* Mirrors layoutFor() in @graphics/tunnelmap/index.tsx (not exported there). */
-const OUTER = 6;
-const BAND = 16;
-const TB_W = 320;
-
-function mapBoxFor(width: number, height: number): Box {
-  const inset = OUTER + BAND;
-  const frame = { x0: inset, y0: inset, x1: width - inset, y1: height - inset };
-  const unit = Math.max(0.55, Math.min(1, width / 1100));
-  return { x0: frame.x0 + 14, y0: frame.y0 + 12, x1: frame.x1 - 14 - TB_W * unit * 0.6, y1: frame.y1 - 12 };
-}
 
 const mapId = (key: string) => (key.includes('>') ? `TRAM-${key.replace('>', ':')}` : `RAIL-${key}`);
 
@@ -48,7 +36,7 @@ export function GeoView({ model, state, layer, selected, onSelect }: { model: Si
   const w = Math.max(size.w, 320);
   const h = Math.max(size.h, 240);
   const geo = useMemo(() => {
-    const proj = tunnelProjection(mapBoxFor(w, h));
+    const proj = tunnelProjection(tunnelMapLayout(w, h).mapBox);
     return new Map(allLinkGeometry(proj).map((g) => [g.link.id as string, g.pts]));
   }, [w, h]);
   const highlight = selected ? (model.byKey[selected] ? mapId(selected) : selected) : null;

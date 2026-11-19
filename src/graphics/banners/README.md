@@ -9,7 +9,7 @@ All layouts and wording are original to MERIDIAN. Nothing here reproduces a real
 | Export | Notes |
 |---|---|
 | `ClassificationBanner({ marking, position })` | 18px bar, centred capitals, 1px rule on the inner edge. Not positioned: the shell places it (flex child or fixed). The bottom copy is `aria-hidden`. |
-| `MarkingStrip({ marking })` | 13px strip for directly under a window title bar. |
+| `MarkingStrip({ marking, markings? })` | 13px strip for directly under a window title bar. `marking` is a canon `Marking` or a `MarkingId`; ids resolve against `markings` or the list the shell registers with `registerMarkings()` once canon loads (unknown id renders nothing). |
 | `CoverSheet({ marking, docNo, title, copyNo?, copiesTotal?, distribution?, originator, date, logRows? })` | One 816 x 1056 page (8.5 x 11). Border in the marking colour, marking label, document control block, six handling instructions, receipt and access record with empty ruled lines (default 16). `date` takes ISO or formatted text. Breaks to its own page in print. |
 | `Stamp({ kind, date?, text?, seed?, of?, ink?, marking?, scale?, class? })` | Inline SVG stamp. Seeded ink mask, rotation within 3 degrees either way, double-rule border. |
 | `enhanceStamps(root?, markings?)` | Upgrades `.stamp[data-kind]` elements into SVG stamps. Idempotent; returns the count upgraded. |

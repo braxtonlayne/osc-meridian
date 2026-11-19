@@ -9,7 +9,7 @@ import type { CompartmentId, TierNo } from './canon-types';
 import * as audit from './audit';
 import * as session from './session';
 import { loadSync, saveSync, load, save } from './persist';
-import { normalize, pushPath, replacePath } from './router';
+import { hashOf, normalize, pushPath, replacePath } from './router';
 import { APPS, appById, appForPath, isAppId } from '@apps/index';
 import { canonNow, loadDoc, markingById, printDocument, searchRoutes } from '@shell/adapters';
 import type { SearchHit } from '@shell/adapters';
@@ -79,7 +79,7 @@ export const printQueue = signal(0);
 export const recent = signal<string[]>([]);
 export const runHistory = signal<string[]>([]);
 
-/** Mail delivery state; the Message Traffic app reads `delivered` and `read`. */
+/** Mail delivery state (shell-internal; apps read it through services.mail). */
 export const mailState = {
   delivered: signal<string[]>([]),
   read: signal<string[]>([]),
@@ -167,10 +167,15 @@ function describe(w: Win): string {
 
 function onNavigate(w: Win, target: string): void {
   const p = normalize(target);
+  const hash = hashOf(target);
   const entry = byRouteMap.get(p);
   const owner = entry ? appById(entry.app) : appForPath(p);
   if (!owner || owner.id !== w.appId || (entry && routeKey(entry) && !session.satisfies(routeKey(entry)!))) {
-    openRoute(p);
+    openRoute(p + hash);
+    return;
+  }
+  if (p === w.path.peek()) {
+    if (hash) goToAnchor(w, hash, true);
     return;
   }
   w.path.value = p;
@@ -182,7 +187,57 @@ function onNavigate(w: Win, target: string): void {
     audit.log('window.open', entry.docNo, `Operator ${session.operatorId.peek()} opened ${entry.docNo} (${markingById(entry.marking).label}) in ${owner.title}.`);
   }
   pushRecent(p);
-  pushPath(p);
+  pushPath(p, hash);
+  if (hash) goToAnchor(w, hash, false);
+}
+
+/* ------------------------------------------------------------- anchors */
+
+let anchorJob = 0;
+
+/**
+ * Scroll a window to the element named by a fragment once its content has
+ * loaded (apps load lazily and fetch their document). Looks for an element
+ * with that id, or a directive paragraph (`data-para`), inside the window and
+ * scrolls only the window's own scrollers. Gives up after ~6 s.
+ * When `announce` is set (the window was already open), a hashchange event is
+ * dispatched so apps that track the fragment themselves (directives) follow it.
+ */
+function goToAnchor(w: Win, hash: string, announce: boolean): void {
+  if (announce) {
+    const old = location.href;
+    pushPath(w.path.peek(), hash);
+    if (location.href !== old) dispatchEvent(new HashChangeEvent('hashchange', { oldURL: old, newURL: location.href }));
+  }
+  const id = decodeURIComponent(hash.slice(1));
+  if (!id || typeof document === 'undefined') return;
+  const job = ++anchorJob;
+  const until = performance.now() + 6000;
+  const sel = `#${CSS.escape(id)}, [data-para="${CSS.escape(id.replace(/^para-/, ''))}"]`;
+  const tick = () => {
+    if (job !== anchorJob) return;
+    const root = document.querySelector(`[data-win-id="${w.id}"] .win-body`);
+    const el = root?.querySelector<HTMLElement>(sel);
+    if (el && !root!.querySelector('.win-loading')) {
+      scrollWithin(root as HTMLElement, el);
+      return;
+    }
+    if (performance.now() < until) setTimeout(tick, 100);
+  };
+  setTimeout(tick, 0);
+}
+
+/** Scroll every scrollable ancestor of `el` up to `root` so `el` sits at the top; never the page. */
+function scrollWithin(root: HTMLElement, el: HTMLElement): void {
+  let node = el.parentElement;
+  while (node) {
+    if (node.scrollHeight > node.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(node).overflowY)) {
+      const top = el.getBoundingClientRect().top - node.getBoundingClientRect().top;
+      node.scrollTop += top;
+    }
+    if (node === root) break;
+    node = node.parentElement;
+  }
 }
 
 const hooks = { onFocus, onClose, onNavigate };
@@ -210,12 +265,23 @@ export interface OpenRouteOptions {
 export function openRoute(path: string, opts: OpenRouteOptions = {}): void {
   const p = normalize(path);
   if (p === '/') return;
+  const hash = hashOf(path);
   const push = opts.push !== false;
   const existing = wm.windows.peek().find((w) => w.path.peek() === p);
   if (existing) {
     wm.focusWindow(existing.id);
+    if (hash) goToAnchor(existing, hash, true);
     return;
   }
+  const opened = openRouteNew(p, push, hash);
+  if (opened && hash) goToAnchor(opened, hash, false);
+}
+
+/** Open a new window for a normalised path (route, app home, refusal or not-found). */
+function openRouteNew(p: string, push: boolean, hash: string): Win | null {
+  const pushIt = () => {
+    if (push) pushPath(p, hash);
+  };
   const entry = byRouteMap.get(p);
   if (entry) {
     const def = appById(entry.app);
@@ -223,7 +289,7 @@ export function openRoute(path: string, opts: OpenRouteOptions = {}): void {
     if (key && !session.satisfies(key)) {
       const comp = entry.access?.compartment;
       const briefing = comp ? canonNow().compartments.find((c) => c.id === comp)?.briefingDocNo : undefined;
-      openRefusal(
+      const w = openRefusal(
         p,
         entry.title,
         {
@@ -233,28 +299,29 @@ export function openRoute(path: string, opts: OpenRouteOptions = {}): void {
         },
         entry.docNo,
       );
-      if (push) pushPath(p);
-      return;
+      pushIt();
+      return w;
     }
     if (def) {
-      openAppWindow(def.id, entry, p);
-      if (push) pushPath(p);
-      return;
+      const w = openAppWindow(def.id, entry, p);
+      pushIt();
+      return w;
     }
   }
   const home = APPS.find((a) => a.homeRoute === p);
   if (home) {
-    openAppWindow(home.id, null, p);
-    if (push) pushPath(p);
-    return;
+    const w = openAppWindow(home.id, null, p);
+    pushIt();
+    return w;
   }
-  openRefusal(p, 'Path not found', {
+  const w = openRefusal(p, 'Path not found', {
     authority: 'MERIDIAN Directory Service',
     ref: 'DS-ERR-0404',
     reason: `No document or application is registered at ${p}.`,
     notFound: true,
   });
-  if (push) pushPath(p);
+  pushIt();
+  return w;
 }
 
 function openAppWindow(id: AppId, entry: RouteEntry | null, path: string): Win | null {
@@ -412,6 +479,8 @@ export const services: Services = {
   mail: {
     deliver: deliverMail,
     unread,
+    delivered: mailState.delivered,
+    read: mailState.read,
     meta: mailState.meta,
   },
   sound: {

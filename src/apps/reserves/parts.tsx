@@ -1,6 +1,6 @@
 /** Small shared pieces: canon redaction sentinels, link buttons, refusal wrapper. */
 import { createContext, h } from 'preact';
-import type { ComponentChildren, ComponentType } from 'preact';
+import type { ComponentChildren } from 'preact';
 import { useContext } from 'preact/hooks';
 import { Redaction } from '@design/index';
 import type { RedactionHoverInfo } from '@design/index';
@@ -55,16 +55,7 @@ export function LinkButton({ onClick, children, title }: { onClick: () => void; 
   );
 }
 
-/**
- * RefusalState takes its reference as `ref` (see @graphics/states README); Preact 11 passes it
- * through as an ordinary prop. Same seam as the shell adapter.
- */
+/** @graphics/states RefusalState with the app's prop shape. */
 export function Refusal(p: { authority: string; reference: string; reason: string; requirement?: string; docNo?: string }) {
-  return h(GRefusal as unknown as ComponentType<Record<string, unknown>>, {
-    authority: p.authority,
-    ref: p.reference,
-    reason: p.reason,
-    requirement: p.requirement,
-    docNo: p.docNo,
-  });
+  return h(GRefusal, p);
 }

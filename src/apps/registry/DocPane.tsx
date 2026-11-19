@@ -1,5 +1,5 @@
 /** Facility Registry: the page's document (DocumentView) and the refusal panel. */
-import { h, type ComponentType } from 'preact';
+import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { DocJson, RouteEntry, Services } from '@core/contracts';
 import { DocumentView, type DocumentSlots } from '@design/index';
@@ -88,9 +88,9 @@ export function Refusal({ services, entry }: { services: Services; entry: RouteE
     services.audit.log('window.open', entry.docNo, `Operator ${services.session.operatorId.value} requested ${entry.docNo}. Request refused: ${reason}`);
     services.sound.play('error');
   }, [entry.id]);
-  return h(GRefusal as unknown as ComponentType<Record<string, unknown>>, {
+  return h(GRefusal, {
     authority: 'Classification Control, Office of Internal Assurance',
-    ref: briefing ?? 'OSC-DIR-0412',
+    reference: briefing ?? 'OSC-DIR-0412',
     reason,
     requirement: comp ? `${comp} compartment briefing` : `Tier ${entry.access?.tier ?? 3}`,
     docNo: entry.docNo,

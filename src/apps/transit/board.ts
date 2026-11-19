@@ -195,7 +195,14 @@ export function useBoard(cfg: Omit<SimConfig, 'seg04'>): BoardState | null {
 interface Seen {
   from: number;
   to: number;
-  view: string;
+  /** Every board view shown while the movement ran, in the order first seen. */
+  views: string[];
+}
+
+/** "a", "a and b", "a, b and c". */
+export function joinViews(views: readonly string[]): string {
+  if (views.length <= 1) return views[0] ?? '';
+  return `${views.slice(0, -1).join(', ')} and ${views[views.length - 1]}`;
 }
 /** One record per movement across every Transit Control window. */
 const seen = new Map<number, Seen>();
@@ -211,11 +218,12 @@ function flush(services: Services, w: Seg04Window): void {
   const rec = seen.get(w.start);
   if (!rec || alreadyLogged(services, w.start)) return;
   logged.add(w.start);
+  const view = joinViews(rec.views);
   services.audit.log(
     'transit.watch',
     'SEG04',
-    seg04WatchDetail(services.session.operatorId.peek(), WORKSTATION, rec.view, rec.from, rec.to),
-    seg04WatchData(rec.view, rec.from, rec.to),
+    seg04WatchDetail(services.session.operatorId.peek(), WORKSTATION, view, rec.from, rec.to),
+    seg04WatchData(view, rec.from, rec.to),
   );
 }
 
@@ -238,8 +246,10 @@ export function useSeg04Watch(services: Services, root: { current: HTMLElement |
         const visible = !!el && el.getClientRects().length > 0 && document.visibilityState === 'visible' && phase.peek() === 'active';
         if (visible) {
           const rec = seen.get(w.start);
-          if (rec) rec.to = now;
-          else seen.set(w.start, { from: now, to: now, view: viewRef.current });
+          if (rec) {
+            rec.to = now;
+            if (!rec.views.includes(viewRef.current)) rec.views.push(viewRef.current);
+          } else seen.set(w.start, { from: now, to: now, views: [viewRef.current] });
         }
       } else if (w && now >= w.end) {
         flush(services, w);

@@ -1,5 +1,9 @@
 // Run: npx vitest run -c src/graphics/tunnelmap/vitest.config.ts
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+// Geometry is checked against the full canon; the client canon ('@canon') withholds the
+// positions of sites outside the operator's network (tests/unit/client-canon.test.ts).
+vi.mock('@canon', async () => ({ default: (await import('../../../content/canon/canon.json')).default }));
 import { CERTIFIED, certifiedLinks, certifiedSumMi, CERTIFIED_ROUTE_MILEAGE } from './certified';
 import { canon, tunnelLinks, linkOf } from './links';
 

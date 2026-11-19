@@ -75,7 +75,8 @@ and the set above with St. Louis (BETA-05, 189) in place of Detroit.
   (no network). Alaska and Hawaii are off the sheet. Same construction as `@graphics/map`
   `projectionFor`, but fitted to this sheet's own map box (the frame band and title block take
   room), so the two are not pixel-interchangeable; use `tunnelProjection(box)` to place anything
-  on this sheet.
+  on this sheet. Overlays get the box the map itself uses from `tunnelMapLayout(width, height).mapBox`
+  (exported from the index), so `tunnelProjection(tunnelMapLayout(w, h).mapBox)` lines up exactly.
 - Each link follows the great circle between its ends (28 samples) with a sideways sine bow of
   3.5 to 7 per cent of the chord (rail 5.5). The side comes from a hash of the link id; where two
   links leave a shared site within 25 degrees of each other they are set to bow apart.

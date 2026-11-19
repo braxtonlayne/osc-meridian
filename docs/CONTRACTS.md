@@ -118,6 +118,7 @@ Owner: integration (`src/narrative/**`). Started once from `src/main.tsx` after 
 - `AuditKind` gains `'system'`: lines the system writes itself (segment 04 record withdrawal, repeated-refusal note, F-122 return). Audit viewers need a label for it.
 - `services.mail.deliver(msgId, opts?)` with `MailDeliverOptions { slots?, read?, silent?, repeat? }`; `repeat` re-delivers an already delivered message as unread with new slots (non-delivery notice, every time).
 - `services.mail.meta`: `Record<msgId, { at, slots? }>`; `at` is the in-world ISO delivery time (use it for `dateMode: delivery`); the mail app replaces `{token}` in the body/slotTemplate with `slots[token]`.
+- `services.mail.delivered` / `services.mail.read`: `ReadonlySignal<string[]>` of message ids (delivery order; read set kept from `mail.read` audit entries). Apps read mailbox state only through these, never from shell internals.
 
 **What apps must log for the engine to see:**
 | Kind | subject | data |

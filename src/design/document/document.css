@@ -217,6 +217,25 @@
   .doc-body--dense .doc-table th {
     padding: 1px var(--sp-2);
   }
+  /* The scan kit's page is an inline-size container with no intrinsic width: give it the
+     frame's width wherever a document (screen or print path) holds one. */
+  .doc .scan-page {
+    width: 100%;
+  }
+
+  /* Body tables sit in a horizontal scroller: a wide register (an incident worklog) scrolls
+     inside the sheet instead of squeezing its date column. */
+  .doc-table-scroll {
+    max-width: 100%;
+    margin: var(--sp-3) 0;
+    overflow-x: auto;
+  }
+  .doc-table-scroll > .doc-table {
+    margin: 0;
+  }
+  .doc-table td.is-date {
+    white-space: nowrap;
+  }
 
   /* ================= Redaction inside documents ================= */
   .doc .rx {
@@ -953,6 +972,12 @@
     .doc-table th,
     .doc-table td {
       border-color: var(--print-ink);
+    }
+    .doc-table-scroll {
+      overflow: visible;
+    }
+    .doc-table td.is-date {
+      white-space: normal;
     }
     .doc-table tr,
     .doc-sig,

@@ -9,7 +9,7 @@
 import '@design/styles';
 import './shell/shell.css';
 import { render } from 'preact';
-import { docsService, loadCanon, loadRoutes } from '@shell/adapters';
+import { docsService, followRouteRebuilds, loadCanon, loadRoutes } from '@shell/adapters';
 import { initSession, satisfies } from '@core/session';
 import { initAudit } from '@core/audit';
 import { currentPath } from '@core/router';
@@ -24,9 +24,12 @@ document.documentElement.classList.add('js');
 
 docsService(satisfies);
 setRoutes(loadRoutes());
+// Dev: a content rebuild rewrites routes.json; re-index in place instead of losing the table.
+if (import.meta.hot) followRouteRebuilds(setRoutes);
 
 const path = currentPath();
-if (path !== '/') pendingPath.value = path;
+// Keep the fragment (#para-6) so the deep link scrolls to its anchor after sign-in.
+if (path !== '/') pendingPath.value = path + location.hash;
 
 setReady(
   (async () => {

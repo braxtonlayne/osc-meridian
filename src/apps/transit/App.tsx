@@ -18,6 +18,7 @@ import { LineDiagram, type DiagramNetwork } from '@graphics/schematic';
 import { RefusalState } from '@graphics/states';
 import type { TunnelLayer } from '@graphics/tunnelmap';
 import { hhmmLocal, hhmmssZ, zoneForState } from '@sim/time';
+import { diagramBlockCounts } from '@sim/transit-model';
 import { logBaseFrom, TIMETABLE_DOCNO, useBoard, useSeg04Watch, useSheets, useTimetable, watchAt } from './board';
 import { GeoView } from './geo';
 import { Tunnel3DView } from './tunnel3d';
@@ -253,7 +254,7 @@ export default function App({ win, route }: AppProps) {
     body = (
       <RefusalState
         authority="Transit Operations"
-        ref="DIR-0412"
+        reference="DIR-0412"
         docNo={route.docNo}
         reason={`${route.docNo} is held under a compartment this operator has not been briefed into.`}
         requirement={`${route.access?.compartment ?? `Tier ${route.access?.tier}`} compartment briefing. Reference DIR-0412.`}
@@ -374,7 +375,7 @@ function MainView(p: MainProps) {
 function DocumentPane(p: MainProps) {
   const { doc, services } = p;
   const docView = p.docErr ? (
-    <RefusalState authority="Records Division" ref="DIR-0412" reason="The document could not be retrieved from the records server. The request has been recorded." />
+    <RefusalState authority="Records Division" reference="DIR-0412" reason="The document could not be retrieved from the records server. The request has been recorded." />
   ) : doc ? (
     <DocumentView
       doc={doc}
@@ -424,6 +425,7 @@ function NetworkLive(p: MainProps & { network: NetworkId }) {
             network={p.network}
             trains={trains.map((t) => ({ id: t.id, kind: t.kind, link: t.link, pos: t.pos, dir: t.dir, label: t.label, suppressed: t.suppressed }))}
             occupancy={p.state?.occupancy ?? {}}
+            blockCounts={diagramBlockCounts(p.model)}
             selected={p.selected}
             onSelectLink={p.onSelect}
           />

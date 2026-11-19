@@ -12,6 +12,7 @@ import { ReactorOneLine, Gauge, ReadoutRow, TelemetryChart, SealStateIndicator }
 ```tsx
 <ReactorOneLine reactorId="RX-A03" />
 <ReactorOneLine reactorId="RX-A01" live={{ breakers: { '52-G1': 'OPEN' }, loadMW: 9.2 }} />
+<ReactorOneLine reactorId="RX-B08" siteMask="BETA SITE" />  {/* site identity not released */}
 ```
 
 Station electrical single-line diagram, drawn as an engineering sheet (zone border, notes, legend, title block).
@@ -80,6 +81,10 @@ One table-like row: tag, label, sunken value field, unit, status square + word. 
 for use on its own.
 
 ## TelemetryChart
+
+The index exports a lazy wrapper: uPlot and its stylesheet load with the first chart rendered (a box of
+`height` holds the place meanwhile), so importing one-lines or gauges from `@graphics/reactor` does not pull
+uPlot in. `@graphics/reactor/TelemetryChart` is the eager component.
 
 ```tsx
 <TelemetryChart height={160} series={[

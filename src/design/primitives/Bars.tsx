@@ -1,4 +1,4 @@
-import type { ComponentChildren, HTMLAttributes, TargetedKeyboardEvent, TargetedPointerEvent } from 'preact';
+import type { ComponentChildren, TargetedKeyboardEvent } from 'preact';
 import { useRef } from 'preact/hooks';
 import './primitives.css';
 import { cx } from '../util';
@@ -22,7 +22,7 @@ export function Toolbar({ label, children }: ToolbarProps) {
     const cur = items.indexOf(document.activeElement as HTMLElement);
     if (cur < 0) return;
     e.preventDefault();
-    let next = cur;
+    let next: number;
     if (e.key === 'ArrowRight') next = (cur + 1) % items.length;
     else if (e.key === 'ArrowLeft') next = (cur - 1 + items.length) % items.length;
     else if (e.key === 'Home') next = 0;

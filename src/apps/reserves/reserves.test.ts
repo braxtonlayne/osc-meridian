@@ -67,23 +67,30 @@ describe('sustainment calculator', () => {
   it('facility windows follow the class rules', () => {
     const cls = (id: string) => canon.classes.find((c) => c.id === id);
     const a = canon.facilities.find((f) => f.class === 'ALPHA')!;
-    const wa = facilityWindow(a, cls('ALPHA'), a.capacity);
+    const aCap = a.capacity!;
+    const wa = facilityWindow(a, cls('ALPHA'), aCap);
     expect(toMonths(wa.minDays!)).toBeCloseTo(a.sustainedMonths!, 9);
-    const wHalf = facilityWindow(a, cls('ALPHA'), a.capacity / 2);
+    const wHalf = facilityWindow(a, cls('ALPHA'), aCap / 2);
     expect(toMonths(wHalf.minDays!)).toBeCloseTo(a.sustainedMonths! * 2, 9);
 
     const g = canon.facilities.find((f) => f.class === 'GAMMA')!;
-    const wg = facilityWindow(g, cls('GAMMA'), g.capacity);
+    const wg = facilityWindow(g, cls('GAMMA'), g.capacity!);
     expect(wg.minDays).toBe(cls('GAMMA')!.sustainDaysMin);
     expect(wg.maxDays).toBe(cls('GAMMA')!.sustainDaysMax);
+    // Withheld berths are never scaled from as if they were a figure.
+    const wgx = facilityWindow({ ...g, capacity: null }, cls('GAMMA'), 100);
+    expect(wgx.minDays).toBeNull();
+    expect(wgx.scaled).toBe(false);
 
+    // DELTA berths are withheld from the client canon; the class ceiling needs none.
     const d = canon.facilities.find((f) => f.class === 'DELTA')!;
+    expect(d.capacity).toBeNull();
     const wd = facilityWindow(d, cls('DELTA'), 1);
     expect(wd.scaled).toBe(false);
     expect(wd.maxDays).toBe(cls('DELTA')!.sustainDaysMax);
 
     const b = canon.facilities.find((f) => f.class === 'BETA')!;
-    const wb = facilityWindow(b, cls('BETA'), b.capacity);
+    const wb = facilityWindow(b, cls('BETA'), b.capacity!);
     expect(wb.minDays).toBeNull();
     expect(wb.stated).toBe(cls('BETA')!.sustainabilityText);
   });

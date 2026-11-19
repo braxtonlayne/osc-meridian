@@ -26,9 +26,11 @@ export interface FacilityLine {
   id: string;
   cls: ClassId;
   codename: string | null;
-  berthing: number;
-  posted: number;
-  fillPct: number;
+  /** Null when the client canon withholds the figure (DELTA, Tier 1). Never read as zero. */
+  berthing: number | null;
+  posted: number | null;
+  /** Null when either figure is withheld. */
+  fillPct: number | null;
   commanderPn: string | null;
 }
 
@@ -62,7 +64,7 @@ export function facilityLines(c: Canon): FacilityLine[] {
     codename: f.codename,
     berthing: f.capacity,
     posted: f.staff,
-    fillPct: pct(f.staff, f.capacity),
+    fillPct: f.staff === null || f.capacity === null ? null : pct(f.staff, f.capacity),
     commanderPn: f.commanderId,
   }));
 }

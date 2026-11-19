@@ -4,7 +4,7 @@
  * TALLOW-controlled fuel block. Imports the reactor modules directly so uPlot (TelemetryChart)
  * stays out of this chunk.
  */
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 import { GroupBox, PropertyGrid, StatusLight } from '@design/index';
 import { ReactorOneLine } from '@graphics/reactor/OneLine';
 import { Gauge, ReadoutRow } from '@graphics/reactor/gauges';
@@ -42,55 +42,12 @@ export function NoteWithOrders({ note, onOrder }: { note: string; onOrder: (wo: 
   );
 }
 
-/**
- * Replace the site id and codename in the drawing's text when the site identity is not
- * released to this operator. The drawing takes its title from canon; the mask is applied
- * to the rendered SVG text and accessible name only.
- */
-function useSiteMask(host: { current: HTMLElement | null }, r: Reactor, masked: boolean) {
-  useEffect(() => {
-    const el = host.current;
-    if (!el || !masked) return;
-    const f = facility(r.site);
-    const needles = [r.site, f?.codename].filter((s): s is string => !!s);
-    const apply = () => {
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-        let t = n.nodeValue ?? '';
-        let changed = false;
-        for (const s of needles) {
-          if (t.includes(s)) {
-            t = t.split(s).join(s === r.site ? WITHHELD_SITE : '');
-            changed = true;
-          }
-        }
-        if (changed) n.nodeValue = t.replace(/\s{2,}/g, ' ');
-      }
-      for (const a of el.querySelectorAll('[aria-label]')) {
-        let v = a.getAttribute('aria-label') ?? '';
-        for (const s of needles) v = v.split(s).join(s === r.site ? WITHHELD_SITE : '');
-        a.setAttribute('aria-label', v);
-      }
-    };
-    apply();
-    const mo = new MutationObserver(() => {
-      mo.disconnect();
-      apply();
-      mo.observe(el, { subtree: true, childList: true, characterData: true });
-    });
-    mo.observe(el, { subtree: true, childList: true, characterData: true });
-    return () => mo.disconnect();
-  }, [host, r, masked]);
-}
-
 export function ReactorConsole({ reactor: r, onOrder, report }: { reactor: Reactor; onOrder: (wo: string) => void; report?: { docNo: string; date: string } }) {
   const { satisfies } = useRsv();
   const plant = useMemo(() => buildPlant(canon, r.id), [r.id]);
   const s = useMemo(() => (plant ? solve(plant) : null), [plant]);
   const released = siteReleased(r.site, satisfies);
   const tallow = satisfies('TALLOW');
-  const drawingHost = useRef<HTMLDivElement>(null);
-  useSiteMask(drawingHost, r, !released);
   const f = facility(r.site);
   const fe = division('FE');
   const lr = division('LR');
@@ -181,8 +138,8 @@ export function ReactorConsole({ reactor: r, onOrder, report }: { reactor: React
       </GroupBox>
 
       <GroupBox title={`Station electrical one-line diagram, ${plant.drawing.no}`}>
-        <div class="rsv-drawing" ref={drawingHost}>
-          <ReactorOneLine reactorId={r.id} />
+        <div class="rsv-drawing">
+          <ReactorOneLine reactorId={r.id} siteMask={released ? undefined : WITHHELD_SITE} />
         </div>
       </GroupBox>
 

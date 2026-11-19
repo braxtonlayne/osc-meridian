@@ -15,7 +15,7 @@
  */
 import type { AppId, AuditEntry, RouteEntry } from '@core/contracts';
 import type { Canon, Facility, FacilityId, MarkingId, TierNo } from '@core/canon-types';
-import { isRx, rxPlain } from '@core/rx';
+import { hasRx, isRx, rxPlain } from '@core/rx';
 import {
   ACCESSION_HELD,
   DIVISION_UTILITIES,
@@ -100,6 +100,9 @@ export function monthYear(ym: string | null | undefined): string {
 export const plain = (v: string | null | undefined): string => (v === null || v === undefined ? '--' : rxPlain(v));
 
 const bar = (n: number) => '█'.repeat(Math.max(1, n));
+
+/** A site figure; null is withheld by the client canon (DELTA, Tier 1) and prints as a bar, never 0. */
+const fig = (n: number | null): string => (n === null ? bar(4) : fmtN(n));
 
 export function wrap(text: string, width: number): string[] {
   const w = Math.max(16, width);
@@ -217,10 +220,13 @@ const sites: Handler = (_p, ctx) => {
   const dw = Math.max(6, Math.min(28, ctx.cols - 32));
   const lines = [`${col('ID', 10)}${col('CLASS', 7)}${col('DESIGNATION', dw)}${rcol('STAFF', 6)}${rcol('BERTHS', 8)}`];
   for (const f of ctx.canon.facilities) {
-    lines.push(`${col(f.id, 10)}${col(f.class, 7)}${col(plain(f.codename ?? '-'), dw)}${rcol(fmtN(f.staff), 6)}${rcol(fmtN(f.capacity), 8)}`);
+    lines.push(`${col(f.id, 10)}${col(f.class, 7)}${col(plain(f.codename ?? '-'), dw)}${rcol(fig(f.staff), 6)}${rcol(fig(f.capacity), 8)}`);
   }
-  const staff = ctx.canon.facilities.reduce((s, f) => s + f.staff, 0);
-  lines.push(`${ctx.canon.facilities.length} facilities on the register. Posted staff ${fmtN(staff)}. Berths are surge berthing.`);
+  // The total is the canon figure, not a sum over rows: withheld site figures are not zero.
+  const withheld = ctx.canon.facilities.some((f) => f.staff === null);
+  lines.push(
+    `${ctx.canon.facilities.length} facilities on the register. Posted staff ${fmtN(ctx.canon.headline.staffPosted)}. Berths are surge berthing.${withheld ? ' Barred site figures are withheld (T1).' : ''}`,
+  );
   return out(lines);
 };
 
@@ -251,14 +257,17 @@ function facilityLines(f: Facility, ctx: HostContext): string[] {
     ...kv('Class', `${f.class}  ${cls ? cls.name : ''}`.trim(), ctx.cols),
     ...kv('Location', geo(f.locationText), ctx.cols),
     ...kv('Cover', plain(f.coverIdentity), ctx.cols),
-    ...kv('Depth', f.depthFt === null ? '--' : `${fmtN(f.depthFt)} ft`, ctx.cols),
-    ...kv('Completed', monthYear(f.completed), ctx.cols),
-    ...kv('Berths', `${fmtN(f.capacity)} (surge berthing)`, ctx.cols),
+    // Client-canon nulls: GAMMA depths are Tier 2, DELTA figures Tier 1. Withheld, not absent.
+    ...kv('Depth', f.depthFt !== null ? `${fmtN(f.depthFt)} ft` : f.class === 'GAMMA' ? `${fig(null)} Withheld (T2)` : f.class === 'DELTA' ? `${fig(null)} Withheld (T1)` : '--', ctx.cols),
+    ...kv('Completed', isRx(f.completed) ? plain(f.completed) : monthYear(f.completed), ctx.cols),
+    ...kv('Berths', f.capacity === null ? `${fig(null)} Withheld (T1)` : `${fmtN(f.capacity)} (surge berthing)`, ctx.cols),
   ];
   if (f.sustainedMonths !== null) lines.push(...kv('Sustained', `${fmtN(f.sustainedMonths)} months at full reserves`, ctx.cols));
-  lines.push(...kv('Posted staff', fmtN(f.staff), ctx.cols), ...kv('Function', plain(f.function), ctx.cols));
+  lines.push(...kv('Posted staff', f.staff === null ? `${fig(null)} Withheld (T1)` : fmtN(f.staff), ctx.cols), ...kv('Function', plain(f.function), ctx.cols));
   if (f.connectionsText) lines.push(...kv('Connections', geo(f.connectionsText), ctx.cols));
   if (rx) lines.push(...kv('Reactor', open ? `${rx.id} ${rx.designation}  ${rx.status}` : `${bar(rx.id.length + rx.designation.length + 1)} (SEXTANT)`, ctx.cols));
+  // A null reactor flag is withheld by the client canon (BETA outside the home network, DELTA), not "none".
+  else if (f.reactor === null) lines.push(...kv('Reactor', `${bar(3)} Withheld (${f.class === 'DELTA' ? 'T1' : 'SEXTANT'})`, ctx.cols));
   else lines.push(...kv('Reactor', 'None. Station supply per class standard.', ctx.cols));
   return lines;
 }
@@ -510,8 +519,10 @@ const strength: Handler = (p, ctx) => {
       const lw = Math.max(10, Math.min(26, ctx.cols - 43));
       lines.push(`${col('PN', 13)}${col('NAME', 18)}${col('LAST POSTED', lw)}EFFECTIVE`);
       for (const x of carried) {
-        const last = /Last posted ([^.]+)\./.exec(x.notes)?.[1] ?? '--';
-        const eff = /effective (\d{2} [A-Z]{3} \d{4})/.exec(x.notes)?.[1] ?? '--';
+        // Notes the client canon withholds (HOLLOW sentinels) print as bars, not as "none".
+        const held = hasRx(x.notes);
+        const last = /Last posted ([^.]+)\./.exec(x.notes)?.[1] ?? (held ? bar(Math.min(12, lw - 1)) : '--');
+        const eff = /effective (\d{2} [A-Z]{3} \d{4})/.exec(x.notes)?.[1] ?? (held ? bar(11) : '--');
         lines.push(`${col(x.pn, 13)}${col(shortName(x.name), 18)}${col(last, lw)}${eff}`);
       }
       const rest = c.headline.staffUnposted - carried.length;
@@ -526,11 +537,10 @@ const strength: Handler = (p, ctx) => {
   if (lower === 'all' || lower === 'network') {
     const lines = [head('ALL SITES'), `${col('CLASS', 8)}${col('NAME', 30)}${rcol('SITES', 6)}${rcol('POSTED', 8)}`];
     for (const k of c.classes) {
-      const fs = c.facilities.filter((f) => f.class === k.id);
-      lines.push(`${col(k.id, 8)}${col(k.name, 30)}${rcol(String(fs.length), 6)}${rcol(fmtN(fs.reduce((s, f) => s + f.staff, 0)), 8)}`);
+      // Class stated totals: site figures withheld from the client canon (DELTA) are not summed as zero.
+      lines.push(`${col(k.id, 8)}${col(k.name, 30)}${rcol(String(k.count), 6)}${rcol(fmtN(k.statedStaff), 8)}`);
     }
-    const posted = c.facilities.reduce((s, f) => s + f.staff, 0);
-    lines.push(`${col('Posted', 44)}${rcol(fmtN(posted), 8)}`);
+    lines.push(`${col('Posted', 44)}${rcol(fmtN(c.headline.staffPosted), 8)}`);
     lines.push(`${col(UNPOSTED, 44)}${rcol(fmtN(c.headline.staffUnposted), 8)}`);
     lines.push(`${col('Total personnel', 44)}${rcol(fmtN(c.headline.staffTotal), 8)}`);
     return out(lines);
@@ -539,8 +549,9 @@ const strength: Handler = (p, ctx) => {
   if (cls) {
     const fs = c.facilities.filter((f) => f.class === cls.id);
     const lines = [head(`${cls.id} ${cls.name.toUpperCase()}`)];
-    for (const f of fs) lines.push(`${col(f.id, 10)}${col(plain(f.codename ?? '-'), 30)}${rcol(fmtN(f.staff), 6)}`);
-    lines.push(`${col('Posted', 40)}${rcol(fmtN(fs.reduce((s, f) => s + f.staff, 0)), 6)}`);
+    for (const f of fs) lines.push(`${col(f.id, 10)}${col(plain(f.codename ?? '-'), 30)}${rcol(fig(f.staff), 6)}`);
+    // The class stated total, never a sum that would count withheld sites as zero.
+    lines.push(`${col(fs.some((f) => f.staff === null) ? 'Posted (class stated total)' : 'Posted', 40)}${rcol(fmtN(cls.statedStaff), 6)}`);
     return out(lines);
   }
   const id = normalizeFacility(arg, c);
@@ -548,7 +559,8 @@ const strength: Handler = (p, ctx) => {
   const f = c.facilities.find((x) => x.id === id)!;
   const lines = [head(f.id)];
   for (const s of f.staffBreakdown) lines.push(`${col(plain(s.role), 40)}${rcol(fmtN(s.count), 6)}`);
-  lines.push(`${col('Posted', 40)}${rcol(fmtN(f.staff), 6)}`);
+  if (f.staff === null) lines.push('Site return withheld (T1).');
+  lines.push(`${col('Posted', 40)}${rcol(fig(f.staff), 6)}`);
   return out(lines);
 };
 

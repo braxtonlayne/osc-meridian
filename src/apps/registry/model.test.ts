@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import canonJson from '@canon';
 import type { Canon, ClassId } from '@core/canon-types';
+import { rxInfo } from '@core/rx';
 import {
   CLASS_IDS,
   adjacentTo,
@@ -15,6 +16,7 @@ import {
   staffingBars,
   sustainmentText,
   totals,
+  type Cell,
   type Viewer,
 } from './model';
 
@@ -52,10 +54,33 @@ describe('registry model', () => {
     expect(isOpen(by('GAMMA-04').depth)).toBe(false);
   });
 
-  it('SEXTANT releases network geography but never DELTA', () => {
+  it('SEXTANT lifts the plan, but geography the client canon withholds stays a SEXTANT bar; DELTA never opens', () => {
     const rows = buildRows(canon, sextant);
-    expect(rows.filter((r) => r.cls !== 'DELTA').every((r) => isOpen(r.location))).toBe(true);
-    expect(rows.filter((r) => r.cls === 'DELTA').some((r) => isOpen(r.location) || isOpen(r.capacity) || isOpen(r.codename))).toBe(false);
+    for (const r of rows.filter((x) => x.cls !== 'DELTA')) {
+      const inClient = !rxInfo(r.f.locationText);
+      expect(isOpen(r.location), r.id).toBe(inClient);
+      if (!isOpen(r.location)) expect(r.location.rx.key).toBe('SEXTANT');
+    }
+    // The home network and GAMMA metro areas are in the client canon.
+    for (const id of adjacent) expect(isOpen(rows.find((r) => r.id === id)!.location)).toBe(true);
+    expect(isOpen(rows.find((r) => r.id === 'GAMMA-04')!.location)).toBe(true);
+    expect(rows.filter((r) => r.cls === 'DELTA').some((r) => isOpen(r.location) || isOpen(r.capacity) || isOpen(r.staff) || isOpen(r.codename))).toBe(false);
+    // Even a session that satisfies every key gets no DELTA position or figure from the client canon.
+    const everything = buildRows(canon, { adjacent, satisfies: () => true });
+    expect(everything.filter((r) => r.cls === 'DELTA').some((r) => isOpen(r.location) || isOpen(r.capacity) || isOpen(r.staff))).toBe(false);
+  });
+
+  it('DELTA figures withheld by the client canon are T1 bars, never zero', () => {
+    const rows = buildRows(canon, { adjacent, satisfies: () => true });
+    for (const r of rows.filter((x) => x.cls === 'DELTA')) {
+      for (const c of [r.capacity, r.staff, r.reactor] as Cell<unknown>[]) {
+        expect(isOpen(c)).toBe(false);
+        if (!isOpen(c)) expect(c.rx.key).toBe('T1');
+      }
+    }
+    const b08 = rows.find((r) => r.id === 'BETA-08')!;
+    expect(isOpen(b08.reactor)).toBe(false);
+    if (!isOpen(b08.reactor)) expect(b08.reactor.rx.key).toBe('SEXTANT');
   });
 
   it('DELTA rows show designation and class only', () => {
@@ -71,15 +96,20 @@ describe('registry model', () => {
     expect(isOpen(r.location)).toBe(false);
     if (!isOpen(r.location)) {
       expect(r.location.rx.key).toBe('SEXTANT');
-      expect(r.location.rx.len).toBe(locationLabel(r.f).length);
+      // The client canon carries only the length of the withheld source text.
+      expect(r.location.rx.len).toBe(rxInfo(locationLabel(r.f))!.len);
     }
   });
 
-  it('footer totals over every row match the canon headline when nothing is withheld', () => {
+  it('footer totals count withheld rows instead of summing them as zero', () => {
     const rows = buildRows(canon, { adjacent, satisfies: () => true });
     const t = totals(rows);
-    expect(t.capacity).toBe(canon.headline.capacitySurge);
-    expect(t.staff).toBe(canon.headline.staffPosted);
+    const delta = canon.classes.find((k) => k.id === 'DELTA')!;
+    expect(t.capacityWithheld).toBe(delta.count);
+    expect(t.staffWithheld).toBe(delta.count);
+    // Released rows plus the DELTA class's stated totals give the canon headline.
+    expect(t.capacity + delta.statedCapacity).toBe(canon.headline.capacitySurge);
+    expect(t.staff + delta.statedStaff).toBe(canon.headline.staffPosted);
   });
 
   it('text filter searches released values only', () => {

@@ -210,12 +210,6 @@
   .per-org__detail {
     flex: none;
   }
-  .per-app .pgrid--cols-2 {
-    grid-template-columns: max-content minmax(0, 1fr);
-  }
-  .per-app .pgrid--cols-2 .pgrid__k {
-    border-left: 0;
-  }
   .per-app .pgrid__k {
     white-space: normal;
     max-width: 12em;

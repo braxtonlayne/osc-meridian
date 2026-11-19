@@ -1,7 +1,7 @@
-import type { ComponentChildren, HTMLAttributes, TargetedKeyboardEvent, TargetedPointerEvent } from 'preact';
+import type { ComponentChildren, TargetedKeyboardEvent } from 'preact';
 import { useEffect, useId, useMemo, useRef } from 'preact/hooks';
 import './primitives.css';
-import { cx, useControllable } from '../util';
+import { cx, scrollIntoViewWithin, useControllable } from '../util';
 
 export interface TreeNode {
   id: string;
@@ -86,8 +86,8 @@ export function Tree({
 
   useEffect(() => {
     if (!cursorId) return;
-    const el = rootRef.current?.querySelector<HTMLElement>(`#${CSS.escape(domId(cursorId))} > .tree__row`);
-    el?.scrollIntoView({ block: 'nearest' });
+    const root = rootRef.current;
+    scrollIntoViewWithin(root, root?.querySelector<HTMLElement>(`#${CSS.escape(domId(cursorId))} > .tree__row`));
   }, [cursorId]);
 
   const toggle = (id: string, force?: boolean) => {

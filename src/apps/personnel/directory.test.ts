@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import canonJson from '../../../content/canon/canon.client.json';
 import type { Canon, CompartmentId, Person } from '../../core/canon-types';
+import { rxInfo } from '../../core/rx';
 import { buildRow, cellText, filterRows, parseHolds, searchText, sortKey, stripHolds, UNPOSTED_SITE, type DirContext } from './directory';
 
 const canon = canonJson as unknown as Canon;
@@ -48,12 +49,19 @@ describe('field withholding', () => {
       expect(hay).not.toContain(p.email.toLowerCase());
     }
   });
-  it('releases unposted entries to a HOLLOW holder', () => {
+  it('releases the tier of unposted entries to a HOLLOW holder; the client canon still withholds the name', () => {
     const p = canon.roster.find((x) => x.site === UNPOSTED_SITE)!;
     const r = buildRow(p, ctx(['LANTERN', 'HOLLOW']));
-    expect(cellText(r.name)).toBe(p.name);
     expect(r.tierNo).toBe(p.tier);
-    expect(searchText(r)).toContain(p.name.toLowerCase());
+    expect(cellText(r.tier)).not.toBe('');
+    // Names, posts and addresses of unposted entries never reach the browser: HOLLOW bars of
+    // the withheld length stand in their place, and the sentinel itself is not searchable.
+    for (const [c, v] of [[r.name, p.name], [r.role, p.role], [r.email, p.email]] as const) {
+      expect('rx' in c).toBe(true);
+      if ('rx' in c) expect(c.rx).toEqual(rxInfo(v));
+    }
+    expect(rxInfo(p.name)!.key).toBe('HOLLOW');
+    expect(searchText(r)).not.toMatch(/\[\[rx/);
   });
   it('shows held and sponsorable compartments, bars the rest', () => {
     const lockhart = canon.roster.find((p) => /Holds KESTREL and TALLOW/.test(p.notes))!;
