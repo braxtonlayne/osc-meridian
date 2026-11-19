@@ -10,7 +10,7 @@ marking: UMBRA-C
 originator: RD/ALPHA-03
 revision: 8
 date: 2008-05-09
-xrefs: [OSC-RSV-MED, OSC-PER-VET, OSC-FAC-ALPHA-03, OSC-RSV-SEED]
+xrefs: [OSC-RSV-MED, OSC-FAC-ALPHA-03, OSC-RSV-SEED]
 summary: Catalogue of the biological sample collection on Level 9 at ALPHA-03, with accession structure, receipt from site clinics, storage conditions and freezer plant.
 recordType: COLLECTION CATALOGUE
 fields:
@@ -28,9 +28,9 @@ revisions:
 
 ## Holdings and purpose
 
-The collection holds :r[:c[reserves.items.MED-GENETIC.value] samples]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} on Level 9. It is a Records Division holding. It is not medical stock and is not drawn on for clinical use; see :x[OSC-RSV-MED].
+The collection holds :r[:c[reserves.items.MED-GENETIC.value]{auth="RD" ref="RD-07-0231"} samples]{compartment=LANTERN auth="RD" ref="RD-07-0110"} on Level 9. It is a Records Division holding. It is not medical stock and is not drawn on for clinical use; see :x[OSC-RSV-MED].
 
-:::redact{tier=2 auth="RD" ref="OSC-RSV-GENE"}
+:::redact{tier=2 auth="RD" ref="RD-07-0231"}
 The collection is the physical holding of the genetic and biometric database for "essential personnel". It supports verification of the identity of designated persons and their dependants on admission under seal, and verification of family lines under the OSC supplement to the background investigation (:x[OSC-PER-VET]). Selection of donors is made on the lists issued to the Chief, Records Division, and is not made by the collection.
 :::
 
@@ -50,22 +50,22 @@ Sorted by accession. The full catalogue is browsed in the Reserves application, 
 
 | Accession | Sample type | Aliquots | Received | Storage | Donor category | Selection basis |
 |---|---|---|---|---|---|---|
-| :r[BSC-04-000001]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Whole blood, EDTA | 6 | 18 OCT 2004 | :r[D-01/03/A/01]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000002]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Whole blood, EDTA | 6 | 18 OCT 2004 | :r[D-01/03/A/02]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000003]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Buccal swab | 2 | 18 OCT 2004 | :r[F-01/2/14/007]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E2]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Dependant of BSC-04-000001]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000004]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Buccal swab | 2 | 18 OCT 2004 | :r[F-01/2/14/008]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E2]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Dependant of BSC-04-000001]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000005]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Extracted DNA | 4 | 21 OCT 2004 | :r[F-01/2/14/009]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[F]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000006]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Whole blood, EDTA | 6 | 21 OCT 2004 | :r[D-01/03/A/03]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[PV]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Readiness draw, ALPHA-01 clinic]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000007]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Whole blood, EDTA | 6 | 21 OCT 2004 | :r[D-01/03/A/04]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[PV]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Readiness draw, ALPHA-01 clinic]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000008]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Buffy coat | 3 | 25 OCT 2004 | :r[D-01/03/B/01]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000009]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Extracted DNA | 4 | 25 OCT 2004 | :r[F-01/2/15/001]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[F]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000010]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Extracted DNA | 4 | 25 OCT 2004 | :r[F-01/2/15/002]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[F]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000011]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Whole blood, EDTA | 6 | 02 NOV 2004 | :r[D-01/03/B/02]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E1]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Council list 2004/2]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
-| :r[BSC-04-000012]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Buccal swab | 2 | 02 NOV 2004 | :r[F-01/2/15/003]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :r[E2]{tier=2 auth="RD" ref="OSC-RSV-GENE"} | :r[Dependant of BSC-04-000011]{tier=2 auth="RD" ref="OSC-RSV-GENE"} |
+| :r[BSC-04-000001]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Whole blood, EDTA | 6 | 18 OCT 2004 | :r[D-01/03/A/01]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E1]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000002]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Whole blood, EDTA | 6 | 18 OCT 2004 | :r[D-01/03/A/02]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E1]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000003]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Buccal swab | 2 | 18 OCT 2004 | :r[F-01/2/14/007]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E2]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Dependant of BSC-04-000001]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000004]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Buccal swab | 2 | 18 OCT 2004 | :r[F-01/2/14/008]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E2]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Dependant of BSC-04-000001]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000005]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Extracted DNA | 4 | 21 OCT 2004 | :r[F-01/2/14/009]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[F]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000006]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Whole blood, EDTA | 6 | 21 OCT 2004 | :r[D-01/03/A/03]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[PV]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Readiness draw, ALPHA-01 clinic]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000007]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Whole blood, EDTA | 6 | 21 OCT 2004 | :r[D-01/03/A/04]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[PV]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Readiness draw, ALPHA-01 clinic]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000008]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Buffy coat | 3 | 25 OCT 2004 | :r[D-01/03/B/01]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E1]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Council list 2004/1]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000009]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Extracted DNA | 4 | 25 OCT 2004 | :r[F-01/2/15/001]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[F]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000010]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Extracted DNA | 4 | 25 OCT 2004 | :r[F-01/2/15/002]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[F]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Line verification, OSC supplement]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000011]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Whole blood, EDTA | 6 | 02 NOV 2004 | :r[D-01/03/B/02]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E1]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Council list 2004/2]{tier=2 auth="RD" ref="RD-07-0231"} |
+| :r[BSC-04-000012]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Buccal swab | 2 | 02 NOV 2004 | :r[F-01/2/15/003]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :r[E2]{tier=2 auth="RD" ref="RD-07-0231"} | :r[Dependant of BSC-04-000011]{tier=2 auth="RD" ref="RD-07-0231"} |
 
 ## Donor category codes
 
-:::redact{tier=2 auth="RD" ref="OSC-RSV-GENE"}
+:::redact{tier=2 auth="RD" ref="RD-07-0231"}
 | Code | Category |
 |---|---|
 | E1 | Designated essential |

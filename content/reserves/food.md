@@ -86,7 +86,7 @@ April results: all sites within limits. ALPHA-04 filter train 2 ran on reduced m
 
 ## Site stocks
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Site or class | Meals held | Share of network meal holding | Days at site share of the sustained figure, 3 meals per day | Next delivery |
 |---|---|---|---|---|
 | ALPHA-05 Reserves Stacks | Central reserve | 31% | Held for redistribution | |

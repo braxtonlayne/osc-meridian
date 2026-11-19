@@ -18,7 +18,7 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-04, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Philadelphia Suburbs }
     - { label: Function, value: Northeast industrial base }
     - { label: Seal state, value: CONDITIONED }
@@ -35,9 +35,9 @@ revisions:
 | Berthing | :c[facilities.GAMMA-04.capacity] |
 | Posted staff | :c[facilities.GAMMA-04.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Surface cover | :r[:c[facilities.GAMMA-04.coverStory]]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0325.name] (P-2-06-0325)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[BETA-02 (Eastern Network)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Surface cover | :r[:c[facilities.GAMMA-04.coverStory]{auth="CVO" ref="CVO-07-113"}]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0325.name]{auth="PV" ref="PV-07-212"} (P-2-06-0325)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[BETA-02 (Eastern Network)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 Class standard: :x[OSC-FAC-CLS-GAMMA]. Network sheet: :x[OSC-TRN-NET-EAS].
 

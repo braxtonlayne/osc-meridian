@@ -18,7 +18,7 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-16, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Nashville Area }
     - { label: Function, value: Mid-South logistics }
     - { label: Seal state, value: CONDITIONED }
@@ -26,7 +26,7 @@ dossier:
 revisions:
   - { rev: "1", date: 2005-10-03, change: Site designated, by: FE/ALPHA-02 }
   - { rev: "2", date: 2007-09-28, change: Completion entered, by: FE/ALPHA-02 }
-  - { rev: "3", date: 2008-01-08, change: Seal state field added to identity block (all GAMMA dossiers), by: FE/ALPHA-02 }
+  - { rev: "3", date: 2008-01-08, change: "Seal state field added to identity block (all GAMMA dossiers)", by: FE/ALPHA-02 }
   - { rev: "4", date: 2008-04-30, change: Annual register review, by: FE/ALPHA-02 }
 ---
 
@@ -35,8 +35,8 @@ revisions:
 | Berthing | :c[facilities.GAMMA-16.capacity] |
 | Posted staff | :c[facilities.GAMMA-16.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Surface cover | :r[:c[facilities.GAMMA-16.coverStory]]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0379.name] (P-2-06-0379)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[BETA-12 (Southern Network)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Surface cover | :r[:c[facilities.GAMMA-16.coverStory]{auth="CVO" ref="CVO-07-113"}]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0379.name]{auth="PV" ref="PV-07-212"} (P-2-06-0379)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[BETA-12 (Southern Network)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 Last inspection: 03 MAR 2008, emergency lighting duration test, FE/ALPHA-02. Satisfactory.

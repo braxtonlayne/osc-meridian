@@ -50,7 +50,7 @@ The phase was the largest intake to date. Recruitment was organised around facil
 
 ALPHA completion dates, from the class standard (:x[OSC-FAC-CLS-ALPHA]):
 
-::canon-table{source="facilities" filter="class=ALPHA" cols="id:Facility,codename:Name,completed:Completed"}
+::canon-table{source="facilities" auth="CVO" filter="class=ALPHA" cols="id:Facility,codename:Name,completed:Completed"}
 
 Investigation capacity under the OSC supplement was the limiting factor throughout. Average time from nomination to tier assignment was 31 weeks in 2004 and 22 weeks in 2006. The Recruitment Branch moved from Level 6 to Level 7 at ALPHA-01 in March 2005.
 
@@ -65,6 +65,6 @@ The series continues in :x[OSC-PER-PH3].
 
 ## Recruitment sources
 
-:::redact{tier=2 auth="PV" ref="OSC-PER-PH2"}
+:::redact{tier=2 auth="PV" ref="PV-06-202"}
 From 2004 recruitment moved from personal nomination to referral. Security forces were drawn mainly from personnel leaving military service, approached in their last year of service through the separation counselling channel of the parent service, under cover of a contractor employment programme. Engineering and life support staff were drawn from the workforces of prime contractors, with the contractor's agreement and without the employee's knowledge of the destination before tier assignment. A referral that did not proceed to tier assignment was closed with the outcome NOT PROCEEDED and the referee was not told.
 :::

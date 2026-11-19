@@ -51,17 +51,17 @@ The presiding member votes only to break a tie (Article III; see :x[OSC-CNL-CHR-
 
 | Casting votes recorded | |
 |---|---|
-| Sessions 2001 to 2007 | :r[Two: session 2 of 2003 (item 4); session 5 of 2006 (item 7)]{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"} |
+| Sessions 2001 to 2007 | :r[Two: session 2 of 2003 (item 4); session 5 of 2006 (item 7)]{compartment=QUARRY auth="CS" ref="CS-06-140"} |
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 No succession. The holder has occupied the seat since the Council was constituted. No read-out or reissue of copy 01 has been required. The Secretariat holds a sealed succession pack for this seat (instructions for the presiding duties to pass to the Seat 03 holder in the interval before admission of a successor), last reviewed 14 SEP 2007.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Ex officio member of all standing committees. Sits on the Standing Committee on Custody and Records (chair: Seat 06).
 :::
 

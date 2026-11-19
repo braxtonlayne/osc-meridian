@@ -21,10 +21,10 @@ distribution:
 recordType: REGISTER AND PROTOCOL
 fields:
   - { label: Register, value: Prime Contractor Register }
-  - { label: Custodian, value: Office of Internal Assurance (OIA/ALPHA-01) }
-  - { label: Contracting office, value: Facilities Engineering (FE/ALPHA-02) }
+  - { label: Custodian, value: "Office of Internal Assurance (OIA/ALPHA-01)" }
+  - { label: Contracting office, value: "Facilities Engineering (FE/ALPHA-02)" }
   - { label: Effective, value: 15 FEB 2008 }
-  - { label: Supersedes, value: OSC-ASR-CTR rev 5 (03 AUG 2007) }
+  - { label: Supersedes, value: "OSC-ASR-CTR rev 5 (03 AUG 2007)" }
   - { label: Register closed for entries, value: 31 JAN 2008 }
 revisions:
   - { rev: "6", date: 12 FEB 2008, change: "Annual register return. Matrix redrawn by class. Section 2.4 added (closed contracts).", by: OIA/ALPHA-01 }

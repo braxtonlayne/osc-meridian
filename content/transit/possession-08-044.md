@@ -47,11 +47,11 @@ fields:
 
 Walk-down arrangements are those on the commissioning sheet, :x[OSC-TRN-SEG-04].
 
-:::redact{compartment=KESTREL auth="TO" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="TO" ref="TO-07-311"}
 Party: FE 2, SFC escort 4. Movement authority: Transit Control.
 :::
 
-:::redact{tier=2 auth="TO" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="TO" ref="TO-07-041"}
 Movement under Transit Control instruction TC-08-0011.
 :::
 

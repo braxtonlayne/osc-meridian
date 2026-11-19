@@ -34,7 +34,7 @@ revisions:
 |---|---|
 | Designation | :c[reactors.RX-B08.designation] |
 | Type | :c[reactors.RX-B08.type] |
-| Host site | BETA site :r[:c[reactors.RX-B08.site]]{compartment=SEXTANT auth="LR" ref="OSC-CB-013"} |
+| Host site | BETA site :r[:c[reactors.RX-B08.site]{auth="LR" ref="LR-07-0314"}]{compartment=SEXTANT auth="LR" ref="LR-07-0313"} |
 | Rated thermal power | :c[reactors.RX-B08.thermalMWt] MWt |
 | Rated electrical output | :c[reactors.RX-B08.electricMWe] MWe |
 | Commissioned | :c[reactors.RX-B08.commissioned] |
@@ -87,14 +87,14 @@ Station single-line diagram FE-E-B08-0101, revision G, dated 04 AUG 2007. During
 
 | Work order | Description | Opened | Status |
 |---|---|---|---|
-| LR-08-0102 | Refuelling outage, RX-B08, core module exchange | 01 APR 2008 | Open |
+| LR-08-0098 | Refuelling outage, RX-B08, core module exchange | 01 APR 2008 | Open |
 | FE-08-0344 | Module bay crane, pre-lift inspection and load test | 01 APR 2008 | Complete 25 APR 2008 |
 | FE-08-0380 | Diesel set 2 fuel filter change during outage running | 30 APR 2008 | Complete 05 MAY 2008 |
 | LR-08-0136 | Spent module cask, shipping papers and escort request | 08 MAY 2008 | Open, awaiting shipment instructions |
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Spent module | Removed 11 MAY 2008; to be held in the module bay cask pending shipment instructions |

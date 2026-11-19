@@ -65,7 +65,7 @@ The network totals and the link sum agree. System :c[transitTech.tramSystem], sp
 
 ## 4. Note on reporting figures
 
-Certified mileage (:c[headline.tunnelCertifiedMi]) is a Council reporting figure and is not derived from this table. It is prepared and returned by Transit Operations. This office has not been asked to reconcile the two and does not do so. The return comprises five tram links :r[ALPHA-01 to BETA-02, BETA-02 to GAMMA-03, BETA-02 to GAMMA-04, BETA-10 to GAMMA-07 and ALPHA-05 to GAMMA-09]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} accepted by witnessed run before the first cut-off date of the return. No inter-hub rail segment is included in it.
+Certified mileage (:c[headline.tunnelCertifiedMi]) is a Council reporting figure and is not derived from this table. It is prepared and returned by Transit Operations. This office has not been asked to reconcile the two and does not do so. The return comprises five tram links :r[ALPHA-01 to BETA-02, BETA-02 to GAMMA-03, BETA-02 to GAMMA-04, BETA-10 to GAMMA-07 and ALPHA-05 to GAMMA-09]{compartment=SEXTANT auth="TO" ref="TO-07-313"} accepted by witnessed run before the first cut-off date of the return. No inter-hub rail segment is included in it.
 
 Cost tables prepared by the Comptroller use the figures in sections 2 and 3, as restated in :x[OSC-MEM-07-0944]. Definitions are in the glossary, :x[OSC-SYS-GLO], under CERTIFIED MILEAGE (:c[headline.tunnelCertifiedMi]) and ENGINEERING MILEAGE.
 
@@ -107,7 +107,7 @@ Funding lines for construction are given in :x[OSC-LDG-CAT-TRANSIT].
 
 Generated from tunnel telemetry. Extract run 15 MAY 2008 0600Z (0200 EDT). Readings are hourly means at the block's mid-point sensor unless a sensor at a portal is shown. Normal range for a running tunnel with ventilation in service: CO2 400 to 600 ppm, temperature 61 to 68 F, RH 40 to 65%.
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 | Block | Date | Interval (Z) | CO2 ppm (mean / peak) | Temp F | RH % | Vent mode | Annotation |
 |---|---|---|---|---|---|---|---|
 | 01-03 | 13 MAY 2008 | 2100-2300 | 470 / 520 | 64.1 | 58 | Normal | |

@@ -74,7 +74,7 @@ The Secretary tabled the draft of revision 2008-Q2 of the Facility Inventory, pr
 
 Members' comments are to be given to the Secretary in person by 07 MAR 2008 (action 08-01/2). The Secretariat will prepare issue arrangements for approval at Session 2 (action 08-01/3).
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Seat 07 asked whether copies of the current revision would be withdrawn before the new revision was issued. The Secretary said that the current revision would be destroyed by the Secretariat on issue of the new revision, copy for copy, against the register, and that certificates would be laid at the session following issue.
 :::
 
@@ -82,9 +82,9 @@ Seat 07 asked whether copies of the current revision would be withdrawn before t
 
 The Secretary reported that the 2008 declarations for Seats 10 and 11 were received on 09 JAN 2008 and 08 JAN 2008 respectively, nil change in each case (:x[OSC-CNL-SEAT-10], :x[OSC-CNL-SEAT-11]).
 
-## Item 6. :r[Personnel accounting: carriage of personnel without posting at month end]{compartment=QUARRY auth="CS" ref="OSC-CNL-RES-08-01"}
+## Item 6. :r[Personnel accounting: carriage of personnel without posting at month end]{compartment=QUARRY auth="COUNCIL" ref="OSC-CNL-RES-08-01"}
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-RES-08-01"}
+:::redact{tier=1 auth="COUNCIL" ref="OSC-CNL-RES-08-01"}
 The Director, Personnel & Vetting, presented a paper on the personnel carried in the total without a posting, by site of last posting and by date of change of category. The paper was read in the chamber and returned. The Council agreed the recommendations in paragraphs 4 to 7 of the paper, and directed that the matter return at Session 2 of 2008 for a date of effect.
 :::
 

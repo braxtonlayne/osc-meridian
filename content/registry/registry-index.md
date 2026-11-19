@@ -90,12 +90,12 @@ Columns are released by tier and compartment. Designation and class are shown fo
 
 ## 1. Register
 
-::canon-table{source="facilities" filter="class!=DELTA" cols="id:Designation,class:Class,capacity:Surge berthing,staff:Posted staff" caption="ALPHA, BETA and GAMMA installations, 30 APR 2008 returns"}
+::canon-table{source="facilities" auth="CVO" filter="class!=DELTA" cols="id:Designation,class:Class,capacity:Surge berthing,staff:Posted staff" caption="ALPHA, BETA and GAMMA installations, 30 APR 2008 returns"}
 
-::canon-table{source="facilities" class="DELTA" cols="id:Designation,class:Class" caption="DELTA installations"}
+::canon-table{source="facilities" auth="CVO" class="DELTA" cols="id:Designation,class:Class" caption="DELTA installations"}
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
-::canon-table{source="facilities" class="DELTA" cols="id:Designation,codename:Codename,locationText:Corridor,coverIdentity:Cover,capacity:Berthing,staff:Posted staff,function:Role" caption="DELTA installations, particulars"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
+::canon-table{source="facilities" auth="CVO" class="DELTA" cols="id:Designation,codename:Codename,locationText:Corridor,coverIdentity:Cover,capacity:Berthing,staff:Posted staff,function:Role" caption="DELTA installations, particulars"}
 :::
 
 | Register totals (all classes) | |
@@ -116,16 +116,16 @@ Totals include rows whose figures are not released at the reader's tier.
 
 ## 3. Locations, cover identities and connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
-::canon-table{source="facilities" filter="class!=DELTA" cols="id:Designation,locationText:Location,coverIdentity:Cover identity,network:Tram network,connectionsText:Connections (ALPHA)" caption="Installation locations and cover identities"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
+::canon-table{source="facilities" auth="CVO" filter="class!=DELTA" cols="id:Designation,locationText:Location,coverIdentity:Cover identity,network:Tram network,connectionsText:Connections (ALPHA)" caption="Installation locations and cover identities"}
 
 ::canon-table{source="tramNetworks.links" cols="network:Network,from:From,to:To,label:Link" caption="Tram connections by network"}
 :::
 
 ## 4. Function lines
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
-::canon-table{source="facilities" filter="class!=DELTA" cols="id:Designation,function:Function" caption="Function lines, ALPHA, BETA and GAMMA installations"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
+::canon-table{source="facilities" auth="CVO" filter="class!=DELTA" cols="id:Designation,function:Function" caption="Function lines, ALPHA, BETA and GAMMA installations"}
 :::
 
 ## 5. Notes

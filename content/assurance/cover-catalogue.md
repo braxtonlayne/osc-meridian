@@ -20,10 +20,10 @@ distribution:
 recordType: CATALOGUE EXTRACT
 fields:
   - { label: Catalogue, value: Cover Identity Catalogue }
-  - { label: Custodian, value: Cover Operations (CVO/ALPHA-04) }
-  - { label: Extract prepared for, value: ALPHA-03 (host site and adjacent entry) }
+  - { label: Custodian, value: "Cover Operations (CVO/ALPHA-04)" }
+  - { label: Extract prepared for, value: "ALPHA-03 (host site and adjacent entry)" }
   - { label: Review interval, value: Not exceeding eighteen months }
-  - { label: Classes covered, value: ALPHA and BETA (GAMMA and DELTA sites hold no cover catalogue entry) }
+  - { label: Classes covered, value: "ALPHA and BETA (GAMMA and DELTA sites hold no cover catalogue entry)" }
 revisions:
   - { rev: "10", date: 20 MAY 2008, change: "Cover review entered (one site).", by: CVO/ALPHA-04 }
   - { rev: "9", date: 14 MAY 2008, change: "Cover review entered (one site).", by: CVO/ALPHA-04 }
@@ -41,20 +41,20 @@ revisions:
 
 ## 2. Host site
 
-::canon-table{source="coverCatalogue" facility="ALPHA-03" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
+::canon-table{source="coverCatalogue" auth="CVO" facility="ALPHA-03" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
 
 Next review due by 27 AUG 2009. Facility dossier: :x[OSC-FAC-ALPHA-03].
 
 ## 3. Adjacent regional operations centre
 
-::canon-table{source="coverCatalogue" facility="BETA-09" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
+::canon-table{source="coverCatalogue" auth="CVO" facility="BETA-09" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
 
 Next review: **28 MAY 2008**, 1500Z (1000 CDT), at the site. Brought forward from the ordinary interval at the request of the parent command, whose construction notice for the quarter lists works at the auxiliary facility. The review will confirm visible surface staffing and public-records posture against this entry. Facility dossier: :x[OSC-FAC-BETA-09].
 
 ## 4. Other entries
 
 :::redact{compartment=SEXTANT auth="CVO" ref="CVO-08-027"}
-::canon-table{source="coverCatalogue" filter="facility!=ALPHA-03,facility!=BETA-09" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility!=ALPHA-03,facility!=BETA-09" cols="facility:Site,coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records posture,lastCoverReview:Last cover review"}
 :::
 
 ## 5. Cover review

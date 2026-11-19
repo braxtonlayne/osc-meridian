@@ -15,7 +15,7 @@ distribution:
   - Branch members (through detachment commanders)
   - Commandant, Security Forces Command
   - Facility commanders
-xrefs: [OSC-PER-RATIO, OSC-PER-ORG, OSC-DIR-0115, OSC-DIR-0163, OSC-DIR-0156, OSC-DIR-0216, OSC-RSV-ARMS]
+xrefs: [OSC-PER-RATIO, OSC-PER-ORG, OSC-DIR-0115, OSC-DIR-0163, OSC-DIR-0156, OSC-DIR-0216]
 recordType: FUNCTIONAL BRANCH RECORD
 fields:
   - { label: "Branch", value: "Security Forces" }
@@ -56,7 +56,7 @@ DELTA sites are guarded by two-person posts drawn from the security forces of th
 
 ## Armament issue
 
-:::redact{tier=2 auth="SFC" ref="OSC-PER-BR-SEC"}
+:::redact{tier=2 auth="SFC" ref="SFC-07-0072"}
 Armament is issued from the facility armoury against the post orders for each post and returned at the end of the shift. Access control and patrol posts carry a sidearm; escort officers for consists also carry a carbine. The armoury custodian keeps the issue register by personnel number and reconciles it at each handover. Heavy weapons and their stocks are held under the armaments reserve (:x[OSC-RSV-ARMS]) and are issued only on the order of the facility commander after a declared discontinuity, or for qualification firing. A security officer who discharges a weapon other than at qualification firing makes a written report before the end of the shift, and is withdrawn from armed posts pending review by Security Forces Command.
 :::
 

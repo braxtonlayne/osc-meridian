@@ -41,12 +41,12 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 04 DEC 2006 |
-| Predecessor copy 04: certificate of destruction | OSC-F-137/06-00341, 06 DEC 2006. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
+| Predecessor copy 04: certificate of destruction | Certificate CS-CD-0612-04, 06 DEC 2006. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
 | Successor read in | 28 DEC 2006 (day 24) |
 | Copy 04 reissued | 28 DEC 2006 |
 | Last sighted at custody audit | 03 OCT 2007 |
 
-Certificate form :x[OSC-F-137].
+Certificate under the Secretariat procedure for Council copies (:x[OSC-DIR-0354], Council copies); Council copies are not certified on :x[OSC-F-137].
 
 ## Read-in arrangements
 
@@ -56,13 +56,13 @@ Overtime claims for the two officers were settled by the Comptroller on 19 JAN 2
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 04 DEC 2006. Read out 05 DEC 2006. Successor admitted 28 DEC 2006, day 24 of the period.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Custody and Records (chair: Seat 06). Member, Standing Committee on Transit and Works (chair: Seat 09).
 :::
 

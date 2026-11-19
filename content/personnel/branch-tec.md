@@ -50,7 +50,7 @@ Reactor operators hold a licence for one unit. A licence lapses after 90 days wi
 
 Tunnel engineers and survey technicians are posted to Facilities Engineering at ALPHA-02 and work throughout the rail and tram network under possessions booked through Network Control. Engineering lengths and environmental data are in :x[OSC-TRN-ENG].
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-PER-BR-TEC"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-07-0071"}
 A tunnel crew is two engineers or technicians with a security forces escort. The crew leader holds KESTREL; other members are briefed for the segment or network of the possession only. Walk-downs of portal seals are made monthly on each segment, including segments not in revenue service, and are booked by the Tunnel Structures Engineer. Crews record environmental readings at the stations fixed in the segment engineering sheet and nowhere else. Crew vacancies on segments not in revenue service are filled from Facilities Engineering at ALPHA-02 only and are not advertised.
 :::
 

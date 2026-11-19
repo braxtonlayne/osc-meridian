@@ -87,7 +87,7 @@ Station single-line diagram FE-E-A04-0101, revision H, dated 03 SEP 2007. The co
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Core | Initial core, loaded SEP 2005 |

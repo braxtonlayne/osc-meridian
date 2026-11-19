@@ -54,9 +54,7 @@ Register total, all years: $:c[budget.totalB] billion.
 
 ## Table 3. Programme category by line
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" cols="no:Line,categoryId:Programme category,sourceId:Source"}
-:::
 
 ## Keeping the register
 

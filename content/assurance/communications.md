@@ -21,10 +21,10 @@ distribution:
 recordType: SECURITY PROTOCOL
 fields:
   - { label: Protocol, value: Communications Security }
-  - { label: Office of primary responsibility, value: Communications Security (CMS/ALPHA-02) }
-  - { label: Coordinating office, value: Office of Internal Assurance (OIA/ALPHA-01) }
+  - { label: Office of primary responsibility, value: "Communications Security (CMS/ALPHA-02)" }
+  - { label: Coordinating office, value: "Office of Internal Assurance (OIA/ALPHA-01)" }
   - { label: Effective, value: 01 JAN 2008 }
-  - { label: Supersedes, value: OSC-ASR-COMM rev 3 (20 FEB 2007) }
+  - { label: Supersedes, value: "OSC-ASR-COMM rev 3 (20 FEB 2007)" }
   - { label: Applies to, value: All MERIDIAN users and key custodians }
 revisions:
   - { rev: "4", date: 04 DEC 2007, change: "MERIDIAN release 4.1 accreditation. Section 4 restated. Removable media table revised.", by: CMS/ALPHA-02 }

@@ -41,16 +41,16 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 07 FEB 2005 |
-| Predecessor copy 02: certificate of destruction | OSC-F-137/05-00031, 09 FEB 2005. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
+| Predecessor copy 02: certificate of destruction | Certificate CS-CD-0502-02, 09 FEB 2005. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
 | Successor read in | 21 FEB 2005 (day 14) |
 | Copy 02 reissued | 21 FEB 2005 |
 | Last sighted at custody audit | 02 OCT 2007 |
 
-Destruction before reissue as required by Article II (:x[OSC-CNL-CHR-II]). Certificate form :x[OSC-F-137].
+Destruction before reissue as required by Article II (:x[OSC-CNL-CHR-II]). Certificate under the Secretariat procedure for Council copies (:x[OSC-DIR-0354]); not certified on :x[OSC-F-137].
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001 at the constitution of the Council; served until the office changed hands on 07 FEB 2005. Read out of all compartments 08 FEB 2005 by the Director, Office of Internal Assurance, in the presence of the Secretary. Debriefing undertaking signed. The first holder's post-service obligations under Article V are recorded in the Secretariat's undertakings file.
 
 Successor admitted 21 FEB 2005. Briefed in two sittings (16 and 21 FEB 2005).
@@ -58,7 +58,7 @@ Successor admitted 21 FEB 2005. Briefed in two sittings (16 and 21 FEB 2005).
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Chairs the Standing Committee on Personnel (members: Seats 07, 10 and 11). The committee receives the Personnel & Vetting strength summary each quarter.
 :::
 

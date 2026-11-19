@@ -63,6 +63,6 @@ The cumulative series agrees with total personnel :c[headline.staffTotal] in :x[
 
 ## Recruitment sources
 
-:::redact{tier=2 auth="PV" ref="OSC-PER-PH3"}
+:::redact{tier=2 auth="PV" ref="PV-06-203"}
 Analysts are recruited from the intelligence community by referral from serving OSC analysts, who are asked once a year to name colleagues they would trust with their own work. Referees are not told the outcome. Technical recruits come from naval nuclear propulsion, tunnelling contractors and the communications staffs of the military services. Phase 3 is the first phase in which a recruit's family was interviewed during the investigation, under the multi-generational element of the supplement.
 :::

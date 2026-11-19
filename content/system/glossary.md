@@ -19,7 +19,7 @@ help:
   reviewed: 2008-04-30
 revisions:
   - { rev: 9, date: 2008-04-30, change: "SESSION TIMEOUT and HANDHELD MODE revised for release 4.1.7. CONSIST ID revised at the request of Transit Operations.", by: CS/ALPHA-01 }
-  - { rev: 8, date: 2008-01-31, change: "UTILIZATION moved to the table of entries restated from the monthly return.", by: CS/ALPHA-01 }
+  - { rev: 8, date: 2008-01-31, change: "UTILIZATION restated from the January personnel return.", by: CS/ALPHA-01 }
   - { rev: 7, date: 2007-10-31, change: "CERTIFIED MILEAGE and ENGINEERING MILEAGE separated. Previously one entry, TUNNEL MILEAGE.", by: CS/ALPHA-01 }
 ---
 
@@ -29,15 +29,7 @@ These are the standard meanings of terms used in OSC documents and in MERIDIAN. 
 
 Terms are listed alphabetically. Terms shown under **See also** are themselves defined in this glossary. Proposed additions and corrections are made to the Council Secretariat by the originating division; the glossary is reissued at the end of each month in which an entry changes.
 
-::canon-table{source="glossary" filter="term!=UTILIZATION" cols="term:Term,def:Definition,seeAlso:See also"}
-
-## Entries restated from the monthly return
-
-The entry below states a figure that changes with the personnel return. It is restated each month and is held here rather than in the table above.
-
-| Term | Definition | See also |
-|---|---|---|
-| UTILIZATION | Current staffing as a percentage of sustained capacity (:c[headline.capacitySustained]): :c[headline.staffTotal] persons, :c[headline.utilizationPct] per cent, as at May 2008. | SUSTAINED CAPACITY, FULL OPERATIONAL CAPABILITY |
+::canon-table{source="glossary" cols="term:Term,def:Definition,seeAlso:See also"}
 
 ## Figures in current use
 

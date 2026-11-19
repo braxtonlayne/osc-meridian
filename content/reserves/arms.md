@@ -30,9 +30,9 @@ revisions:
 
 | Item | Holding | Stated basis |
 |---|---|---|
-| Small arms | :c[reserves.items.ARMS-SMALL.value] weapons | :c[reserves.items.ARMS-SMALL.text] |
-| Ammunition | :c[reserves.items.ARMS-AMMUNITION.value] rounds | All calibres on issue |
-| Heavy weapon systems | :r[Holdings by system type and bay]{tier=1 auth="CS" ref="OSC-2008-Q2"} | :c[reserves.items.ARMS-HEAVY.text] |
+| Small arms | :c[reserves.items.ARMS-SMALL.value]{auth="SFC" ref="SFC-07-0068"} weapons | :c[reserves.items.ARMS-SMALL.text]{auth="SFC" ref="SFC-07-0068"} |
+| Ammunition | :c[reserves.items.ARMS-AMMUNITION.value]{auth="SFC" ref="SFC-07-0068"} rounds | All calibres on issue |
+| Heavy weapon systems | :r[Holdings by system type and bay]{tier=1 auth="CS" ref="CS-07-012"} | :c[reserves.items.ARMS-HEAVY.text]{auth="SFC" ref="SFC-07-0068"} |
 
 Small arms are counted by serial number, whether on issue, in a site armory or in the Reserves Stacks. Weapons in repair at the ALPHA-02 armourer's shop are counted. Weapons awaiting disposal are not.
 
@@ -44,7 +44,7 @@ Small arms are counted by serial number, whether on issue, in a site armory or i
 | Reserve per armed position | 4 |
 | Weapons per armed position, full capacity plus reserve | 5 |
 | Armed positions on the issue basis | :c[anomalies.ARMS_RESERVE.figures.impliedEquippedStrength] |
-| Holding | :c[reserves.items.ARMS-SMALL.value] |
+| Holding | :c[reserves.items.ARMS-SMALL.value]{auth="SFC" ref="SFC-07-0068"} |
 
 Armed positions are established by Security Forces Command post orders for each site and are not the same as security forces strength. See :x[OSC-PER-BR-SEC].
 
@@ -66,7 +66,7 @@ Armed positions are established by Security Forces Command post orders for each 
 
 ## Heavy weapon systems
 
-:::redact{tier=1 auth="CS" ref="OSC-2008-Q2"}
+:::redact{tier=1 auth="CS" ref="CS-07-012"}
 Heavy weapon systems are held under the Council schedule and are not reported on this record. The schedule lists each system by type, bay and serial with the authority for its release.
 :::
 

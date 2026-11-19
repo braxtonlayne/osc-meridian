@@ -37,7 +37,7 @@ identity: &ident
   - { label: Designation, value: ALPHA-03, mono: true }
   - { label: Codename, value: ARCHIVE SITE TANGO }
   - { label: Class, value: "ALPHA (Command & Control Hub)" }
-  - { label: Network, value: Central Network (secondary hub) }
+  - { label: Network, value: "Central Network (secondary hub)" }
   - { label: Cover identity, value: Federal Reserve Gold Depository Secondary Site }
   - { label: Cover agency of record, value: Federal Reserve System }
   - { label: Reactor installation, value: RX-A03, mono: true }
@@ -47,7 +47,7 @@ identity: &ident
   - { label: Resident divisions, value: "RD (headquarters); OIA resident officer; MS site medical officer; FE life support section" }
   - { label: Local time zone, value: "Eastern (EDT, Z-4)" }
   - { label: Register section, value: FE/ALPHA-02 Facilities Register }
-  - { label: Dossier custodian, value: Plant Records Section, FE/ALPHA-02 }
+  - { label: Dossier custodian, value: "Plant Records Section, FE/ALPHA-02" }
 dossier:
   facility: ALPHA-03
   dossierType: *dtype
@@ -80,7 +80,7 @@ ALPHA-03 is the seat of the Records Division and holds the network's records sta
 
 2.1. Cover identity as carried in the Facility Inventory: **:c[facilities.ALPHA-03.coverIdentity]**.
 
-::canon-table{source="coverCatalogue" facility="ALPHA-03" cols="coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover catalogue entry, ALPHA-03"}
+::canon-table{source="coverCatalogue" auth="CVO" facility="ALPHA-03" cols="coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover catalogue entry, ALPHA-03"}
 
 2.2. Prepared public statement (Cover Operations text; to be read as written):
 
@@ -100,13 +100,13 @@ The Records Division operates the stacks on Levels 6 and 7 and the reading room 
 
 > Genetic/biometric database for "essential personnel."
 
-:::redact{tier=2 auth="RD" ref="OSC-RSV-GENE"}
+:::redact{tier=2 auth="RD" ref="RD-07-0231"}
 The database holds reference samples, fingerprint sets and dental records for personnel designated essential under the Council's continuity list, and for the dependants designated with them. Designation is made by the Council Secretariat. The Records Division receives, holds and indexes; it does not select. A record is not removed when its subject is redesignated. Records of personnel carried in categories other than POSTED are held on the same basis as records of posted personnel.
 :::
 
 > Cultural/historical preservation (selective).
 
-:::redact{tier=2 auth="RD" ref="OSC-CNL-CHR-VI"}
+:::redact{tier=2 auth="COUNCIL" ref="CC-ART-VI"}
 Selection is made against the continuity-of-knowledge schedule approved by the Council. Holdings on the schedule are preserved at this site in original or in certified copy. Holdings not on the schedule are not preserved, and no record is kept of what was considered and declined. The schedule is revised by the Council and not by the Records Division.
 :::
 
@@ -129,7 +129,7 @@ The continuity-of-knowledge holdings are maintained by the Records Division unde
 
 4.3. Command arrangements:
 
-:::redact{tier=2 auth="SFC" ref="OSC-ASR-PSEC"}
+:::redact{tier=2 auth="SFC" ref="SFC-06-0170"}
 Command succession at ALPHA-03 runs Commander, Deputy Commander, Chief of Staff, Chief Records Division. The order to seal the facility is given by the Commander or, in her absence, by the next officer in succession who is on site. When the seal order is given, personnel not on the seal roster at that time are not admitted below Level 1. The seal roster is the posted strength less those with lapsed medical readiness, less those named by the Commander. Personnel carried in categories other than POSTED are not on the seal roster. The roster is held by the Command Section and is not published to the site.
 :::
 
@@ -191,9 +191,9 @@ Depths are to the top of each level, in feet below the surface reference point. 
 | 6 | Records Stacks A-B | :c[facilities.ALPHA-03.levels.6.topFt] | T3 | :c[facilities.ALPHA-03.levels.6.notes] |
 | 7 | Records Stacks C | :c[facilities.ALPHA-03.levels.7.topFt] | T3 | :c[facilities.ALPHA-03.levels.7.notes] |
 | 8 | Cold Storage: Seed Collection | :c[facilities.ALPHA-03.levels.8.topFt] | T3 | :c[facilities.ALPHA-03.levels.8.notes] |
-| 9 | :r[Cold Storage: Biological Sample Collection]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | :c[facilities.ALPHA-03.levels.9.topFt] | T2 | :r[Genetic material vault, -80 C and vapour-phase nitrogen.]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} |
-| 10 | :r[Power Plant]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-03.levels.10.topFt] | T2 | :r[RX-A03, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| 11 | :r[Special Collections Annex]{tier=1 auth="RD" ref="OSC-CNL-CHR-VII"} | :c[facilities.ALPHA-03.levels.11.topFt] | T1 | :r[Access list held by the Chief, Records Division.]{tier=1 auth="RD" ref="OSC-CNL-CHR-VII"} |
+| 9 | :r[Cold Storage: Biological Sample Collection]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | :c[facilities.ALPHA-03.levels.9.topFt] | T2 | :r[Genetic material vault, -80 C and vapour-phase nitrogen.]{compartment=LANTERN auth="RD" ref="RD-07-0110"} |
+| 10 | :r[Power Plant]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-03.levels.10.topFt] | T2 | :r[RX-A03, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="FE-07-0388"} |
+| 11 | :r[Special Collections Annex]{tier=1 auth="COUNCIL" ref="CC-ART-VII"} | :c[facilities.ALPHA-03.levels.11.topFt] | T1 | :r[Access list held by the Chief, Records Division.]{tier=1 auth="COUNCIL" ref="CC-ART-VII"} |
 | 12 | Rail Terminal: Inter-Hub Platforms and Central Network Tram | :c[facilities.ALPHA-03.levels.12.topFt] | T3 | :c[facilities.ALPHA-03.levels.12.notes] |
 
 ## 8. Level descriptions
@@ -218,8 +218,8 @@ Depths are to the top of each level, in feet below the surface reference point. 
 
 8.10. **Level 9, biological sample collection.**
 
-:::redact{compartment=LANTERN auth="RD" ref="OSC-CB-010"}
-Genetic material vault. Mechanical freezers at -80 C and vapour-phase nitrogen dewars, with a liquid nitrogen bulk tank fed from the Level 12 delivery point. The collection holds :r[:c[reserves.items.MED-GENETIC.value] samples]{tier=2 auth="RD" ref="OSC-RSV-GENE"}. Temperature logs are kept by the Vault Custodian, Biological Collections (A. Coyle) for Levels 8 and 9. Oxygen depletion alarms are tested on the first Monday of the month; personnel on the level when the alarm sounds leave by the stair without waiting for confirmation. Catalogue: :x[OSC-RSV-GENE].
+:::redact{compartment=LANTERN auth="RD" ref="RD-07-0110"}
+Genetic material vault. Mechanical freezers at -80 C and vapour-phase nitrogen dewars, with a liquid nitrogen bulk tank fed from the Level 12 delivery point. The collection holds :r[:c[reserves.items.MED-GENETIC.value]{auth="RD" ref="RD-07-0231"} samples]{tier=2 auth="RD" ref="RD-07-0231"}. Temperature logs are kept by the Vault Custodian, Biological Collections (A. Coyle) for Levels 8 and 9. Oxygen depletion alarms are tested on the first Monday of the month; personnel on the level when the alarm sounds leave by the stair without waiting for confirmation. Catalogue: :x[OSC-RSV-GENE].
 :::
 
 8.11. **Level 10.** Plant level. Reactor reference at para 9.

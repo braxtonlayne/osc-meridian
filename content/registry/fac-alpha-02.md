@@ -31,7 +31,7 @@ identity: &ident
   - { label: Designation, value: ALPHA-02, mono: true }
   - { label: Codename, value: OLYMPUS STATION }
   - { label: Class, value: "ALPHA (Command & Control Hub)" }
-  - { label: Network, value: Mountain/Western Network (hub) }
+  - { label: Network, value: "Mountain/Western Network (hub)" }
   - { label: Cover identity, value: "Concealed within \"expanded\" NORAD infrastructure" }
   - { label: Cover facility type, value: Front Range Communications Annex }
   - { label: Reactor installation, value: RX-A02, mono: true }
@@ -39,7 +39,7 @@ identity: &ident
   - { label: Resident divisions, value: "FE, CMS, SFC" }
   - { label: Entry, value: Horizontal adit }
   - { label: Register section, value: FE/ALPHA-02 Facilities Register }
-  - { label: Dossier custodian, value: Plant Records Section, FE/ALPHA-02 }
+  - { label: Dossier custodian, value: "Plant Records Section, FE/ALPHA-02" }
 dossier:
   facility: ALPHA-02
   dossierType: *dtype
@@ -57,8 +57,8 @@ This dossier is maintained at the site that issues it. Facilities Engineering is
 
 | Field | Entry |
 |---|---|
-| Location (Facility Inventory) | :r[:c[facilities.ALPHA-02.locationText]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| Terrain | :r[:c[facilities.ALPHA-02.terrain]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| Location (Facility Inventory) | :r[:c[facilities.ALPHA-02.locationText]{auth="TO" ref="TO-07-313"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| Terrain | :r[:c[facilities.ALPHA-02.terrain]{auth="TO" ref="TO-07-313"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 | Entry | Horizontal adit from the annex gate; blast doors 1 and 2 |
 | Depth to terminal level | :c[facilities.ALPHA-02.depthFt] ft (vertical cover over the terminal level) |
 | Completed | :c[facilities.ALPHA-02.completed] |
@@ -69,15 +69,15 @@ This dossier is maintained at the site that issues it. Facilities Engineering is
 
 2.2. Prepared public statement:
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-> :c[facilities.ALPHA-02.coverStory]
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+> :c[facilities.ALPHA-02.coverStory]{auth="CVO" ref="CVO-07-113"}
 :::
 
 2.3. Photography at the gate is refused under the cover statement. This applies to OSC personnel. Badge photographs are taken on Level 5.
 
 ## 3. Function
 
-:r[Western Command Hub. Military operations coordination. Deep continuity for DoD/Joint Chiefs. Hardened communications array. :r[Weapons research oversight.]{tier=1 auth="SFC" ref="OSC-ASR-CG"}]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"}
+:r[Western Command Hub. Military operations coordination. Deep continuity for DoD/Joint Chiefs. Hardened communications array. :r[Weapons research oversight.]{tier=1 auth="SFC" ref="SFC-07-0033"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"}
 
 Facilities Engineering, Communications Security and Security Forces Command are headquartered here. The tunnel maintenance depot for rail and tram rolling stock heavy maintenance is on Level 10.
 
@@ -97,11 +97,11 @@ Facilities Engineering, Communications Security and Security Forces Command are 
 
 5.1. Facility Inventory connection line, quoted:
 
-> :c[facilities.ALPHA-02.connectionsText]
+> :c[facilities.ALPHA-02.connectionsText]{auth="TO" ref="TO-07-313"}
 
 5.2. Inter-hub rail and regional tram detail:
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 | Segment | Between | Reference | Engineering length (mi) | Running time (h) | Completed | Status |
 |---|---|---|---|---|---|---|
 | 02 | ALPHA-01 to ALPHA-02 | :x[OSC-TRN-SEG-02] | :c[railSegments.02.miles] | :c[railSegments.02.hours] | :c[railSegments.02.completed] | :c[railSegments.02.status] |
@@ -125,9 +125,9 @@ Depths in feet below the gate datum. The adit runs from Level 1 to the Level 2 p
 | 4 | Dining, Personnel Services and Clinic | :c[facilities.ALPHA-02.levels.4.topFt] | T4 | :c[facilities.ALPHA-02.levels.4.notes] |
 | 5 | Security Forces Command and Armory | :c[facilities.ALPHA-02.levels.5.topFt] | T3 | :c[facilities.ALPHA-02.levels.5.notes] |
 | 6 | Communications Array Equipment Rooms | :c[facilities.ALPHA-02.levels.6.topFt] | T3 | :c[facilities.ALPHA-02.levels.6.notes] |
-| 7 | :r[Military Operations Floor]{tier=2 auth="SFC" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-02.levels.7.topFt] | T2 | :r[Joint operations coordination.]{tier=2 auth="SFC" ref="OSC-ASR-CG"} |
-| 8 | :r[Laboratories]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-02.levels.8.topFt] | T2 | :r[Technical evaluation. Separate air handling.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| 9 | :r[Power Plant]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-02.levels.9.topFt] | T2 | :r[RX-A02, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
+| 7 | :r[Military Operations Floor]{tier=2 auth="SFC" ref="SFC-07-0033"} | :c[facilities.ALPHA-02.levels.7.topFt] | T2 | :r[Joint operations coordination.]{tier=2 auth="SFC" ref="SFC-07-0033"} |
+| 8 | :r[Laboratories]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-02.levels.8.topFt] | T2 | :r[Technical evaluation. Separate air handling.]{tier=2 auth="FE" ref="FE-07-0388"} |
+| 9 | :r[Power Plant]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-02.levels.9.topFt] | T2 | :r[RX-A02, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="FE-07-0388"} |
 | 10 | Engineering Shops and Tunnel Maintenance Depot | :c[facilities.ALPHA-02.levels.10.topFt] | T3 | :c[facilities.ALPHA-02.levels.10.notes] |
 | 11 | Rail Terminal: Inter-Hub Platforms | :c[facilities.ALPHA-02.levels.11.topFt] | T3 | :c[facilities.ALPHA-02.levels.11.notes] |
 
@@ -135,12 +135,12 @@ Depths in feet below the gate datum. The adit runs from Level 1 to the Level 2 p
 
 | Platform | Use | Lighting | Remarks |
 |---|---|---|---|
-| 1 | Inter-hub rail, ALPHA-01 | Normal | :r[Segment 02. Booked paths per working timetable.]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| 2 | Inter-hub rail, ALPHA-04 | Normal | :r[Segment 03. Booked paths per working timetable.]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| 3 | Inter-hub rail | Standby | Not in revenue service. :r[Platform 3: Segment 04, commissioned :c[railSegments.04.completed], no booked paths.]{compartment=KESTREL auth="FE" ref="OSC-TRN-SEG-04"} |
-| 4 | Mountain/Western tram | Normal | :r[BETA-04 services.]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| 5 | Mountain/Western tram | Normal | :r[BETA-11 services.]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| 6 | Mountain/Western tram | Normal | :r[BETA-06 services.]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| 1 | Inter-hub rail, ALPHA-01 | Normal | :r[Segment 02. Booked paths per working timetable.]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| 2 | Inter-hub rail, ALPHA-04 | Normal | :r[Segment 03. Booked paths per working timetable.]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| 3 | Inter-hub rail | Standby | Not in revenue service. :r[Platform 3: Segment 04, commissioned :c[railSegments.04.completed], no booked paths.]{compartment=KESTREL auth="FE" ref="FE-07-0304"} |
+| 4 | Mountain/Western tram | Normal | :r[BETA-04 services.]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| 5 | Mountain/Western tram | Normal | :r[BETA-11 services.]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| 6 | Mountain/Western tram | Normal | :r[BETA-06 services.]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 7.1. Platform edge doors on platforms 1 to 6 are tested weekly by the depot. Platform 3 is included in the weekly test. Segment engineering sheet: :x[OSC-TRN-SEG-04].
 

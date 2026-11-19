@@ -36,7 +36,7 @@ revisions:
 
 The Mountain/Western Network is worked as two sub-networks, one from each hub, joined only by rail Segment 03 (:x[OSC-TRN-SEG-03]). No tram link runs between ALPHA-02 and ALPHA-04. Tram stock moving between the sub-networks travels by rail on a flat consist.
 
-ALPHA-04 is described in its facility record as follows: ":c[facilities.ALPHA-04.connectionsText]" For working purposes it is the hub of sub-network W and is treated as a full hub by Network Control.
+ALPHA-04 is described in its facility record as follows: ":c[facilities.ALPHA-04.connectionsText]{auth="TO" ref="TO-07-313"}" For working purposes it is the hub of sub-network W and is treated as a full hub by Network Control.
 
 System: :c[transitTech.tramSystem], :c[transitTech.tramSpeed]. Depth band :c[transitTech.averageDepth].
 
@@ -54,15 +54,15 @@ Links M1 to M9 in register order. M1 to M3 are worked from ALPHA-02 (sub-network
 
 | Link | Sub-network | From | To | Label |
 |---|---|---|---|---|
-| M1 | M | ALPHA-02 | :r[BETA-04]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Minneapolis)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M2 | M | ALPHA-02 | :r[BETA-11]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Salt Lake City)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M3 | M | ALPHA-02 | :r[BETA-06]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Phoenix)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M4 | W | ALPHA-04 | :r[BETA-07]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Seattle)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M5 | W | ALPHA-04 | :r[BETA-08]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Las Vegas)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M6 | W | :r[BETA-07]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-13]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Portland)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M7 | W | :r[BETA-08]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-11]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Los Angeles)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M8 | M | :r[BETA-11]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-14]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Boise)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| M9 | W | ALPHA-04 | :r[GAMMA-12]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(San Francisco)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| M1 | M | ALPHA-02 | :r[BETA-04]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Minneapolis)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M2 | M | ALPHA-02 | :r[BETA-11]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Salt Lake City)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M3 | M | ALPHA-02 | :r[BETA-06]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Phoenix)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M4 | W | ALPHA-04 | :r[BETA-07]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Seattle)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M5 | W | ALPHA-04 | :r[BETA-08]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Las Vegas)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M6 | W | :r[BETA-07]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-13]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Portland)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M7 | W | :r[BETA-08]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-11]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Los Angeles)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M8 | M | :r[BETA-11]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-14]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Boise)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| M9 | W | ALPHA-04 | :r[GAMMA-12]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(San Francisco)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 ## 4. Division of responsibility
 

@@ -31,7 +31,7 @@ revisions:
 |---|---|
 | Designation | :c[reactors.RX-B03.designation] |
 | Type | :c[reactors.RX-B03.type] |
-| Host site | BETA site :r[:c[reactors.RX-B03.site]]{compartment=SEXTANT auth="LR" ref="OSC-CB-013"} |
+| Host site | BETA site :r[:c[reactors.RX-B03.site]{auth="LR" ref="LR-07-0314"}]{compartment=SEXTANT auth="LR" ref="LR-07-0313"} |
 | Rated thermal power | :c[reactors.RX-B03.thermalMWt] MWt |
 | Rated electrical output | :c[reactors.RX-B03.electricMWe] MWe |
 | Commissioned | :c[reactors.RX-B03.commissioned] |
@@ -73,7 +73,7 @@ Station single-line diagram FE-E-B03-0101, revision H, dated 27 FEB 2008. Revisi
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Core module | Initial module, installed JAN 2007 |

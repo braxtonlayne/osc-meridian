@@ -47,7 +47,7 @@ Detection systems A and B agreed throughout. No alarms on traction power: Segmen
 
 ## Dispatcher's supporting remarks
 
-:::redact{compartment=KESTREL auth="TO" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="TO" ref="TO-07-311"}
 Board showed OCCUPIED, not POSSESSED, for each block in turn. Possession reports POSSESSED regardless of detection.
 
 Second occasion. First 08 APR 2008 2210Z, Watch 2, not logged; see dispatcher notebook.

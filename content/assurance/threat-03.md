@@ -22,7 +22,7 @@ fields:
   - { label: Register, value: OIA Threat and Contingency Register }
   - { label: Entry, value: "03", mono: true }
   - { label: Threat group, value: External }
-  - { label: Owning office, value: Security Forces Command (SFC/ALPHA-02) }
+  - { label: Owning office, value: "Security Forces Command (SFC/ALPHA-02)" }
   - { label: Register custodian, value: Office of Internal Assurance }
   - { label: Contingency protocol, value: OSC-CP-03, mono: true }
   - { label: Last review, value: 28 FEB 2008 }

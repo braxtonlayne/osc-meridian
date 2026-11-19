@@ -129,11 +129,11 @@ The Ledger application draws this table as a flow chart from source appropriatio
 
 The Facility Inventory carries an assessment of the programme's audit exposure. The rating is reproduced for account holders at Tier 2 and above. The assessment text is not reproduced.
 
-:::redact{tier=2 auth="CS" ref="OSC-2008-Q2"}
+:::redact{tier=2 auth="CS" ref="CS-07-012"}
 Audit exposure rating (Facility Inventory, Revision 2008-Q2, budget section): MINIMAL. No change since the previous revision.
 :::
 
-:::redact{tier=1 auth="CS" ref="OSC-2008-Q2"}
+:::redact{tier=1 auth="CS" ref="CS-07-012"}
 Audit Exposure Risk: MINIMAL. Network cost distribution and classification protocols prevent single-point discovery. Congressional oversight committees possess no awareness of program existence.
 :::
 

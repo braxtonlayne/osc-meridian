@@ -42,17 +42,17 @@ Seats are numbered 01 to 11 and are described by category only. The seat record 
 
 | Seat | Category | Holder |
 |---|---|---|
-| 01 | Cabinet-level | :r[Holder, office held and date of appointment]{tier=1 auth="CS" ref="OSC-CNL-SEAT-01"} |
-| 02 | Cabinet-level | :r[Holder, office held and date of appointment on succession]{tier=1 auth="CS" ref="OSC-CNL-SEAT-02"} |
-| 03 | Cabinet-level | :r[Holder and office held]{tier=1 auth="CS" ref="OSC-CNL-SEAT-03"} |
-| 04 | Cabinet-level | :r[Holder, office held and date of appointment]{tier=1 auth="CS" ref="OSC-CNL-SEAT-04"} |
-| 05 | Agency director | :r[Holder and agency]{tier=1 auth="CS" ref="OSC-CNL-SEAT-05"} |
-| 06 | Agency director | :r[Holder, agency and date of appointment]{tier=1 auth="CS" ref="OSC-CNL-SEAT-06"} |
-| 07 | Agency director | :r[Holder, agency and date of appointment on succession, with note]{tier=1 auth="CS" ref="OSC-CNL-SEAT-07"} |
-| 08 | Senior military | :r[Holder, service and rank]{tier=1 auth="CS" ref="OSC-CNL-SEAT-08"} |
-| 09 | Senior military | :r[Holder, service, rank and date]{tier=1 auth="CS" ref="OSC-CNL-SEAT-09"} |
-| 10 | Defense industry | :r[Holder and company]{tier=1 auth="CS" ref="OSC-CNL-SEAT-10"} |
-| 11 | Defense industry | :r[Holder, company and date]{tier=1 auth="CS" ref="OSC-CNL-SEAT-11"} |
+| 01 | Cabinet-level | :r[Holder, office held and date of appointment]{tier=1 auth="CS" ref="CS-06-140"} |
+| 02 | Cabinet-level | :r[Holder, office held and date of appointment on succession]{tier=1 auth="CS" ref="CS-06-140"} |
+| 03 | Cabinet-level | :r[Holder and office held]{tier=1 auth="CS" ref="CS-06-140"} |
+| 04 | Cabinet-level | :r[Holder, office held and date of appointment]{tier=1 auth="CS" ref="CS-06-140"} |
+| 05 | Agency director | :r[Holder and agency]{tier=1 auth="CS" ref="CS-06-140"} |
+| 06 | Agency director | :r[Holder, agency and date of appointment]{tier=1 auth="CS" ref="CS-06-140"} |
+| 07 | Agency director | :r[Holder, agency and date of appointment on succession, with note]{tier=1 auth="CS" ref="CS-06-104"} |
+| 08 | Senior military | :r[Holder, service and rank]{tier=1 auth="CS" ref="CS-06-140"} |
+| 09 | Senior military | :r[Holder, service, rank and date]{tier=1 auth="CS" ref="CS-06-140"} |
+| 10 | Defense industry | :r[Holder and company]{tier=1 auth="CS" ref="CS-06-140"} |
+| 11 | Defense industry | :r[Holder, company and date]{tier=1 auth="CS" ref="CS-06-140"} |
 
 ## Appointment and succession
 
@@ -62,6 +62,6 @@ Members are appointed and succeed under Charter Article II (:x[OSC-CNL-CHR-II]).
 
 Tier 1 members are counted in the tier figures of :x[OSC-PER-IDX] and are paid on the central account. They do not appear on any facility strength return. The Council's own provision on accounting for persons is at Charter Article V (:x[OSC-CNL-CHR-V]).
 
-:::redact{tier=2 auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{tier=2 auth="CS" ref="CS-06-140"}
 Members are berthed at ALPHA-01 in a residential area reserved to the Council and are not allocated berths in the facility berthing plan. Staff attached to members (aides, drivers and protection details) are Tier 2 or Tier 3 personnel of the Council Secretariat and are counted on the ALPHA-01 return.
 :::

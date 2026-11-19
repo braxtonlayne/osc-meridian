@@ -50,15 +50,15 @@ revisions:
 | Copy 07 issued | 17 AUG 2006 |
 | Predecessor copy 07: certificate of destruction | |
 
-Certificate form :x[OSC-F-137].
+Certificate under the Secretariat procedure for Council copies (:x[OSC-DIR-0354], Council copies); Council copies are not certified on :x[OSC-F-137].
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-MIN-06-04"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-104"}
 Note to the entry for predecessor copy 07: to follow (Secretariat).
 :::
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 14 JUL 2006. Read out of compartments by the Director, Office of Internal Assurance, on 21 JUL 2006 at the first holder's private address, the first holder having left government service. Debriefing undertaking signed the same day. Collection of copy 07 from the first holder was arranged for the Secretariat courier on 21 AUG 2006.
 
 Successor admitted 17 AUG 2006 at session 4 of 2006, day 34 of the period as extended by the Council. The successor was overseas from 18 JUL to 11 AUG 2006 and could not be briefed by secure means.
@@ -66,7 +66,7 @@ Successor admitted 17 AUG 2006 at session 4 of 2006, day 34 of the period as ext
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Personnel (chair: Seat 02).
 :::
 

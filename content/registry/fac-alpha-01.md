@@ -11,7 +11,7 @@ originator: FE/ALPHA-02
 revision: 9
 date: 2008-04-30
 facility: ALPHA-01
-summary: "RAVEN MOUNTAIN, beneath a former quarry under reclamation (cover catalogued by Cover Operations)."
+summary: "RAVEN MOUNTAIN, Eastern Network primary hub (cover catalogued by Cover Operations)."
 distribution:
   - Facility Commander, ALPHA-01
   - Deputy Commander, ALPHA-01 (Chair, Space and Parking Allocation Board)
@@ -22,9 +22,6 @@ distribution:
   - Registry file copy (RD/ALPHA-03)
 xrefs:
   - OSC-FAC-CLS-ALPHA
-  - OSC-TRN-SEG-01
-  - OSC-TRN-SEG-02
-  - OSC-TRN-SEG-06
   - OSC-TRN-NET-EAS
   - OSC-RSV-RX-A01
   - OSC-CNL-SEAT-00
@@ -34,15 +31,15 @@ identity: &ident
   - { label: Designation, value: ALPHA-01, mono: true }
   - { label: Codename, value: RAVEN MOUNTAIN }
   - { label: Class, value: "ALPHA (Command & Control Hub)" }
-  - { label: Network, value: Eastern Network (primary hub) }
-  - { label: Cover facility type, value: Former quarry reclamation and groundwater monitoring station }
-  - { label: Cover agency of record, value: Department of the Interior }
+  - { label: Network, value: "Eastern Network (primary hub)" }
+  - { label: Cover facility type, value: "Withheld (SEXTANT). See OSC-ASR-COV." }
+  - { label: Cover agency of record, value: "Withheld (SEXTANT). See OSC-ASR-COV." }
   - { label: Reactor installation, value: RX-A01, mono: true }
   - { label: Facility Commander, value: "T. R. Kelleway, VADM (Ret.)" }
   - { label: Deputy Commander, value: S. Pelletier }
   - { label: Resident divisions, value: "CS, OIA, TO, PV, CMP, IAD" }
   - { label: Register section, value: FE/ALPHA-02 Facilities Register }
-  - { label: Dossier custodian, value: Plant Records Section, FE/ALPHA-02 }
+  - { label: Dossier custodian, value: "Plant Records Section, FE/ALPHA-02" }
 dossier:
   facility: ALPHA-01
   dossierType: *dtype
@@ -58,20 +55,20 @@ revisions:
 
 | Field | Entry |
 |---|---|
-| Location (Facility Inventory) | :r[:c[facilities.ALPHA-01.locationText]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| Terrain | :r[:c[facilities.ALPHA-01.terrain]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| Surface reference point | :r[Reclamation office scale house, north gate]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| Location (Facility Inventory) | :r[:c[facilities.ALPHA-01.locationText]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| Terrain | :r[:c[facilities.ALPHA-01.terrain]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| Surface reference point | :r[Reclamation office scale house, north gate]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 | Depth to terminal level | :c[facilities.ALPHA-01.depthFt] ft |
 | Completed | :c[facilities.ALPHA-01.completed] |
 | Commander in post since | :c[facilities.ALPHA-01.completed] (facility completion) |
 
 ## 2. Cover identity
 
-2.1. The surface facility is presented as a former limestone quarry under reclamation. No separate cover agency title is carried in the Facility Inventory for this site; the cover arrangement is catalogued by Cover Operations at :x[OSC-ASR-COV].
+2.1. The surface facility is presented as :r[a former limestone quarry under reclamation]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"}. No separate cover agency title is carried in the Facility Inventory for this site; the cover arrangement is catalogued by Cover Operations at :x[OSC-ASR-COV].
 
 2.2. Prepared public statement (Cover Operations text; to be read as written and not paraphrased):
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
 > :c[facilities.ALPHA-01.coverStory]
 :::
 
@@ -79,7 +76,7 @@ revisions:
 
 ## 3. Function
 
-:r[:c[facilities.ALPHA-01.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"}
+:r[:c[facilities.ALPHA-01.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"}
 
 The Core Council sits at this facility. The Council Secretariat, the Office of Internal Assurance, Transit Operations (Network Control), Personnel & Vetting, the Comptroller and Intelligence & Analysis are headquartered here.
 
@@ -108,7 +105,7 @@ The Core Council sits at this facility. The Council Secretariat, the Office of I
 
 5.2. Inter-hub rail and regional tram detail:
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 | Platform | Service | Reference | Engineering length (mi) | Running time (h) | Status |
 |---|---|---|---|---|---|
 | 1 | Segment 01 to ALPHA-03 | :x[OSC-TRN-SEG-01] | :c[railSegments.01.miles] | :c[railSegments.01.hours] | :c[railSegments.01.status] |
@@ -134,14 +131,14 @@ Depths are to the top of each level, in feet below the surface reference point. 
 | 3 | Berthing A-F | :c[facilities.ALPHA-01.levels.3.topFt] | T4 | :c[facilities.ALPHA-01.levels.3.notes] |
 | 4 | Dining and Personnel Services | :c[facilities.ALPHA-01.levels.4.topFt] | T4 | :c[facilities.ALPHA-01.levels.4.notes] |
 | 5 | Clinic | :c[facilities.ALPHA-01.levels.5.topFt] | T4 | :c[facilities.ALPHA-01.levels.5.notes] |
-| 6 | Administration and Secretariat Offices | :c[facilities.ALPHA-01.levels.6.topFt] | T3 | Council Secretariat; copy register held here. :r[Register custodian: Secretary to the Council (A. Penhallow). The :c[anomalies.ELECTRONIC_COPY.figures.copies] distribution copies are issued to seat holders against signature; returns and destructions witnessed by the Secretary in person.]{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"} Personnel & Vetting; Comptroller. |
+| 6 | Administration and Secretariat Offices | :c[facilities.ALPHA-01.levels.6.topFt] | T3 | Council Secretariat; copy register held here. :r[Register custodian: Secretary to the Council (A. Penhallow). The :c[anomalies.ELECTRONIC_COPY.figures.copies] distribution copies are issued to seat holders against signature; returns and destructions witnessed by the Secretary in person.]{compartment=QUARRY auth="CS" ref="CS-06-140"} Personnel & Vetting; Comptroller. |
 | 7 | Records and Secure Storage | :c[facilities.ALPHA-01.levels.7.topFt] | T3 | :c[facilities.ALPHA-01.levels.7.notes] |
 | 8 | Communications Equipment Rooms | :c[facilities.ALPHA-01.levels.8.topFt] | T3 | :c[facilities.ALPHA-01.levels.8.notes] |
-| 9 | :r[Power Plant]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-01.levels.9.topFt] | T2 | :r[RX-A01 and switchgear. Diesel generator hall.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| 10 | :r[Operations Floor]{tier=2 auth="IAD" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-01.levels.10.topFt] | T2 | :r[Intelligence fusion floor and Network Control (Transit Operations).]{tier=2 auth="IAD" ref="OSC-ASR-CG"} |
-| 11 | :r[Conference Level]{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"} | :c[facilities.ALPHA-01.levels.11.topFt] | T1 | :r[Access by Council Secretariat escort.]{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"} |
-| 12 | :r[Residential Suite R]{tier=1 auth="CS" ref="OSC-CNL-CHR-VI"} | :c[facilities.ALPHA-01.levels.12.topFt] | T1 | :r[Maintained to standing readiness.]{tier=1 auth="CS" ref="OSC-CNL-CHR-VI"} |
-| 13 | Rail Terminal: Inter-Hub Platforms and Eastern Network Tram | :c[facilities.ALPHA-01.levels.13.topFt] | T3 | :r[:c[facilities.ALPHA-01.levels.13.notes]]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| 9 | :r[Power Plant]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-01.levels.9.topFt] | T2 | :r[RX-A01 and switchgear. Diesel generator hall.]{tier=2 auth="FE" ref="FE-07-0388"} |
+| 10 | :r[Operations Floor]{tier=2 auth="IAD" ref="IAD-07-0033"} | :c[facilities.ALPHA-01.levels.10.topFt] | T2 | :r[Intelligence fusion floor and Network Control (Transit Operations).]{tier=2 auth="IAD" ref="IAD-07-0033"} |
+| 11 | :r[Conference Level]{tier=1 auth="COUNCIL" ref="CC-ART-IV"} | :c[facilities.ALPHA-01.levels.11.topFt] | T1 | :r[Access by Council Secretariat escort.]{tier=1 auth="COUNCIL" ref="CC-ART-IV"} |
+| 12 | :r[Residential Suite R]{tier=1 auth="COUNCIL" ref="CC-ART-VI"} | :c[facilities.ALPHA-01.levels.12.topFt] | T1 | :r[Maintained to standing readiness.]{tier=1 auth="COUNCIL" ref="CC-ART-VI"} |
+| 13 | Rail Terminal: Inter-Hub Platforms and Eastern Network Tram | :c[facilities.ALPHA-01.levels.13.topFt] | T3 | :r[:c[facilities.ALPHA-01.levels.13.notes]]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 6.1. Lift car calls to Levels 11 and 12 are not available from the public lift panels. Personnel who find a lift stopped at either level are to remain in the car and use the car telephone.
 

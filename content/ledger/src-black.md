@@ -38,9 +38,9 @@ This source comprises programme money appropriated within classified intelligenc
 
 | Parent appropriation | Receiving department | Lines | Amount |
 |---|---|---:|---:|
-| :r[Classified Program 0417, Continuity Infrastructure Annex]{tier=1 auth="CMP" ref="OSC-ASR-CG"} | DOD | 26 | 73,266 |
-| :r[Classified Program 0522, Special Facilities Account]{tier=1 auth="CMP" ref="OSC-ASR-CG"} | DHS | 6 | 22,359 |
-| :r[Classified Program 0386, Site Support Account]{tier=1 auth="CMP" ref="OSC-ASR-CG"} | DOE | 8 | 22,045 |
+| :r[Classified Program 0417, Continuity Infrastructure Annex]{tier=1 auth="CMP" ref="CMP-07-0019"} | DOD | 26 | 73,266 |
+| :r[Classified Program 0522, Special Facilities Account]{tier=1 auth="CMP" ref="CMP-07-0019"} | DHS | 6 | 22,359 |
+| :r[Classified Program 0386, Site Support Account]{tier=1 auth="CMP" ref="CMP-07-0019"} | DOE | 8 | 22,045 |
 | Total | | 40 | 117,670 |
 
 Transfers are made quarterly to the receiving department's account at the sub-account given in the register. The receiving department records the transfer as a reimbursable obligation from a classified customer, which is its normal practice for such work, and audits the line in its own accounts.

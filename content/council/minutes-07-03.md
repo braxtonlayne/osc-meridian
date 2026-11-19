@@ -51,7 +51,7 @@ distribution:
   - Seats 01 to 11 (by numbered copy)
   - Secretary to the Council (register copy)
   - Records Division, ALPHA-03 (library extract)
-xrefs: [OSC-TRN-SEG-04, OSC-MEM-07-0612, OSC-RSV-IDX, OSC-CNL-SEAT-03]
+xrefs: [OSC-MEM-07-0612, OSC-RSV-IDX, OSC-CNL-SEAT-03]
 ---
 
 No recording equipment was present in the chamber. These minutes were prepared by N. Fenwick, Minutes Clerk, from the Secretary's notes, and are signed by the Secretary. Attendance is recorded by seat. Seven members constitute a quorum.
@@ -68,7 +68,7 @@ Approved, with one correction to the time of adjournment (1745Z, not 1754Z).
 
 The Secretary reported the issue on :c[realEvents.RE-08.dateText] of the national continuity policy. The Council noted the policy. The published text is to be filed with the Council's reference papers (action 07-03/1).
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-RES-07-04"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="OSC-CNL-RES-07-04"}
 The Council agreed that the policy be cited in the Office's directives as the public framework for continuity of government, and that Cover Operations use it as the reference for the cover documents of the sites it names. No other action was taken. Seat 05 asked that the minutes record that the Office was not consulted on the text. The presiding member agreed that the minutes record the policy as "noted" and nothing further.
 :::
 
@@ -76,7 +76,7 @@ The Council agreed that the policy be cited in the Office's directives as the pu
 
 Seat 03 reported for the committee, which met at 1230Z (0830 EDT) the same morning (:x[OSC-CNL-SEAT-03]). The committee received the reserves position (:x[OSC-RSV-IDX]) and a paper from Logistics & Reserves fixing the basis on which reserve figures are stated (:x[OSC-MEM-07-0612]). Reserve burn-down figures will in future be stated against the sustained capacity of :c[headline.capacitySustained] and not against surge berthing. The paper is to be circulated to all seats (action 07-03/2).
 
-:::redact{compartment=QUARRY auth="LR" ref="OSC-MEM-07-0612"}
+:::redact{compartment=QUARRY auth="LR" ref="LR-07-0612"}
 Seat 10 asked what provision existed for berths above the sustained figure. Seat 03 replied that the committee had considered the point and that berths above the sustained figure were provided for in the plans of reconstitution and not in the reserves position. The Council did not discuss the matter further.
 :::
 
@@ -84,14 +84,14 @@ Seat 10 asked what provision existed for berths above the sustained figure. Seat
 
 Seat 09 reported progress on the tram networks. Works are on programme.
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-RES-07-05"}
-Seat 09 reported the completion of rail segment 04, :c[railSegments.04.a] to :c[railSegments.04.b], in :c[railSegments.04.completed] (:x[OSC-TRN-SEG-04]). :r[Completion reported; acceptance into service deferred. The segment is to be shown on the network control board but is not to carry booked traffic, and is not to be added to the connection lists of either terminal facility until the Council directs otherwise.]{compartment=KESTREL auth="TO" ref="OSC-TRN-SEG-04"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="OSC-CNL-RES-07-05"}
+Seat 09 reported the completion of rail segment 04, :c[railSegments.04.a] to :c[railSegments.04.b], in :c[railSegments.04.completed] (:x[OSC-TRN-SEG-04]). :r[Completion reported; acceptance into service deferred. The segment is to be shown on the network control board but is not to carry booked traffic, and is not to be added to the connection lists of either terminal facility until the Council directs otherwise.]{compartment=KESTREL auth="TO" ref="TO-07-304"}
 
 The Council noted the report.
 
 :::
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-RES-07-05"}
+:::redact{tier=1 auth="COUNCIL" ref="OSC-CNL-RES-07-05"}
 The reason for deferral was given orally by Seat 09 and Seat 01. The Secretary was instructed not to minute it. The Council agreed that the segment should not be included in the certified return until acceptance into service and that the question of acceptance return to the Council on the instruction of the presiding member only.
 :::
 
@@ -107,7 +107,7 @@ The Director, Office of Internal Assurance, attended for this item at the Counci
 
 ## Item 8. Closed item
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-III"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-III"}
 The Council considered a paper from the presiding member on delegations of authority held by the Director, Office of Internal Assurance, under Article III. The Council agreed that the delegation in respect of inquiries into Council records be withdrawn and held by the Secretary, effective on the date of the session, without notice to the division concerned.
 :::
 

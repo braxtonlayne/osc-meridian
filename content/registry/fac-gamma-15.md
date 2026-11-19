@@ -18,9 +18,9 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-15, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Albuquerque Region }
-    - { label: Function, value: Withheld (see table) }
+    - { label: Function, value: "Withheld (see table)" }
     - { label: Seal state, value: CONDITIONED }
     - { label: Register section, value: FE/ALPHA-02 Facilities Register }
 revisions:
@@ -32,14 +32,14 @@ revisions:
 
 | Field | Entry |
 |---|---|
-| Function | :r[:c[facilities.GAMMA-15.function]]{tier=2 auth="PV" ref="OSC-ASR-CG"} |
+| Function | :r[:c[facilities.GAMMA-15.function]]{tier=2 auth="PV" ref="PV-07-033"} |
 | Berthing | :c[facilities.GAMMA-15.capacity] |
 | Posted staff | :c[facilities.GAMMA-15.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Depth | :r[:c[facilities.GAMMA-15.depthFt] ft]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| Surface cover | :r[:c[facilities.GAMMA-15.coverStory]]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0374.name], PhD (P-2-06-0374)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[None]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Depth | :r[:c[facilities.GAMMA-15.depthFt]{auth="TO" ref="TO-07-313"} ft]{tier=2 auth="FE" ref="FE-07-0388"} |
+| Surface cover | :r[:c[facilities.GAMMA-15.coverStory]{auth="CVO" ref="CVO-07-113"}]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0374.name]{auth="PV" ref="PV-07-212"}, PhD (P-2-06-0374)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[None]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 ::canon-table{source="facilities.GAMMA-15.staffBreakdown" cols="role:Post,count:Posted" caption="Posted staff by post"}
 

@@ -93,13 +93,11 @@ Stock rotated out before expiry is issued to site food service, medical services
 
 Fiscal-year phasing for each line is in :x[OSC-LDG-REG], Table 2.
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" filter="categoryId=RESERVES" cols="no:Line,title:Cover title,department:Dept,account:Account,amountM:Total ($M)"}
-:::
 
 ## Cover line basis
 
-:::redact{tier=2 auth="CVO" ref="OSC-ASR-COV"}
+:::redact{tier=2 auth="CVO" ref="CVO-07-104"}
 Reserves lines are titled as the federal stockpile, mass care and prepositioning programmes they sit beside. The medical countermeasures line (LI-064) has obligated since FY2003. When federal pandemic influenza funding increased in DEC 2005, the stockpile build was presented, where questioned, as part of the general growth in countermeasure procurement; the Ledger records no change to the line, and no question was received. Small arms replacement (LI-084) and ammunition storage maintenance (LI-122) are carried here at Tier 2 and are not shown in the Logistics & Reserves position at Tier 3. The seed collection line (LI-067) and the biological specimen repository line (LI-116) serve ALPHA-03.
 :::
 

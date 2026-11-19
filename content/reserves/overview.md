@@ -31,7 +31,7 @@ entries:
   - { docNo: OSC-RSV-GENE, title: "Biological Sample Collection, ALPHA-03 (Catalogue)", route: /reserves/genetic-vault, date: 2008-05-09, marking: "UMBRA//OSC COMPARTMENTED", note: "Records Division custody." }
 ---
 
-**Position as at 0001Z 01 MAY 2008.** Issued on the first working day of each month by the Logistics & Reserves Division, Stores Control, ALPHA-05 Level 6. This revision supersedes the position of 01 APR 2008 (revision 16), which is to be destroyed on receipt of this revision. Action officer: Reserve Position Clerk, Stores Control, extension 6-2210.
+**Position as at 0001Z 01 MAY 2008.** Issued on the first working day of each month by the Logistics & Reserves Division, Stores Control, ALPHA-05 Level 6. This revision supersedes the position of 01 APR 2008 (revision 16), which is to be destroyed on receipt of this revision. Action officer: Reserve Position Clerk, Stores Control, extension 5-2210.
 
 Quantities are stated at full network scale against a sustained capacity of :c[headline.capacitySustained] persons, as defined in :x[OSC-MEM-07-0612]. Facility berthing figures are not used in this position. Where a holding is a rate (water treatment) or a duration (pharmaceutical supply, generator runtime), the duration is the period the holding supports at that scale.
 
@@ -45,13 +45,13 @@ Quantities are stated at full network scale against a sustained capacity of :c[h
 | MEDICAL | Pharmaceutical stockpiles | :c[reserves.items.MED-PHARMA.value] years | Supply at capacity | :x[OSC-RSV-MED] |
 | MEDICAL | Surgical facilities | :c[reserves.items.MED-SURGICAL.value] operating rooms | Network-wide | :x[OSC-RSV-MED] |
 | MEDICAL | Blood and plasma storage | :c[reserves.items.MED-BLOOD.value] units | Issued-unit equivalent | :x[OSC-RSV-MED] |
-| MEDICAL | Biological sample collection | :r[:c[reserves.items.MED-GENETIC.value] samples]{compartment=LANTERN auth="RD" ref="OSC-CB-010"} | Held at ALPHA-03, Level 9 | :x[OSC-RSV-GENE] |
-| ENERGY | Nuclear reactor plant | :c[reserves.items.ENERGY-NUCLEAR.value] installations | Station load at host sites | :x[OSC-RSV-ENERGY] |
+| MEDICAL | Biological sample collection | :r[:c[reserves.items.MED-GENETIC.value]{auth="RD" ref="RD-07-0231"} samples]{compartment=LANTERN auth="RD" ref="RD-07-0110"} | Held at ALPHA-03, Level 9 | :x[OSC-RSV-GENE] |
+| ENERGY | Nuclear reactor plant | :c[reserves.items.ENERGY-NUCLEAR.value]{auth="LR" ref="LR-07-0314"} installations | Station load at host sites | :x[OSC-RSV-ENERGY] |
 | ENERGY | Diesel generator backup | :c[reserves.items.ENERGY-DIESEL.value] days runtime | All facilities | :x[OSC-RSV-ENERGY] |
 | ENERGY | Renewable integration | Not stated as a quantity | :c[reserves.items.ENERGY-RENEWABLE.text] | :x[OSC-RSV-ENERGY] |
-| ARMAMENTS | Small arms | :r[:c[reserves.items.ARMS-SMALL.value] weapons]{tier=2 auth="SFC" ref="OSC-RSV-ARMS"} | :r[Full capacity plus reserve, five per armed position]{tier=2 auth="SFC" ref="OSC-RSV-ARMS"} | :x[OSC-RSV-ARMS] |
-| ARMAMENTS | Ammunition | :r[:c[reserves.items.ARMS-AMMUNITION.value] rounds]{tier=2 auth="SFC" ref="OSC-RSV-ARMS"} | :r[All calibres on issue]{tier=2 auth="SFC" ref="OSC-RSV-ARMS"} | :x[OSC-RSV-ARMS] |
-| ARMAMENTS | :r[Heavy weapon systems]{tier=1 auth="CS" ref="OSC-2008-Q2"} | :r[Holdings by system and bay, ALPHA-02 and ALPHA-05]{tier=1 auth="CS" ref="OSC-2008-Q2"} | :r[Council schedule]{tier=1 auth="CS" ref="OSC-2008-Q2"} | :r[Not indexed]{tier=1 auth="CS" ref="OSC-2008-Q2"} |
+| ARMAMENTS | Small arms | :r[:c[reserves.items.ARMS-SMALL.value]{auth="SFC" ref="SFC-07-0068"} weapons]{tier=2 auth="SFC" ref="SFC-07-0068"} | :r[Full capacity plus reserve, five per armed position]{tier=2 auth="SFC" ref="SFC-07-0068"} | :x[OSC-RSV-ARMS] |
+| ARMAMENTS | Ammunition | :r[:c[reserves.items.ARMS-AMMUNITION.value]{auth="SFC" ref="SFC-07-0068"} rounds]{tier=2 auth="SFC" ref="SFC-07-0068"} | :r[All calibres on issue]{tier=2 auth="SFC" ref="SFC-07-0068"} | :x[OSC-RSV-ARMS] |
+| ARMAMENTS | :r[Heavy weapon systems]{tier=1 auth="CS" ref="CS-07-012"} | :r[Holdings by system and bay, ALPHA-02 and ALPHA-05]{tier=1 auth="CS" ref="CS-07-012"} | :r[Council schedule]{tier=1 auth="CS" ref="CS-07-012"} | :r[Not indexed]{tier=1 auth="CS" ref="CS-07-012"} |
 
 Holdings are reported from the site returns of 25 APR 2008. All five ALPHA returns and all BETA returns were received by the closing date. Two GAMMA returns were received after the closing date and are included at their March figures; the April figures will be carried in revision 18. No DELTA cache return is required for this position.
 
@@ -91,7 +91,7 @@ Calculator inputs may be changed by any user. Changed inputs are not saved with 
 
 Site positions are held under compartment TALLOW and are released to holders only.
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Site or class | Food | Water treatment | Medical | Diesel fuel | Return received |
 |---|---|---|---|---|---|
 | ALPHA-01 | 100% of allocation | 100% | 98% | 100% | 24 APR 2008 |

@@ -51,7 +51,7 @@ distribution:
   - Seats 01 to 11 (by numbered copy)
   - Secretary to the Council (register copy)
   - Records Division, ALPHA-03 (library extract)
-xrefs: [OSC-MEM-07-0944, OSC-CNL-SEAT-08, OSC-LDG-FY08, OSC-FAC-ALPHA-02]
+xrefs: [OSC-CNL-SEAT-08, OSC-LDG-FY08, OSC-FAC-ALPHA-02]
 ---
 
 No recording equipment was present in the chamber. These minutes were prepared by N. Fenwick, Minutes Clerk, from the Secretary's notes, and are signed by the Secretary. Attendance is recorded by seat. Seven members constitute a quorum.
@@ -76,13 +76,13 @@ The quarterly certified mileage, :c[headline.tunnelCertifiedMi] miles, was accep
 
 The Comptroller's representative presented the FY2008 cost return. The programme estimate for the year is $:c[budget.fiscalYears.FY2008.totalM] million, distributed across the cover appropriations as in previous years. The Council accepted the return. The line-item schedule will be held by the Secretary for reading by members on request (action 07-06/3; see :x[OSC-LDG-FY08]).
 
-:::redact{compartment=QUARRY auth="CMP" ref="OSC-MEM-07-0944"}
+:::redact{compartment=QUARRY auth="CMP" ref="CMP-07-0951"}
 Seat 10 asked how the cost per mile shown for the transit category had been derived. The Comptroller's representative said that the figure in the return was stated against the certified mileage, :c[headline.tunnelCertifiedMi] miles, as in all Council reporting, and that a working paper from Facilities Engineering had set out the segment and network engineering lengths for the cost tables (:x[OSC-MEM-07-0944]). Stated against the engineering lengths, of :c[headline.railEngineeringMi] miles of rail and :c[headline.tramEngineeringMi] miles of tram, the cost per mile would be a small fraction of the figure in the return.
 
 Seat 09 said that the certified return reported tunnel accepted into operation and was not intended as a measure of construction. Seat 10 asked that the return carry both figures. The presiding member ruled that Council reporting continue on the certified figure only, and that the working paper be returned to file. Seat 10 asked that the ruling be minuted.
 :::
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-III"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-III"}
 The presiding member further directed that the engineering lengths not be laid before the Council in any later return and that Transit Operations be informed of the ruling through the Secretary and not in writing.
 :::
 
@@ -90,7 +90,7 @@ The presiding member further directed that the engineering lengths not be laid b
 
 Seat 09 laid the annual return of the weapons oversight function at ALPHA-02 (:x[OSC-FAC-ALPHA-02]). The return was read in the chamber and returned to Seat 09.
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-09"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 The Council accepted the return. Seat 08 joined the oversight inspection party for 2008 at the request of Seat 09.
 :::
 

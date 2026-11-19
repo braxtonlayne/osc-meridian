@@ -70,7 +70,7 @@ The Secretary reported that the office represented by Seat 07 changed hands on 1
 
 The Council agreed to extend the period to day 34, 17 AUG 2006, for travel. The extension was recorded as made on the Secretary's report and not by resolution. The successor was briefed in the anteroom from 1430Z (1030 EDT), admitted at 1655Z (1255 EDT), and took the seat for the remainder of the session. See :x[OSC-CNL-SEAT-07].
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-07"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-104"}
 The Secretary reported on the predecessor's copy. The first holder of Seat 07 had left government service on the change of office and had been read out at a private address on 21 JUL 2006. The predecessor's copy 07 had not been returned to the Secretariat by the date of the session. The first holder's former office had confirmed that the copy was held in an approved container at the first holder's address pending collection, and collection by Secretariat courier was arranged for 21 AUG 2006.
 
 The Council directed that the successor's copy be issued at this session, so that the seat should not stand vacant beyond the period as extended, and that the destruction of the predecessor's copy be certified on collection.
@@ -78,7 +78,7 @@ The Council directed that the successor's copy be issued at this session, so tha
 Predecessor copy 07: certificate of destruction to follow (Secretariat).
 :::
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-II"}
 Seat 06 asked that the Office of Internal Assurance be told of the arrangement. The presiding member ruled that the matter rested with the Secretariat and that no report to the Office of Internal Assurance was required while collection was in hand. The ruling was not put to a vote.
 :::
 
@@ -86,7 +86,7 @@ Seat 06 asked that the Office of Internal Assurance be told of the arrangement. 
 
 The Director, Personnel & Vetting, reported on Phase 2 (:x[OSC-PER-PH2]), which closes at the end of 2006. Recruitment is on course for the phase total of :c[phases.2.recruited], cumulative :c[phases.2.cumulative]. Vetting backlogs at the western sites have been cleared. The closing return will be laid at Session 6 (action 06-04/2).
 
-:::redact{compartment=QUARRY auth="PV" ref="OSC-PER-PH2"}
+:::redact{compartment=QUARRY auth="PV" ref="PV-06-202"}
 Seat 02 asked how many personnel recruited in the phase had been carried in categories other than posted at any point. The Director undertook to answer in writing. The answer was received by the Secretary on 06 SEP 2006 and is held with the papers of this session.
 :::
 
@@ -106,7 +106,7 @@ The Secretary will sight every issued copy between 02 and 06 OCT 2006. Members w
 
 ## Item 8. Closed item
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-VI"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-VI"}
 The Council considered the annual review of the plans of reconstitution held under Article VI. The review paper was read in the chamber and returned to the Secretary. The Council agreed the review without amendment and directed that the next review be taken at the corresponding session of 2007.
 :::
 

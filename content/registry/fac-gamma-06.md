@@ -18,7 +18,7 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-06, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Miami Outskirts }
     - { label: Function, value: Latin America operations personnel }
     - { label: Seal state, value: CONDITIONED }
@@ -35,9 +35,9 @@ revisions:
 | Berthing | :c[facilities.GAMMA-06.capacity] |
 | Posted staff | :c[facilities.GAMMA-06.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Depth | :r[:c[facilities.GAMMA-06.depthFt] ft]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| Surface cover | :r[None. No surface cover facility.]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0334.name] (P-2-06-0334)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[BETA-03 (Southern Network)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Depth | :r[:c[facilities.GAMMA-06.depthFt]{auth="TO" ref="TO-07-313"} ft]{tier=2 auth="FE" ref="FE-07-0388"} |
+| Surface cover | :r[None. No surface cover facility.]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0334.name]{auth="PV" ref="PV-07-212"} (P-2-06-0334)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[BETA-03 (Southern Network)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 Last inspection: 25 FEB 2008, completion acceptance survey, FE/ALPHA-02. Two items open: berth curtain rails, bay 3; refuge chamber 1 signage.

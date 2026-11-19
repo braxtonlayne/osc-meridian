@@ -92,14 +92,14 @@ Berthing is surge berthing, the physical count of berths. It is not supported by
 
 Berthing and posted strength are released for every BETA installation. Location, cover and connection are released at Tier 3 for BETA-09 only, to readers posted at ALPHA-03.
 
-::canon-table{source="facilities" class="BETA" cols="id:Site,capacity:Berthing,staff:Posted staff,depthFt:Depth (ft)" caption="BETA installations as at 30 APR 2008"}
+::canon-table{source="facilities" auth="CVO" class="BETA" cols="id:Site,capacity:Berthing,staff:Posted staff,depthFt:Depth (ft)" caption="BETA installations as at 30 APR 2008"}
 
 | Site | Location | Cover identity | Adjacent hub |
 |---|---|---|---|
 | BETA-09 | :c[facilities.BETA-09.locationText] | :c[facilities.BETA-09.coverIdentity] | ALPHA-03 |
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
-::canon-table{source="facilities" class="BETA" cols="id:Site,locationText:Location,coverIdentity:Cover identity,network:Network" caption="BETA locations and cover identities"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
+::canon-table{source="facilities" auth="CVO" class="BETA" cols="id:Site,locationText:Location,coverIdentity:Cover identity,network:Network" caption="BETA locations and cover identities"}
 
 ::canon-table{source="tramNetworks.links" filter="kind=BETA" cols="from:Hub,to:Site,label:Link,miles:Miles,hours:Running time (h)" caption="BETA inbound tram links"}
 :::
@@ -110,8 +110,8 @@ Berthing and posted strength are released for every BETA installation. Location,
 
 7.2 On-site generation additional to the class standard is fitted at certain BETA installations whose load cannot depend on the grid or on diesel alone. Site allocation is not given in this standard. Plant particulars are on :x[OSC-RSV-ENERGY].
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
-7.3 On-site generation is fitted at :c[reactors.RX-B03.site] (:c[reactors.RX-B03.id], :c[reactors.RX-B03.designation]), :c[reactors.RX-B08.site] (:c[reactors.RX-B08.id], :c[reactors.RX-B08.designation]) and :c[reactors.RX-B09.site] (:c[reactors.RX-B09.id], :c[reactors.RX-B09.designation]). The units are of the Regional Continuity Power Unit type with a transportable core module, so that refuelling is a module exchange carried out by tram or by road under the cover. Selection rested on load: containment laboratories at BETA-03, backup command and communications at BETA-09, and at BETA-08 the cover already accounts for radiological traffic. The largest BETA command was considered and not selected, its cover already justifying a large diesel plant.
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
+7.3 On-site generation is fitted at :c[reactors.RX-B03.site]{auth="LR" ref="LR-07-0314"} (:c[reactors.RX-B03.id], :c[reactors.RX-B03.designation]), :c[reactors.RX-B08.site]{auth="LR" ref="LR-07-0314"} (:c[reactors.RX-B08.id], :c[reactors.RX-B08.designation]) and :c[reactors.RX-B09.site] (:c[reactors.RX-B09.id], :c[reactors.RX-B09.designation]). The units are of the Regional Continuity Power Unit type with a transportable core module, so that refuelling is a module exchange carried out by tram or by road under the cover. Selection rested on load: containment laboratories at BETA-03, backup command and communications at BETA-09, and at BETA-08 the cover already accounts for radiological traffic. The largest BETA command was considered and not selected, its cover already justifying a large diesel plant.
 :::
 
 ## 8. Dossiers in this class

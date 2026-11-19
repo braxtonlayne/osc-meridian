@@ -89,7 +89,7 @@ Two May dosimetry badges were not returned at the exchange. Both have since been
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Core | Initial core, loaded NOV 2004 |

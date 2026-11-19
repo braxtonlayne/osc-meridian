@@ -44,8 +44,8 @@ Entries below are retained in the directory because the personnel number remains
 
 | Personnel no. | Name | Role | Site | Div. | Mail address | Remarks |
 |---|---|---|---|---|---|---|
-| :r[P-1-01-0004]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Name withheld at origin]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Member, Core Council (Seat 10)]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[ALPHA-01]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | | :r[address withheld]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Holds distribution copy ten.]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} |
-| :r[P-1-03-0009]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Name withheld at origin, two]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Member, Core Council (Seat 11)]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[ALPHA-01]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | | :r[address withheld]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} | :r[Holds distribution copy eleven.]{tier=1 auth="CS" ref="OSC-CNL-SEAT-00"} |
+| :r[P-1-01-0004]{tier=1 auth="CS" ref="CS-06-140"} | :r[Name withheld at origin]{tier=1 auth="CS" ref="CS-06-140"} | :r[Member, Core Council (Seat 10)]{tier=1 auth="CS" ref="CS-06-140"} | :r[ALPHA-01]{tier=1 auth="CS" ref="CS-06-140"} | | :r[address withheld]{tier=1 auth="CS" ref="CS-06-140"} | :r[Holds distribution copy ten.]{tier=1 auth="CS" ref="CS-06-140"} |
+| :r[P-1-03-0009]{tier=1 auth="CS" ref="CS-06-140"} | :r[Name withheld at origin, two]{tier=1 auth="CS" ref="CS-06-140"} | :r[Member, Core Council (Seat 11)]{tier=1 auth="CS" ref="CS-06-140"} | :r[ALPHA-01]{tier=1 auth="CS" ref="CS-06-140"} | | :r[address withheld]{tier=1 auth="CS" ref="CS-06-140"} | :r[Holds distribution copy eleven.]{tier=1 auth="CS" ref="CS-06-140"} |
 
 Category total, DETACHED / UNPOSTED :c[headline.staffUnposted]. Three entries are listed above; the category has no further directory entries. Enquiries about entries carried centrally are not dealt with by the directory office.
 

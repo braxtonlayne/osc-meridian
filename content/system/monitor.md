@@ -15,7 +15,7 @@ xrefs: [OSC-ASR-COMM, KB-0019, OSC-SYS-CAL]
 recordType: SYSTEM MONITOR
 fields:
   - { label: Site, value: ALPHA-03 }
-  - { label: Workstation group, value: A03-5 (Records Division, Level 5), mono: false }
+  - { label: Workstation group, value: "A03-5 (Records Division, Level 5)", mono: false }
   - { label: Refresh, value: Every 30 seconds while open }
   - { label: Monitor owner, value: "CMS/ALPHA-02, Network Operations" }
 revisions:

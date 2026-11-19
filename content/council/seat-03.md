@@ -61,13 +61,13 @@ Committee papers are returned to the committee secretary at the close of the mee
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 No succession. The holder has occupied the seat since the Council was constituted. The holder is named in the Seat 01 succession pack to take the chair in the interval before a successor to Seat 01 is admitted.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Chair, Standing Committee on Reserves (members: Seats 05, 08 and 10). No other committee.
 :::
 

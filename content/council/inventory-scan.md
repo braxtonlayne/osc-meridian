@@ -41,7 +41,7 @@ ISSUED BY THE COUNCIL SECRETARIAT, ALPHA-01. TOTAL DISTRIBUTION :c[tiers.1.count
 
 COPY 0:r[7]{compartment=BRIAR auth="OIA" ref="OIA-08-031"} OF :c[tiers.1.count]
 
-ISSUED TO :r[Reader of record, entered by hand at issue]{tier=1 auth="CS" ref="OSC-CNL-CHR-VII"}
+ISSUED TO :r[Reader of record, entered by hand at issue]{tier=1 auth="COUNCIL" ref="CC-ART-VII"}
 
 ::stamp{kind="RECEIVED" text="RD-ACC-08-00412" date="2008-03-24" seed=9}
 
@@ -53,7 +53,7 @@ OSC-2008-Q2. SHEET 1 OF 31.
 
 :c[legalNotice]
 
-Reader's acknowledgement on receipt: :r[Signature and date of the reader of record]{tier=1 auth="CS" ref="OSC-CNL-CHR-VII"}
+Reader's acknowledgement on receipt: :r[Signature and date of the reader of record]{tier=1 auth="COUNCIL" ref="CC-ART-VII"}
 
 OSC-2008-Q2. SHEET 2 OF 31.
 
@@ -73,15 +73,15 @@ OSC-2008-Q2. SHEET 2 OF 31.
 | Programme cost, FY2001 to FY2008 | $:c[headline.programCostB] billion |
 | Certified mileage | :c[headline.tunnelCertifiedMi] miles |
 
-The Office of Strategic Continuity maintains :c[headline.facilities] operational facilities, with an integrated underground transportation network connecting :c[headline.hubs] primary hub installations. :r[Present staffing is stated against the sustained figure, and the utilization targets for Phases 4 and 5 are set on the same basis. Surge berthing is stated separately in Section 08 and is not used in this summary.]{tier=1 auth="CS" ref="OSC-CNL-CHR-VII"}
+The Office of Strategic Continuity maintains :c[headline.facilities] operational facilities, with an integrated underground transportation network connecting :c[headline.hubs] primary hub installations. :r[Present staffing is stated against the sustained figure, and the utilization targets for Phases 4 and 5 are set on the same basis. Surge berthing is stated separately in Section 08 and is not used in this summary.]{tier=1 auth="COUNCIL" ref="CC-ART-VII"}
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-VII"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-VII"}
 Facility construction was initiated in the first quarter of 2001 under the authority described in Section 07. All construction has been carried out by compartmented defense contractors under the operational security protocols set out in that section, with costs distributed across the line items listed in Section 09.
 :::
 
 Individual contractors possess no comprehensive knowledge of network scope or purpose.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-VII"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-VII"}
 Changes since revision 2007-Q4: facility returns for the fourth quarter of 2007; tram network completion status; strength by facility as at the December pay run; personnel carried in the total without a posting, by site of last posting; reserve positions restated on the sustained basis; contractor compartment summary.
 :::
 
@@ -95,7 +95,7 @@ OSC-2008-Q2. SHEET 3 OF 31.
 
 ::canon-table{source="classificationControl" cols="label:Control,text:Provision" limit=2}
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-III"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-III"}
 Revision Authority: Council majority vote only. Access Control: biometric authentication and passphrase. Copies of this revision are issued against the register of distribution copies and are destroyed by the Secretariat on issue of the next revision.
 :::
 

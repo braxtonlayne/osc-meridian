@@ -12,7 +12,7 @@ revision: 2
 date: 2008-03-28
 summary: Working timetable No. 2 of 2008, effective 01 APR 2008. Rail paths by segment, tram paths by network, headways, speed basis, Network Control watch roster and board notices.
 supersedes: OSC-TRN-TT-08-01
-xrefs: [OSC-TRN-RS, OSC-TRN-ENG, OSC-TRN-SEG-04, OSC-TRN-INC-08-017, OSC-TRN-POS-08-044, KB-0042, OSC-SYS-GLO, OSC-DIR-0262, OSC-TRN-SEG-01, OSC-TRN-SEG-05, OSC-TRN-NET-CEN]
+xrefs: [OSC-TRN-ENG, OSC-TRN-SEG-04, OSC-TRN-INC-08-017, OSC-TRN-POS-08-044, KB-0042, OSC-SYS-GLO, OSC-DIR-0262, OSC-TRN-SEG-01, OSC-TRN-SEG-05, OSC-TRN-NET-CEN]
 distribution:
   - Network Control, ALPHA-01 (all watches)
   - Transit Control desks, ALPHA-02 and ALPHA-05
@@ -95,7 +95,7 @@ The Central Network is shown in full. Paths on the other three networks are carr
 | BETA-09 to GAMMA-17 | 2 | 1500Z (1000 CDT) | TCE-016 | Second path added at Revision 2 |
 | BETA-05 to GAMMA-10 | 1 | 1400Z (0900 CDT) | TCE-019 | Consist provided from outside the Central Network |
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 **Eastern Network** (hub ALPHA-01, platforms 4 and 5): ALPHA-01 to BETA-01, 1 path each way, TEA-031. ALPHA-01 to BETA-02, 3 paths each way, TEA-022 and TEA-024. ALPHA-01 to BETA-10, 1 path each way, TEA-035. BETA-02 to GAMMA-03, 4 paths each way, TEA-040 shuttle. BETA-02 to GAMMA-04, 2 paths each way, TEA-042. BETA-10 to GAMMA-07, 2 paths each way, TEA-046.
 
 **Southern Network** (hub ALPHA-05, platforms 3 to 6): ALPHA-05 to BETA-03, 1 path each way, TSO-008. ALPHA-05 to BETA-12, 2 paths each way, TSO-012. ALPHA-05 to BETA-05, 1 path each way, TSO-015. BETA-03 to GAMMA-05, 2 paths, TSO-021. BETA-03 to GAMMA-06, 1 path, TSO-023. BETA-12 to GAMMA-16, 1 path, TSO-027. ALPHA-05 to GAMMA-08, 2 paths, TSO-030. ALPHA-05 to GAMMA-09, 3 paths, TSO-033.
@@ -125,7 +125,7 @@ Handover is taken at the desk against the board. The outgoing dispatcher stays o
 
 ## 7. Annex A: Consist allocation
 
-:::redact{compartment=KESTREL auth="TO" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="TO" ref="TO-07-311"}
 Rail consists are numbered for the segment of their first booked run (:x[OSC-TRN-RS]). Allocation for this timetable:
 
 | Series | Allocated to | In this timetable |

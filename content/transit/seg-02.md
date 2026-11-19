@@ -74,21 +74,21 @@ The positions of shafts and M02 are recorded by engineering chainage. Surface lo
 
 | Structure | Function | Surface location |
 |---|---|---|
-| 02-V1 | Ventilation | :r[Loudoun County, VA; utility substation compound]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V2 | Ventilation, egress | :r[Garrett County, MD; gas storage wellsite]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V3 | Ventilation, traction feed | :r[Muskingum County, OH; pipeline compressor station]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V4 | Ventilation, egress | :r[Vigo County, IN; well field pumping house]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| M02 | Crew relief station, refuge | :r[Macoupin County, IL; geological survey core store]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V5 | Ventilation, dewatering | :r[Audrain County, MO; water district booster station]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V6 | Ventilation, dewatering | :r[Saline County, KS; utility substation compound]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V7 | Ventilation, egress | :r[Kit Carson County, CO; seismic survey station]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
-| 02-V8 | Ventilation | :r[Adams County, CO; communications relay compound]{compartment=SEXTANT auth="FE" ref="OSC-CB-013"} |
+| 02-V1 | Ventilation | :r[Loudoun County, VA; utility substation compound]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V2 | Ventilation, egress | :r[Garrett County, MD; gas storage wellsite]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V3 | Ventilation, traction feed | :r[Muskingum County, OH; pipeline compressor station]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V4 | Ventilation, egress | :r[Vigo County, IN; well field pumping house]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| M02 | Crew relief station, refuge | :r[Macoupin County, IL; geological survey core store]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V5 | Ventilation, dewatering | :r[Audrain County, MO; water district booster station]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V6 | Ventilation, dewatering | :r[Saline County, KS; utility substation compound]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V7 | Ventilation, egress | :r[Kit Carson County, CO; seismic survey station]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
+| 02-V8 | Ventilation | :r[Adams County, CO; communications relay compound]{compartment=SEXTANT auth="FE" ref="FE-07-0313"} |
 
 Cross passages: 1,000 ft centres throughout, fire doors normally closed, door state on the board as a block attribute.
 
 ## Part E. Portals and seal doors
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 | Portal | Seal doors | Rating | Last walk-down | Condition |
 |---|---|---|---|---|
 | ALPHA-01 (west portal, Level 13) | PD02-1A, PD02-1B, double leaf, hydraulic | Blast and NBC | 11 JAN 2008 | Seals serviceable. Leaf B hydraulic accumulator recharged. |

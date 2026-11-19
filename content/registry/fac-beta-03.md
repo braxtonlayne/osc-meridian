@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-03
 summary: Regional Operations Center under the cover "CDC Secondary Research Complex"; function "Southeast regional ops / biomedical".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-SOU, OSC-RSV-RX-B03]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-03
@@ -29,7 +29,7 @@ dossier:
     - { label: Cover identity, value: CDC Secondary Research Complex }
     - { label: Function, value: Southeast regional ops / biomedical }
     - { label: Commander, value: "M. Ebner, PhD (P-2-04-0225)" }
-    - { label: Scientific direction, value: Facility Commander (dual appointment) }
+    - { label: Scientific direction, value: "Facility Commander (dual appointment)" }
     - { label: Containment, value: "Suites 1-3 working; suite 4 in fit-out" }
     - { label: Status, value: OPERATIONAL }
 revisions:
@@ -40,12 +40,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-03.locationText]. Piedmont pine and pasture south of the metropolitan area, inside a fenced federal parcel shared with a genuine records storage annex of the cover agency.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-03.locationText]{auth="TO" ref="TO-07-313"}. Piedmont pine and pasture south of the metropolitan area, inside a fenced federal parcel shared with a genuine records storage annex of the cover agency.
 
-**Cover story (prepared statement).** :c[facilities.BETA-03.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-03.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-03" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-03" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The surface complex is the most heavily staffed BETA cover. Its laboratories hold genuine contingency specimen stocks for the cover agency, and its biosafety posture is the publicly stated reason for the perimeter, the guard force and the standby plant.
 :::
@@ -76,13 +76,13 @@ Biomedical Research and Laboratory Containment Technicians are particular to BET
 
 **Programme growth.** The Phase 4 objective "Expand BETA-03 biomedical research capacity" stands against this site. Containment suite 4 (fit-out from January 2008) is the first work under it. The objective carries no staffing figure; posts will be requested against completed suites.
 
-:::redact{tier=2 auth="MS" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="MS" ref="MS-07-0041"}
 **Specimen holdings.** Working stocks in suites 1-3 are drawn from, and returned to, the biological sample collection at ALPHA-03 by tram under Medical Services escort. Suite 4 is specified for work on material not held at the surface complex. Admission to the isolation ward on activation is by the relocation list only; the surface complex's own laboratory staff are not on the list and the surface laboratory is not equipped to shelter them.
 :::
 
 ## 4. Tram connection
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-03 takes one link from the adjacent hub and feeds two GAMMA shelters. Link engineering is on :x[OSC-TRN-NET-SOU].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-03" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -96,7 +96,7 @@ Specimen consignments ride in the leading vehicle of a booked consist with a Med
 
 Class standard: :c[classes.BETA.sustainabilityText]. Unlike the class standard, the site carries on-site generation, sized for the containment load over the full sustainment window. Diesel plant to network standard (:c[reserves.items.ENERGY-DIESEL.value] days) is kept as backup.
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 On-site generation is reactor :c[reactors.RX-B03.id], :c[reactors.RX-B03.designation] (:c[reactors.RX-B03.type]), :c[reactors.RX-B03.electricMWe] MWe. Status :c[reactors.RX-B03.status]: :c[reactors.RX-B03.statusNote] Plant status, fuel and refuelling: :x[OSC-RSV-RX-B03].
 
 Containment suite 4 will add an estimated 0.6 MW at full operation. Logistics & Reserves has confirmed the unit can carry it within rating.
@@ -117,13 +117,13 @@ Containment suite 4 will add an estimated 0.6 MW at full operation. Logistics & 
 
 ## 7. Command and routine items
 
-Commander and scientific director: :c[roster.P-2-04-0225.name], :c[roster.P-2-04-0225.rank] (P-2-04-0225), m.ebner@b03.cmd.mer.
+Commander and scientific director: :c[roster.P-2-04-0225.name]{auth="PV" ref="PV-07-212"}, :c[roster.P-2-04-0225.rank] (P-2-04-0225), m.ebner@b03.cmd.mer.
 
 - **Fire drill.** :c[calendar.CAL-0805-09.title], :c[calendar.CAL-0805-09.dateText], :c[calendar.CAL-0805-09.timeText]. :c[calendar.CAL-0805-09.note] Containment suites are made safe and vacated before the alarm, not during it; suite supervisors begin at 1415Z.
 - Respirator fit testing for all B4 staff is due before 31 MAY 2008.
 - Autoclave 2 failed its spore test on 17 APR 2008 and is tagged out. Autoclave 1 carries the load; the waste schedule is extended by one shift.
 - The galley is closed for deep cleaning 20 to 22 MAY 2008. Boxed meals are issued from B5 stores.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Southeast regional ops / biomedical: the programme of record for suite 4, its tasking authority and the material lists, held by the Council Secretariat. Not entered in this register.
 :::

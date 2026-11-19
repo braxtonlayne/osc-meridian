@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-12
 summary: Regional Operations Center under the cover "FEMA Hurricane Continuity Site"; function "Gulf Coast operations".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-SOU]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-12
@@ -38,12 +38,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-12.locationText]. Piney woods and pasture on the terrace north of the lake parishes, above the storm surge line. The continuity site is a hardened operations building, two equipment staging warehouses, a fuel farm, a helicopter pad and a generator building.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-12.locationText]{auth="TO" ref="TO-07-313"}. Piney woods and pasture on the terrace north of the lake parishes, above the storm surge line. The continuity site is a hardened operations building, two equipment staging warehouses, a fuel farm, a helicopter pad and a generator building.
 
-**Cover story (prepared statement).** :c[facilities.BETA-12.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-12.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-12" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-12" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 :::
 
 **Cover history.** :c[realEvents.RE-06.dateText]: :c[realEvents.RE-06.publicEvent] The site was then under construction. Surface activity during the response made the cover more visible than planned, and the higher level of activity was kept afterwards and written into the cover story. Obligations on the site's line item rose from FY2006:
@@ -75,13 +75,13 @@ Surge berthing: :c[facilities.BETA-12.capacity]. Posted strength at the 30 APR 2
 
 The Technical/Engineering line includes the dewatering crew, which keeps a two-person watch in the B2 control room at all hours. Logistics/Support is larger than the class norm because the site holds the regional storm stock for the cover.
 
-:::redact{tier=2 auth="PV" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="PV" ref="PV-07-041"}
 **Relocation list.** The Gulf Coast relocation list (RL-B12) was enlarged in FY2006 from 190 to 340 named persons. The list was drawn up after the 2005 response showed which regional officials had remained in post. Officials who left their posts during that response were not carried forward.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-12 takes one link from the adjacent hub and feeds one GAMMA shelter. Link engineering is on :x[OSC-TRN-NET-SOU].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-12" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -111,13 +111,13 @@ DW-4 was returned to service on 22 APR 2008 after a pump change (FE-08-0377).
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-05-0269.name] (P-2-05-0269), m.thibodeaux@b12.cmd.mer.
+Commander: :c[roster.P-2-05-0269.name]{auth="PV" ref="PV-07-212"} (P-2-05-0269), m.thibodeaux@b12.cmd.mer.
 
 - **Season posture review.** :c[calendar.CAL-0805-16.title], :c[calendar.CAL-0805-16.dateText], :c[calendar.CAL-0805-16.timeText]. :c[calendar.CAL-0805-16.note] The review also confirms that the flood doors at B1 and B5 close in under 90 seconds, that dewatering runs on diesel alone for the 72-hour test, and the staff call-in list for a storm landfall.
 - Staff living in the lake parishes are to keep their household storm plans current; leave during a declared storm is granted only for evacuation of dependants.
 - Mould: report any visible growth at B4 to the clinic, not to the galley. Dehumidifier filters are changed fortnightly through the summer.
 - The cover's helicopter pad is not a parking area at any time.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Gulf Coast operations: continuity of the energy and port picture for the Gulf Coast on activation, with the regional reconstitution order held for the Council.
 :::

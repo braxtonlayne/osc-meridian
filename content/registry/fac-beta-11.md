@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-11
 summary: Regional Operations Center under the cover "BLM Resource Management"; function "Mountain West ops".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-MTW]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-11
@@ -37,12 +37,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-11.locationText]. High sagebrush valley on the east side of the Wasatch, about 6,400 ft above sea level. The field station is an office, a crew bunkhouse, a vehicle and equipment barn and a weather enclosure, on a graded road off the state highway.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-11.locationText]{auth="TO" ref="TO-07-313"}. High sagebrush valley on the east side of the Wasatch, about 6,400 ft above sea level. The field station is an office, a crew bunkhouse, a vehicle and equipment barn and a weather enclosure, on a graded road off the state highway.
 
-**Cover story (prepared statement).** :c[facilities.BETA-11.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-11.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-11" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-11" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 Surface liaison with the cover agency's field office is carried by the Cover Liaison Officer (Land Management) at ALPHA-04, :c[roster.P-3-06-0731.name], who covers this station and the surface surveying station at ALPHA-04.
 :::
@@ -57,13 +57,13 @@ Surge berthing: :c[facilities.BETA-11.capacity]. Posted strength at the 30 APR 2
 
 ::canon-table{source="facilities.BETA-11.staffBreakdown" cols="role:Staffing line,count:Posted" caption="Posted strength by line, 30 APR 2008 return"}
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
 **Regional task.** The analysis cell keeps the Mountain West position: highway passes, power transmission corridors and the reservoirs serving the Wasatch Front. The cover's field crews survey corridor routes as part of their genuine range and mineral work; their reports are copied to the cell through the cover agency's ordinary file distribution and are not otherwise requested.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-11 takes one link from the adjacent hub and feeds one GAMMA shelter. Link engineering is on :x[OSC-TRN-NET-MTW].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-11" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -99,12 +99,12 @@ Records of the survey (logs of 14 boreholes, two seismic refraction lines) are h
 
 ## 8. Command and routine items
 
-Commander: :c[roster.P-2-05-0263.name] (P-2-05-0263), d.hensley@b11.cmd.mer.
+Commander: :c[roster.P-2-05-0263.name]{auth="PV" ref="PV-07-212"} (P-2-05-0263), d.hensley@b11.cmd.mer.
 
 - Elk on the access road at dusk. Drive slowly between the cattle guard and the barn.
 - The cover's field crews start their summer season on 19 MAY 2008. Bunkhouse occupancy rises from 4 to 12; installation staff are not to use the bunkhouse showers.
 - Altitude: new arrivals are given a 48-hour light-duty period. The clinic holds supplementary oxygen for the B5 berthing area.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Mountain West ops: corridor priorities for movement to and from the adjacent hub on activation, held for the Council.
 :::

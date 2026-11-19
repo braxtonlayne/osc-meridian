@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-10
 summary: Regional Operations Center under the cover "DHS Regional Response Center"; function "Great Lakes regional command".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-EAS]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-10
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-10.locationText]. Flat farmland and light industrial parks at the edge of the outer suburbs, beside a state route and a freight rail line.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-10.locationText]{auth="TO" ref="TO-07-313"}. Flat farmland and light industrial parks at the edge of the outer suburbs, beside a state route and a freight rail line.
 
-**Cover story (prepared statement).** :c[facilities.BETA-10.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-10.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-10" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-10" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The response center is the largest BETA cover by surface floor area: an operations building with a public-facing exercise hall, an equipment staging warehouse, a generator building and a truck yard. Surface staff are cover agency employees.
 :::
@@ -71,13 +71,13 @@ Surge berthing: :c[facilities.BETA-10.capacity]. Posted strength at the 30 APR 2
 
 The Transit Operations (Tram) line staffs the crew depot at B6. Drivers based here work turns on the region's links and are rostered by Network Control. The Communications line is the largest at any BETA site because B4 relays traffic for the region's GAMMA shelters.
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
 **Regional command.** On activation BETA-10 takes command of the Great Lakes region's GAMMA shelters and corridor sites and holds the regional relocation list (RL-B10, 1,040 named persons, the largest BETA list). Exercise participants from the cover agency's own interagency programme have been used, without their knowledge, to time the surface-to-B3 transit on three occasions since 2006.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-10 takes one link from the adjacent hub and feeds one GAMMA shelter. Link engineering is on :x[OSC-TRN-NET-EAS].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-10" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -116,13 +116,13 @@ Units 4 to 6 are run loaded in the first week of each quarter; next in July.
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-04-0258.name] (P-2-04-0258), p.novak@b10.cmd.mer.
+Commander: :c[roster.P-2-04-0258.name]{auth="PV" ref="PV-07-212"} (P-2-04-0258), p.novak@b10.cmd.mer.
 
 - Parking: the truck yard is the cover's. Installation staff use the north lot. Permits for the north lot are reissued on 01 JUN 2008; collect from the B1 security office.
 - The gymnasium at B5 is closed 0500Z to 0700Z (0000 to 0200 CDT) for cleaning.
 - The interagency exercise in the surface exercise hall on 20 and 21 MAY 2008 will bring about 120 visitors to the surface. Installation staff without surface duties use the service entrance on both days.
 - Tram crew rest rooms at B6 have been repainted. Crews are asked not to fix notices to the new paintwork.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Great Lakes regional command: command relationships with the regional corridor sites and the activation authority for the regional relocation list, held by the Council Secretariat.
 :::

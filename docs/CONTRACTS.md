@@ -99,7 +99,7 @@ Audit `kind` values: `window.open window.close doc.read search redaction.hover p
 | `@graphics/banners` | `ClassificationBanner({marking, position})`, `MarkingStrip({marking})`, `CoverSheet({...})`, `Stamp({kind, date?})` |
 | `@graphics/lock` | `AccessCard({operatorId, passphrase, ...})`, `SmartToken({inserted})`, `DesktopWatermark()` |
 | `@graphics/forms` | `CheckboxMark`, `SignatureBlock`, `Barcode({value})`, `FormNumberMark` |
-| `@graphics/states` | `EmptyState`, `ErrorState`, `RefusalState({authority, ref, reason})` |
+| `@graphics/states` | `EmptyState`, `ErrorState`, `RefusalState({authority, reference, reason})` |
 | `@graphics/map` | `UsMap(...)`, facility marker system |
 | `@graphics/schematic` | rail/tram line diagram |
 | `@graphics/tunnelmap` | geographic tunnel map, certified + engineering layers |

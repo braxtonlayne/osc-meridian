@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-02
 summary: Regional Operations Center under the cover "Natural Gas Reserve Facility"; function "Mid-Atlantic industrial continuity".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-EAS]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-02
@@ -29,7 +29,7 @@ dossier:
     - { label: Function, value: Mid-Atlantic industrial continuity }
     - { label: Commander, value: "D. Kowalczyk (P-2-04-0211)" }
     - { label: Status, value: OPERATIONAL }
-    - { label: Tram role, value: Through station (one inbound, two outbound) }
+    - { label: Tram role, value: "Through station (one inbound, two outbound)" }
     - { label: Dossier custodian, value: FE Registry Section }
 revisions:
   - { rev: 6, date: 30 APR 2008, change: "Quarterly revision. Possession for May entered; compressor building works closed.", by: FE Registry }
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-02.locationText]. Upland farm and second-growth woodland on the Allegheny plateau. The surface property is fenced to pipeline-operator standard and posted with the operator's emergency number.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-02.locationText]{auth="TO" ref="TO-07-313"}. Upland farm and second-growth woodland on the Allegheny plateau. The surface property is fenced to pipeline-operator standard and posted with the operator's emergency number.
 
-**Cover story (prepared statement).** :c[facilities.BETA-02.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-02.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-02" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-02" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The compressor station and wellheads at the surface are operable and are run on a published test schedule. Flare tests are notified to the county the day before. Odorant deliveries arrive by road on the first Monday of the month.
 :::
@@ -70,13 +70,13 @@ Surge berthing: :c[facilities.BETA-02.capacity]. Posted strength at the 30 APR 2
 
 The Industrial Continuity Planning line is particular to BETA-02. It keeps the regional register of continuity-essential plant (refineries, rolling mills, chemical works, power stations, rail yards) and the call-out arrangements for each.
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
 **Continuity cards.** Industrial Continuity Planning holds relocation cards for 31 named plant managers and senior engineers in the region. Holders know the card admits them to "a federal facility" on a published code word. They have not been told where it is or how deep. Card holders' families are not covered; the matter was raised at the 2007 programme review and left with the Council Secretariat.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-02 takes one link from the adjacent hub and feeds two GAMMA shelters. Link engineering is on :x[OSC-TRN-NET-EAS].
 
 ::canon-table{source="tramNetworks.links" filter="from=BETA-02" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Outbound links"}
@@ -122,12 +122,12 @@ Diesel unit 2 is held for a governor actuator (on order, FE-08-0402). Units 1 an
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-04-0211.name] (P-2-04-0211), d.kowalczyk@b02.cmd.mer.
+Commander: :c[roster.P-2-04-0211.name]{auth="PV" ref="PV-07-212"} (P-2-04-0211), d.kowalczyk@b02.cmd.mer.
 
 - Parking at the surface is limited to the cover's 18 marked bays. Staff are reminded that the meter house apron is not a parking area; two vehicles were moved in April at the request of the cover's shift supervisor.
 - Annual hearing tests for staff with surface duties (compressor noise exposure) are on 13 and 14 MAY 2008 at the clinic.
 - The regional analysis cell has moved to 0600Z (0200 EDT) submission of its contribution to the daily continuity summary.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Mid-Atlantic industrial continuity: the order of restoration for designated plant in the region and the reserve allocations against each, held for the Council and released on activation.
 :::

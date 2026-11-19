@@ -70,7 +70,7 @@ The Secretary laid revision 2008-Q2 of the Facility Inventory (:x[OSC-2008-Q2]),
 
 The revision was approved by a majority of the full Council. It is to be issued in :c[tiers.1.count] physical copies, one to each seat, numbered to the seat. No other copy is to be made.
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-RES-08-02"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="OSC-CNL-RES-08-02"}
 Votes: eight in favour, none against. Seats 10 and 11 recused, the revision containing the contractor compartment summary. The presiding member did not vote.
 :::
 
@@ -78,7 +78,7 @@ Votes: eight in favour, none against. Seats 10 and 11 recused, the revision cont
 
 The Secretary will issue the new revision to members in person by 04 APR 2008 (action 08-02/1). On issue, each member's copy of the current revision will be destroyed by the Secretariat against the register, copy for copy, and certificates laid at Session 3 (action 08-02/2). The register of distribution copies is :x[OSC-CNL-SEAT-00].
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Seat 07 asked that copy 07 of the current revision be collected from the member's office and not brought by the member, the member being in travel status in the first week of April. The Secretary agreed.
 :::
 
@@ -92,13 +92,13 @@ The Director, Personnel & Vetting, laid the Phase 3 strength return (:x[OSC-PER-
 
 ## Item 7. Closed item
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-RES-08-03"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="OSC-CNL-RES-08-03"}
 **Personnel accounting: change of payroll category.** Taken on from Session 1 of 2008, item 6. The Council agreed that personnel carried in the total without a posting be transferred to a payroll category to be specified by the Comptroller, effective 31 MAY 2008. Personnel & Vetting and the Comptroller are to make the arrangements for the date of effect (action 08-02/4). Personnel & Vetting will close the collection of declarations from the sites before month end.
 
-:r[Count: withheld by instruction of the Council.]{tier=2 auth="CS" ref="OSC-CNL-RES-08-03"}
+:r[Count: withheld by instruction of the Council.]{tier=2 auth="COUNCIL" ref="OSC-CNL-RES-08-03"}
 :::
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-RES-08-03"}
+:::redact{tier=1 auth="COUNCIL" ref="OSC-CNL-RES-08-03"}
 The Council directed that the personnel concerned are not to be notified of the change of category, and that enquiries about the category received after the date of effect be answered by Personnel & Vetting in the form already approved.
 :::
 

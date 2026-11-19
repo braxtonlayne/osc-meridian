@@ -51,16 +51,16 @@ The holder carries the Council's standing brief on outside agency discovery (thr
 |---|---|
 | Courier | Intelligence & Analysis duty officer, with one Security Forces escort |
 | Receipt | Signed by the holder on the brief's control sheet; control sheet retained by IAD |
-| Missed deliveries since 2001 | :r[Three: SEP 2003, AUG 2005, JAN 2007. Reasons entered on the control sheets.]{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"} |
+| Missed deliveries since 2001 | :r[Three: SEP 2003, AUG 2005, JAN 2007. Reasons entered on the control sheets.]{compartment=QUARRY auth="CS" ref="CS-06-140"} |
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 No succession. The seat was filled on 24 SEP 2001, when the Council resolved that the standing brief on outside agency discovery be held by a member and not by a division. Until that date the seat's papers were held by the Secretary. Resolution reference OSC-CNL-RES-01-07.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Chair, Standing Committee on Custody and Records (members: Seats 01, 04 and 11). The committee receives the Secretary's annual custody audit and the Office of Internal Assurance's register of open incidents involving Council records.
 :::

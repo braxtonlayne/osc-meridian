@@ -41,7 +41,7 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 09 JUN 2003 |
-| Predecessor copy 11: certificate of destruction | OSC-F-137/03-00104, 10 JUN 2003. Two Secretariat witnesses. Method: cross-cut shredding and burn bag, ALPHA-01 records room (pulper not then installed). |
+| Predecessor copy 11: certificate of destruction | Certificate CS-CD-0306-11, 10 JUN 2003. Two Secretariat witnesses. Method: cross-cut shredding and burn bag, ALPHA-01 records room (pulper not then installed). |
 | Successor read in | 30 JUN 2003 (day 21) |
 | Copy 11 reissued | 30 JUN 2003 |
 | Last sighted at custody audit | 05 OCT 2007 |
@@ -60,12 +60,12 @@ The holder recuses on contractor register matters (:x[OSC-ASR-CTR]) on the same 
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 09 JUN 2003. Read out 09 JUN 2003. Successor admitted 30 JUN 2003, day 21 of the period. This was the first succession under Article II; the procedure used became the Secretariat's standing procedure for later successions.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Custody and Records (chair: Seat 06). Member, Standing Committee on Personnel (chair: Seat 02).
 :::

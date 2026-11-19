@@ -53,7 +53,7 @@ Total personnel :c[headline.staffTotal] (all tiers, pay run 30 APR 2008). Tier r
 
 Tier 1 composition is as stated in the Facility Inventory and is not repeated here. Tier 2 strength by installation is held as an annex:
 
-:::redact{tier=2 auth="PV" ref="OSC-DIR-0233"}
+:::redact{tier=2 auth="PV" ref="PV-06-233"}
 **Annex T2 (Tier 2 by installation).** Tier 2 strength is reported by each facility command as the Command Staff line of its strength return and is not separately audited by this office. ALPHA commands report the commander, deputy commander, chief of staff, senior intelligence officer and resident division heads. BETA commands report the commander, deputy commander and senior intelligence officer only. GAMMA superintendents are reported by the parent BETA command. DELTA sites have no Tier 2 post. Tier 2 personnel serving at ALPHA-01 with the Council Secretariat, the Office of Internal Assurance and the network divisions are carried on the ALPHA-01 return irrespective of division. Acting Tier 2 credentials are not counted in Tier 2 strength (:x[OSC-DIR-0395]).
 :::
 

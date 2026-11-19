@@ -52,12 +52,12 @@ The network total is the sum of the link register.
 
 | Link | From | To | Label |
 |---|---|---|---|
-| L1 | ALPHA-01 | :r[BETA-01]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Maine)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| L2 | ALPHA-01 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Pittsburgh)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| L3 | ALPHA-01 | :r[BETA-10]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Chicago)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| L4 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-03]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(DC Metro)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| L5 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-04]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Philadelphia)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
-| L6 | :r[BETA-10]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[GAMMA-07]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} | :r[(Detroit)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| L1 | ALPHA-01 | :r[BETA-01]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Maine)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| L2 | ALPHA-01 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Pittsburgh)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| L3 | ALPHA-01 | :r[BETA-10]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Chicago)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| L4 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-03]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(DC Metro)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| L5 | :r[BETA-02]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-04]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Philadelphia)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
+| L6 | :r[BETA-10]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[GAMMA-07]{compartment=SEXTANT auth="TO" ref="TO-07-313"} | :r[(Detroit)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 ## 4. Topology
 

@@ -16,7 +16,7 @@ distribution:
   - Director, Medical Services
   - Director, Office of Internal Assurance
   - Facility commanders
-xrefs: [OSC-ASR-PSEC, OSC-DIR-0233, OSC-DIR-0378, OSC-PER-TRF, OSC-SYS-GLO]
+xrefs: [OSC-ASR-PSEC, OSC-DIR-0378, OSC-PER-TRF, OSC-SYS-GLO]
 recordType: VETTING STANDARD
 fields:
   - { label: "Standard", value: "OSC supplement to the enhanced SSBI" }
@@ -65,7 +65,7 @@ The basic standard is: :c[security.personnel.investigation] The supplement adds 
 
 4.1. The assessment is conducted by Medical Services under a protocol issued to Tier 2. The subject is informed that an assessment will be made and of its date. The result is returned to the adjudicating office as a rating; the clinical record is held by Medical Services.
 
-:::redact{tier=2 auth="MS" ref="OSC-PER-VET"}
+:::redact{tier=2 auth="MS" ref="MS-07-0090"}
 4.2. The assessment comprises a structured interview of about four hours, two standardised personality inventories and a scenario questionnaire. The scenario questionnaire presents situations in which an instruction of the Office conflicts with a duty or loyalty owed elsewhere (to family, to a former service, to a public office, to a profession) and records the subject's stated course of action and reasons.
 
 4.3. Reliability is rated on a five-point scale. A rating of 1 or 2 bars appointment. A rating of 3 permits appointment at Tier 4 only, or at Tier 3 with a reassessment after twelve months. Ratings are not disclosed to the subject.
@@ -77,7 +77,7 @@ The basic standard is: :c[security.personnel.investigation] The supplement adds 
 
 5.1. The subject completes Schedule D, listing persons with whom the subject has regular personal contact, by name, occupation, citizenship and frequency of contact. The investigator extends and verifies Schedule D.
 
-:::redact{tier=2 auth="OIA" ref="OSC-PER-VET"}
+:::redact{tier=2 auth="OIA" ref="OIA-07-090"}
 5.2. The map is extended to the second degree: for each person on Schedule D the investigator records that person's own regular contacts so far as they can be found from interview, correspondence, telephone and financial records, and public sources. Persons in journalism, legislative staff, law enforcement outside the Office, or any foreign government service are flagged wherever they appear in the map.
 
 5.3. The completed map is passed to the Office of Internal Assurance, which keeps it current for the period of the subject's service from records available to it. The subject is not told that the map is kept current.
@@ -91,7 +91,7 @@ The basic standard is: :c[security.personnel.investigation] The supplement adds 
 
 6.2. Reinvestigation is brought forward on a trigger. Triggers known to the subject are: a self-report under :x[OSC-DIR-0378]; a change of marital status or cohabitation; a financial difficulty reported on Schedule B; a facility transfer (:x[OSC-PER-TRF]).
 
-:::redact{compartment=BRIAR auth="OIA" ref="OSC-PER-VET"}
+:::redact{compartment=BRIAR auth="OIA" ref="OIA-07-090"}
 6.3. Further triggers, applied by the Office of Internal Assurance without notice to the subject:
 
 - a change of personnel category other than by posting;

@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-07
 summary: Regional Operations Center under the cover "USGS Seismology Center"; function "Pacific Northwest ops / tech sector continuity".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-MTW]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-07
@@ -29,7 +29,7 @@ dossier:
     - { label: Function, value: Pacific Northwest ops / tech sector continuity }
     - { label: Commander, value: "A. Haverford (P-2-05-0241)" }
     - { label: Status, value: OPERATIONAL }
-    - { label: Structural design, value: Base-isolated (levels B2-B5) }
+    - { label: Structural design, value: "Base-isolated (levels B2-B5)" }
     - { label: Dossier custodian, value: FE Registry Section }
 revisions:
   - { rev: 6, date: 30 APR 2008, change: "Quarterly revision. Bearing inspection for May entered.", by: FE Registry }
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-07.locationText]. Forested foothills of the Cascades above a river valley. The seismology center occupies a two-storey data building, an instrument workshop and a radio mast on a gated forest road.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-07.locationText]{auth="TO" ref="TO-07-313"}. Forested foothills of the Cascades above a river valley. The seismology center occupies a two-storey data building, an instrument workshop and a radio mast on a gated forest road.
 
-**Cover story (prepared statement).** :c[facilities.BETA-07.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-07.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-07" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-07" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The center's surface sensors are part of the public network and their data is published. The installation keeps its own down-hole instruments separately; they are not connected to the cover's network.
 :::
@@ -70,13 +70,13 @@ Surge berthing: :c[facilities.BETA-07.capacity]. Posted strength at the 30 APR 2
 
 The Technology Sector Liaison line is particular to BETA-07. It maintains continuity arrangements with regional software, semiconductor and data-centre operators under the cover of the seismic-hazard outreach the center genuinely runs.
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
 **Liaison arrangements.** Arrangements are in place with nine firms in the region. Each holds a sealed recovery set (source code escrow, process documentation, key-holder lists) on deposit at the installation under a commercial storage contract with the cover agency. The firms' names are held by Intelligence & Analysis and do not appear in installation records. No firm employee is on the relocation list.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-07 takes one link from the adjacent hub, the longest BETA link in the network, and feeds one GAMMA shelter. Link engineering is on :x[OSC-TRN-NET-MTW].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-07" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -117,12 +117,12 @@ Class standard: :c[classes.BETA.sustainabilityText]. Diesel runtime to network s
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-05-0241.name] (P-2-05-0241), a.haverford@b07.cmd.mer.
+Commander: :c[roster.P-2-05-0241.name]{auth="PV" ref="PV-07-212"} (P-2-05-0241), a.haverford@b07.cmd.mer.
 
 - The isolation moat is not a storage space. Two pallets of filter elements found in the north moat on 28 APR 2008 have been removed to B2 stores.
 - Earthquake drill (drop, cover, hold; then muster) is on the third Thursday of each month at 1900Z (1200 PDT).
 - The cover's radio mast is being repainted in June. Staff using the forest road will see a contractor crane on site from 09 JUN 2008.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Pacific Northwest ops / tech sector continuity: the order in which deposited recovery sets are opened on activation, and by whom, held for the Council.
 :::

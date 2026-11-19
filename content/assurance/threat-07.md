@@ -22,7 +22,7 @@ fields:
   - { label: Register, value: OIA Threat and Contingency Register }
   - { label: Entry, value: "07", mono: true }
   - { label: Threat group, value: Internal }
-  - { label: Owning office, value: Cover Programs Office (CVO/ALPHA-04) }
+  - { label: Owning office, value: "Cover Programs Office (CVO/ALPHA-04)" }
   - { label: Register custodian, value: Office of Internal Assurance }
   - { label: Contingency protocol, value: OSC-CP-07, mono: true }
   - { label: Last review, value: 28 FEB 2008 }

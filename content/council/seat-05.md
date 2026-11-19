@@ -42,7 +42,7 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 11 APR 2005 |
-| Predecessor copy 05: certificate of destruction | OSC-F-137/05-00072, 13 APR 2005. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
+| Predecessor copy 05: certificate of destruction | Certificate CS-CD-0504-05, 13 APR 2005. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
 | Successor read in | 02 MAY 2005 (day 21) |
 | Copy 05 reissued | 02 MAY 2005 |
 | Last sighted at custody audit | 02 OCT 2007 |
@@ -60,12 +60,12 @@ The seat holds one terminal on the key distribution network, installed at the ho
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 11 APR 2005. Read out 12 APR 2005. Successor admitted 02 MAY 2005, day 21 of the period, after a briefing in three sittings.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Reserves (chair: Seat 03). Member, Standing Committee on Transit and Works (chair: Seat 09).
 :::

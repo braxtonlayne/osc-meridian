@@ -105,7 +105,7 @@ Refuge chambers are stocked under the facility schedule of the nearer hub. Shaft
 
 ## 6. Emergency movement priorities
 
-:::redact{tier=2 auth="TO" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="TO" ref="TO-07-041"}
 On declaration of a continuity condition, Segment 01 is worked as a priority corridor from ALPHA-01 to ALPHA-03 for the first 36 hours. Booked paths are cancelled. Movements are released by Network Control in the order: (1) Records Division reception party and continuity-of-knowledge holdings consigned under the standing list; (2) personnel on the ALPHA-03 seal roster not on site; (3) materiel for the seed and biological collections. Return paths run empty unless Transit Control directs otherwise. Platform 1 at ALPHA-01 and platform 1 at ALPHA-03 are held clear for Segment 01 throughout.
 :::
 

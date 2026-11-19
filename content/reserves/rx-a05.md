@@ -87,7 +87,7 @@ Operators whose requalification falls due in June are to sit the 27 MAY examinat
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Core | Initial core, loaded MAR 2005 |

@@ -77,7 +77,7 @@ The quarterly protection channel test of 07 MAY 2008 was performed to written pr
 
 ## Fuel and burn-down
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Item | Entry |
 |---|---|
 | Core | Initial core, loaded AUG 2003 |

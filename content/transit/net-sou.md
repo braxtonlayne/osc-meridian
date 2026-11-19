@@ -48,7 +48,7 @@ Total equals the sum of the register.
 
 ## Link designations
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 | Link | From | To | Label |
 |---|---|---|---|
 | S1 | ALPHA-05 | BETA-03 | (Atlanta) |

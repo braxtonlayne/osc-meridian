@@ -11,7 +11,7 @@ originator: OIA/ALPHA-01
 revision: 3
 date: 2008-02-28
 summary: Threat (internal), source response and contingency paragraphs owned by Office of General Counsel.
-xrefs: [OSC-ASR-CG, OSC-LDG-REG, OSC-LDG-IDX, OSC-CNL-CHR-VII, OSC-PER-VET]
+xrefs: [OSC-ASR-CG, OSC-LDG-REG, OSC-LDG-IDX, OSC-CNL-CHR-VII]
 distribution:
   - Director, Office of Internal Assurance (ALPHA-01)
   - Office of General Counsel (ALPHA-01)

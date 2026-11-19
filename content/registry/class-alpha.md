@@ -46,7 +46,7 @@ ALPHA installations are designated **:c[classes.ALPHA.name]**. A facility is car
 | Depth | :c[classes.ALPHA.depthText] | Depth band :c[classes.ALPHA.depthMinFt] to :c[classes.ALPHA.depthMaxFt] ft to the terminal level; :x[OSC-TRN-ENG] |
 | Life support and power | :c[classes.ALPHA.sustainabilityText] | Reactor plant at every site; :x[OSC-RSV-ENERGY] |
 | Transit | :c[classes.ALPHA.transitEntitlement] | Inter-hub rail platforms plus regional tram platforms; :x[OSC-TRN-ENG] |
-| Function | :r[Government reconstitution capability]{tier=2 auth="CS" ref="OSC-CNL-CHR-VI"} | See para 6 |
+| Function | :r[Government reconstitution capability]{tier=2 auth="COUNCIL" ref="CC-ART-VI"} | See para 6 |
 
 The class is closed at :c[classes.ALPHA.count] installations. No sixth site is programmed. Requests to reclassify a BETA installation upward are not entertained under this standard.
 
@@ -54,7 +54,7 @@ The class is closed at :c[classes.ALPHA.count] installations. No sixth site is p
 
 Figures are drawn from the site returns for the pay run of 30 APR 2008. Depth is to the top of the rail terminal level, not to the invert of the running tunnel.
 
-::canon-table{source="facilities" class="ALPHA" cols="id:Site,codename:Codename,depthFt:Depth (ft),completed:Completed,capacity:Berthing,staff:Posted staff,sustainedMonths:Window (months)" caption="ALPHA installations as at 30 APR 2008"}
+::canon-table{source="facilities" auth="CVO" class="ALPHA" cols="id:Site,codename:Codename,depthFt:Depth (ft),completed:Completed,capacity:Berthing,staff:Posted staff,sustainedMonths:Window (months)" caption="ALPHA installations as at 30 APR 2008"}
 
 **Class berthing** (the sum of the five site figures) is :c[classes.ALPHA.statedCapacity]. This is the surge figure for the class. It is not the class share of the network basis used for reserve planning, which is set by Logistics & Reserves and is not restated here.
 
@@ -92,15 +92,15 @@ Segment lengths, running times and status are carried on :x[OSC-TRN-ENG] and the
 
 | Site | Function (Facility Inventory) |
 |---|---|
-| ALPHA-01 | :r[:c[facilities.ALPHA-01.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| ALPHA-02 | :r[:c[facilities.ALPHA-02.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| ALPHA-01 | :r[:c[facilities.ALPHA-01.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| ALPHA-02 | :r[:c[facilities.ALPHA-02.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 | ALPHA-03 | :c[facilities.ALPHA-03.function] |
-| ALPHA-04 | :r[:c[facilities.ALPHA-04.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| ALPHA-05 | :r[:c[facilities.ALPHA-05.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| ALPHA-04 | :r[:c[facilities.ALPHA-04.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| ALPHA-05 | :r[:c[facilities.ALPHA-05.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 
 6.2. Government reconstitution.
 
-:::redact{tier=2 auth="CS" ref="OSC-CNL-CHR-VI"}
+:::redact{tier=2 auth="COUNCIL" ref="CC-ART-VI"}
 The class as a whole carries the reconstitution capability described in Article VI of the Charter. ALPHA-01 is the primary reconstitution site. ALPHA-05 is the secondary reconstitution site and is maintained to the same standing readiness for its conference suite. The remaining three sites provide continuity of function only and are not fitted for reconstitution. Rail paths between the primary and secondary sites are held in the working timetable by Transit Operations on instruction and are not offered for booking.
 :::
 

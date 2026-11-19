@@ -41,7 +41,7 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 17 OCT 2005 |
-| Predecessor copy 09: certificate of destruction | :r[OSC-F-137/05-00198, 18 OCT 2005]{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"} |
+| Predecessor copy 09: certificate of destruction | :r[Certificate CS-CD-0510-09, 18 OCT 2005]{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"} |
 | Successor read in | 08 NOV 2005 (day 22) |
 | Copy 09 reissued | 08 NOV 2005 |
 | Last sighted at custody audit | 03 OCT 2007 |
@@ -53,17 +53,17 @@ The holder sponsors the weapons oversight function at ALPHA-02 (:x[OSC-FAC-ALPHA
 | Item | Entry |
 |---|---|
 | Annual return | Laid at the last session of each year. 2006 return laid 14 DEC 2006. |
-| Inspection | Once a year by the holder or a nominee admitted for the purpose. 2007 inspection: :r[11 to 12 SEP 2007, by the holder in person]{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"} |
+| Inspection | Once a year by the holder or a nominee admitted for the purpose. 2007 inspection: :r[11 to 12 SEP 2007, by the holder in person]{compartment=QUARRY auth="CS" ref="CS-06-140"} |
 | Related reserve | :x[OSC-RSV-ARMS] |
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 17 OCT 2005 on retirement. Read out 17 OCT 2005, the day of departure. The certificate of destruction for predecessor copy 09 was signed the following morning, 18 OCT 2005; the copy had been held overnight in the Secretary's safe. Successor admitted 08 NOV 2005, day 22 of the period.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Chair, Standing Committee on Transit and Works (members: Seats 04, 05 and 08). The committee receives the Transit Operations certified return and the Facilities Engineering works programme.
 :::

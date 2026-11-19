@@ -19,10 +19,10 @@ distribution:
 recordType: CLASSIFICATION GUIDE
 fields:
   - { label: Guide, value: OSC Classification Guide }
-  - { label: Office of primary responsibility, value: Office of Internal Assurance (OIA/ALPHA-01) }
+  - { label: Office of primary responsibility, value: "Office of Internal Assurance (OIA/ALPHA-01)" }
   - { label: Effective, value: 15 MAR 2008 }
-  - { label: Supersedes, value: OSC-ASR-CG rev 6 (09 OCT 2007) }
-  - { label: Applies to, value: All personnel and all records, every medium }
+  - { label: Supersedes, value: "OSC-ASR-CG rev 6 (09 OCT 2007)" }
+  - { label: Applies to, value: "All personnel and all records, every medium" }
   - { label: Queries, value: Resident Assurance Officer at your site }
 revisions:
   - { rev: "7", date: 11 MAR 2008, change: "Section 7 restated with reference formats as shown on MERIDIAN redaction marks. CVO added as a withholding authority.", by: OIA/ALPHA-01 }
@@ -98,7 +98,7 @@ revisions:
 |---|---|---|---|---|
 | OIA | Office of Internal Assurance | Inquiry files, incidents, assurance contingencies, monitoring methods | `OIA-YY-NNN` (incident), `OIA-PROT-NN` (contingency protocol) | OIA-08-031 |
 | CS | Council Secretariat | Council records custody, copy register, succession and destruction | `CS-YY-NNN` | CS-07-114 |
-| PV | Personnel & Vetting | Investigation detail, strength accounting, personnel categories | `PV-YY-NNN`, or the query number `PV-Q-YY-NNNN` | PV-Q-08-0031 |
+| PV | Personnel & Vetting | Investigation detail, strength accounting, personnel categories | `PV-YY-NNN`, or the query number `PV-Q-YY-NNNN`; a directory entry withheld below the holder's tier shows the holder's personnel number `P-T-YY-NNNN` | PV-Q-08-0031 |
 | TO | Transit Operations | Network control, timetables, possessions, consist records | `TO-YY-NNN` | TO-08-062 |
 | FE | Facilities Engineering | Engineering sheets, plant and tunnel data | Work order `FE-YY-NNNN` | FE-08-0417 |
 | LR | Logistics & Reserves | Reserve positions, fuel, burn-down figures | Work order `LR-YY-NNNN` | LR-08-0153 |

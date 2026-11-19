@@ -93,13 +93,11 @@ Filter media, membranes, lamps and consumables are not equipment and are charged
 
 Fiscal-year phasing for each line is in :x[OSC-LDG-REG], Table 2.
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" filter="categoryId=EQUIPMENT" cols="no:Line,title:Cover title,department:Dept,account:Account,amountM:Total ($M)"}
-:::
 
 ## Cover line basis
 
-:::redact{tier=2 auth="CVO" ref="OSC-ASR-COV"}
+:::redact{tier=2 auth="CVO" ref="CVO-07-104"}
 Equipment lines are titled as the departments' ordinary continuity, research and information-assurance buys, which they resemble closely. The diesel plant line (LI-123) was justified in FY2005 on the experience of the 14 AUG 2003 northeastern outage, during which construction-phase diesel plant at two shelter sites ran without load-shedding for the duration. The quantum key distribution line (LI-118) carries the network described in :x[OSC-ASR-COMM] as a research programme. The compact reactor line (LI-117) carries reactor plant development for the eight installations and is described in :x[OSC-RSV-ENERGY] only by reference. The workstation environment line (LI-121) carries MERIDIAN development, including the present release, on a DOE account as materiel and information systems work.
 :::
 

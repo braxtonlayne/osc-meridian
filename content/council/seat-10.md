@@ -52,18 +52,18 @@ The holder recuses on matters touching the contractor register (:x[OSC-ASR-CTR])
 | 2005 | 2 sessions |
 | 2006 | 3 sessions |
 | 2007 | 2 sessions |
-| Items | :r[Prime contract extensions (TRANSIT works, 2005); contractor compartment matrix review (2006, twice); reserves supply contract (2006); tram rolling stock maintenance award (2007, twice); line-item transfer between cover appropriations (2005)]{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"} |
+| Items | :r[Prime contract extensions (TRANSIT works, 2005); contractor compartment matrix review (2006, twice); reserves supply contract (2006); tram rolling stock maintenance award (2007, twice); line-item transfer between cover appropriations (2005)]{compartment=QUARRY auth="CS" ref="CS-06-140"} |
 
 The annual declaration of interests was received on 09 JAN 2007. The 2008 declaration falls due on 09 JAN 2008.
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 No succession. Original member. The holder's firm changed ownership in 2004; the Council resolved that the seat passes with the office and not with the firm, and the holder remained (resolution OSC-CNL-RES-04-03).
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Reserves (chair: Seat 03). Member, Standing Committee on Personnel (chair: Seat 02).
 :::

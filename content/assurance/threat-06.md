@@ -21,7 +21,7 @@ fields:
   - { label: Register, value: OIA Threat and Contingency Register }
   - { label: Entry, value: "06", mono: true }
   - { label: Threat group, value: Internal }
-  - { label: Owning office, value: Office of Internal Assurance (OIA/ALPHA-01) }
+  - { label: Owning office, value: "Office of Internal Assurance (OIA/ALPHA-01)" }
   - { label: Register custodian, value: Office of Internal Assurance }
   - { label: Contingency protocol, value: OSC-CP-06, mono: true }
   - { label: Last review, value: 28 FEB 2008 }

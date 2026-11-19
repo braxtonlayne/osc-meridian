@@ -29,14 +29,14 @@ identity: &ident
   - { label: Designation, value: ALPHA-04, mono: true }
   - { label: Codename, value: WESTERN CONTINUITY STATION }
   - { label: Class, value: "ALPHA (Command & Control Hub)" }
-  - { label: Network, value: Mountain/Western Network (terminal hub) }
+  - { label: Network, value: "Mountain/Western Network (terminal hub)" }
   - { label: Cover identity, value: Bureau of Land Management Surveying Station }
   - { label: Reactor installation, value: RX-A04, mono: true }
   - { label: Facility Commander, value: C. Wendt }
-  - { label: Resident divisions, value: CVO (headquarters) }
-  - { label: Cover liaison, value: N. Buckmaster (CVO) }
+  - { label: Resident divisions, value: "CVO (headquarters)" }
+  - { label: Cover liaison, value: "N. Buckmaster (CVO)" }
   - { label: Register section, value: FE/ALPHA-02 Facilities Register }
-  - { label: Dossier custodian, value: Plant Records Section, FE/ALPHA-02 }
+  - { label: Dossier custodian, value: "Plant Records Section, FE/ALPHA-02" }
 dossier:
   facility: ALPHA-04
   dossierType: *dtype
@@ -52,8 +52,8 @@ revisions:
 
 | Field | Entry |
 |---|---|
-| Location (Facility Inventory) | :r[:c[facilities.ALPHA-04.locationText]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| Terrain | :r[:c[facilities.ALPHA-04.terrain]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| Location (Facility Inventory) | :r[:c[facilities.ALPHA-04.locationText]{auth="TO" ref="TO-07-313"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| Terrain | :r[:c[facilities.ALPHA-04.terrain]{auth="TO" ref="TO-07-313"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 | Entry | Drill shaft head inside the core shed; personnel and vehicle lifts |
 | Depth to terminal level | :c[facilities.ALPHA-04.depthFt] ft |
 | Completed | :c[facilities.ALPHA-04.completed] |
@@ -64,11 +64,11 @@ revisions:
 
 2.2. Prepared public statement:
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-> :c[facilities.ALPHA-04.coverStory]
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+> :c[facilities.ALPHA-04.coverStory]{auth="CVO" ref="CVO-07-113"}
 :::
 
-::canon-table{source="coverCatalogue" facility="ALPHA-04" cols="coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover catalogue entry, ALPHA-04"}
+::canon-table{source="coverCatalogue" auth="CVO" facility="ALPHA-04" cols="coverAgency:Cover agency,coverFacilityType:Cover facility type,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover catalogue entry, ALPHA-04"}
 
 2.3. Cover Operations is headquartered at this site, and the surface station is maintained as the reference example of a working cover. The survey work is real. Core is drilled, logged, boxed and racked, and survey parties go out in marked vehicles on published dates. Below-grade personnel do not handle core, do not enter the core shed racks, and do not ride in survey vehicles.
 
@@ -76,7 +76,7 @@ revisions:
 
 ## 3. Function
 
-:r[West Coast regional command. Pacific theater monitoring. Port security continuity. :r[Resource extraction oversight post-event.]{tier=2 auth="CVO" ref="OSC-ASR-CG"}]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"}
+:r[West Coast regional command. Pacific theater monitoring. Port security continuity. :r[Resource extraction oversight post-event.]{tier=2 auth="CVO" ref="CVO-07-027"}]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"}
 
 Cover Operations maintains the cover-identity catalogue (:x[OSC-ASR-COV]) and the prepared statements for every facility type from Level 5.
 
@@ -96,11 +96,11 @@ Cover Operations maintains the cover-identity catalogue (:x[OSC-ASR-COV]) and th
 
 5.1. Facility Inventory connection line, quoted:
 
-> :c[facilities.ALPHA-04.connectionsText]
+> :c[facilities.ALPHA-04.connectionsText]{auth="TO" ref="TO-07-313"}
 
 5.2. Detail:
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 | Platform | Service | Reference | Engineering length (mi) | Running time (h) | Status |
 |---|---|---|---|---|---|
 | 1 | Segment 03 to ALPHA-02 | :x[OSC-TRN-SEG-03] | :c[railSegments.03.miles] | :c[railSegments.03.hours] | :c[railSegments.03.status] |
@@ -120,11 +120,11 @@ Network sheet: :x[OSC-TRN-NET-MTW]. ALPHA-04 is the end of the inter-hub line. C
 | 3 | Berthing A-E | :c[facilities.ALPHA-04.levels.3.topFt] | T4 | A and B occupied. C to E closed. |
 | 4 | Dining, Personnel Services and Clinic | :c[facilities.ALPHA-04.levels.4.topFt] | T4 | One dining room. Clinic without theatre; surgical cases by consist to ALPHA-02. |
 | 5 | Administration and Liaison Offices | :c[facilities.ALPHA-04.levels.5.topFt] | T3 | :c[facilities.ALPHA-04.levels.5.notes] |
-| 6 | :r[Monitoring Floor]{tier=2 auth="IAD" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-04.levels.6.topFt] | T2 | :r[Pacific monitoring and port security watch.]{tier=2 auth="IAD" ref="OSC-ASR-CG"} |
-| 7 | :r[Plans Library]{tier=2 auth="CVO" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-04.levels.7.topFt] | T2 | :r[Post-event resource planning holdings.]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| 8 | :r[Power Plant]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-04.levels.8.topFt] | T2 | :r[RX-A04, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
+| 6 | :r[Monitoring Floor]{tier=2 auth="IAD" ref="IAD-07-0033"} | :c[facilities.ALPHA-04.levels.6.topFt] | T2 | :r[Pacific monitoring and port security watch.]{tier=2 auth="IAD" ref="IAD-07-0033"} |
+| 7 | :r[Plans Library]{tier=2 auth="CVO" ref="CVO-07-027"} | :c[facilities.ALPHA-04.levels.7.topFt] | T2 | :r[Post-event resource planning holdings.]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| 8 | :r[Power Plant]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-04.levels.8.topFt] | T2 | :r[RX-A04, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="FE-07-0388"} |
 | 9 | Tunnel Maintenance Depot | :c[facilities.ALPHA-04.levels.9.topFt] | T3 | :c[facilities.ALPHA-04.levels.9.notes] |
-| 10 | Rail Terminal: Inter-Hub Platform and Western Tram | :c[facilities.ALPHA-04.levels.10.topFt] | T3 | :r[:c[facilities.ALPHA-04.levels.10.notes]]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| 10 | Rail Terminal: Inter-Hub Platform and Western Tram | :c[facilities.ALPHA-04.levels.10.topFt] | T3 | :r[:c[facilities.ALPHA-04.levels.10.notes]]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 ## 7. Power
 

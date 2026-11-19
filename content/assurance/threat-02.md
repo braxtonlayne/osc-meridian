@@ -23,7 +23,7 @@ fields:
   - { label: Register, value: OIA Threat and Contingency Register }
   - { label: Entry, value: "02", mono: true }
   - { label: Threat group, value: External }
-  - { label: Owning office, value: Facilities Engineering (FE/ALPHA-02) }
+  - { label: Owning office, value: "Facilities Engineering (FE/ALPHA-02)" }
   - { label: Register custodian, value: Office of Internal Assurance }
   - { label: Contingency protocol, value: OSC-CP-02, mono: true }
   - { label: Last review, value: 28 FEB 2008 }

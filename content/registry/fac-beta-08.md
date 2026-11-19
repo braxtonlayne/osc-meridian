@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-08
 summary: Regional Operations Center under the cover "Nuclear Test Site Support"; function "Nevada operations / weapons oversight".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-MTW, OSC-RSV-RX-B08]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-08
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-08.locationText]. Desert basin and alluvial fan below a limestone range. The support facility is a walled compound of vehicle maintenance sheds, a dispatch office, a fuel point and a guard house on a paved spur from the state highway.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-08.locationText]{auth="TO" ref="TO-07-313"}. Desert basin and alluvial fan below a limestone range. The support facility is a walled compound of vehicle maintenance sheds, a dispatch office, a fuel point and a guard house on a paved spur from the state highway.
 
-**Cover story (prepared statement).** :c[facilities.BETA-08.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-08.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-08" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-08" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 Convoys, radiological placarding and badged workers are ordinary under the cover, and deliveries to the installation travel as test-site support traffic.
 :::
@@ -74,19 +74,19 @@ Surge berthing: :c[facilities.BETA-08.capacity]. Posted strength at the 30 APR 2
 |---|---|
 | Security Forces | Two posts filled from the March intake |
 | Reactor Operations | One operator on loan to ALPHA-05 for the outage review, returning 16 MAY 2008 |
-| Weapons Oversight | :r[One analyst post vacated 03 MAR 2008; not refilled (L. Ackroyd, P-3-06-0977).]{compartment=HOLLOW auth="PV" ref="OSC-CB-012"} |
+| Weapons Oversight | :r[One analyst post vacated 03 MAR 2008; not refilled (L. Ackroyd, P-3-06-0977).]{compartment=HOLLOW auth="PV" ref="PV-Q-08-0031"} |
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Weapons oversight: custody verification, movement monitoring and the integrity audit for the weapons holdings in the region, with the reporting line to the Council direct. The audit schedule and the holdings list are kept by the Council Secretariat and are not entered here.
 :::
 
-:::redact{tier=2 auth="SFC" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="SFC" ref="SFC-07-0041"}
 **Security Forces.** BETA-08 holds the regional armament issue point for the western BETA and GAMMA sites and the two-person rule applies to its bays as at ALPHA-05. Convoy escort for the cover's test-site traffic is provided by the cover agency, not by installation posts.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-08 takes one link from the adjacent hub and feeds one GAMMA shelter. Link engineering is on :x[OSC-TRN-NET-MTW].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-08" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -98,7 +98,7 @@ BETA-08 takes one link from the adjacent hub and feeds one GAMMA shelter. Link e
 
 Class standard: :c[classes.BETA.sustainabilityText]. The site has on-site generation in addition to the diesel plant (:c[reserves.items.ENERGY-DIESEL.value] days to network standard). On-site generation is presently out of service for scheduled maintenance; the station is on diesel and surface supply.
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 On-site generation is reactor :c[reactors.RX-B08.id], :c[reactors.RX-B08.designation], :c[reactors.RX-B08.electricMWe] MWe. Status :c[reactors.RX-B08.status]: :c[reactors.RX-B08.statusNote] Plant status: :x[OSC-RSV-RX-B08].
 
 The outage began 28 APR 2008 with the core module exchange; the spent module left by the vehicle decline under cover-agency placarding the same night. Startup testing is reported by cable to the distribution of this dossier (:x[OSC-CBL-08-01208]). During the outage diesel bus E-A carries essential loads and the surface supply carries bus E-B. Diesel bulk stock was raised to the outage reserve in January and is drawn down against the outage plan.
@@ -118,7 +118,7 @@ The outage began 28 APR 2008 with the core module exchange; the spent module lef
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-04-0247.name], :c[roster.P-2-04-0247.rank] (P-2-04-0247), m.sorensen@b08.cmd.mer.
+Commander: :c[roster.P-2-04-0247.name]{auth="PV" ref="PV-07-212"}, :c[roster.P-2-04-0247.rank] (P-2-04-0247), m.sorensen@b08.cmd.mer.
 
 - Dosimeters are exchanged on the first working day of each month at the B1 issue window. Staff on leave on that day exchange on return. Lost dosimeters are reported under :x[OSC-DIR-0216].
 - Outage working hours: the galley serves a fourth meal at 0900Z (0200 PDT) until startup testing is complete.

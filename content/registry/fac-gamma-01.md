@@ -18,7 +18,7 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-01, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Greater Boston Metro }
     - { label: Function, value: Academic/scientific personnel focus }
     - { label: Seal state, value: CONDITIONED }
@@ -35,9 +35,9 @@ revisions:
 | Berthing | :c[facilities.GAMMA-01.capacity] |
 | Posted staff | :c[facilities.GAMMA-01.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Surface cover | :r[:c[facilities.GAMMA-01.coverStory]]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0311.name] (P-2-06-0311)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[None]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Surface cover | :r[:c[facilities.GAMMA-01.coverStory]{auth="CVO" ref="CVO-07-113"}]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0311.name]{auth="PV" ref="PV-07-212"} (P-2-06-0311)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[None]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 Class standard: :x[OSC-FAC-CLS-GAMMA].
 

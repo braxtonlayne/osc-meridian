@@ -1134,7 +1134,7 @@
     "format": "AUD-{yymmdd}-{serial6} {hhmm}Z ({local}) {KIND} {operatorId} WS {workstation} {detail}",
     "examples": [
       "AUD-080520-004417 1432Z (1032 EDT) DOC.READ OPR-A03-1147 WS A03-5-114 Opened OSC-2008-Q2 (UMBRA//OSC EYES ONLY) in Records Library. Access recorded under OIA-08-031.",
-      "AUD-080520-004418 1433Z (1033 EDT) REDACTION.HOVER OPR-A03-1147 WS A03-5-114 Examined withholding mark rx-14 in OSC-DIR-0233 (authority PV, ref PV-R-06)."
+      "AUD-080520-004418 1433Z (1033 EDT) REDACTION.HOVER OPR-A03-1147 WS A03-5-114 Examined withholding mark rx-14 in OSC-DIR-0233 (authority PV, ref PV-06-233)."
     ]
   },
   "segment04": {

@@ -18,7 +18,7 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-05, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Charlotte Region }
     - { label: Function, value: Banking infrastructure }
     - { label: Seal state, value: CONDITIONED }
@@ -26,7 +26,7 @@ dossier:
 revisions:
   - { rev: "1", date: 2005-09-19, change: Site designated, by: FE/ALPHA-02 }
   - { rev: "2", date: 2007-10-26, change: Completion entered, by: FE/ALPHA-02 }
-  - { rev: "3", date: 2008-01-08, change: Seal state field added to identity block (all GAMMA dossiers), by: FE/ALPHA-02 }
+  - { rev: "3", date: 2008-01-08, change: "Seal state field added to identity block (all GAMMA dossiers)", by: FE/ALPHA-02 }
   - { rev: "4", date: 2008-04-30, change: Annual register review, by: FE/ALPHA-02 }
 ---
 
@@ -35,10 +35,10 @@ revisions:
 | Berthing | :c[facilities.GAMMA-05.capacity] |
 | Posted staff | :c[facilities.GAMMA-05.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Depth | :r[:c[facilities.GAMMA-05.depthFt] ft]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
-| Surface cover | :r[:c[facilities.GAMMA-05.coverStory]]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0329.name] (P-2-06-0329)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[BETA-03 (Southern Network)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Depth | :r[:c[facilities.GAMMA-05.depthFt]{auth="TO" ref="TO-07-313"} ft]{tier=2 auth="FE" ref="FE-07-0388"} |
+| Surface cover | :r[:c[facilities.GAMMA-05.coverStory]{auth="CVO" ref="CVO-07-113"}]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0329.name]{auth="PV" ref="PV-07-212"} (P-2-06-0329)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[BETA-03 (Southern Network)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 ::canon-table{source="facilities.GAMMA-05.staffBreakdown" cols="role:Post,count:Posted" caption="Posted staff by post"}
 

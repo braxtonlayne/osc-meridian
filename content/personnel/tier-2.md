@@ -44,7 +44,7 @@ Clearance is :c[tiers.2.clearance]. Knowledge scope, as stated in the Facility I
 
 ## Breakdown by installation
 
-:::redact{tier=2 auth="PV" ref="OSC-DIR-0233"}
+:::redact{tier=2 auth="PV" ref="PV-06-233"}
 | Class | Posts at each installation | Notes |
 |---|---|---|
 | ALPHA | Commander, deputy commander, chief of staff, senior intelligence officer; resident division directors and deputies | ALPHA-01 also carries the Secretary to the Council, OIA and the network division directors. |

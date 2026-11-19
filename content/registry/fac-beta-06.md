@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-06
 summary: Regional Operations Center under the cover "DOE Solar Research Facility"; function "Southwest regional ops".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-MTW]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-06
@@ -37,12 +37,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-06.locationText]. Upper Sonoran desert on the north side of the valley. The array field covers about 90 acres; the operations building, two maintenance buildings and a fenced instrument compound sit at its south edge.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-06.locationText]{auth="TO" ref="TO-07-313"}. Upper Sonoran desert on the north side of the valley. The array field covers about 90 acres; the operations building, two maintenance buildings and a fenced instrument compound sit at its south edge.
 
-**Cover story (prepared statement).** :c[facilities.BETA-06.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-06.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-06" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-06" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The array is real and exports to the grid. Its published output figures are the cover agency's. Part of the array's ground-mounted inverter yard stands over the installation's heat rejection plant, which accounts for the yard's size.
 :::
@@ -59,13 +59,13 @@ Surge berthing: :c[facilities.BETA-06.capacity]. Posted strength at the 30 APR 2
 
 Security Forces carry a heavier share than at most BETA sites because the array field perimeter is long and is patrolled by the cover agency's contract guards by day and by installation posts at night.
 
-:::redact{tier=2 auth="IAD" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="IAD" ref="IAD-07-0118"}
 **Water.** The installation draws from two wells on the cover agency's water right. On activation the surface array staff are released from duty and directed to the public shelter list for the county; the wells are then drawn for the installation only. The regional analysis cell keeps the Southwest position on reservoir levels and canal deliveries for the same reason.
 :::
 
 ## 4. Tram connection
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 Single tram link to the adjacent hub. Link engineering is on :x[OSC-TRN-NET-MTW].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-06" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)"}
@@ -95,13 +95,13 @@ Intake pre-filters are changed early after wind events. The 27 APR 2008 dust eve
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-05-0236.name] (P-2-05-0236), t.quintero@b06.cmd.mer.
+Commander: :c[roster.P-2-05-0236.name]{auth="PV" ref="PV-07-212"} (P-2-05-0236), t.quintero@b06.cmd.mer.
 
 - **Summer heat posture** from 01 JUN 2008: surface work by installation staff between 1700Z and 2300Z (1000 and 1600 MST) needs the duty officer's approval; water and shade at the instrument compound; vehicles not to be left in the array access lanes.
 - Glare complaints from the county road were raised with the cover agency in March. The agency has re-angled row 14. No action falls to the installation.
 - Rattlesnake sightings at the instrument compound are to be reported to the cover's grounds contractor, not handled by staff.
 - The galley water-saving schedule (paper service on Mondays and Thursdays) continues through the summer.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Southwest regional ops: water allocation among sites in the region on activation, and the release of surface staff, under standing instructions held by the Council Secretariat.
 :::

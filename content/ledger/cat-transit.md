@@ -76,7 +76,7 @@ Prepared by Transit Accounts for the FY2008 cost return. Column A divides catego
 
 | Item | A. Certified basis | B. Engineering basis |
 |---|---:|---:|
-| Route-miles | :c[headline.tunnelCertifiedMi] | 16,612 |
+| Route-miles | :c[headline.tunnelCertifiedMi] | :c[anomalies.TUNNEL_847.figures.engineeringTotalMi] |
 | Category cost to date ($M) | 89,000 | 89,000 |
 | Cost per route-mile, to date ($M) | 105.08 | 5.36 |
 | FY2008 obligations ($M) | 14,004 | 14,004 |
@@ -95,13 +95,11 @@ Notes to Table 5:
 
 Fiscal-year phasing for each line is in :x[OSC-LDG-REG], Table 2.
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" filter="categoryId=TRANSIT" cols="no:Line,title:Cover title,department:Dept,account:Account,amountM:Total ($M)"}
-:::
 
 ## Cover line basis
 
-:::redact{tier=2 auth="CVO" ref="OSC-ASR-COV"}
+:::redact{tier=2 auth="CVO" ref="CVO-07-104"}
 Tunnel works are titled as utility, conduit, pipeline-easement and geological survey work, which is the surface explanation used at every portal and shaft. Boring is carried as technology demonstration and long-bore survey (LI-072, LI-093), lining and spoil as procurement and disposal (LI-031, LI-068). Traction power for the rail segments is carried on a DHS account as substation work (LI-056) under a mass-transit security heading, which was the largest DHS account of the right character open in FY2003. Rolling stock is special-purpose vehicle procurement (LI-098). Signalling and train control (LI-112) is on a FEMA account as a development line. No line title uses the words rail, tram, tunnel network or segment together.
 :::
 

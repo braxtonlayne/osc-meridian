@@ -60,6 +60,6 @@ The series continues in :x[OSC-PER-PH2].
 
 ## Recruitment sources
 
-:::redact{tier=2 auth="PV" ref="OSC-PER-PH1"}
+:::redact{tier=2 auth="PV" ref="PV-06-201"}
 Phase 1 recruits were nominated personally by Council members from their own departments, agencies, commands and companies, in proportion to seat category. Nominees were approached by the nominating member, not by the Office. No nominee was approached in writing. A nominee who declined was not approached again, and the nomination was recorded with the outcome DECLINED and retained.
 :::

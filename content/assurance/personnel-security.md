@@ -21,11 +21,11 @@ distribution:
 recordType: SECURITY PROTOCOL
 fields:
   - { label: Protocol, value: Personnel Security }
-  - { label: Office of primary responsibility, value: Office of Internal Assurance (OIA/ALPHA-01) }
-  - { label: Coordinating office, value: Personnel & Vetting (PV/ALPHA-01) }
+  - { label: Office of primary responsibility, value: "Office of Internal Assurance (OIA/ALPHA-01)" }
+  - { label: Coordinating office, value: "Personnel & Vetting (PV/ALPHA-01)" }
   - { label: Effective, value: 01 FEB 2008 }
-  - { label: Supersedes, value: OSC-ASR-PSEC rev 4 (12 JUN 2007) }
-  - { label: Applies to, value: All personnel, Tiers 2 to 4 }
+  - { label: Supersedes, value: "OSC-ASR-PSEC rev 4 (12 JUN 2007)" }
+  - { label: Applies to, value: "All personnel, Tiers 2 to 4" }
 revisions:
   - { rev: "5", date: 30 JAN 2008, change: "Section 5 restated: daily review of probationary audit trails made standing. Section 7 (debriefing) added.", by: OIA/ALPHA-01 }
   - { rev: "4", date: 12 JUN 2007, change: "Reportable changes table revised (financial).", by: OIA/ALPHA-01 }

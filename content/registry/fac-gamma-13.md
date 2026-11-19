@@ -18,14 +18,14 @@ dossier:
   dossierType: "FACILITY DOSSIER: PERSONNEL SHELTER"
   identity:
     - { label: Designation, value: GAMMA-13, mono: true }
-    - { label: Class, value: GAMMA (Personnel Shelter) }
+    - { label: Class, value: "GAMMA (Personnel Shelter)" }
     - { label: Area, value: Portland Metro }
     - { label: Function, value: Pacific resource corridor }
     - { label: Seal state, value: CONDITIONED }
     - { label: Register section, value: FE/ALPHA-02 Facilities Register }
 revisions:
   - { rev: "1", date: 2005-08-22, change: Site designated, by: FE/ALPHA-02 }
-  - { rev: "2", date: 2007-10-22, change: Seal drill entered (SEALED (DRILL), 15 to 19 OCT 2007), by: FE/ALPHA-02 }
+  - { rev: "2", date: 2007-10-22, change: "Seal drill entered (SEALED (DRILL), 15 to 19 OCT 2007)", by: FE/ALPHA-02 }
   - { rev: "3", date: 2008-01-25, change: Completion entered, by: FE/ALPHA-02 }
   - { rev: "4", date: 2008-04-30, change: Annual register review, by: FE/ALPHA-02 }
 ---
@@ -35,9 +35,9 @@ revisions:
 | Berthing | :c[facilities.GAMMA-13.capacity] |
 | Posted staff | :c[facilities.GAMMA-13.staff] |
 | Sustainment window | :c[classes.GAMMA.sustainDaysMin] to :c[classes.GAMMA.sustainDaysMax] days |
-| Surface cover | :r[None. No surface cover facility.]{tier=2 auth="CVO" ref="OSC-ASR-CG"} |
-| Site superintendent | :r[:c[roster.P-2-06-0365.name] (P-2-06-0365)]{compartment=SEXTANT auth="PV" ref="OSC-CB-013"} |
-| Tram connection | :r[BETA-07 (Mountain/Western Network)]{compartment=SEXTANT auth="TO" ref="OSC-CB-013"} |
+| Surface cover | :r[None. No surface cover facility.]{tier=2 auth="CVO" ref="CVO-07-027"} |
+| Site superintendent | :r[:c[roster.P-2-06-0365.name]{auth="PV" ref="PV-07-212"} (P-2-06-0365)]{compartment=SEXTANT auth="PV" ref="PV-07-113"} |
+| Tram connection | :r[BETA-07 (Mountain/Western Network)]{compartment=SEXTANT auth="TO" ref="TO-07-313"} |
 
 Note. Seal drill held 15 to 19 OCT 2007, during the national exercise week, so that any surface observation would be put down to the exercise. Recorded in telemetry history as SEALED (DRILL). The drill was held before completion was entered and counts toward seal acceptance. See :x[OSC-ASR-THR-02].
 

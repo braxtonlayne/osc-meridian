@@ -79,20 +79,20 @@ Works complete and tests passed. Segment handed to Transit Operations for contro
 
 ## Block 5. Commissioning crew
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 | Name | Personnel no. | Post | Remarks |
 |---|---|---|---|
 | O. Garrity | P-3-05-0288 | Tunnel Structures Engineer | Engineer in charge |
 | A. Delacroix | P-3-04-0371 | Traction Power Engineer | |
 | M. Quarles | P-4-05-0912 | Guideway Technician | |
-| R. Tobin | P-3-05-0142 | Tunnel Survey Technician | Alignment survey, 05 MAR 2007. :r[Status changed 19 APR 2007.]{compartment=HOLLOW auth="PV" ref="OSC-CB-012"} |
+| :r[R. Tobin]{compartment=HOLLOW auth="PV" ref="PV-Q-08-0031"} | P-3-05-0142 | Tunnel Survey Technician | Alignment survey, 05 MAR 2007. :r[Status changed 19 APR 2007.]{compartment=HOLLOW auth="PV" ref="PV-Q-08-0031"} |
 | F. Nakashima | P-4-06-0458 | Ventilation Technician | |
 | J. Beaudry | P-3-03-0219 | Signal and Detection Engineer (TO) | Detection tests |
 :::
 
 ## Block 6. Maintenance after commissioning
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 Walk-down: Monthly, portal seals, both ends. Possession booked by FE; times by arrangement with Transit Control.
 
 Guideway, detection and traction power: no routine maintenance while the segment is not in revenue service. Ventilation in standby mode; shafts run 2 hours weekly. Refuge chambers rotated with ALPHA-05 stocks.

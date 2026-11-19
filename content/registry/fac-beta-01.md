@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-01
 summary: Regional Operations Center under the cover "EPA Monitoring Station"; function "Northeast regional ops".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-EAS]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-01
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-01.locationText]. Rolling woodland and farm lots west of the Penobscot valley. The surface installation sits on a 140-acre parcel registered to the cover agency, with a single paved access from the town road.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-01.locationText]{auth="TO" ref="TO-07-313"}. Rolling woodland and farm lots west of the Penobscot valley. The surface installation sits on a 140-acre parcel registered to the cover agency, with a single paved access from the town road.
 
-**Cover story (prepared statement).** :c[facilities.BETA-01.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-01.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-01" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-01" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 
 The monitoring work at the surface is genuine. Air and surface water results are published by the cover agency under its own programme. Sampling crews are employed by the cover agency and are not briefed on the installation below.
 :::
@@ -70,13 +70,13 @@ Surge berthing: :c[facilities.BETA-01.capacity]. Posted strength at the 30 APR 2
 
 BETA-01 runs three watches on the operations floor rather than the four kept at the larger BETA commands. Security Forces post orders were revised on 14 APR 2008 to drop the second portal post between 2300 and 0600 local, when the instrument building is locked.
 
-:::redact{tier=2 auth="PV" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="PV" ref="PV-07-041"}
 **Relocation designation.** On activation the installation receives the Northeastern regional continuity group (relocation list RL-B01, 212 named persons). Admission is by list. The cover agency's sampling crews and instrument technicians are not on the list and are released from duty at the gate under the cover agency's own closure procedure.
 :::
 
 ## 4. Tram connection
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 Single tram link to the adjacent hub. Link engineering is given on :x[OSC-TRN-NET-EAS].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-01" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)"}
@@ -115,6 +115,6 @@ Commander: Walter Ingersoll (P-2-05-0203), w.ingersoll@b01.cmd.mer.
 - Galley menu rotation follows the Eastern region cycle. The site has asked for a second fish day; the request is with Logistics & Reserves.
 - Lost badge reported 09 APR 2008 (Logistics/Support). Badge cancelled and reissued under :x[OSC-DIR-0115].
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Northeast regional ops: continuity of the regional analysis picture for the six northeastern states on loss of ALPHA-01, including the maritime approaches. Standing designations for the regional reconstitution group are held by the Council Secretariat.
 :::

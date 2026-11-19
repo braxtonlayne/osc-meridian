@@ -12,7 +12,7 @@ revision: 6
 date: 2008-04-30
 facility: BETA-05
 summary: Regional Operations Center under the cover "FAA Regional Training Center"; function "Central logistics hub".
-xrefs: [OSC-FAC-CLS-BETA, OSC-TRN-NET-SOU, OSC-TRN-NET-CEN]
+xrefs: [OSC-FAC-CLS-BETA]
 distribution:
   - FE Registry Section, ALPHA-02
   - Facility Commander, BETA-05
@@ -39,12 +39,12 @@ revisions:
 
 ## 1. Location and cover
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
-**Location.** :c[facilities.BETA-05.locationText]. Rolling prairie between the river and the turnpike. The training center campus has two classroom blocks, the simulator building, a dormitory for course students and a warehouse.
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
+**Location.** :c[facilities.BETA-05.locationText]{auth="TO" ref="TO-07-313"}. Rolling prairie between the river and the turnpike. The training center campus has two classroom blocks, the simulator building, a dormitory for course students and a warehouse.
 
-**Cover story (prepared statement).** :c[facilities.BETA-05.coverStory]
+**Cover story (prepared statement).** :c[facilities.BETA-05.coverStory]{auth="CVO" ref="CVO-07-113"}
 
-::canon-table{source="coverCatalogue" filter="facility=BETA-05" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
+::canon-table{source="coverCatalogue" auth="CVO" filter="facility=BETA-05" cols="coverAgency:Cover agency,coverFacilityType:Registered as,visibleSurfaceStaff:Visible surface staff,publicRecordsPosture:Public records,lastCoverReview:Last cover review" caption="Cover record (from the cover identity catalogue)"}
 :::
 
 ## 2. Installation
@@ -68,13 +68,13 @@ Surge berthing: :c[facilities.BETA-05.capacity]. Posted strength at the 30 APR 2
 
 Logistics & Supply is the largest line and works to Logistics & Reserves at ALPHA-05 on a stores account of its own. Transit Operations (Tram Yard) staff are carried on the site's strength but take their rosters from Network Control.
 
-:::redact{tier=2 auth="LR" ref="OSC-DIR-0412"}
+:::redact{tier=2 auth="LR" ref="LR-07-0066"}
 **Forward stocks.** BETA-05 holds the forward stock for the central and southern BETA and GAMMA sites: about 21 days' rations at surge berthing for the sites it serves, medical consumables, filter elements and lift spares. Issues are made against LR demands only. On activation, issues to GAMMA sites are made in the order of the published priority list, and a site that has not acknowledged the activation signal is passed over.
 :::
 
 ## 4. Tram connections
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 BETA-05 takes one link from the adjacent hub and runs one outbound link to a GAMMA shelter. Link engineering: inbound on :x[OSC-TRN-NET-SOU]; outbound on :x[OSC-TRN-NET-CEN].
 
 ::canon-table{source="tramNetworks.links" filter="to=BETA-05" cols="from:From,to:To,label:Link,miles:Miles,hours:Running time (h)" caption="Inbound link"}
@@ -104,13 +104,13 @@ Class standard: :c[classes.BETA.sustainabilityText]. Diesel runtime to network s
 
 ## 7. Command and routine items
 
-Commander: :c[roster.P-2-05-0230.name] (P-2-05-0230), r.atwater@b05.cmd.mer.
+Commander: :c[roster.P-2-05-0230.name]{auth="PV" ref="PV-07-212"} (P-2-05-0230), r.atwater@b05.cmd.mer.
 
 - **Cover course in session.** :c[calendar.CAL-0805-22.title], from :c[calendar.CAL-0805-22.dateText], :c[calendar.CAL-0805-22.timeText] daily. :c[calendar.CAL-0805-22.note] The course students are cover agency personnel and are not to be addressed on any installation matter.
 - The student dormitory's car park is full during course weeks. Installation staff park in the warehouse yard and walk to the service entrance.
 - Annual stocktake of bulk stores B-D runs 02 to 06 JUN 2008. Stores A were counted in March with a variance of 0.4%.
 - Forklift operator recertification for the Logistics & Supply line is due by 30 JUN 2008.
 
-:::redact{tier=1 auth="CS" ref="OSC-CNL-CHR-IV"}
+:::redact{tier=1 auth="COUNCIL" ref="CC-ART-IV"}
 Central logistics hub: the activation priority list for forward-stock issues and the passed-over procedure, held by Logistics & Reserves for the Council.
 :::

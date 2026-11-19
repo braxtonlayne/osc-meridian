@@ -94,13 +94,11 @@ Lines posting without a basis in this table are listed in the fiscal-year statem
 
 Fiscal-year phasing for each line is in :x[OSC-LDG-REG], Table 2.
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" filter="categoryId=PERSONNEL" cols="no:Line,title:Cover title,department:Dept,account:Account,amountM:Total ($M)"}
-:::
 
 ## Cover line basis
 
-:::redact{tier=2 auth="CVO" ref="OSC-ASR-COV"}
+:::redact{tier=2 auth="CVO" ref="CVO-07-104"}
 Personnel lines are titled as the departments' own workforce, training and health programmes. Pay for programme staff is not carried under any title that contains the word payroll. Civilian pay is carried as a special-programmes line (LI-015) and as facility operations staffing (LI-002); investigations as supplemental personnel security investigations (LI-004); classified relocation allowances on a DOE account (LI-078). Health and safety monitoring (LI-080) has grown by more, in amount, than any other personnel line since FY2006. From FY2007 it also carries pay and medical costs for personnel who are not on a site strength return, at a rate notified monthly by Personnel & Vetting.
 :::
 

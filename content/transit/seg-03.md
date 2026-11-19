@@ -70,7 +70,7 @@ The segment leaves ALPHA-02 westward under the Front Range, crosses beneath the 
 
 General: guideway over each fault crossing is carried on isolation bearings with sliding joints at each end. Trains are stopped automatically on a ground acceleration trip at any of the segment's accelerometers.
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 | Crossing | Joint | Design offset (in) | Bearings | Trip setting | Last inspection | Finding |
 |---|---|---|---|---|---|---|
 | Fault 1 | SJ03-1 | 18 | 24 lead-rubber | 0.05 g | 14 JAN 2008 | No defect |

@@ -69,6 +69,6 @@ Investigation capacity under the OSC supplement is to be increased before the fi
 
 ## Recruitment sources
 
-:::redact{tier=2 auth="PV" ref="OSC-PER-PH4"}
+:::redact{tier=2 auth="PV" ref="PV-06-204"}
 Phase 4 adds two sources to those used in Phase 3: the families of serving personnel, who are already partly investigated under the multi-generational element of the supplement, and the cover workforces at ALPHA and BETA surface facilities, whose members already hold cleared access. Approaches to family members are made by the serving relative's facility commander. Cover workforce candidates are identified by Cover Operations and are not approached until the cover review for their facility has been completed.
 :::

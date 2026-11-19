@@ -55,7 +55,7 @@ This record is a planning statement. No recruitment plan has been approved for t
 
 Continuity protocols for further branches of government will require escort, liaison and berthing staff at the facilities designated for them, and a small number of posts held by persons nominated outside the Office. Archive expansion at ALPHA-03 will require Records Division posts in proportion to the holdings added. Governance transition protocols are prepared under Charter Article VI (:x[OSC-CNL-CHR-VI]).
 
-:::redact{tier=2 auth="CS" ref="OSC-CNL-CHR-VI"}
+:::redact{tier=2 auth="COUNCIL" ref="CC-ART-VI"}
 Primary governance transition protocols provide for the assumption of executive functions by the Council at a declared point of discontinuity, and for the administration of the population in its facilities thereafter. The personnel implication is a cadre of administrators, Tier 2 and Tier 3, trained in the protocols in advance and posted across the ALPHA and BETA facilities so that no single loss removes the cadre. Persons nominated outside the Office for continuity of the judicial and legislative branches are berthed as guests and are not appointed to any tier. Their number is set by the Council and is not counted against the phase target.
 :::
 
@@ -71,6 +71,6 @@ Earlier phases are shown in :x[OSC-PER-PH4].
 
 ## Recruitment sources
 
-:::redact{tier=2 auth="PV" ref="OSC-PER-PH5"}
+:::redact{tier=2 auth="PV" ref="PV-06-205"}
 Recruitment sources for the phase are to be set at the Phase 4 review. The working assumption is that by 2013 the families of serving personnel will be the largest single source, and that recruits born after 2001 to serving personnel will be investigated from the age of sixteen under a shortened supplement.
 :::

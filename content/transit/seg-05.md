@@ -82,7 +82,7 @@ D05-10: Platform 2, ALPHA-03, tactile edge strip lifting at two locations. Categ
 
 General: a junction in block 05-15 connects Segment 05 with the Segment 04 approach road at ALPHA-05. It was installed under possession 07-018 for the Segment 04 commissioning runs.
 
-:::redact{compartment=KESTREL auth="FE" ref="OSC-CB-011"}
+:::redact{compartment=KESTREL auth="FE" ref="FE-06-0311"}
 Turnout T05/04-1, trailing in the up direction, gives access from the Segment 05 up guideway to the platform 7 road. The turnout is clamped and padlocked normal. The clamp key is held by Transit Control, ALPHA-05, and is not issued to Network Control. With the clamp fitted, a route cannot be set across the junction from the board; detection on the platform 7 road continues to report to the board under Segment 04 block 04-01.
 
 | Date | Clamp | Authority | Remarks |

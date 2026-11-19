@@ -31,5 +31,5 @@ xrefs: [OSC-CNL-SEAT-00, OSC-DIR-0354, OSC-F-137]
 | Amended | Not amended |
 | Released below Council level | Yes. UMBRA//OSC RESTRICTED extract, released with the Charter at adoption |
 | Administered by | Council Secretariat, ALPHA-01. Seats, holders by office and distribution copies are entered in :x[OSC-CNL-SEAT-00]. |
-| Instruments citing this article | :x[OSC-DIR-0354] (destruction on succession); :x[OSC-F-137] (certificate of destruction) |
+| Instruments citing this article | :x[OSC-DIR-0354] (destruction on succession); :x[OSC-F-137] (not used for Council copies; Secretariat certificate under :x[OSC-DIR-0354]) |
 | Governing text | The paper register held by the Secretary to the Council. Where this extract and the register differ, the register governs. |

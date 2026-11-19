@@ -80,13 +80,11 @@ DOD carries just over half the category. Allocation between departments follows 
 
 The list below gives the Facility Construction lines from the register with their programme totals. Fiscal-year phasing for each line is in :x[OSC-LDG-REG], Table 2.
 
-:::redact{tier=2 auth="CMP" ref="OSC-ASR-CG"}
 ::canon-table{source="budget.lineItems" filter="categoryId=FACILITY" cols="no:Line,title:Cover title,department:Dept,account:Account,amountM:Total ($M)"}
-:::
 
 ## Cover line basis
 
-:::redact{tier=2 auth="CVO" ref="OSC-ASR-COV"}
+:::redact{tier=2 auth="CVO" ref="CVO-07-104"}
 Cover titles in this category are chosen by Cover Operations to match the surface cover identity of the site served, and the line is placed in whichever of the four departments has an account of the right character and size. Where the agency named in the cover identity has no account available to the programme, the line goes to the nearest plausible department. LI-043 (Seismology Center Instrumentation Vaults) serves the BETA-07 seismology centre cover on a DOE account. LI-063 (Hurricane Continuity Site Development) serves BETA-12 on a DOD account, because the FEMA account of the right size was fully committed in FY2003. LI-006 (Regional Response Center Build-Out) serves BETA-10 and is older than the department whose cover it supports; it stays on its DOD account. LI-018 (Geotechnical Survey and Characterization) carried the BETA-11 site survey during the winter games security build-up of FEB 2002. Lines titled for relocation arrangements, recapitalisation and site remediation carry the ALPHA hubs. No line title names a facility, a corridor or a depth.
 :::
 

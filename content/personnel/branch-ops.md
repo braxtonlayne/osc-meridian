@@ -15,7 +15,7 @@ distribution:
   - Branch members (through supervisors)
   - Director, Intelligence & Analysis
   - Facility commanders
-xrefs: [OSC-PER-RATIO, OSC-PER-ORG, OSC-DIR-0288, OSC-DIR-0412, OSC-PER-BR-SEC]
+xrefs: [OSC-PER-RATIO, OSC-PER-ORG, OSC-DIR-0288, OSC-DIR-0412]
 recordType: FUNCTIONAL BRANCH RECORD
 fields:
   - { label: "Branch", value: "Command, Intelligence and Military Operations" }
@@ -45,7 +45,7 @@ Products. The fusion floor issues the daily continuity summary at 1100Z. Cells c
 
 ## Military Operations
 
-:::redact{tier=2 auth="SFC" ref="OSC-PER-BR-OPS"}
+:::redact{tier=2 auth="SFC" ref="SFC-07-0071"}
 Military operations posts exist only at facilities with a military operations function and are filled by officers and senior non-commissioned officers retired from the armed services within the preceding five years. Posts: operations officer, plans officer, liaison officer (Joint Staff), watch officer. The branch maintains the plans for the recovery of command of designated forces from a facility, liaison with the military continuity sites, and the order of battle of forces expected to report to the Office after a declared discontinuity. Military operations staff are not part of Security Forces Command and do not command security forces (:x[OSC-PER-BR-SEC]).
 :::
 

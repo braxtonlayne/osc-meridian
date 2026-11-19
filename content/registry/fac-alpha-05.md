@@ -32,14 +32,14 @@ identity: &ident
   - { label: Designation, value: ALPHA-05, mono: true }
   - { label: Codename, value: SENTINEL DEEP }
   - { label: Class, value: "ALPHA (Command & Control Hub)" }
-  - { label: Network, value: Southern Network (hub) }
+  - { label: Network, value: "Southern Network (hub)" }
   - { label: Cover identity, value: FEMA Regional Coordination Complex }
   - { label: Reactor installation, value: RX-A05, mono: true }
   - { label: Facility Commander, value: "E. Villalobos, Col (Ret.)" }
   - { label: Resident divisions, value: "LR (headquarters), MS (headquarters)" }
   - { label: Local time zone, value: "Central (CDT, Z-5)" }
   - { label: Register section, value: FE/ALPHA-02 Facilities Register }
-  - { label: Dossier custodian, value: Plant Records Section, FE/ALPHA-02 }
+  - { label: Dossier custodian, value: "Plant Records Section, FE/ALPHA-02" }
 dossier:
   facility: ALPHA-05
   dossierType: *dtype
@@ -55,8 +55,8 @@ revisions:
 
 | Field | Entry |
 |---|---|
-| Location (Facility Inventory) | :r[:c[facilities.ALPHA-05.locationText]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
-| Terrain | :r[:c[facilities.ALPHA-05.terrain]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"} |
+| Location (Facility Inventory) | :r[:c[facilities.ALPHA-05.locationText]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
+| Terrain | :r[:c[facilities.ALPHA-05.terrain]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"} |
 | Entry | Lift heads in the basement warehouse of the coordination complex |
 | Depth to terminal level | :c[facilities.ALPHA-05.depthFt] ft |
 | Completed | :c[facilities.ALPHA-05.completed] |
@@ -67,7 +67,7 @@ revisions:
 
 2.2. Prepared public statement:
 
-:::redact{compartment=SEXTANT auth="CVO" ref="OSC-ASR-COV"}
+:::redact{compartment=SEXTANT auth="CVO" ref="CVO-07-104"}
 > :c[facilities.ALPHA-05.coverStory]
 :::
 
@@ -75,7 +75,7 @@ revisions:
 
 ## 3. Function
 
-:r[:c[facilities.ALPHA-05.function]]{compartment=SEXTANT auth="CVO" ref="OSC-CB-013"}
+:r[:c[facilities.ALPHA-05.function]]{compartment=SEXTANT auth="CVO" ref="CVO-07-113"}
 
 Logistics & Reserves and Medical Services are headquartered here. Reserve positions for the network are compiled on Level 6 and published from this site.
 
@@ -101,7 +101,7 @@ Logistics & Reserves and Medical Services are headquartered here. Reserve positi
 
 5.2. Detail:
 
-:::redact{compartment=SEXTANT auth="TO" ref="OSC-CB-013"}
+:::redact{compartment=SEXTANT auth="TO" ref="TO-07-313"}
 | Platform | Service | Reference | Engineering length (mi) | Running time (h) | Status |
 |---|---|---|---|---|---|
 | 1 | Segment 06 to ALPHA-01 | :x[OSC-TRN-SEG-06] | :c[railSegments.06.miles] | :c[railSegments.06.hours] | :c[railSegments.06.status] |
@@ -124,9 +124,9 @@ Network sheet: :x[OSC-TRN-NET-SOU].
 | 5 | Clinic and Medical Services Directorate | :c[facilities.ALPHA-05.levels.5.topFt] | T3 | :c[facilities.ALPHA-05.levels.5.notes] |
 | 6 | Logistics & Reserves Offices and Stores Control | :c[facilities.ALPHA-05.levels.6.topFt] | T3 | :c[facilities.ALPHA-05.levels.6.notes] |
 | 7 | Reserves Stacks | :c[facilities.ALPHA-05.levels.7.topFt] | T3 | :c[facilities.ALPHA-05.levels.7.notes] |
-| 8 | :r[Conference Suite S]{tier=1 auth="CS" ref="OSC-CNL-CHR-VI"} | :c[facilities.ALPHA-05.levels.8.topFt] | T1 | :r[Maintained to standing readiness.]{tier=1 auth="CS" ref="OSC-CNL-CHR-VI"} |
-| 9 | :r[Operations Floor]{tier=2 auth="IAD" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-05.levels.9.topFt] | T2 | :r[Southern operations and energy infrastructure watch.]{tier=2 auth="IAD" ref="OSC-ASR-CG"} |
-| 10 | :r[Power Plant]{tier=2 auth="FE" ref="OSC-ASR-CG"} | :c[facilities.ALPHA-05.levels.10.topFt] | T2 | :r[RX-A05, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="OSC-ASR-CG"} |
+| 8 | :r[Conference Suite S]{tier=1 auth="COUNCIL" ref="CC-ART-VI"} | :c[facilities.ALPHA-05.levels.8.topFt] | T1 | :r[Maintained to standing readiness.]{tier=1 auth="COUNCIL" ref="CC-ART-VI"} |
+| 9 | :r[Operations Floor]{tier=2 auth="IAD" ref="IAD-07-0033"} | :c[facilities.ALPHA-05.levels.9.topFt] | T2 | :r[Southern operations and energy infrastructure watch.]{tier=2 auth="IAD" ref="IAD-07-0033"} |
+| 10 | :r[Power Plant]{tier=2 auth="FE" ref="FE-07-0388"} | :c[facilities.ALPHA-05.levels.10.topFt] | T2 | :r[RX-A05, switchgear, diesel generator hall.]{tier=2 auth="FE" ref="FE-07-0388"} |
 | 11 | Rail and Tram Terminal | :c[facilities.ALPHA-05.levels.11.topFt] | T3 | :c[facilities.ALPHA-05.levels.11.notes] |
 
 6.1. Level 8 is cleaned, aired and its equipment checked to a schedule held by the Council Secretariat. The cleaning contract for Level 8 is separate from the site cleaning contract. Site cleaners do not go to Level 8.
@@ -150,7 +150,7 @@ Network sheet: :x[OSC-TRN-NET-SOU].
 | 7-B1 to 7-B4 | Water treatment consumables, filter media | Stores Control |
 | 7-C1 to 7-C6 | Pharmaceuticals and surgical consumables | Medical Services; controlled drugs in 7-C6 under two signatures |
 | 7-D1 to 7-D3 | Response equipment for the surface complex (cover stock) | Cover Operations account, held here |
-| 7-E1 to 7-E4 | :r[Armament bays]{compartment=TALLOW auth="LR" ref="OSC-CB-014"} | Two-person rule |
+| 7-E1 to 7-E4 | :r[Armament bays]{compartment=TALLOW auth="LR" ref="LR-07-0314"} | Two-person rule |
 
 8.2. Stock movements by tram are booked through Stores Control and carried on the tram manifest. Stock is not moved off the site in personal baggage under any circumstances, including stock the bearer has signed for.
 

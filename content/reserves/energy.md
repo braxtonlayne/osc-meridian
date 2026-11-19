@@ -26,7 +26,7 @@ fields:
 
 | Source | Holding | Stated basis |
 |---|---|---|
-| Nuclear reactor plant | :c[reserves.items.ENERGY-NUCLEAR.value] installations | Five at ALPHA sites, three at BETA sites |
+| Nuclear reactor plant | :c[reserves.items.ENERGY-NUCLEAR.value]{auth="LR" ref="LR-07-0314"} installations | Five at ALPHA sites, three at BETA sites |
 | Diesel generator backup | :c[reserves.items.ENERGY-DIESEL.value] days runtime | :c[reserves.items.ENERGY-DIESEL.text] |
 | Surface renewables | Not stated as a quantity | :c[reserves.items.ENERGY-RENEWABLE.text] |
 
@@ -43,9 +43,9 @@ Diesel runtime is stated at the essential load of each site with all sets availa
 | RX-A03 | :c[reactors.RX-A03.designation] | ALPHA-03 | :c[reactors.RX-A03.thermalMWt] MWt / :c[reactors.RX-A03.electricMWe] MWe | :c[reactors.RX-A03.commissioned] | <span class="status-light status-light--DEGRADED"><span class="status-light__sq" aria-hidden="true"></span>DEGRADED</span> | :x[OSC-RSV-RX-A03] |
 | RX-A04 | :c[reactors.RX-A04.designation] | ALPHA-04 | :c[reactors.RX-A04.thermalMWt] MWt / :c[reactors.RX-A04.electricMWe] MWe | :c[reactors.RX-A04.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-A04] |
 | RX-A05 | :c[reactors.RX-A05.designation] | ALPHA-05 | :c[reactors.RX-A05.thermalMWt] MWt / :c[reactors.RX-A05.electricMWe] MWe | :c[reactors.RX-A05.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-A05] |
-| RX-B03 | :c[reactors.RX-B03.designation] | BETA site :r[:c[reactors.RX-B03.site]]{compartment=TALLOW auth="LR" ref="OSC-CB-014"} | :c[reactors.RX-B03.thermalMWt] MWt / :c[reactors.RX-B03.electricMWe] MWe | :c[reactors.RX-B03.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-B03] |
-| RX-B08 | :c[reactors.RX-B08.designation] | BETA site :r[:c[reactors.RX-B08.site]]{compartment=TALLOW auth="LR" ref="OSC-CB-014"} | :c[reactors.RX-B08.thermalMWt] MWt / :c[reactors.RX-B08.electricMWe] MWe | :c[reactors.RX-B08.commissioned] | <span class="status-light status-light--OFFLINE"><span class="status-light__sq" aria-hidden="true"></span>OFFLINE</span> | :x[OSC-RSV-RX-B08] |
-| RX-B09 | :c[reactors.RX-B09.designation] | BETA site :r[:c[reactors.RX-B09.site]]{compartment=TALLOW auth="LR" ref="OSC-CB-014"} | :c[reactors.RX-B09.thermalMWt] MWt / :c[reactors.RX-B09.electricMWe] MWe | :c[reactors.RX-B09.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-B09] |
+| RX-B03 | :c[reactors.RX-B03.designation] | BETA site :r[:c[reactors.RX-B03.site]{auth="LR" ref="LR-07-0314"}]{compartment=TALLOW auth="LR" ref="LR-07-0314"} | :c[reactors.RX-B03.thermalMWt] MWt / :c[reactors.RX-B03.electricMWe] MWe | :c[reactors.RX-B03.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-B03] |
+| RX-B08 | :c[reactors.RX-B08.designation] | BETA site :r[:c[reactors.RX-B08.site]{auth="LR" ref="LR-07-0314"}]{compartment=TALLOW auth="LR" ref="LR-07-0314"} | :c[reactors.RX-B08.thermalMWt] MWt / :c[reactors.RX-B08.electricMWe] MWe | :c[reactors.RX-B08.commissioned] | <span class="status-light status-light--OFFLINE"><span class="status-light__sq" aria-hidden="true"></span>OFFLINE</span> | :x[OSC-RSV-RX-B08] |
+| RX-B09 | :c[reactors.RX-B09.designation] | BETA site :r[:c[reactors.RX-B09.site]]{compartment=TALLOW auth="LR" ref="LR-07-0314"} | :c[reactors.RX-B09.thermalMWt] MWt / :c[reactors.RX-B09.electricMWe] MWe | :c[reactors.RX-B09.commissioned] | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span>NOMINAL</span> | :x[OSC-RSV-RX-B09] |
 
 Status words follow the plant status convention: NOMINAL, unit carrying station load within its limits; DEGRADED, unit carrying station load under a limit or with a component out of service; OFFLINE, unit not carrying load, station on diesel and surface supply; FAULT, unit tripped or unavailable without a planned outage. Each unit's status page gives the status note, the surveillance schedule and open work orders.
 
@@ -53,7 +53,7 @@ HCPU units (ALPHA sites) are refuelled in place. RCPU units (BETA sites) are ref
 
 ## Fuel holdings
 
-:::redact{compartment=TALLOW auth="LR" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="LR" ref="LR-07-0314"}
 | Holding | ALPHA sites | BETA sites | GAMMA sites | Basis |
 |---|---|---|---|---|
 | Diesel fuel, % of allocation | 97 to 100 | 88 (class) | 71 (class) | Return of 25 APR 2008 |
@@ -85,4 +85,4 @@ Every unit is on the reactor surveillance schedule: protection channel functiona
 
 Diesel sets are run loaded monthly for one hour and run for four hours at full load annually. Run results are entered on the site life support return.
 
-Point of contact: Reactor Operations Section, Logistics & Reserves, ALPHA-05, extension 6-2304.
+Point of contact: Reactor Operations Section, Logistics & Reserves, ALPHA-05, extension 5-2304.

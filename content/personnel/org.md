@@ -36,8 +36,8 @@ The interactive chart in the Personnel System is drawn from this record. Boxes s
   - **Council Secretariat (CS)**, Secretary to the Council
     - Network divisions: IAD, TO, FE, CMS, PV, CMP, RD, MS, LR, SFC
     - Facility commands: ALPHA commanders; BETA commanders; GAMMA site superintendents (through the parent BETA command); DELTA sites (through the parent BETA command, guard rotation by SFC)
-  - **Office of Internal Assurance (OIA)**: :r[reports directly to the Council through the presiding seat; not through the Secretariat]{tier=2 auth="CS" ref="OSC-CNL-SEAT-00"}
-  - **Cover Operations (CVO)**: :r[reports directly to the Council through the presiding seat; tasked by the Council in session]{tier=2 auth="CS" ref="OSC-CNL-SEAT-00"}
+  - **Office of Internal Assurance (OIA)**: :r[reports directly to the Council through the presiding seat; not through the Secretariat]{tier=2 auth="CS" ref="CS-06-140"}
+  - **Cover Operations (CVO)**: :r[reports directly to the Council through the presiding seat; tasked by the Council in session]{tier=2 auth="CS" ref="CS-06-140"}
 
 Network divisions are seated at an ALPHA facility but act for all facilities within their mandate. A facility commander commands every person posted to the facility, including personnel of network divisions, for discipline, berthing and the strength return; the division directs their work.
 
@@ -69,7 +69,7 @@ Division codes are the withholding authorities used on redaction marks (:x[OSC-A
 
 ## Facility commands
 
-::canon-table{source="facilities" filter="class=ALPHA" cols="id:Facility,codename:Name,commanderId:Commander (personnel no.)"}
+::canon-table{source="facilities" auth="CVO" filter="class=ALPHA" cols="id:Facility,codename:Name,commanderId:Commander (personnel no.)"}
 
 BETA commanders and GAMMA site superintendents are listed by personnel number in the Personnel Directory (:x[OSC-PER-DIR]). The full list of installations is in the Facility Registry (:x[OSC-FAC-IDX]). Facility command staff are Tier 2 (:x[OSC-PER-T2]).
 

@@ -64,7 +64,7 @@ The biological sample collection at ALPHA-03 is a Records Division holding. It i
 
 ## Site stocks
 
-:::redact{compartment=TALLOW auth="MS" ref="OSC-CB-014"}
+:::redact{compartment=TALLOW auth="MS" ref="MS-07-0314"}
 | Site or class | Formulary at table line | Frozen red cells | FFP | Shortfall items |
 |---|---|---|---|---|
 | ALPHA-01 | 100% | Held | Held | 0 |

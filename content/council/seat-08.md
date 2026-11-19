@@ -42,7 +42,7 @@ revisions:
 | Item | Entry |
 |---|---|
 | Office changed hands | 01 OCT 2007 |
-| Predecessor copy 08: certificate of destruction | OSC-F-137/07-00287, 03 OCT 2007. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
+| Predecessor copy 08: certificate of destruction | Certificate CS-CD-0710-08, 03 OCT 2007. Two Secretariat witnesses. Method: pulping, ALPHA-01 records room. |
 | Successor read in | 25 OCT 2007 (day 24) |
 | Copy 08 reissued | 25 OCT 2007 |
 | Custody audit | The 2007 audit (01 to 05 OCT) sighted the certificate in place of the copy. Copy 08 to be sighted at the 2008 audit. |
@@ -61,12 +61,12 @@ The holder travels to sessions by rail from the western hub and is booked by the
 
 ## Succession history
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-CHR-II"}
+:::redact{compartment=QUARRY auth="COUNCIL" ref="CC-ART-II"}
 First holder admitted 20 JAN 2001; served until the office changed hands on 01 OCT 2007 on reassignment. Read out 02 OCT 2007 at ALPHA-02. Successor admitted 25 OCT 2007, day 24 of the period, in a single sitting at ALPHA-02; the Secretary travelled to the successor.
 :::
 
 ## Committee assignments
 
-:::redact{compartment=QUARRY auth="CS" ref="OSC-CNL-SEAT-00"}
+:::redact{compartment=QUARRY auth="CS" ref="CS-06-140"}
 Member, Standing Committee on Reserves (chair: Seat 03). Member, Standing Committee on Transit and Works (chair: Seat 09). Both assignments carried over from the predecessor by resolution OSC-CNL-RES-07-09.
 :::
