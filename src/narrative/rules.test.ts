@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import planJson from './plan.json';
 import { SPEC } from './spec';
-import { formRefusal, initialState, reduce, seg04Window, TICK_CAP_MS } from './rules';
+import { A2_PATTERN, formRefusal, initialState, isQueryOfInterest, isUndeliverable, reduce, seg04Window, TICK_CAP_MS } from './rules';
 import type { Ctx, Effect, NarrativeEvent, NarrativeState } from './rules';
 import type { AuditEntry, AuditKind } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
@@ -381,6 +381,28 @@ describe('audit consequences', () => {
     expect(h.mails(a)).toEqual([{ type: 'mail', id: 'msg-08-04497', slots: { recipient: 'c.dimmick@a03.rd.mer' }, repeat: true }]);
     expect(h.mails(b)[0]!.slots).toEqual({ recipient: 'r.tobin@a02.fe.mer' });
     expect(h.mailIds(h.audit('mail.send', 'x', '', { to: 'm.okafor@a03.rd.mer' }))).toEqual([]);
+  });
+
+  it('A2: hashed surnames plus the shipped pattern cover the plan pattern', () => {
+    const rule = (planJson as unknown as { auditRules: { id: string; condition: string }[] }).auditRules.find((r) => r.id === 'A2')!;
+    const src = /\/(.+)\/i/.exec(rule.condition)![1]!;
+    const norm = (a: string) => a.replace(/\\b/g, '');
+    const shipped = A2_PATTERN.source.split('|').map(norm);
+    const names = src.split('|').filter((alt) => !shipped.includes(norm(alt)));
+    expect(names).toHaveLength(3);
+    for (const n of names) {
+      expect(isQueryOfInterest(`Records of ${n[0]!.toUpperCase()}${n.slice(1)}, C.`)).toBe(true);
+      expect(isQueryOfInterest(`${n}x`)).toBe(false);
+    }
+    expect(isQueryOfInterest('cafeteria rota')).toBe(false);
+  });
+
+  it('A7: the hashed recipient set is exactly the plan list', () => {
+    const rule = (planJson as unknown as { auditRules: { id: string; condition: string }[] }).auditRules.find((r) => r.id === 'A7')!;
+    const listed = rule.condition.match(/[a-z.]+@[a-z0-9.]+/g)!;
+    expect(listed).toHaveLength(3);
+    for (const a of listed) expect(isUndeliverable(a.toUpperCase())).toBe(true);
+    expect(isUndeliverable('m.okafor@a03.rd.mer')).toBe(false);
   });
 
   it('A8: strength enquiry to Personnel Accounting, once', () => {
