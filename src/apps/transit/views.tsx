@@ -212,7 +212,7 @@ export function MovementTable({ model, trains, narrow }: { model: SimModel; trai
     { key: 'block', header: 'Block', mono: true },
     { key: 'speed', header: 'Speed', align: 'right', mono: true, render: (t) => (t.speed === null ? '--' : `${t.speed} mph`), sortValue: (t) => t.speed ?? -1 },
     { key: 'exp', header: 'Expected arr.', mono: true, render: (t) => (t.unbooked ? '--' : stamp(model, t.expArrMs, t.to)), sortValue: (t) => t.expArrMs || 0 },
-    { key: 'running', header: 'Running', render: (t) => runningText(t.runningMin), sortValue: (t) => t.runningMin ?? -999 },
+    { key: 'running', header: 'Running', render: (t) => (t.held ? 'HELD' : t.dispatched && !t.unbooked ? 'Dispatched' : runningText(t.runningMin)), sortValue: (t) => t.runningMin ?? -999 },
   ];
   const used = narrow ? cols.filter((c) => ['label', 'dir', 'block', 'running'].includes(c.key)) : cols;
   return <DataTable columns={used} rows={trains} rowKey={(t) => t.id} label="Consists on the line" dense empty={<p class="tr-note">No consists on this section of line.</p>} />;

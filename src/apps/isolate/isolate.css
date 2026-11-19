@@ -1,0 +1,131 @@
+/* Network Isolation, Manual Initiate. Tokens only. */
+.iso-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.iso-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-3);
+}
+.iso-panelview,
+.iso-reg,
+.iso-rest,
+.iso-links,
+.iso-site,
+.iso-routed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.iso-guard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+}
+.iso-guardwrap {
+  position: relative;
+}
+.iso-sealover {
+  position: absolute;
+  pointer-events: none;
+}
+.iso-sealctl {
+  padding-top: var(--sp-6);
+}
+.iso-row {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+}
+.iso-row--stack {
+  flex-direction: column;
+}
+.iso-ann {
+  flex: none;
+}
+.iso-state {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.iso-p {
+  margin: 0;
+  max-width: 78ch;
+}
+.iso-note {
+  margin: var(--sp-2) 0 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+  max-width: 86ch;
+}
+.iso-ol {
+  margin: 0;
+  padding-left: var(--sp-6);
+  max-width: 86ch;
+}
+.iso-ol li + li {
+  margin-top: var(--sp-1);
+}
+.iso-empty {
+  padding: var(--sp-4);
+  color: var(--text-2);
+}
+.iso-decide,
+.iso-raise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+.iso-mimicwrap {
+  overflow-x: auto;
+}
+.iso-site {
+  max-width: 560px;
+}
+.iso-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--paper);
+  border: 1px solid var(--row-rule);
+  font-size: var(--fs-sm);
+}
+.iso-linkbtn {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--link);
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+.iso-linkbtn:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 2px;
+}
+.iso-doc {
+  background: var(--surface);
+  border: 1px solid var(--row-rule);
+}
+.iso-loading {
+  padding: var(--sp-5);
+  color: var(--text-2);
+}
+.iso-refusal {
+  height: 100%;
+  min-height: 320px;
+}
+.iso-app--compact .iso-main {
+  padding: var(--sp-2);
+}

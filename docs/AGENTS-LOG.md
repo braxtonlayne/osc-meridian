@@ -101,3 +101,24 @@ Owner directive for pass two: reuse graphics first, Opus for new graphics, Fable
 | C2 | Canon extension | inherit (Opus) | content/canon/extended-c.json, canon-merge, canon-schema/types, canon-release.ts | accounts, survivability PM-3, sealDrill, doors 296, cameras 372, hoists 15, musterPoints, apps fragment mechanism, CANON-T2 encoded release (181 values) | Done; 121 canon tests. lifesupport OPR-G08-0611 at GAMMA-08; deputy OPR-A02-0139 (P-2-04-0139, name T2-only); auditor OPR-A01-0948 at ALPHA-01. |
 | GX1 | Panel hardware kit | **Opus** | src/graphics/panel/** | Guarded switch, buttons, lamps, key/selector/toggle switches, ISA-18.1 annunciator, meters, segment display, plates, panel frame, mimic helpers | Done; 25 tests; orchestrator reviewed sample panel and guard states: passes, no Fable rerun. |
 | GX2 | Icons for 12 apps + 27 controls | **Opus** | src/graphics/icons/** | Same hand as the 93-id set, separate 16/32 drawings | Done (93 → 132 ids). Orchestrator reviewed 4x app sheet: matches the set, passes; environ/isolate/muster/chime 16px slightly weaker. No Fable rerun. |
+
+## Pass two, wave 2B: set pieces and accounts in content (2026-11-19, parallel)
+All app agents ran as Opus (inherit); graphics they drew in their own src/graphics/<app>/ folders are Opus-drawn. No Fable agents in wave 2B.
+
+| # | Agent | Model | Owns | Result |
+|---|---|---|---|---|
+| AP1 | strike: Hardened Site Survivability Estimator PM-3 | Opus | src/apps/strike, content/strike, canon apps/strike | Map point + yield, cube-root contours, survivability table, register/compare/print, per-account rules; secret: SEG 04 in egress list (847 of 6,074). Fixed a DELTA anchor-city leak in its canon fragment. |
+| AP2 | isolate: Network Isolation Manual Initiate | Opus | src/apps/isolate (+graphics) | GuardedSwitch, 5-level permanent escalation, tamper seal, restoration certificate approved by deputy; 14 mails; secret: archived initiation NI-080327-01. |
+| AP3 | drill: Seal Drill Coordinator | Opus | src/apps/drill, src/graphics/drill | Map/schematic/Gantt propagation from canon sealDrill, two-officer order; secret: ALPHA-05 acknowledges before the order arrives. |
+| AP4 | cctv: Facility Video DVR client | Opus | src/apps/cctv, src/graphics/cctv | Procedural Canvas cameras (372), layouts, PTZ, 60-min playback, reflects plant state; secret: A02-C24 shows the seg04 train during a recorder gap. |
+| AP5 | plant: Reactor Plant Panel | Opus | src/apps/plant | Fully operable training simulator, display-only live mode; secret: only unplanned trip on 30 MAR 2007. |
+| AP6 | doors: Door and Airlock Control | Opus | src/apps/doors, src/graphics/doors | 296 doors, interlocks, decon, overrides, drill reaction; secret: A05-AL3 on unlisted level 12. |
+| AP7 | dispatch: Dispatcher Workstation | Opus | src/apps/dispatch, src/sim/transit*, minimal src/apps/transit | Route setting, dispatched trains in the transit sim, holds; secret: SEG 04 key position 3. |
+| AP8 | hoist: Shaft Hoist Control | Opus | src/apps/hoist | 15 hoists at canon depths/speeds, driver's console; secret: vanes below the deepest listed stop. |
+| AP9 | environ: Environmental Control | Opus | src/apps/environ | Scrubbers, CBRN filtration, CO2/O2 model, handover log; secret: CO2 balance implies 6–9 unposted occupants. |
+| AP10 | pa: Emergency Broadcast / PA | Opus | src/apps/pa | Zones, numbered library, tone sequences, queue/pre-emption; secret: withheld message 40, Zone 00. |
+| AP11 | muster: Muster Board | Opus | src/apps/muster | Badge muster, reconciliation 3,847/3,057/790 from canon; secret: dead seg04 reader logs unposted badges. |
+| AP12 | patch: Hub Circuit Patch Panel | Opus | src/apps/patch, src/graphics/patch | Jack field, tests, calls; secret: T04-SP1 answers "Platform seven." |
+| X2 | Accounts in existing apps | Opus | forms, assurance, mail, terminal, system, personnel… | Action queue (F-126 → deputy → KESTREL), audit review + findings, trace mail, terminal/system per account, T2 values for deputy. |
+| CT1 | Per-account content | Opus | content/variants, content/mail/accounts | 37 variants, 31 t4 flags, 23 account mails. |
+| CT2 | Real events + 9/11 thread (SPEC-2 §5) | Opus | realEvents, new council/assurance/ledger docs | Audit of real-party actions; RE-10..13; unrecorded high table OSC-CNL-DEL-01-04; handler D. H. Carrow (fictional); researchers memo with "we should encourage these guys". |

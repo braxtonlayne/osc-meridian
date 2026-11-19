@@ -1,0 +1,82 @@
+{
+  "$comment": "Door and Airlock Control (doors app). Door definitions are canon doors (extended-c). Here: board model constants, seeded cycle log, message ids. Airlock check: 4 x leaf cycle (8 s) + 2 x dwellSec + 2 x equalizeSec = airlock cycleSec (90 s).",
+  "motion": {
+    "unlockSec": { "portal": 4, "blast": 8, "airlock": 1 },
+    "dogSec": { "portal": 4, "blast": 10, "airlock": 1 },
+    "heldOpenSec": { "portal": 120, "blast": 600, "airlock": 30 }
+  },
+  "airlock": { "dwellSec": 15, "equalizeSec": 14, "maxPersons": 6 },
+  "pressure": {
+    "unit": "IN. W.G.",
+    "insideDp": 0.3,
+    "deconDp": 0.15,
+    "leafOpenMaxDp": 0.05,
+    "lowAlarmDp": 0.1,
+    "meterMax": 0.5
+  },
+  "shiftChangeZ": [4, 12, 20],
+  "localZones": [
+    { "facility": "ALPHA-01", "offsetH": -4, "label": "EDT" },
+    { "facility": "ALPHA-03", "offsetH": -4, "label": "EDT" },
+    { "facility": "ALPHA-05", "offsetH": -5, "label": "CDT" },
+    { "facility": "GAMMA-08", "offsetH": -5, "label": "CDT" }
+  ],
+  "logCap": 400,
+  "logRetentionDays": 45,
+  "bypassKeyPrefix": "KS",
+  "mail": {
+    "override": "msg-08-04651",
+    "overrideOia": "msg-08-04652",
+    "interlock": "msg-08-04653",
+    "interlockOia": "msg-08-04654",
+    "shift": "msg-08-04655",
+    "noRecord": "msg-08-04656"
+  },
+  "history": [
+    { "site": "ALPHA-05", "door": "A05-AL2", "level": 11, "event": "CYCLE OUT", "at": "2008-04-08T21:36:00Z", "by": "LOCAL L11", "count": 6, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "OPEN CMD", "at": "2008-04-08T21:41:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "OPEN", "at": "2008-04-08T21:42:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "CLOSED-LOCKED", "at": "2008-04-08T21:49:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL3", "level": 12, "event": "CYCLE IN", "at": "2008-04-09T03:52:00Z", "by": "LOCAL L12", "count": 4, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD3", "level": 7, "event": "OPEN CMD", "at": "2008-05-12T14:20:00Z", "by": "LOCAL L7", "count": null, "note": "Stores issue" },
+    { "site": "ALPHA-05", "door": "A05-BD3", "level": 7, "event": "CLOSED-LOCKED", "at": "2008-05-12T15:02:00Z", "by": "LOCAL L7", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL2", "level": 11, "event": "CYCLE OUT", "at": "2008-05-13T20:58:00Z", "by": "LOCAL L11", "count": 6, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "OPEN CMD", "at": "2008-05-13T21:04:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "OPEN", "at": "2008-05-13T21:05:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-BD8", "level": 11, "event": "CLOSED-LOCKED", "at": "2008-05-13T21:12:00Z", "by": "LOCAL L11", "count": null, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL3", "level": 12, "event": "CYCLE IN", "at": "2008-05-14T03:47:00Z", "by": "LOCAL L12", "count": 4, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T12:02:00Z", "by": "LOCAL L1", "count": 6, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-18T12:07:00Z", "by": "LOCAL L1", "count": 5, "note": "" },
+    { "site": "ALPHA-05", "door": "A05-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-19T04:03:00Z", "by": "LOCAL L1", "count": 4, "note": "" },
+
+    { "site": "GAMMA-08", "door": "G08-BD3", "level": 1, "event": "CLOSE CMD", "at": "2008-05-13T22:15:00Z", "by": "REMOTE A05", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-BD3", "level": 1, "event": "CLOSED-LOCKED", "at": "2008-05-13T22:16:00Z", "by": "REMOTE A05", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-BD3", "level": 1, "event": "OPEN CMD", "at": "2008-05-14T04:05:00Z", "by": "REMOTE A05", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-BD3", "level": 1, "event": "OPEN", "at": "2008-05-14T04:06:00Z", "by": "REMOTE A05", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T12:04:00Z", "by": "LOCAL L1", "count": 3, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-18T12:09:00Z", "by": "LOCAL L1", "count": 3, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-BD4", "level": 3, "event": "OPEN CMD", "at": "2008-05-18T15:40:00Z", "by": "LOCAL L3", "count": null, "note": "Scrubber filter change" },
+    { "site": "GAMMA-08", "door": "G08-BD4", "level": 3, "event": "OPEN", "at": "2008-05-18T15:41:00Z", "by": "LOCAL L3", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-BD4", "level": 3, "event": "CLOSED-LOCKED", "at": "2008-05-18T16:22:00Z", "by": "LOCAL L3", "count": null, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T20:03:00Z", "by": "LOCAL L1", "count": 4, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-18T20:07:00Z", "by": "LOCAL L1", "count": 4, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-19T04:02:00Z", "by": "LOCAL L1", "count": 3, "note": "" },
+    { "site": "GAMMA-08", "door": "G08-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-19T04:06:00Z", "by": "LOCAL L1", "count": 3, "note": "" },
+
+    { "site": "ALPHA-02", "door": "A02-BD4", "level": 5, "event": "OPEN CMD", "at": "2008-05-16T13:10:00Z", "by": "LOCAL L5", "count": null, "note": "Armory issue" },
+    { "site": "ALPHA-02", "door": "A02-BD4", "level": 5, "event": "CLOSED-LOCKED", "at": "2008-05-16T13:31:00Z", "by": "LOCAL L5", "count": null, "note": "" },
+    { "site": "ALPHA-02", "door": "A02-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T14:01:00Z", "by": "LOCAL L1", "count": 5, "note": "" },
+    { "site": "ALPHA-02", "door": "A02-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-18T14:06:00Z", "by": "LOCAL L1", "count": 6, "note": "" },
+    { "site": "ALPHA-02", "door": "A02-AL2", "level": 11, "event": "CYCLE OUT", "at": "2008-05-12T04:12:00Z", "by": "LOCAL L11", "count": 2, "note": "" },
+    { "site": "ALPHA-02", "door": "A02-AL2", "level": 11, "event": "CYCLE IN", "at": "2008-05-12T05:51:00Z", "by": "LOCAL L11", "count": 2, "note": "" },
+
+    { "site": "ALPHA-03", "door": "A03-BD3", "level": 6, "event": "OPEN CMD", "at": "2008-05-16T13:00:00Z", "by": "LOCAL L6", "count": null, "note": "Stacks A-B, accession transfer" },
+    { "site": "ALPHA-03", "door": "A03-BD3", "level": 6, "event": "CLOSED-LOCKED", "at": "2008-05-16T16:45:00Z", "by": "LOCAL L6", "count": null, "note": "" },
+    { "site": "ALPHA-03", "door": "A03-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T12:01:00Z", "by": "LOCAL L1", "count": 6, "note": "" },
+    { "site": "ALPHA-03", "door": "A03-AL1", "level": 1, "event": "CYCLE OUT", "at": "2008-05-18T12:05:00Z", "by": "LOCAL L1", "count": 4, "note": "" },
+
+    { "site": "ALPHA-01", "door": "A01-BD3", "level": 7, "event": "OPEN CMD", "at": "2008-05-15T14:30:00Z", "by": "LOCAL L7", "count": null, "note": "Secure storage audit" },
+    { "site": "ALPHA-01", "door": "A01-BD3", "level": 7, "event": "CLOSED-LOCKED", "at": "2008-05-15T15:55:00Z", "by": "LOCAL L7", "count": null, "note": "" },
+    { "site": "ALPHA-01", "door": "A01-AL1", "level": 1, "event": "CYCLE IN", "at": "2008-05-18T11:58:00Z", "by": "LOCAL L1", "count": 6, "note": "" }
+  ]
+}

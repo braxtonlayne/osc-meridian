@@ -319,6 +319,9 @@ export default function App({ win, route }: AppProps) {
           { id: 'watch', content: watch ? `${watch.watch}: ${watch.dispatcher}` : 'Watch not recorded', label: 'Dispatcher on watch' },
           { id: 'consists', content: `Consists ${state?.trains.length ?? 0}`, mono: true },
           { id: 'blocks', content: `Blocks not clear ${notClear}`, mono: true },
+          ...(state?.holds.isolation || state?.holds.drill
+            ? [{ id: 'holds', content: state.holds.isolation ? `Movements held: isolation ${state.holds.isolation}` : `Departures held: seal drill ${state.holds.drill}`, label: 'Network holds' }]
+            : []),
           { id: 'tt', content: tt ? `${tt.timetable.source} rev ${tt.revision}` : 'No timetable', mono: true },
         ]}
       />

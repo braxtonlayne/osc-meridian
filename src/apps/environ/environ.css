@@ -1,0 +1,200 @@
+/* Environmental Control (app id "environ"). Tokens only; unlayered, all selectors under .env-*. */
+.env-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-base);
+  container-type: inline-size;
+}
+.env-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.env-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-3);
+  background: var(--chrome-face);
+}
+.env-doc {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--ws-bg);
+}
+.env-remote {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.env-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: flex-start;
+}
+.env-mimicwrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.env-mimic-t {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  fill: var(--text-1);
+}
+.env-mimic-v {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.env-dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--sp-1) var(--sp-3);
+  margin: 0;
+  font-size: var(--fs-sm);
+  max-width: 360px;
+}
+.env-dl dt {
+  color: var(--text-2);
+}
+.env-dl dd {
+  margin: 0;
+}
+.env-note {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  margin: var(--sp-2) 0;
+  max-width: 60ch;
+}
+.env-h {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  margin: var(--sp-3) 0 var(--sp-2);
+}
+.env-loghead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.env-table {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-3);
+}
+.env-table--narrow {
+  width: auto;
+  min-width: 320px;
+  margin-top: var(--sp-3);
+}
+.env-table caption {
+  text-align: left;
+  font-weight: var(--fw-semibold);
+  padding: var(--sp-1) 0;
+}
+.env-table th,
+.env-table td {
+  border: 1px solid var(--row-rule);
+  padding: 2px var(--sp-2);
+  text-align: left;
+  vertical-align: top;
+}
+.env-table thead th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+}
+.env-table .num {
+  text-align: right;
+}
+.env-table .mono,
+.env-dl .mono {
+  font-family: var(--font-mono);
+}
+.env-sub {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  margin-top: 2px;
+}
+.env-st {
+  display: inline-block;
+  width: var(--status-sq);
+  height: var(--status-sq);
+  margin-right: var(--sp-1);
+  vertical-align: -1px;
+  border: 1px solid var(--text-1);
+}
+.env-st--nominal {
+  background: var(--st-nominal);
+}
+.env-st--degraded {
+  background: var(--st-degraded);
+}
+.env-st--fault {
+  background: var(--st-fault);
+}
+.env-trendbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-2) 0;
+  font-size: var(--fs-sm);
+}
+.env-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.env-trend {
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  padding: var(--sp-2);
+}
+.env-trend .u-legend {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.env-balance p {
+  max-width: 70ch;
+}
+.env-linkbtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--link);
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+.env-linkbtn:focus-visible {
+  outline: 1px dotted var(--text-1);
+}
+@container (width < 720px) {
+  .env-scroll {
+    padding: var(--sp-2);
+  }
+  .env-table {
+    font-size: var(--fs-xs);
+  }
+}
+.env-mimicwrap .pk-mimic-svg {
+  max-width: none;
+}

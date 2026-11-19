@@ -8,15 +8,17 @@ import { dirPreset, orgPreset } from '../state';
 import { rxPlain } from '@core/rx';
 import { CellView, Figure, RxText, usePer } from '../ui';
 import { buildRow } from '../directory';
+import { useCanonT2 } from '../acct';
 
 type Sel = { kind: 'person'; pn: string } | { kind: 'unit'; id: string } | null;
 
 function PersonDetail({ pn }: { pn: string }) {
   const per = usePer();
+  const t2 = useCanonT2(per.services);
   const p = personByPn.get(pn);
   if (!p) return <p class="per-note">No directory entry is held for {pn}.</p>;
   const held = per.services.session.compartments.value;
-  const r = buildRow(p, { holds: (c) => held.includes(c), sponsorable: SPONSORABLE, compartmentIds: canon.compartments.map((c) => c.id), divisionName });
+  const r = buildRow(p, { holds: (c) => held.includes(c), sponsorable: SPONSORABLE, compartmentIds: canon.compartments.map((c) => c.id), divisionName, t2 });
   return (
     <>
       <PropertyGrid

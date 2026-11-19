@@ -1,6 +1,7 @@
 ---
 id: fac-gamma-08
 route: /registry/facility/gamma-08
+t4: true
 app: registry
 family: registry
 template: dossier

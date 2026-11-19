@@ -1,0 +1,44 @@
+{
+  "$comment": "Shaft Hoist Control (src/apps/hoist). Drive and plant parameters that canon `hoists` does not hold. Hoist speeds, accelerations, cage limits and landing depths are read from canon `hoists`; nothing here repeats them.",
+  "model": {
+    "creepFpm": 60,
+    "creepFt": 4,
+    "inspectionFpm": 150,
+    "levelToleranceFt": 0.5,
+    "landingZoneFt": 3,
+    "overtravelFt": 6,
+    "estopDecelFtps2": 12,
+    "overspeedPct": 110,
+    "personLb": 175,
+    "loadWarnPct": 90,
+    "loadScalePct": 125,
+    "personStep": 5,
+    "freightStepLb": 2500,
+    "gateCycleSec": 5,
+    "dwellSec": 10,
+    "brakeTestSec": 12,
+    "brakeTestTorquePct": 150,
+    "estopHoldMs": 500,
+    "estopInspectionMin": 15,
+    "autoLoadMaxPct": 60,
+    "recorderEvents": 80,
+    "driverMaxTier": 2
+  },
+  "landingCompartments": [
+    { "facility": "ALPHA-03", "level": 8, "compartment": "LANTERN" }
+  ],
+  "sumpVanes": [
+    { "hoist": "A02-H2", "belowBottomFt": 48, "finalLimitBelowBottomFt": 56 }
+  ],
+  "docs": {
+    "procedure": "OSC-DIR-0466",
+    "dataSheet": "OSC-MEM-07-1342"
+  },
+  "mail": {
+    "restrictedCall": { "analyst": "msg-08-06231", "auditor": "msg-08-06232" },
+    "estop": { "analyst": "msg-08-06233", "auditor": "msg-08-06234", "deputy": "msg-08-06235" },
+    "overload": { "deputy": "msg-08-06236" },
+    "position": { "deputy": "msg-08-06237" },
+    "oiaEstop": "msg-08-06238"
+  }
+}

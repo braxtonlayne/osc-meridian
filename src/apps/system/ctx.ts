@@ -13,6 +13,8 @@ export interface SysCtx {
   entryFor(path: string): RouteEntry | undefined;
   /** The window is narrow (handheld mode or a small window). */
   narrow: boolean;
+  /** Tier 4 rule for listings: false for a document this account may not see. */
+  visible(r: RouteEntry): boolean;
 }
 
 export const Ctx = createContext<SysCtx | null>(null);

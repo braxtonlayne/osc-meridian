@@ -1,0 +1,151 @@
+/* Hub Circuit Patch Panel (app id "patch"). Tokens only; unlayered, all selectors under .pt-*. */
+
+.pt-app {
+  container-type: inline-size;
+  container-name: patch;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  color: var(--text-1);
+}
+.pt-main {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--chrome-face);
+}
+.pt-bay-select {
+  display: inline-flex;
+  align-items: center;
+}
+.pt-bay-select .f-row,
+.pt-bay-select label {
+  margin: 0;
+}
+.pt-bay-select select {
+  min-width: 17ch;
+}
+.pt-isonote {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--chrome-shadow);
+  font: var(--fw-bold) var(--fs-sm) / var(--lh-sm) var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.pt-docbar {
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--chrome-shadow);
+}
+.pt-doc {
+  background: var(--paper);
+  min-height: 100%;
+}
+.pt-pad {
+  padding: var(--sp-5);
+}
+.pt-muted {
+  color: var(--text-3);
+  margin: var(--sp-2) 0;
+}
+.pt-hint {
+  margin: var(--sp-2) 0 0;
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+  max-width: 560px;
+}
+.pt-line {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.pt-h {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font: var(--fw-semibold) var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+
+/* Bay */
+.pt-bay-view {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(300px, 1fr);
+  gap: var(--sp-5);
+  padding: var(--sp-4);
+  align-items: start;
+}
+.pt-field-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+.pt-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.pt-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+.pt-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: var(--sp-2);
+}
+.pt-callside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 160px;
+  flex: 1;
+}
+.pt-transcript {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  list-style: none;
+  min-height: 72px;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  font: var(--fs-sm) / var(--lh-sm) var(--font-mono);
+}
+.pt-transcript li + li {
+  margin-top: var(--sp-1);
+}
+
+/* Tables */
+.pt-table-view,
+.pt-log,
+.pt-quality {
+  padding: var(--sp-4);
+}
+.pt-table-view {
+  height: 100%;
+  box-sizing: border-box;
+}
+.pt-quality {
+  max-width: 760px;
+}
+.pt-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.pt-rx {
+  display: inline-block;
+  background: var(--redact);
+  color: var(--redact);
+  min-width: 4ch;
+}
+
+@container patch (max-width: 860px) {
+  .pt-bay-view {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

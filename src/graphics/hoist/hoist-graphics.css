@@ -1,0 +1,115 @@
+/* @graphics/hoist. Tokens only. */
+.hg-none {
+  margin: 0;
+  padding: var(--sp-3);
+  color: var(--text-2);
+}
+
+/* ---- elevation with cage overlay ---- */
+.hg-elev {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.hg-elev > .d3v2,
+.hg-elev__over {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hg-elev__over {
+  pointer-events: none;
+}
+.hg-rope {
+  stroke: var(--text-2);
+  stroke-width: 1;
+  fill: none;
+}
+.hg-sheave {
+  fill: var(--chrome-dark);
+}
+.hg-cagebox {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.hg-cage.is-sel .hg-cagebox {
+  fill: var(--text-1);
+}
+.hg-cage.is-sel .hg-rope {
+  stroke: var(--text-1);
+}
+.hg-landing {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.hg-cagelbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  fill: var(--text-1);
+}
+
+/* ---- depth indicator strip ---- */
+.hg-ind {
+  display: block;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.hg-ind__face {
+  fill: var(--paper);
+  stroke: var(--chrome-outer);
+}
+.hg-ind__cap {
+  font-family: var(--font-ui);
+  font-size: 8px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  fill: var(--text-2);
+}
+.hg-ind__axis,
+.hg-ind__tick,
+.hg-ind__vane {
+  stroke: var(--text-1);
+  stroke-width: 1;
+  fill: none;
+}
+.hg-ind__vane.is-bare {
+  stroke: var(--text-2);
+}
+.hg-ind__limit {
+  stroke: var(--st-fault);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+.hg-ind__num {
+  font-size: 8px;
+  fill: var(--text-2);
+}
+.hg-ind__lvl {
+  font-size: 9px;
+  fill: var(--text-1);
+}
+.hg-ind__lvl.is-sel {
+  fill: var(--select-fg);
+  font-weight: var(--fw-bold);
+}
+.hg-ind__sel {
+  fill: var(--select-bg);
+}
+.hg-ind__call {
+  fill: var(--text-1);
+}
+.hg-ind__ptr {
+  fill: var(--text-1);
+}
+.hg-ind__ptr.is-zone {
+  fill: var(--st-degraded);
+}
+.hg-ind__ptrline {
+  stroke: var(--text-1);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}

@@ -13,8 +13,9 @@
  * narrative engine (src/narrative) reacts to it. The host only prints what the
  * operator's state already supports, so its output agrees with the engine.
  */
-import type { AppId, AuditEntry, RouteEntry } from '@core/contracts';
+import type { AccountDef, AccountId, AppId, AuditEntry, RouteEntry } from '@core/contracts';
 import type { Canon, Facility, FacilityId, MarkingId, TierNo } from '@core/canon-types';
+import { readableByTier4 } from '@core/docs';
 import { hasRx, isRx, rxPlain } from '@core/rx';
 import { formatInWorldDate } from '@core/session';
 import {
@@ -59,13 +60,54 @@ export interface HostContext {
    */
   docRows?(docNo: string): ReadonlyMap<string, readonly (string | null)[]> | undefined;
   appTitle(id: AppId): string;
+  /** Pass two: the signed-in account (identity for WHOAMI, home site, Tier 4 rule). Omitted: canon.operator. */
+  account?: AccountDef;
+  /** Pass two: every credential issued on this workstation (ACCOUNTS). */
+  accounts?: readonly AccountDef[];
+  /** Pass two: ids of messages delivered to this account (Tier 4 may list them). */
+  delivered?: readonly string[];
 }
 
-/** Routes the operator may see listed: undelivered messages are not on this operator's register. */
-function heldRoutes(ctx: Pick<HostContext, 'routes' | 'isHeld'>): readonly RouteEntry[] {
-  const held = ctx.isHeld;
-  return held ? ctx.routes.filter((r) => held(r.route)) : ctx.routes;
+type VisCtx = Pick<HostContext, 'routes' | 'isHeld' | 'account' | 'delivered'>;
+
+/** Short-form reference cited by the Tier 4 refusal (as the shell's). */
+export const T4_REF = 'DIR-0301';
+
+/** The identity the host answers for: the signed-in account, or the pass-one operator. */
+export function identity(ctx: Pick<HostContext, 'canon' | 'account'>): Pick<AccountDef, 'operatorId' | 'pn' | 'displayName' | 'roleTitle' | 'tier' | 'site' | 'divisionId' | 'supervisorPn' | 'probationStart'> {
+  if (ctx.account) return ctx.account;
+  const op = ctx.canon.operator;
+  return { operatorId: op.operatorId, pn: op.pn, displayName: op.displayName, roleTitle: '', tier: op.tier, site: op.site, divisionId: op.divisionId, supervisorPn: op.supervisorPn, probationStart: op.probationStart };
 }
+
+/** Division label; facility command posts carry id CMD, which no division has. */
+export function divisionLabel(canon: Canon, id: string): string {
+  if (id === 'CMD') return 'Facility Command';
+  return canon.divisions.find((d) => d.id === id)?.name ?? id;
+}
+
+const isTier4 = (ctx: Pick<HostContext, 'account'>): boolean => ctx.account?.tier === 4;
+
+/**
+ * Tier 4 rule (docs/SPEC-2.md §1): a Tier 4 account sees a document only if it is marked `t4`,
+ * the account has its own variant, it is a message delivered to the account, or it is an
+ * application home route. True for every route at other tiers.
+ */
+export function tier4Visible(r: RouteEntry, ctx: Pick<HostContext, 'account' | 'delivered'>): boolean {
+  const a = ctx.account;
+  if (!a || a.tier !== 4) return true;
+  if (readableByTier4(r) || r.variants?.includes(a.id)) return true;
+  if (r.family === 'mail' && (ctx.delivered ?? []).includes(r.id)) return true;
+  return r.route === `/${r.app}`;
+}
+
+/** Routes the operator may see listed: undelivered messages are not on this operator's register; Tier 4 sees its own small world. */
+export function heldRoutes(ctx: VisCtx): readonly RouteEntry[] {
+  const held = ctx.isHeld;
+  return ctx.routes.filter((r) => (!held || held(r.route)) && tier4Visible(r, ctx));
+}
+
+const T4_REFUSAL = (what: string) => `${what}: refused. Requires Tier 3 access determination. Reference ${T4_REF}.`;
 
 export type Effect =
   | { kind: 'open'; route: string }
@@ -73,7 +115,9 @@ export type Effect =
   | { kind: 'clear' }
   | { kind: 'logout' }
   | { kind: 'search'; q: string }
-  | { kind: 'consist'; id: string };
+  | { kind: 'consist'; id: string }
+  /** Auditor only: read another account's trail (services.account.readAudit) and print the last n. */
+  | { kind: 'auditOther'; account: AccountId; operatorId: string; n: number };
 
 export interface HostResult {
   lines: string[];
@@ -211,30 +255,76 @@ type Handler = (p: Parsed, ctx: HostContext) => HostResult;
 
 const out = (lines: string[], effects: Effect[] = [], marking?: MarkingId): HostResult => (marking ? { lines, effects, marking } : { lines, effects });
 
-const help: Handler = () =>
-  out(['COMMANDS AVAILABLE TO THIS OPERATOR', ...HELP_LINES.map((h) => `  ${h.cmd.padEnd(18)}${h.text}`), 'Reference KB-0026 and OSC-DIR-0301.']);
+const help: Handler = (_p, ctx) => {
+  const lines = HELP_LINES.map((h) => `  ${h.cmd.padEnd(18)}${h.text}`);
+  if (ctx.account?.auditReader) lines.push('  audit tail [n] --operator <id>  Audit trail of another operator (OIA, read-only)');
+  return out(['COMMANDS AVAILABLE TO THIS OPERATOR', ...lines, 'Reference KB-0026 and OSC-DIR-0301.']);
+};
 
 const whoami: Handler = (_p, ctx) => {
-  const op = ctx.canon.operator;
-  const div = ctx.canon.divisions.find((d) => d.id === op.divisionId);
+  const op = identity(ctx);
   const held = [...ctx.compartments];
-  return out([
+  const lines = [
     ...kv('Operator', `${ctx.operatorId}  ${op.pn}`, ctx.cols),
     ...kv('Name', op.displayName, ctx.cols),
+  ];
+  if (op.roleTitle) lines.push(...kv('Post', op.roleTitle, ctx.cols));
+  lines.push(
     ...kv('Tier', ctx.acting ? `${ctx.tier} (acting)  baseline ${op.tier}` : String(ctx.tier), ctx.cols),
-    ...kv('Site', `${op.site}  ${div ? div.name : op.divisionId}`, ctx.cols),
+    ...kv('Site', `${op.site}  ${divisionLabel(ctx.canon, op.divisionId)}`, ctx.cols),
     ...kv('Workstation', WORKSTATION, ctx.cols),
     ...kv('Compartments', held.length ? held.join(' ') : 'None', ctx.cols),
-    ...kv('Probation', `Day ${ctx.probationDay} of ${ctx.probationLength}`, ctx.cols),
-    ...kv('Supervisor', op.supervisorPn, ctx.cols),
-  ]);
+  );
+  // Accounts with no probation start are not on probation: no row.
+  if (op.probationStart) lines.push(...kv('Probation', `Day ${ctx.probationDay} of ${ctx.probationLength}`, ctx.cols));
+  if (op.supervisorPn) lines.push(...kv('Supervisor', op.supervisorPn, ctx.cols));
+  if (ctx.account?.approves.length) lines.push(...kv('Approves', ctx.account.approves.join(' '), ctx.cols));
+  if (ctx.account?.auditReader) lines.push(...kv('Audit review', 'Office of Internal Assurance auditor (read-only)', ctx.cols));
+  return out(lines);
+};
+
+/** "OPR-A01-0948", "a01-0948", "auditor" -> the account, if issued on this workstation. */
+export function resolveAccount(arg: string, accounts: readonly AccountDef[]): AccountDef | undefined {
+  const a = arg.trim().toUpperCase();
+  if (!a) return undefined;
+  return accounts.find((x) => x.id.toUpperCase() === a || x.operatorId.toUpperCase() === a || x.operatorId.toUpperCase() === `OPR-${a}`);
+}
+
+const accounts: Handler = (_p, ctx) => {
+  const list = ctx.accounts ?? [];
+  if (!list.length) return out(['No credentials are recorded as issued on this workstation.']);
+  const me = identity(ctx).operatorId;
+  const rw = Math.max(16, ctx.cols - 36);
+  const lines = [`CREDENTIALS ISSUED  WS ${WORKSTATION}  ${stamp(ctx.now)}`, `  ${col('OPERATOR', 15)}${col('TIER', 5)}${col('SITE', 10)}POST`];
+  for (const a of list) lines.push(`${a.operatorId === me ? '*' : ' '} ${col(a.operatorId, 15)}${col(String(a.tier), 5)}${col(a.site, 10)}${col(a.roleTitle, rw)}`.trimEnd());
+  lines.push(`${list.length} credentials. * in use. Credentials are presented at the lock screen.`);
+  return out(lines);
+};
+
+const su: Handler = (p, ctx) => {
+  const who = p.args[0] ? resolveAccount(p.args[0], ctx.accounts ?? []) : undefined;
+  const cmd = p.cmd.toUpperCase();
+  const lines = [
+    `${cmd}: not available at ${HOST}. A credential is presented only at the workstation lock screen (OSC-DIR-0301).`,
+    who
+      ? `To use credential ${who.operatorId}, log off (Directory > Log off) and choose its card.`
+      : 'Log off (Directory > Log off) and choose the card of the credential to be used.',
+  ];
+  return out(lines.flatMap((l) => wrap(l, ctx.cols)));
 };
 
 const sites: Handler = (_p, ctx) => {
   const dw = Math.max(6, Math.min(28, ctx.cols - 32));
   const lines = [`${col('ID', 10)}${col('CLASS', 7)}${col('DESIGNATION', dw)}${rcol('STAFF', 6)}${rcol('BERTHS', 8)}`];
-  for (const f of ctx.canon.facilities) {
+  // Tier 4: the operator's own site only; the register itself is a Tier 3 listing.
+  const home = identity(ctx).site;
+  const shown = isTier4(ctx) ? ctx.canon.facilities.filter((f) => f.id === home) : ctx.canon.facilities;
+  for (const f of shown) {
     lines.push(`${col(f.id, 10)}${col(f.class, 7)}${col(plain(f.codename ?? '-'), dw)}${rcol(fig(f.staff), 6)}${rcol(fig(f.capacity), 8)}`);
+  }
+  if (isTier4(ctx)) {
+    lines.push(`Assigned site only. The facility register is released at Tier 3 (${T4_REF}).`);
+    return out(lines);
   }
   // The total is the canon figure, not a sum over rows: withheld site figures are not zero.
   const withheld = ctx.canon.facilities.some((f) => f.staff === null);
@@ -245,8 +335,7 @@ const sites: Handler = (_p, ctx) => {
 };
 
 /** Sites whose location and connections a Tier 3 reader at the operator's site may see without SEXTANT. */
-export function adjacentSites(canon: Canon): Set<string> {
-  const home = canon.operator.site;
+export function adjacentSites(canon: Canon, home: string = canon.operator.site): Set<string> {
   const s = new Set<string>([home]);
   for (const seg of canon.railSegments) {
     if (seg.a === home) s.add(seg.b);
@@ -263,7 +352,7 @@ export function adjacentSites(canon: Canon): Set<string> {
 function facilityLines(f: Facility, ctx: HostContext): string[] {
   const c = ctx.canon;
   const cls = c.classes.find((k) => k.id === f.class);
-  const open = adjacentSites(c).has(f.id) || ctx.satisfies('SEXTANT');
+  const open = adjacentSites(c, identity(ctx).site).has(f.id) || ctx.satisfies('SEXTANT');
   const geo = (v: string | null) => (v === null ? '--' : open ? plain(v) : `${bar(rxPlain(v).length)} (SEXTANT)`);
   const rx = c.reactors.find((r) => r.site === f.id);
   const lines = [
@@ -290,11 +379,13 @@ const site: Handler = (p, ctx) => {
   if (!p.rest) return out(['SITE: specify a facility (site ALPHA-03).']);
   const id = normalizeFacility(p.rest, ctx.canon);
   if (!id) return out([`SITE: ${p.rest.toUpperCase()} is not on the facility register.`]);
+  if (isTier4(ctx) && id !== identity(ctx).site) return out([T4_REFUSAL(`SITE ${id}`)]);
   return out(facilityLines(ctx.canon.facilities.find((f) => f.id === id)!, ctx));
 };
 
 const rail: Handler = (p, ctx) => {
   if ((p.args[0] ?? '').toLowerCase() !== 'status') return out(['RAIL: usage RAIL STATUS.']);
+  if (isTier4(ctx)) return out([T4_REFUSAL('RAIL STATUS')]);
   const lines = [
     `INTER-HUB RAIL  STATUS AT ${stamp(ctx.now)}`,
     `${col('SEG', 5)}${col('FROM', 10)}${col('TO', 10)}${rcol('MILES', 6)}${rcol('HRS', 6)}  STATUS`,
@@ -350,6 +441,7 @@ const open: Handler = (p, ctx) => {
   const r = findDoc(ctx.routes, p.rest);
   // An undelivered message: refused in-world, without confirming it exists or opening anything.
   if (r && ctx.isHeld && !ctx.isHeld(r.route)) return out(['No such message held.']);
+  if (r && !tier4Visible(r, ctx)) return out([`${r.docNo}: display refused. Requires Tier 3 access determination. Reference ${T4_REF}.`]);
   if (!r) {
     if (p.rest.startsWith('/')) return out([`Requesting ${p.rest}.`], [{ kind: 'open', route: p.rest }]);
     return out([`OPEN: ${p.rest.toUpperCase()} is not on the register. Check the number against the register.`]);
@@ -377,8 +469,53 @@ export function auditLine(e: AuditEntry, operatorId: string): string {
   return `AUD-${ymd}-${String(e.seq).padStart(6, '0')} ${t} ${e.kind.toUpperCase()} ${operatorId} WS ${WORKSTATION} ${e.detail}`;
 }
 
+/** AUDIT TAIL --OPERATOR output, once the trail has been read (read-only copy). */
+export function formatAuditOther(entries: readonly AuditEntry[] | null, operatorId: string, n: number, cols: number, now: Date): string[] {
+  if (!entries) return [`AUDIT: the audit trail of ${operatorId} could not be read at ${HOST}. Report the fault to the MERIDIAN Service Desk.`];
+  const head = `AUDIT TRAIL  ${operatorId}  READ-ONLY COPY  ${stamp(now)}`;
+  if (!entries.length) return [head, `No audit entries recorded for ${operatorId}.`];
+  const list = entries.slice(-n);
+  const lines = [head];
+  for (const e of list) lines.push(...wrap(auditLine(e, operatorId), cols));
+  lines.push(`${list.length} of ${entries.length} entries. Read by the Office of Internal Assurance (OSC-DIR-0412 para 8).`);
+  return lines;
+}
+
+/** Pull "--operator <id>" (or "--operator=<id>") out of an argument list. */
+export function takeOperatorOpt(args: readonly string[]): { rest: string[]; operator: string | null; bad: boolean } {
+  const rest: string[] = [];
+  let operator: string | null = null;
+  let bad = false;
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i]!;
+    const m = /^--operator(?:=(.*))?$/i.exec(a);
+    if (!m) {
+      rest.push(a);
+      continue;
+    }
+    const v = m[1] ?? args[++i];
+    if (!v) bad = true;
+    else operator = v;
+  }
+  return { rest, operator, bad };
+}
+
 const audit: Handler = (p, ctx) => {
   if ((p.args[0] ?? '').toLowerCase() !== 'tail') return out(['AUDIT: usage AUDIT TAIL [n].']);
+  const opt = takeOperatorOpt(p.args.slice(1));
+  if (opt.bad) return out(['AUDIT: --operator needs an operator id (OPR-A03-1147).']);
+  if (opt.operator !== null) {
+    if (!ctx.account?.auditReader) {
+      return out(wrap('AUDIT TAIL --OPERATOR: refused. The audit trail of another operator is read only by the Office of Internal Assurance (OSC-DIR-0412 para 8). This request has been recorded.', ctx.cols));
+    }
+    const who = resolveAccount(opt.operator, ctx.accounts ?? []);
+    if (!who) return out([`AUDIT: ${opt.operator.toUpperCase()} is not a credential issued on this workstation. Type ACCOUNTS.`]);
+    const rawN = opt.rest[0];
+    const n = rawN === undefined ? 10 : Number(rawN);
+    if (!Number.isInteger(n) || n < 1) return out(['AUDIT: n must be a whole number from 1 to 50.']);
+    if (who.operatorId === identity(ctx).operatorId) return audit({ ...p, args: ['tail', ...opt.rest] }, ctx);
+    return out([], [{ kind: 'auditOther', account: who.id, operatorId: who.operatorId, n: Math.min(n, 50) }]);
+  }
   const raw = p.args[1];
   const n = raw === undefined ? 10 : Number(raw);
   if (!Number.isInteger(n) || n < 1) return out(['AUDIT: n must be a whole number from 1 to 50.']);
@@ -394,11 +531,11 @@ const clearance: Handler = (p, ctx) => {
   const sub = (p.args[0] ?? 'status').toLowerCase();
   if (sub === 'status') {
     const lines = [`ACCESS DETERMINATION  ${ctx.operatorId}  ${stamp(ctx.now)}`];
-    lines.push(...kv('Tier', ctx.acting ? `${ctx.tier} (acting)  baseline ${ctx.canon.operator.tier}` : `${ctx.tier}`, ctx.cols));
+    lines.push(...kv('Tier', ctx.acting ? `${ctx.tier} (acting)  baseline ${identity(ctx).tier}` : `${ctx.tier}`, ctx.cols));
     const held = ctx.canon.compartments.filter((c) => ctx.compartments.includes(c.id));
     if (!held.length) lines.push(...kv('Compartments', 'None', ctx.cols));
     held.forEach((c, i) => lines.push(...kv(i === 0 ? 'Compartments' : '', `${c.id.padEnd(9)}briefing ${c.briefingDocNo}`, ctx.cols)));
-    lines.push(...kv('Probation', `Day ${ctx.probationDay} of ${ctx.probationLength}`, ctx.cols));
+    if (identity(ctx).probationStart) lines.push(...kv('Probation', `Day ${ctx.probationDay} of ${ctx.probationLength}`, ctx.cols));
     lines.push('Compartment access is requested on OSC-F-126. Reference DIR-0412.');
     return out(lines);
   }
@@ -416,7 +553,7 @@ function requestActing(ctx: HostContext): HostResult {
   if (ctx.acting) return out(['Acting Tier 2 determination is already recorded for this operator.']);
   // Eligibility follows the interim review (narrative step S14); the grant itself is the engine's (S15).
   if (!ctx.flags.interimReview) return out(['CLEARANCE REQUEST ACTING: not eligible: probationary (DIR-0247).']);
-  const sponsor = ctx.canon.operator.supervisorPn;
+  const sponsor = identity(ctx).supervisorPn ?? '--';
   return out([
     `REQUEST  ACTING TIER 2  ${ctx.operatorId}  ${stamp(ctx.now)}`,
     ...kv('Sponsor', `${sponsor} (supervisor of record)`, ctx.cols),
@@ -661,10 +798,16 @@ const copies: Handler = (p, ctx) => {
 
 /* ------------------------------------------------------------ dispatch */
 
+/** Division utilities belong to the ALPHA-03 divisions; a Tier 4 credential is not on their distribution. */
+const division = (h: Handler): Handler => (p, ctx) => (isTier4(ctx) ? out([T4_REFUSAL(p.cmd.toUpperCase())]) : h(p, ctx));
+
 const HANDLERS: Record<string, Handler> = {
   help,
   '?': help,
   whoami,
+  accounts,
+  su,
+  login: su,
   sites,
   site,
   rail,
@@ -681,11 +824,11 @@ const HANDLERS: Record<string, Handler> = {
   man,
   logout,
   exit: logout,
-  wo,
-  trace,
-  strength,
-  consist,
-  copies,
+  wo: division(wo),
+  trace: division(trace),
+  strength: division(strength),
+  consist: division(consist),
+  copies: division(copies),
 };
 
 /** Run one command line against the host. */
@@ -712,7 +855,7 @@ function commonPrefix(xs: string[]): string {
 }
 
 /** Tab completion over documented commands, their subcommands, docNos and facility ids. */
-export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon' | 'isHeld'>): Completion {
+export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon' | 'isHeld' | 'account' | 'delivered'>): Completion {
   const m = /^(\s*)(\S*)(\s+)?(.*)$/.exec(line)!;
   const [, lead = '', word = '', gap, tail = ''] = m;
   let pool: string[];
@@ -735,7 +878,7 @@ export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon'
       pool = heldRoutes(ctx).map((r) => r.docNo);
       upper = true;
     } else if (cmd === 'site') {
-      pool = ctx.canon.facilities.map((f) => f.id);
+      pool = isTier4(ctx) ? [identity(ctx).site] : ctx.canon.facilities.map((f) => f.id);
       upper = true;
     } else if (cmd === 'man') pool = Object.keys(MAN);
     else pool = [];

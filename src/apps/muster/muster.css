@@ -1,0 +1,197 @@
+/* Muster Board. Tokens only (src/design/tokens.css). */
+.mus-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.mus-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.mus-pick select {
+  min-width: 12em;
+}
+.mus-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.mus-pick__fixed {
+  font: var(--fw-semibold) var(--fs-base) / var(--lh-base) var(--font-mono);
+}
+.mus-main {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.mus-net,
+.mus-site,
+.mus-point,
+.mus-co {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  min-width: 0;
+}
+.mus-note {
+  margin: var(--sp-2) 0 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.mus-empty {
+  padding: var(--sp-6);
+  color: var(--text-2);
+}
+.mus-dim {
+  color: var(--text-3);
+}
+.mus-unk {
+  font-weight: var(--fw-semibold);
+}
+.mus-total td {
+  font: var(--fw-semibold) var(--fs-base) / var(--lh-base) var(--font-mono);
+  border-top: 1px solid var(--chrome-shadow);
+  background: var(--th-bg);
+  padding: 0 var(--sp-2);
+}
+.mus-total td.num {
+  text-align: right;
+}
+.mus-row--off td {
+  color: var(--text-3);
+}
+.mus-row--over td,
+.mus-row--unk td {
+  font-weight: var(--fw-semibold);
+}
+.mus-lamps {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.mus-bar {
+  display: inline-flex;
+  gap: 1px;
+  vertical-align: middle;
+  padding: 1px;
+  border: 1px solid var(--chrome-shadow);
+  background: var(--surface);
+}
+.mus-bar span {
+  width: 8px;
+  height: 9px;
+  background: var(--zebra);
+}
+.mus-bar span.on {
+  background: var(--st-nominal);
+}
+.mus-bar--over span.on {
+  background: var(--st-degraded);
+}
+.mus-co__runs select {
+  font: var(--fs-base) var(--font-mono);
+}
+
+/* Close-out report sheet (screen and print) */
+.mus-sheet {
+  max-width: 760px;
+  padding: var(--sp-5) var(--sp-6);
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  color: var(--text-1);
+}
+.mus-sheet header {
+  text-align: center;
+  border-bottom: 2px solid var(--text-1);
+  padding-bottom: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+.mus-sheet h2 {
+  margin: var(--sp-1) 0;
+  font-size: var(--fs-md);
+  letter-spacing: var(--tracking-caps);
+}
+.mus-sheet h3 {
+  margin: var(--sp-4) 0 var(--sp-1);
+  font-size: var(--fs-base);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.mus-sheet__no,
+.mus-sheet__sub {
+  font: var(--fs-sm) var(--font-mono);
+  color: var(--text-2);
+}
+.mus-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--sp-3);
+}
+.mus-sheet th,
+.mus-sheet td {
+  border: 1px solid var(--row-rule);
+  padding: 2px var(--sp-2);
+  text-align: left;
+  vertical-align: top;
+}
+.mus-sheet th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+}
+.mus-sheet__tot td {
+  text-align: right;
+}
+.mus-sheet .mono {
+  font-family: var(--font-mono);
+}
+.mus-sheet ol {
+  margin: 0;
+  padding-left: var(--sp-6);
+}
+.mus-sheet footer {
+  margin-top: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.mus-sheet__dist {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.mus-doc {
+  padding: var(--sp-3);
+}
+.mus-print {
+  color: var(--print-ink);
+}
+.mus-print .mus-sheet {
+  max-width: none;
+  border: 0;
+  background: transparent;
+}
+.mus-print__foot {
+  font-size: var(--fs-sm);
+}
+
+.mus-app--compact .mus-net,
+.mus-app--compact .mus-site,
+.mus-app--compact .mus-point,
+.mus-app--compact .mus-co {
+  padding: var(--sp-2);
+}
+.mus-app--compact .mus-sheet {
+  padding: var(--sp-3);
+}

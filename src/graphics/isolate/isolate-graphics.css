@@ -1,0 +1,44 @@
+/* @graphics/isolate: tamper seal overlay for the guarded cover. Tokens only, no motion. */
+.ts-seal {
+  display: block;
+  overflow: visible;
+}
+.ts-wire {
+  fill: none;
+  stroke: var(--chrome-dark);
+  stroke-width: 1;
+}
+.ts-eye {
+  fill: var(--chrome-shadow);
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.ts-eyehole {
+  fill: var(--chrome-dark);
+}
+.ts-crimp {
+  fill: color-mix(in srgb, var(--chrome-shadow) 70%, var(--chrome-hi));
+  stroke: var(--chrome-outer);
+  stroke-width: 0.75;
+}
+.ts-tag {
+  fill: color-mix(in srgb, var(--st-degraded) 75%, var(--surface));
+  stroke: var(--chrome-outer);
+  stroke-width: 0.75;
+}
+.ts-tagt {
+  font-family: var(--font-mono);
+  font-size: 6px;
+  font-weight: var(--fw-semibold);
+  fill: var(--text-1);
+}
+.ts-word {
+  font-family: var(--font-ui);
+  font-size: 7px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  fill: var(--st-fault);
+}
+.pk-mimic__boxt.hm-cap {
+  font-size: 7px;
+}

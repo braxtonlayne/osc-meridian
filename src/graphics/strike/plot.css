@@ -1,0 +1,68 @@
+/* @graphics/strike local plot. Tokens only; 1px lines; no fills by severity. */
+.spl {
+  display: block;
+  user-select: none;
+  background: var(--row-hover);
+  font-family: var(--font-ui);
+  cursor: crosshair;
+}
+.spl-water {
+  fill: var(--row-hover);
+}
+.spl-land {
+  fill: var(--paper);
+  stroke: var(--chrome-outer);
+  stroke-width: 0.75;
+}
+.spl-borders {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 0.75;
+  stroke-dasharray: 4 2;
+}
+.spl-ring {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.spl-ring--outer {
+  stroke-dasharray: 5 3;
+}
+.spl-ring-label {
+  fill: var(--text-1);
+  font-family: var(--font-mono);
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+}
+.spl-gz {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.spl-ghost circle,
+.spl-ghost path {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.spl-site {
+  cursor: pointer;
+}
+.spl-site-label,
+.spl-site-note {
+  fill: var(--text-1);
+  font-family: var(--font-mono);
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+}
+.spl-site-note {
+  fill: var(--text-2);
+}
+.spl-neat {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}

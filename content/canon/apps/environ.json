@@ -1,0 +1,127 @@
+{
+  "site": "GAMMA-08",
+  "panelNo": "ECP-G08-1  REV B  SHEET 1 OF 1",
+  "local": { "utcOffsetH": -5, "zone": "CDT" },
+  "volumeM3": 2400,
+  "minZoneFlowM3h": 300,
+  "zones": [
+    { "id": "Z1", "level": 1, "ahu": "AHU-1", "flowShare": 0.62, "personShare": 0.2, "equipKw": 1.5, "sensor": "CT-101" },
+    { "id": "Z2", "level": 2, "ahu": "AHU-2", "flowShare": 1, "personShare": 0.72, "equipKw": 3, "sensor": "CT-201" },
+    { "id": "Z3", "level": 3, "ahu": "AHU-1", "flowShare": 0.38, "personShare": 0.08, "equipKw": 3, "sensor": "CT-301" }
+  ],
+  "ahus": [
+    { "id": "AHU-1", "ratedM3h": 5200, "initialSpeed": 2, "tag": "HS-AHU-1" },
+    { "id": "AHU-2", "ratedM3h": 9800, "initialSpeed": 2, "tag": "HS-AHU-2" }
+  ],
+  "fanSpeeds": [
+    { "pos": "OFF", "frac": 0 },
+    { "pos": "LOW", "frac": 0.4 },
+    { "pos": "MED", "frac": 0.7 },
+    { "pos": "HIGH", "frac": 1 }
+  ],
+  "makeup": {
+    "tag": "MAD-1",
+    "positions": [
+      { "id": "CLOSED", "m3h": 0 },
+      { "id": "MIN", "m3h": 600 },
+      { "id": "OPEN", "m3h": 1500 }
+    ],
+    "initial": 2,
+    "outdoorCo2Ppm": 385,
+    "outdoorO2Pct": 20.9
+  },
+  "metabolic": { "co2M3hPerPerson": 0.0187, "o2M3hPerPerson": 0.0225, "heatKwPerPerson": 0.12, "moistureGhPerPerson": 70 },
+  "residualPersonsByLocalHour": [9, 9, 9, 9, 9, 9, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 9, 9],
+  "scrubbers": {
+    "trains": [
+      { "id": "SCR-A", "initialLoading": 0.18, "tag": "HS-SCR-A" },
+      { "id": "SCR-B", "initialLoading": 0.55, "tag": "HS-SCR-B" }
+    ],
+    "removalM3hAt1000": 0.3,
+    "fanBase": 0.5,
+    "bedCapacityM3": 1,
+    "autoRegenAt": 0.92,
+    "saturationKnee": 0.8,
+    "regenMin": 45,
+    "regenResidual": 0.04
+  },
+  "filtration": {
+    "banks": [
+      { "id": "A", "lastChange": "2008-03-12", "dpBase": 0.86, "lot": "GPB-0731-14" },
+      { "id": "B", "lastChange": "2008-04-23", "dpBase": 0.41, "lot": "GPB-0802-03" }
+    ],
+    "cycleDays": 60,
+    "dpChangeAt": 1,
+    "dpClean": 0.35,
+    "dpRisePerCbrnHour": 0.006,
+    "cbrnFlowM3h": 1100,
+    "flowLossPerDp": 0.45,
+    "overpressureFull": 0.45,
+    "overpressureTarget": 0.3,
+    "overpressureLow": 0.15,
+    "overpressureRecirc": 0.02,
+    "overpressureTauMin": 6
+  },
+  "thermal": {
+    "supplyC": 16.5,
+    "kwPerM3hK": 0.000335,
+    "tauMin": 45,
+    "maxC": 38,
+    "rhBase": 36,
+    "rhPerGm3": 4,
+    "rhSealAdd": 9,
+    "rhMax": 95,
+    "rhTauMin": 60
+  },
+  "limits": { "co2Warn": 2500, "co2Alarm": 5000, "o2Low": 19.5, "o2LowLow": 18, "tempHigh": 27, "rhHigh": 65, "excursionMin": 30 },
+  "model": {
+    "stepSec": 30,
+    "sampleEveryMin": 5,
+    "historyHours": 8,
+    "catchupMaxHours": 12,
+    "checkpointEveryRealSec": 120,
+    "loadBalanceTolerancePersons": 2,
+    "loadBalanceMinHours": 2
+  },
+  "initial": { "co2Ppm": 930, "o2Pct": 20.84, "tempC": [19.6, 20.2, 23.4], "rh": [41, 44, 33], "overpressure": 0.02 },
+  "reference": { "sealedRisePpmH": 296, "oneTrainEquilibriumPpm": 2369, "twoTrainEquilibriumPpm": 1184 },
+  "calibration": { "date": "2008-04-08", "tolerancePpm": 50, "by": "FE/GAMMA-08" },
+  "watches": [
+    { "id": "A", "start": 6, "end": 14 },
+    { "id": "B", "start": 14, "end": 22 },
+    { "id": "C", "start": 22, "end": 6 }
+  ],
+  "handoverSeed": [
+    {
+      "at": "2008-05-18T11:04:00Z",
+      "watch": "C",
+      "by": "TECHNICIAN 4-0592",
+      "co2Ppm": 1010,
+      "o2Pct": 20.83,
+      "remarks": "Plant normal. AHU-1 and AHU-2 at MED, makeup air OPEN, scrubbers OFF. CO2 trend above basis again on this watch. CT-201 checked against handheld meter, agrees within 40 ppm. Noted for FE."
+    },
+    {
+      "at": "2008-05-18T19:02:00Z",
+      "watch": "A",
+      "by": "TECHNICIAN 4-0617",
+      "co2Ppm": 880,
+      "o2Pct": 20.85,
+      "remarks": "Plant normal. Filter bank A pre-filter differential still climbing. Change not yet scheduled by FE. Bank B on line for CBRN test only."
+    },
+    {
+      "at": "2008-05-19T03:01:00Z",
+      "watch": "B",
+      "by": "TECHNICIAN 4-0592",
+      "co2Ppm": 940,
+      "o2Pct": 20.84,
+      "remarks": "Plant normal. No CBRN test this watch. Handover verbal to C watch."
+    }
+  ],
+  "mail": {
+    "excursion": "msg-08-05611",
+    "filterOverdue": "msg-08-05612",
+    "overrideQuery": "msg-08-05613",
+    "loadBalance": "msg-08-05614"
+  },
+  "docs": { "procedure": "env-g08-sop", "datasheet": "env-g08-data" }
+}

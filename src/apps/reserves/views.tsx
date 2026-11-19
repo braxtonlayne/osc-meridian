@@ -7,6 +7,8 @@ import { rxInfo } from '@core/rx';
 import { CATEGORY_LABEL, CATEGORY_ORDER, canon, fmtN, houseDate, siteReleased } from './data';
 import type { Category, ReserveItem } from './data';
 import { Bar, CanonText, LinkButton, useRsv } from './parts';
+import { revealItem, useCanonT2 } from './acct';
+import { useServices } from '@core/services';
 import { describeDays, facilityWindow, networkSustainment, parseWhole } from './sustain';
 
 const tierWord = (t: number) => (t === 1 ? 'Tier 1' : t === 2 ? 'Tier 2' : 'Tier 3');
@@ -15,12 +17,14 @@ const tierWord = (t: number) => (t === 1 ? 'Tier 1' : t === 2 ? 'Tier 2' : 'Tier
 
 export function PositionTable({ categories, onOpenSite }: { categories?: Category[]; onOpenSite?: (item: ReserveItem) => void }) {
   const { narrow } = useRsv();
+  const t2 = useCanonT2(useServices());
   const rows = useMemo(() => {
     const cats = categories ?? CATEGORY_ORDER;
     return canon.reserves.items
+      .map((i) => revealItem(i, t2))
       .filter((i) => cats.includes(i.category))
       .sort((a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category));
-  }, [categories]);
+  }, [categories, t2]);
 
   const columns: Column<ReserveItem>[] = [
     { key: 'category', header: 'Category', width: 90, render: (r) => CATEGORY_LABEL[r.category], sortValue: (r) => CATEGORY_ORDER.indexOf(r.category) },

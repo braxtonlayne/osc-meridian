@@ -9,6 +9,7 @@
  * window.open (refusals), redaction.hover.
  */
 import './personnel.css';
+import { T4Home, t4Refused } from './acct';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AppProps, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
@@ -94,7 +95,15 @@ function navTree(): TreeNode[] {
   return out;
 }
 
-export default function App({ win, route }: AppProps) {
+export default function App(props: AppProps) {
+  const services = useServices();
+  const view: View = parsePath(props.route?.route ?? HOME) ?? { kind: 'overview' };
+  const entry = props.route ?? services.docs.byRoute(pathOf(view)) ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Personnel System" docNo={entry?.docNo ?? 'OSC-PER-IDX'} />;
+  return <PersonnelApp {...props} />;
+}
+
+function PersonnelApp({ win, route }: AppProps) {
   const services = useServices();
   const path = route?.route ?? HOME;
   const view: View = parsePath(path) ?? { kind: 'overview' };

@@ -140,10 +140,12 @@ export function PersonnelSecurityPanel({ onActivity }: { onActivity: () => void 
           columns={gridCols}
           rows={[
             { label: 'Operator', value: services.session.operatorId.value, mono: true },
-            { label: 'Personnel number', value: canon.operator.pn, mono: true },
+            { label: 'Personnel number', value: services.account.def.value.pn, mono: true },
             { label: 'Tier', value: `${services.session.tier.value}${services.session.actingTier2.value ? ' (acting)' : ''}` },
-            { label: 'Compartments', value: services.session.compartments.value.join(', ') },
-            { label: 'Probation', value: `Day ${services.session.probationDay.value} (transfer of ${formatOscDate(canon.operator.probationStart)})` },
+            { label: 'Compartments', value: services.session.compartments.value.join(', ') || 'None' },
+            ...(services.account.def.value.probationStart
+              ? [{ label: 'Probation', value: `Day ${services.session.probationDay.value} (transfer of ${formatOscDate(services.account.def.value.probationStart)})` }]
+              : []),
             { label: 'Workstation', value: WORKSTATION_ID, mono: true },
             {
               label: 'Audit trail',
@@ -176,7 +178,7 @@ export function CommunicationsPanel() {
         rows={[
           { label: 'Network', value: canon.security.personnel.communications },
           { label: 'Accrediting office', value: cms ? `${cms.name}, ${cms.site}` : '' },
-          { label: 'This workstation', value: `${WORKSTATION_ID} (${canon.operator.site}), operator ${services.session.operatorId.value}`, mono: true },
+          { label: 'This workstation', value: `${WORKSTATION_ID} (${services.account.def.value.site}), operator ${services.session.operatorId.value}`, mono: true },
           { label: 'Inventory handling', value: canon.classificationControl[0]?.text ?? '' },
         ].filter((r) => r.value)}
       />
@@ -190,8 +192,8 @@ export function CommunicationsPanel() {
 export function CoverPanel({ entry }: { entry: RouteEntry }) {
   const services = useServices();
   const sextant = services.clearance.satisfies('SEXTANT');
-  const released = useMemo(() => releasedSites(canon.operator.site, canon.facilities), []);
-  const [sel, setSel] = useState<string | null>(canon.operator.site);
+  const released = useMemo(() => releasedSites(services.account.def.value.site, canon.facilities), []);
+  const [sel, setSel] = useState<string | null>(services.account.def.value.site);
   const open = (c: CoverCatalogueEntry) => sextant || released.has(c.facility);
   // Bars are sized to the withheld text; a client-canon sentinel carries that length itself.
   const bar = (text: string) => <Withheld len={rxInfo(text)?.len ?? text.length} docNo={entry.docNo} auth={CVO_RX.auth} reference={CVO_RX.ref} />;
@@ -239,7 +241,7 @@ export function ContractorPanel({ entry }: { entry: RouteEntry }) {
   const [tab, setTab] = useState<'register' | 'matrix'>('register');
   const [sel, setSel] = useState<string | null>(canon.contractors.register[0]?.id ?? null);
   const sextant = services.clearance.satisfies('SEXTANT');
-  const released = useMemo(() => releasedSites(canon.operator.site, canon.facilities), []);
+  const released = useMemo(() => releasedSites(services.account.def.value.site, canon.facilities), []);
   const st = contractorStats(canon.contractors.register, canon.contractors.maxSitesKnown);
   const colOpen = (site: string) => !site.startsWith('DELTA') && (sextant || released.has(site));
   const sites = canon.facilities.map((f) => f.id);

@@ -294,7 +294,7 @@ export function Home({ win, services }: AppProps & { services: Services }) {
             total ? (
               <EmptyState icon="search" title="No directive matches the filter" body="Change the text, office or status, or choose Edit, Clear filter." />
             ) : (
-              <EmptyState icon="folder" title="No directives are held" body="The directive series is not loaded on this workstation." />
+              <EmptyState icon="folder" title="No directives are held" body={services.session.tier.value === 4 ? "No directive in the series is issued to Tier 4 personnel at this site (DIR-0301)." : "The directive series is not loaded on this workstation."} />
             )
           }
         />

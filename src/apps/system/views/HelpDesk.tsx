@@ -13,7 +13,7 @@ interface IndexHit {
 }
 
 export function HelpDesk({ articles }: { articles: RouteEntry[] }) {
-  const { services, navTo, say, entryFor } = useSys();
+  const { services, navTo, say, entryFor, visible } = useSys();
   const [q, setQ] = useState('');
   const [sel, setSel] = useState<string[]>([]);
   const [hits, setHits] = useState<IndexHit[] | null>(null);
@@ -38,7 +38,7 @@ export function HelpDesk({ articles }: { articles: RouteEntry[] }) {
     void services
       .search(query)
       .then((res) => {
-        const mine = res.filter((h) => h.route.app === 'system').map((h) => ({ route: h.route, snippet: h.snippet }));
+        const mine = res.filter((h) => h.route.app === 'system' && visible(h.route)).map((h) => ({ route: h.route, snippet: h.snippet }));
         setHits(mine);
         setSearched(query);
         say(`${mine.length} help ${mine.length === 1 ? 'page' : 'pages'} in the index match "${query}".`);
@@ -58,7 +58,7 @@ export function HelpDesk({ articles }: { articles: RouteEntry[] }) {
     { key: 'date', header: 'Reviewed', width: 96, mono: true, sortable: true, render: (r) => formatOscDate(r.date) },
   ];
 
-  const systemPages = PAGES.map((p) => ({ p, e: entryFor(p.path) }));
+  const systemPages = PAGES.map((p) => ({ p, e: entryFor(p.path) })).filter(({ e }) => !e || visible(e));
 
   return (
     <div class="sys-home">
@@ -101,7 +101,11 @@ export function HelpDesk({ articles }: { articles: RouteEntry[] }) {
               articles.length ? (
                 <EmptySearchResults query={q.trim()} />
               ) : (
-                <EmptyState title="No Help Desk articles are registered on this workstation." body="Articles are distributed with the workstation image." />
+                services.account.def.value.tier === 4 ? (
+                  <EmptyState title="No Help Desk articles are released to this operator." body="Help Desk articles are released at Tier 3 (DIR-0301). Refer questions to the site superintendent." />
+                ) : (
+                  <EmptyState title="No Help Desk articles are registered on this workstation." body="Articles are distributed with the workstation image." />
+                )
               )
             }
           />

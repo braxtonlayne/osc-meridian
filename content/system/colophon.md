@@ -1,6 +1,7 @@
 ---
 id: system-colophon
 route: /system/colophon
+t4: true
 app: system
 family: system
 template: help

@@ -1,0 +1,51 @@
+/* @graphics/doors: level mimic. Token colours only; same drawing rules as @graphics/panel. */
+  .dm-svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+    font-family: var(--font-ui);
+  }
+  .dm-bg { fill: var(--paper); }
+  .dm-svg.is-stale .dm-item,
+  .dm-svg.is-stale .dm-lvname { opacity: 0.45; }
+  .dm-title { font-size: 11px; font-weight: var(--fw-bold); letter-spacing: var(--tracking-caps); fill: var(--text-1); }
+  .dm-note { font-size: 9px; font-weight: var(--fw-semibold); letter-spacing: 0.04em; fill: var(--text-2); }
+  .dm-rule { stroke: var(--row-rule); stroke-width: 1; }
+  .dm-lvn { font-family: var(--font-mono); font-size: 10px; fill: var(--text-2); }
+  .dm-lvname { font-size: 11px; fill: var(--text-1); }
+  .dm-row.is-empty .dm-lvname { fill: var(--text-3); }
+  .dm-rx { fill: var(--redact); }
+
+  .dm-item { cursor: pointer; outline: none; }
+  .dm-withheld { cursor: default; }
+  .dm-hit { fill: transparent; }
+  .dm-item:hover .dm-hit { fill: var(--row-hover); }
+  .dm-item:focus-visible .dm-hit { stroke: var(--text-1); stroke-dasharray: 1 2; stroke-width: 1; }
+  .dm-sel { fill: none; stroke: var(--select-bg); stroke-width: 2; }
+
+  .dm-jamb { stroke: var(--text-1); stroke-width: 2; fill: none; }
+  .dm-jamb--heavy { stroke-width: 4; }
+  .dm-pocket { stroke: var(--text-3); stroke-width: 1; fill: none; stroke-dasharray: 2 2; }
+  .dm-gap { fill: var(--surface); }
+  .dm-leafrect { fill: var(--text-1); stroke: var(--text-1); stroke-width: 1; }
+  .dm-leaf.is-travel .dm-leafrect,
+  .dm-key-travel { fill: var(--st-degraded); }
+  .dm-leaf.is-open .dm-gap { fill: var(--st-nominal); }
+  .dm-bolts path,
+  .dm-bolts-key { stroke: var(--text-1); stroke-width: 3; }
+  .dm-item.is-alarm .dm-jamb { stroke: var(--st-fault); }
+  .dm-item.is-alarm .dm-tag { fill: var(--st-fault); font-weight: var(--fw-bold); }
+  .dm-ovr { fill: var(--st-degraded); stroke: var(--text-1); stroke-width: 0.5; }
+  .dm-held { stroke: var(--st-offline); stroke-width: 3; }
+
+  .dm-tag { font-family: var(--font-mono); font-size: 10px; fill: var(--text-1); }
+  .dm-side { font-family: var(--font-mono); font-size: 8px; fill: var(--text-3); }
+  .dm-chamber { fill: var(--surface); stroke: var(--text-1); stroke-width: 1; }
+  .dm-press { fill: var(--chrome-shadow); }
+  .dm-airlock.is-decon .dm-press { fill: var(--st-degraded); }
+
+  .dm-key text { font-size: 9px; fill: var(--text-2); }
+
+.dm-leaf.is-open .dm-leafrect { fill: var(--chrome-shadow); }

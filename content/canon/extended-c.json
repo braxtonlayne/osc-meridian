@@ -33,6 +33,17 @@
       "divisionId": "FE",
       "email": "d.voss@g08.fe.mer",
       "notes": "Environmental systems watch, GAMMA-08. Air handling, CO2 scrubbers, filtration and seal checks. Signs filter change records under DIR-0128."
+    },
+    {
+      "pn": "P-2-01-0019",
+      "name": "Desmond H. Carrow",
+      "rank": null,
+      "role": "Liaison Officer (Principal Desk), Council Secretariat",
+      "tier": 2,
+      "site": "ALPHA-01",
+      "divisionId": "CS",
+      "email": "d.carrow@a01.cs.mer",
+      "notes": "Detailed since 2001-01 to an Executive Office continuity programs post. Reports to the Secretary to the Council. Not admitted to meetings held under delegated authority."
     }
   ],
   "accounts": [

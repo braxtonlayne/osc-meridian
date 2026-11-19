@@ -35,6 +35,17 @@ describe('field withholding', () => {
       expect(searchText(r)).not.toMatch(/\[\[rx/);
     }
   });
+  it('shows T2 names and addresses from CANON-T2 values, never T1', () => {
+    const p = canon.roster.find((x) => rxInfo(x.name)?.key === 'T2' && x.site !== UNPOSTED_SITE)!;
+    const t1 = canon.roster.find((x) => rxInfo(x.name)?.key === 'T1');
+    const t2 = { [`roster.${p.pn}.name`]: 'A. Example', [`roster.${p.pn}.email`]: 'a.example@a02.cmd.mer' } as Record<string, string>;
+    if (t1) t2[`roster.${t1.pn}.name`] = 'Never';
+    const r = buildRow(p, { ...ctx([]), t2 });
+    expect(cellText(r.name)).toBe('A. Example');
+    expect(cellText(r.email)).toBe('a.example@a02.cmd.mer');
+    expect('rx' in buildRow(p, ctx([])).name).toBe(true);
+    if (t1) expect('rx' in buildRow(t1, { ...ctx([]), t2 }).name).toBe(true);
+  });
   it('withholds every field but PN and site of unposted entries without HOLLOW', () => {
     const unposted = canon.roster.filter((p) => p.site === UNPOSTED_SITE);
     expect(unposted.length).toBeGreaterThan(0);

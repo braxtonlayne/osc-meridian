@@ -8,10 +8,12 @@
  * from those audit entries, so nothing is stored outside services.
  */
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
+import type { AppProps, DocJson, RouteEntry, Trace } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
 import { tick } from '@core/session';
+import { loadCanonT2 } from '@core/canon-release';
+import { applyDecisions } from '@apps/forms/decisions';
 import {
   DataTable,
   Dialog,
@@ -56,7 +58,8 @@ import {
   type SentItem,
   type Delivery,
 } from './model';
-import { HOME_SITE, LOWEST_MARKING, MARKINGS, SELF_ADDRESS, buildDirectory, markingLabel, markingRank, nameFor } from './directory';
+import { LOWEST_MARKING, MARKINGS, buildDirectory, isMarkingId, markingLabel, markingRank, nameFor } from './directory';
+import { inboundMailTraces, outgoingTraces, traceMessage, type TraceMessage } from './traces';
 import { AddressBook, Compose, type Draft, type Refusal } from './Compose';
 import './mail.css';
 
@@ -91,7 +94,7 @@ const REPORT_DELAY_MS = 4000;
 
 /* ----------------------------------------------------------------- rows */
 
-type RowKind = 'msg' | 'sent' | 'report';
+type RowKind = 'msg' | 'sent' | 'report' | 'trace';
 
 interface Row {
   key: string;
@@ -112,6 +115,8 @@ interface Row {
   route?: RouteEntry;
   headers?: MsgHeaders;
   sentItem?: SentItem;
+  trace?: Trace;
+  traceMsg?: TraceMessage;
 }
 
 const INBOX = 'Inbox';
@@ -159,8 +164,15 @@ export default function App({ win, route }: AppProps) {
   const tier = services.session.tier.value;
   void services.session.compartments.value; // re-render on briefing (releases)
   const meta = services.mail.meta.value;
+  // pass two: this account's own mailbox and traffic from other issued accounts
+  const account = services.account.def.value;
+  const SELF_ADDRESS = account.email;
+  const HOME_SITE = account.site;
+  const mineTraces = services.traces.mine.value;
+  const holdsT2 = services.clearance.satisfies('T2');
 
   const [, bump] = useState(0);
+  const [t2, setT2] = useState<Record<string, string> | null>(null);
   const [folder, setFolder] = useState<string>(INBOX);
   const [selected, setSelected] = useState<string | null>(route?.id ?? null);
   const [filter, setFilter] = useState('');
@@ -179,7 +191,7 @@ export default function App({ win, route }: AppProps) {
   const pos = previewPos === 'right' && rootW < RIGHT_PANE_MIN_ROOT ? 'bottom' : previewPos;
   const [pane, setPane] = useState<'folders' | 'list' | 'message'>(route ? 'message' : 'list');
   const [lastCheck, setLastCheck] = useState<string>(() => zuluLocal(new Date().toISOString()));
-  const seenCount = useRef(delivered.length);
+  const seenCount = useRef(-1);
 
   /* ---------------- width -> handheld layout */
   useEffect(() => {
@@ -210,14 +222,40 @@ export default function App({ win, route }: AppProps) {
     };
   }, [inMailbox.join('|'), route?.id]);
 
-  // new arrivals while open
+  // Tier 2 directory values, released only to a session that satisfies T2
   useEffect(() => {
-    if (delivered.length > seenCount.current) {
-      const n = delivered.length - seenCount.current;
+    if (!holdsT2) return void setT2(null);
+    let live = true;
+    loadCanonT2()
+      .then((v) => live && setT2(v))
+      .catch(() => live && setT2(null));
+    return () => {
+      live = false;
+    };
+  }, [holdsT2]);
+
+  // decisions on forms this account filed (an approved F-126 reads the filer in)
+  useEffect(() => void applyDecisions(services), [mineTraces.length]);
+
+  const traceMail = useMemo(() => inboundMailTraces(mineTraces, account.id), [mineTraces, account.id]);
+  const traceMsgs = useMemo(
+    () =>
+      traceMail.map((t) => ({
+        t,
+        m: traceMessage(t, { me: account, accountById: (id) => services.account.all().find((a) => a.id === id), isMarking: isMarkingId, lowest: LOWEST_MARKING }),
+      })),
+    [traceMail, account],
+  );
+
+  // new arrivals while open
+  const arrivals = delivered.length + traceMail.length;
+  useEffect(() => {
+    if (seenCount.current >= 0 && arrivals > seenCount.current) {
+      const n = arrivals - seenCount.current;
       setStatus(`${n} new item${n === 1 ? '' : 's'} received ${zuluLocal(new Date().toISOString())}.`);
     }
-    seenCount.current = delivered.length;
-  }, [delivered.length]);
+    seenCount.current = arrivals;
+  }, [arrivals]);
 
   const outgoing = useMemo(() => parseSent(entries), [entries]);
   const sentItems = outgoing.filter((x): x is SentItem => x.kind === 'message');
@@ -233,9 +271,13 @@ export default function App({ win, route }: AppProps) {
       [h.from, ...h.to, ...h.cc].forEach((a) => s.add(a));
     }
     for (const si of sentItems) [...si.to, ...si.cc].forEach((a) => s.add(a));
+    for (const { m } of traceMsgs) [m.from, ...m.to, ...m.cc].forEach((a) => s.add(a));
     return s;
-  }, [inMailbox.join('|'), docCache.size, sentItems.length]);
-  const dir = useMemo(() => buildDirectory(seen), [seen]);
+  }, [inMailbox.join('|'), docCache.size, sentItems.length, traceMsgs]);
+  const dir = useMemo(
+    () => buildDirectory(seen, { accounts: services.account.all(), t2, restrictToSite: account.tier === 4 ? account.site : null, self: SELF_ADDRESS }),
+    [seen, t2, account],
+  );
   const readSet = new Set(readIds);
 
   const rows: Row[] = useMemo(() => {
@@ -261,6 +303,27 @@ export default function App({ win, route }: AppProps) {
         docNo: r.docNo,
         route: r,
         headers: h,
+      });
+    }
+    for (const { t, m } of traceMsgs) {
+      out.push({
+        key: m.docNo,
+        kind: 'trace',
+        folder: INBOX,
+        from: m.from,
+        fromName: nameFor(m.from, dir),
+        toLine: m.to.join('; '),
+        subject: m.subject,
+        sent: m.sent,
+        sortKey: m.sortKey,
+        precedence: m.precedence,
+        marking: m.marking,
+        unread: !readSet.has(m.docNo),
+        attachments: m.attachments.length,
+        thread: m.inReplyTo,
+        docNo: m.docNo,
+        trace: t,
+        traceMsg: m,
       });
     }
     for (const s of sentItems) {
@@ -312,7 +375,7 @@ export default function App({ win, route }: AppProps) {
       }
     }
     return out;
-  }, [inMailbox.join('|'), docCache.size, entries, readIds, dir, now, meta]);
+  }, [inMailbox.join('|'), docCache.size, entries, readIds, dir, now, meta, traceMsgs, SELF_ADDRESS]);
 
   const folders = useMemo(() => {
     const custom = [...new Set(rows.filter((r) => r.folder !== INBOX && r.folder !== SENT).map((r) => r.folder))].sort();
@@ -378,6 +441,13 @@ export default function App({ win, route }: AppProps) {
       services.audit.log('doc.read', current.docNo);
       if (!readSet.has(shownId))
         services.audit.log('mail.read', shownId, `Operator ${operator} opened message ${current.docNo} (${markingLabel(current.marking)}) in Message Traffic.`);
+    } else if (current && current.kind === 'trace') {
+      if (lastLogged.current === shownId) return;
+      lastLogged.current = shownId;
+      const t = current.trace!;
+      if (!readSet.has(shownId))
+        services.audit.log('mail.read', shownId, `Operator ${operator} opened message ${current.docNo} (${markingLabel(current.marking)}) from ${current.from} in Message Traffic.`, { trace: t.id, kind: t.kind, from: t.from });
+      if (!(t.seenBy ?? []).includes(account.id)) services.traces.markSeen(t.id);
     } else if (current && current.kind === 'report') {
       if (lastLogged.current === shownId) return;
       lastLogged.current = shownId;
@@ -450,6 +520,7 @@ export default function App({ win, route }: AppProps) {
 
   const textOf = (r: Row): string => {
     if (r.kind === 'sent') return r.sentItem!.text;
+    if (r.kind === 'trace') return r.traceMsg!.text;
     const d = r.key ? docCache.get(r.key) : undefined;
     if (r.kind === 'report') return reportText(r);
     return d && r.headers ? htmlToText(forView(d, r.headers, meta[r.key]).html) : '';
@@ -517,6 +588,8 @@ export default function App({ win, route }: AppProps) {
   const send = (m: Outgoing) => {
     const a = sendAudit(operator, m);
     services.audit.log('mail.send', a.subject, a.detail, a.data);
+    // traffic for another issued account's mailbox is delivered into that account
+    for (const t of outgoingTraces(m, account, services.account.byEmail)) services.traces.post(t);
     setDraft(null);
     setStatus(`Message dispatched to the message centre ${zuluLocal(new Date().toISOString())}. A copy is filed in Sent Items.`);
   };
@@ -1067,6 +1140,43 @@ function MessagePane({ row, route, doc, delivery, dir, services, receiptPending,
   const operator = services.session.operatorId.value;
   const onHover = (docNo: string) => (i: { auth: string; ref: string }) =>
     services.audit.log('redaction.hover', docNo, `Operator ${operator} examined withheld material in ${docNo} (${i.auth} ${i.ref}). No release was made.`);
+
+  const SELF_ADDRESS = services.account.def.value.email;
+
+  // traffic from another issued account (shared-store trace)
+  if (row && row.kind === 'trace') {
+    const m = row.traceMsg!;
+    const att = m.attachments
+      .map((d) => services.docs.byDocNo(d))
+      .filter((e): e is RouteEntry => !!e)
+      .map((e) => ({ docNo: e.docNo, route: e.route, title: e.title }));
+    const synthetic: DocJson = {
+      id: row.key,
+      route: '/mail',
+      app: 'mail',
+      family: 'mail',
+      template: 'message',
+      docNo: m.docNo,
+      title: m.subject,
+      marking: m.marking,
+      originator: m.originator,
+      revision: 1,
+      date: (row.trace?.at ?? '').slice(0, 10),
+      summary: m.subject,
+      html: textToHtml(m.text),
+      redactions: [],
+      xrefs: att,
+      headings: [],
+      frontmatter: { from: m.from, to: m.to, cc: m.cc, sent: m.sent, precedence: m.precedence, subject: m.subject },
+    };
+    return (
+      <div class="mt-reader">
+        {narrowBack && <BackBar onBack={narrowBack} />}
+        {m.attachments.length > 0 && <Attachments docNos={m.attachments} services={services} onOpen={onOpenDoc} />}
+        <DocumentView doc={synthetic} markings={MARKINGS} onNavigate={(r) => services.openRoute(r)} />
+      </div>
+    );
+  }
 
   // synthetic items: Sent Items copies and delivery reports
   if (row && row.kind !== 'msg') {

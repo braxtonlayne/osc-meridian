@@ -31,6 +31,7 @@ revisions:
 |---|---|
 | Holder (by office) | :c[council.seats.1.holderLabel] |
 | Category | :c[council.seats.1.category] |
+| Office | Of Cabinet rank by designation. Not an elective office; the seat is not held by any officer in the line of succession. |
 | Seated | :c[council.seats.1.since] |
 | Register note | :c[council.seats.1.notes] |
 

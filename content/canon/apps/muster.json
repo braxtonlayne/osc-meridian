@@ -1,0 +1,44 @@
+{
+  "system": {
+    "name": "Badge-Reader Muster System",
+    "release": "3.2",
+    "procedure": "OSC-DIR-0461",
+    "reference": "KB-0316",
+    "originator": "SFC/ALPHA-02"
+  },
+  "badge": {
+    "format": "YY-NNNN",
+    "note": "The muster badge carries the intake year and serial of the holder's personnel number. The tier digit is not encoded on the card.",
+    "visitorPrefix": "V"
+  },
+  "classes": [
+    { "classId": "ALPHA", "arrivalMedianMin": 5, "arrivalP90Min": 11, "reportMin": 15, "sweepMin": 6, "sweepTeams": 4, "visitorsMax": 6 },
+    { "classId": "BETA", "arrivalMedianMin": 4, "arrivalP90Min": 9, "reportMin": 12, "sweepMin": 5, "sweepTeams": 2, "visitorsMax": 2 },
+    { "classId": "GAMMA", "arrivalMedianMin": 3, "arrivalP90Min": 6, "reportMin": 8, "sweepMin": 4, "sweepTeams": 1, "visitorsMax": 1 }
+  ],
+  "noBadgePer1000": 35,
+  "rosterAccountedPct": 50,
+  "readerCapacity": 150,
+  "maxReadersPerPoint": 4,
+  "readersOutOfService": [
+    { "reader": "A02-MP3-R3", "note": "Platform 3 (Segment 04). Segment not in revenue service." },
+    { "reader": "A05-MP3-R7", "note": "Platform 7 (Segment 04). Segment not in revenue service." }
+  ],
+  "unknownBadges": [
+    { "site": "ALPHA-02", "reader": "A02-MP3-R3", "badge": "05-0142", "atMin": 10.5 },
+    { "site": "ALPHA-02", "reader": "A02-MP3-R3", "badge": "05-0151", "atMin": 10.75 },
+    { "site": "ALPHA-02", "reader": "A02-MP3-R3", "badge": "05-0157", "atMin": 11 }
+  ],
+  "siteAccounts": {
+    "ALPHA-01": "auditor",
+    "ALPHA-02": "deputy",
+    "ALPHA-03": "analyst",
+    "GAMMA-08": "lifesupport"
+  },
+  "mail": {
+    "unaccounted": "msg-08-04771",
+    "unknownBadge": "msg-08-04772",
+    "closeoutDiscrepancy": "msg-08-04773",
+    "oiaReferral": "msg-08-04774"
+  }
+}

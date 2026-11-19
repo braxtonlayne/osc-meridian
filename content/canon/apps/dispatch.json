@@ -1,0 +1,91 @@
+{
+  "desk": {
+    "id": "TC/A02",
+    "name": "Transit Control desk, ALPHA-02",
+    "site": "ALPHA-02",
+    "panelNo": "PNL-TO-0204 REV B",
+    "plate": ["TRANSIT CONTROL DESK", "ALPHA-02"],
+    "refPrefix": "DSP-A02",
+    "procedureDocNo": "OSC-TRN-DSP-01",
+    "referenceDocNo": "OSC-TRN-DSP-02",
+    "platformDocNo": "OSC-TRN-DSP-03"
+  },
+  "working": {
+    "dwellMin": { "rail": 20, "tram": 10 },
+    "headwayBlocks": { "rail": 2, "tram": 1 },
+    "tramLoopMinMiles": 150,
+    "loopTolerance": 0.05,
+    "departOffsetsMin": [0, 5, 15, 30, 60],
+    "routeSetMs": 2400,
+    "signalClearMs": 3200,
+    "lookaheadDays": 1,
+    "logShown": 40,
+    "source": "OSC-TRN-TT-08-02 section 3 (headway, dwell); OSC-TRN-NET-EAS (passing loops)"
+  },
+  "training": {
+    "plate": ["TRAINING SIMULATOR", "TS-2 OFF LINE"],
+    "timeScale": 60,
+    "refPrefix": "TRG"
+  },
+  "stock": [
+    { "id": "R01-201", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": true, "remark": "Spare. Acceptance consist, segment 01. Seats reduced to 72." },
+    { "id": "R01-219", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-01", "available": true, "remark": "Spare. Stabled ALPHA-01 platform 1 road." },
+    { "id": "R02-101", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": true, "remark": "Spare. Acceptance consist, segment 02." },
+    { "id": "R03-050", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": true, "remark": "Spare. Acceptance consist, segment 03." },
+    { "id": "R03-055", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": false, "remark": "In works, ALPHA-02 depot. Levitation magnet module replacement." },
+    { "id": "R04-001", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-05", "available": false, "remark": "Not in service. Allocated segment 04. Stabled ALPHA-05 platform 7." },
+    { "id": "R04-002", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-05", "available": false, "remark": "Not in service. Allocated segment 04. Stabled ALPHA-05 platform 7." },
+    { "id": "R05-030", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": true, "remark": "Spare. Acceptance consist, segment 05." },
+    { "id": "R06-010", "system": "RAIL", "type": "MV-4", "stabled": "ALPHA-02", "available": true, "remark": "Spare. Acceptance consist, segment 06." },
+    { "id": "TEA-048", "system": "TRAM", "type": "TT-2", "stabled": "ALPHA-01", "available": true, "remark": "Spare, Eastern Network." },
+    { "id": "TSO-036", "system": "TRAM", "type": "TT-2", "stabled": "ALPHA-05", "available": true, "remark": "Spare, Southern Network." },
+    { "id": "TCE-020", "system": "TRAM", "type": "TT-2", "stabled": "ALPHA-03", "available": true, "remark": "Spare, Central Network." },
+    { "id": "TMW-033", "system": "TRAM", "type": "TT-2F", "stabled": "ALPHA-02", "available": false, "remark": "In works, ALPHA-02 depot. Bogie overhaul." }
+  ],
+  "possessions": [
+    {
+      "id": "TC-POS-08-051",
+      "link": "BETA-07>GAMMA-13",
+      "date": "2008-05-19",
+      "startZ": "0000Z",
+      "endZ": "2359Z",
+      "originator": "TC/ALPHA-04",
+      "title": "Possession, tram link BETA-07 to GAMMA-13, guideway rail renewal",
+      "note": "Rail renewal at the mid-link loop. No movements on the link. Engineer in charge FE/BETA-07."
+    }
+  ],
+  "seg04": {
+    "segment": "04",
+    "keyNo": "A02-TC-04",
+    "keyHolder": "deputy",
+    "positions": ["NORMAL", "ENGRG", "3"],
+    "documentedPositions": 2,
+    "releaseDesk": "TC/ALPHA-05",
+    "releaseDelayMs": 24000,
+    "instructionNo": "TC-08-0113",
+    "suppressedLabel": "R04-***",
+    "withdrawAfterMs": 60000,
+    "portalDoors": ["A02-BD9", "A05-BD8"]
+  },
+  "modes": {
+    "deputy": "live",
+    "analyst": "training",
+    "auditor": "review",
+    "lifesupport": "platform"
+  },
+  "platformSite": "GAMMA-08",
+  "platformService": {
+    "from": "ALPHA-05",
+    "to": "GAMMA-08",
+    "pathsEachWay": 2,
+    "consist": "TSO-030",
+    "source": "OSC-TRN-TT-08-02, Southern Network. Posted at the platform, so the indicator carries it whether or not the network paths are released to the viewer."
+  },
+  "mail": {
+    "logQuery": "msg-08-04761",
+    "conflict": "msg-08-04762",
+    "isolationHold": "msg-08-04763",
+    "instruction": "msg-08-04764",
+    "qualification": "msg-08-04765"
+  }
+}

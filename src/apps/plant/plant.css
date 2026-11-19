@@ -1,0 +1,150 @@
+/* Reactor Plant Panel. Tokens only. */
+.plt {
+  container-type: inline-size;
+  container-name: plt;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+}
+
+.plt > :not(.plt-main) {
+  flex: none;
+}
+
+.plt-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+  border-top: 1px solid var(--chrome-shadow);
+}
+
+.plt-pad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  min-width: 0;
+}
+
+.plt-doc {
+  min-width: 0;
+}
+
+.plt-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.plt-banner {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--row-rule);
+  background: var(--chrome-face);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+
+.plt-note {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+
+.plt-dim {
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+
+.plt-mono {
+  font-family: var(--font-mono);
+}
+
+.plt-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-family: var(--font-mono);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.plt-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.plt-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.plt-drawing {
+  min-width: 0;
+  overflow: auto;
+  padding: var(--sp-3);
+  border: 1px solid var(--row-rule);
+  background: var(--surface);
+}
+
+.plt-unitsel {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Panel layout helpers inside panel-kit sections */
+.plt-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.plt-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.plt-bank {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border: 1px solid var(--row-rule);
+}
+
+.plt-span2 {
+  grid-column: span 2;
+}
+
+.plt-banner > .st-sq {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: var(--sp-1);
+}
+
+/* Handheld layout */
+@container plt (max-width: 760px) {
+  .plt-pad {
+    padding: var(--sp-2);
+  }
+  .plt-span2 {
+    grid-column: auto;
+  }
+  .plt-row {
+    gap: var(--sp-2);
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$comment": "Seal Drill Coordinator (app drill). Class timings, relay intervals, timeScale and the 35-step sequence are canon sealDrill (extended-c); this fragment holds only the coordinator's own constants: how canon facts make a site late or NO REPORT, the order-wire note, the hold before Network Control stands the network down, the drill register's earlier entries and the message ids the coordinator delivers.",
+  "drillIdPrefix": "SD",
+  "tickMs": 250,
+  "holdMin": 60,
+  "registerCap": 40,
+  "orderPosition": {
+    "keyNo": "K-A02-07",
+    "panelNo": "PNL-TO-0433-2 REV B",
+    "secondOfficers": [
+      "Command Duty Officer, ALPHA-02",
+      "Resident Assurance Officer, ALPHA-02"
+    ]
+  },
+  "singleDutyOfficer": {
+    "ackDelayMin": 3,
+    "text": "One duty officer posted. The duty officer clears the gate before answering the order wire."
+  },
+  "completion": {
+    "acceptanceMonths": 2,
+    "unpracticedMonths": 6,
+    "doorDelayMin": 2,
+    "acceptanceText": "Seal acceptance not entered. Seal doors are not on remote report until a drill counts toward acceptance.",
+    "unpracticedText": "No seal drill held since completion. Door crews cycle by the printed card."
+  },
+  "drilledSites": [
+    {
+      "facility": "BETA-06",
+      "date": "2007-10-19",
+      "note": "Site drill during the October 2007 exercise week."
+    },
+    {
+      "facility": "GAMMA-13",
+      "date": "2007-10-19",
+      "note": "SEALED (DRILL) 15 to 19 OCT 2007, held before completion was entered; counts toward seal acceptance."
+    }
+  ],
+  "calendarHolds": [
+    {
+      "calendarId": "CAL-0805-22",
+      "facility": "BETA-05",
+      "through": "2008-05-23",
+      "text": "Surface cover course in session. Vehicle portal held open for cover traffic; seal deferred."
+    }
+  ],
+  "orderWire": [
+    {
+      "facility": "ALPHA-05",
+      "ackAtMin": 0.5,
+      "circuit": "A05 PL7 ORDER WIRE"
+    }
+  ],
+  "history": [
+    {
+      "id": "SD-07-1015-01",
+      "ordered": "2007-10-15T14:00:00Z",
+      "ended": "2007-10-19T14:00:00Z",
+      "scope": "Site drill, BETA-06",
+      "orderedBy": "FE/ALPHA-02",
+      "result": "SEALED (DRILL) 15 TO 19 OCT 2007",
+      "sites": 1,
+      "sealed": 1,
+      "late": 0,
+      "noReport": 0
+    },
+    {
+      "id": "SD-07-1015-02",
+      "ordered": "2007-10-15T14:30:00Z",
+      "ended": "2007-10-19T14:30:00Z",
+      "scope": "Site drill, GAMMA-13",
+      "orderedBy": "FE/ALPHA-02",
+      "result": "SEALED (DRILL) 15 TO 19 OCT 2007",
+      "sites": 1,
+      "sealed": 1,
+      "late": 0,
+      "noReport": 0
+    }
+  ],
+  "mail": {
+    "report": "msg-08-05301",
+    "noReport": "msg-08-05302",
+    "circuitReply": "msg-08-05303",
+    "deputyNote": "msg-08-05304",
+    "oiaObserved": "msg-08-05305",
+    "oiaUnobserved": "msg-08-05306"
+  },
+  "docs": {
+    "procedure": "OSC-DIR-0433",
+    "siteCard": "OSC-DIR-0433-B"
+  }
+}

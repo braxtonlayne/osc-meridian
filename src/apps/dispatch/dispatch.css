@@ -1,0 +1,158 @@
+/* Dispatcher Workstation. Tokens only; unlayered. */
+.dsp-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.dsp-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 1px solid var(--chrome-shadow);
+  border-bottom: 1px solid var(--chrome-hi);
+}
+.dsp-desk {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+.dsp-desk.is-stacked {
+  flex-direction: column;
+  overflow: auto;
+}
+.dsp-left {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.dsp-right {
+  flex: 0 0 auto;
+  width: 392px;
+  min-height: 0;
+  overflow: auto;
+  border-left: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+  padding: var(--sp-2);
+}
+.dsp-desk.is-stacked .dsp-right {
+  width: auto;
+  overflow: visible;
+  border-left: 0;
+  border-top: 1px solid var(--chrome-shadow);
+}
+.dsp-desk.is-stacked .dsp-left {
+  flex: 0 0 auto;
+}
+.dsp-board {
+  position: relative;
+  flex: 1 1 60%;
+  min-height: 220px;
+  overflow: auto hidden;
+  background: var(--paper);
+}
+.dsp-desk.is-stacked .dsp-board {
+  flex: 0 0 auto;
+  height: 340px;
+}
+.dsp-board-tag {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-shadow);
+  font: var(--fw-bold) var(--fs-xs) / var(--lh-xs) var(--font-ui);
+  letter-spacing: var(--tracking-caps);
+}
+.dsp-register {
+  flex: 0 1 40%;
+  min-height: 140px;
+  overflow: auto;
+  border-top: 1px solid var(--chrome-shadow);
+}
+.dsp-desk.is-stacked .dsp-register {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+.dsp-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--th-bg);
+  border-bottom: 1px solid var(--row-rule);
+  font-weight: var(--fw-bold);
+}
+.dsp-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.dsp-doc {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--paper);
+}
+.dsp-note {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.dsp-pad {
+  padding: var(--sp-3);
+}
+.dsp-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.dsp-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-3);
+}
+.dsp-od {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-2);
+}
+.dsp-strip {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.dsp-mimic-t {
+  font: var(--fs-xs) var(--font-mono);
+  fill: var(--text-2);
+}
+.dsp-platform .dsp-plat-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+}
+.dsp-notice {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+  background: var(--paper);
+  font-weight: var(--fw-bold);
+}
+
+.dsp-warn {
+  color: var(--text-1);
+  background: var(--paper);
+  border: var(--bevel) solid var(--st-degraded);
+  padding: var(--sp-1) var(--sp-2);
+}

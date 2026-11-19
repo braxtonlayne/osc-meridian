@@ -32,6 +32,7 @@ import { CLASS_IDS, buildRows, cell, classFromRoute, classRoute, dossierRoute, f
 import { HOME_SITE, canon, className, facilityById, fmt, useRxAudit, useViewer } from './shared';
 import { seedFor, useTelemetry } from './telemetry';
 import './registry.css';
+import { T4Home, t4Refused, useCanonT2 } from './acct';
 
 type HomeTab = 'register' | 'map' | 'document' | 'organisation';
 type Notice = { title: string; body: string; reference?: string; kind?: 'info' | 'warning' | 'error' };
@@ -48,7 +49,14 @@ function accessKey(e: RouteEntry): string | null {
 
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 
-export default function App({ win, route }: AppProps) {
+export default function App(props: AppProps) {
+  const services = useServices();
+  const entry = props.route ?? services.docs.byRoute(INDEX_ROUTE) ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Facility Registry" docNo={entry?.docNo ?? 'OSC-FAC-IDX'} />;
+  return <RegistryApp {...props} />;
+}
+
+function RegistryApp({ win, route }: AppProps) {
   const services = useServices();
   const viewer = useViewer(services);
   const path = route?.route ?? INDEX_ROUTE;
@@ -102,7 +110,8 @@ export default function App({ win, route }: AppProps) {
   }, [entry?.id]);
 
   /* --------------------------------------------------------- the rows */
-  const allRows = useMemo(() => buildRows(canon, viewer), [viewer]);
+  const t2 = useCanonT2(services);
+  const allRows = useMemo(() => buildRows(canon, viewer, t2), [viewer, t2]);
   const scoped = pageClass ? allRows.filter((r) => r.cls === pageClass) : allRows;
   const rows = filterRows(scoped, pageClass ? { ...filter, classes: new Set([pageClass]) } : filter);
   const allShown = !pageClass && rows.length === allRows.length;

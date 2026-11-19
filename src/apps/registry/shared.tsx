@@ -5,12 +5,14 @@ import { useMemo, useRef } from 'preact/hooks';
 import type { Canon, Facility, FacilityId } from '@core/canon-types';
 import type { Services } from '@core/contracts';
 import { splitRx } from '@core/rx';
+import { activeDef } from '@core/accounts';
 import { Redaction } from '@design/index';
 import { adjacentTo, authorityFor, isOpen, type Cell, type Viewer, type Withheld } from './model';
 
 export const canon = canonJson as unknown as Canon;
 
-export const HOME_SITE = canon.operator.site as FacilityId;
+/** The signed-in account's own site (pass two: per account; the page reloads on a switch). */
+export const HOME_SITE = activeDef.peek().site as FacilityId;
 
 export const facilityById = new Map<string, Facility>(canon.facilities.map((f) => [f.id, f]));
 

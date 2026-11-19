@@ -44,7 +44,7 @@ revisions:
 
 ## Record
 
-The Core Council was formed in January 2001 and its membership is recorded in :x[OSC-PER-T1]. Facility construction was initiated in the same month under the unpublished annex to Executive Order 13201; the published order is the public instrument and is cited in prime contracts for their contractor-relations clauses. The Charter purpose is at :x[OSC-CNL-CHR-I].
+The Core Council was formed in January 2001 and its membership is recorded in :x[OSC-PER-T1]. Facility construction was initiated in the same month under the Council's annex to Executive Order 13201, a Council instrument entered on the register against the order's number when the order was published on 17 FEB 2001; the published order is the public instrument and is cited in prime contracts for their contractor-relations clauses. The Charter purpose is at :x[OSC-CNL-CHR-I].
 
 Recruitment in the phase was directed at the command structure and the critical staff of the first facilities: commanders designate, engineering authority, security forces cadre and the Secretariat. There was no Personnel & Vetting division until the second year of the phase. Investigations before then were conducted under interim arrangements and were repeated under the OSC supplement (:x[OSC-PER-VET]) when it was issued.
 

@@ -315,3 +315,55 @@ export function contractorStats(register: readonly Pick<Contractor, 'id' | 'site
     sitesCovered: covered.size,
   };
 }
+
+/* ------------------------------------------------------- audit review (pass two) */
+
+/** Audit kinds offered in the audit review filter, in the order the office lists them. */
+export const REVIEW_KINDS: AuditKind[] = [
+  'doc.read', 'redaction.hover', 'window.open', 'search', 'terminal.cmd', 'print', 'form.submit',
+  'mail.read', 'mail.send', 'clearance.grant', 'transit.watch', 'control', 'trace', 'system',
+  'login', 'logout', 'timeout', 'window.close',
+];
+
+export interface TrailFilter {
+  /** An AuditKind, 'refusals', or 'all'. */
+  kind: string;
+  /** In-world day "2008-05-19", or 'all'. */
+  date: string;
+  text: string;
+}
+
+/** In-world days present in a trail, oldest first ("2008-05-19"). */
+export function trailDates(entries: readonly Pick<AuditEntry, 'at'>[]): string[] {
+  return [...new Set(entries.map((e) => e.at.slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort();
+}
+
+/** Entries of another operator's trail matching the review filter, newest first. */
+export function filterTrail(entries: readonly AuditEntry[], f: TrailFilter): AuditEntry[] {
+  const q = f.text.trim().toUpperCase();
+  return entries
+    .filter((e) => f.kind === 'all' || (f.kind === 'refusals' ? isRefusal(e) : e.kind === f.kind))
+    .filter((e) => f.date === 'all' || e.at.slice(0, 10) === f.date)
+    .filter((e) => !q || `${e.subject} ${e.detail} ${actionLabel(e)} ${auditRef(e)}`.toUpperCase().includes(q))
+    .slice()
+    .reverse();
+}
+
+/** Categories under which the office records an audit finding. */
+export const FINDING_CATEGORIES: { id: string; label: string }[] = [
+  { id: 'need-to-know', label: 'Access outside need to know' },
+  { id: 'withheld', label: 'Repeated examination of withheld material' },
+  { id: 'refusals', label: 'Repeated refused requests' },
+  { id: 'reproduction', label: 'Reproduction not accounted for' },
+  { id: 'traffic', label: 'Message traffic outside the chain of command' },
+  { id: 'controls', label: 'Plant control operated without authority' },
+  { id: 'procedure', label: 'Procedural irregularity' },
+];
+
+/**
+ * Audit finding reference: OIA-AF-YY-NNN. Findings are numbered apart from incident tickets
+ * (OIA-YY-NNN) so the series never collides with a ticket; serial from 101, one per finding.
+ */
+export function findingRef(existing: number, yy = '08'): string {
+  return `OIA-AF-${yy}-${String(101 + Math.max(0, existing)).padStart(3, '0')}`;
+}

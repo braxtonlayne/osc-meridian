@@ -13,8 +13,9 @@ import { DataTable, GroupBox, PropertyGrid, StatusLight, Tabs, formatOscDate, ty
 import { EmptyPrintQueue } from '@graphics/states';
 import { hubLinks, sessionElapsed } from '@shell/Taskbar';
 import { windows } from '@shell/wm';
+import { RefusalState } from '@shell/adapters';
 import { useSys } from '../ctx';
-import { PRINT_PURGE_MS, eventState, formatDuration, printJobs, sortEvents, zuluOf, type PrintJob } from '../logic';
+import { divisionLabel, PRINT_PURGE_MS, eventState, formatDuration, printJobs, sortEvents, zuluOf, type PrintJob } from '../logic';
 import { RouteLink } from './RouteLink';
 import { WithRecord } from './WithRecord';
 
@@ -69,6 +70,18 @@ interface LinkRow {
 }
 
 function Links() {
+  const { services } = useSys();
+  // Tier 4: hub link states name the other facilities; the operator sees its own site only.
+  if (services.account.def.value.tier === 4) {
+    return (
+      <RefusalState
+        authority="Communications Security, Office of Internal Assurance"
+        reference="DIR-0301"
+        requirement="Tier 3"
+        reason="Requires Tier 3 access determination. Hub link states are not displayed to this operator."
+      />
+    );
+  }
   const now = session.tick.value;
   const d = new Date(now);
   const today = session.inWorldDate(d).toISOString().slice(0, 10);
@@ -181,8 +194,10 @@ function SessionTab() {
   const held = s.compartments.value;
   const entries = services.audit.entries.value;
   const at = session.loginAt.value;
-  const div = C.divisions.find((d) => d.id === session.divisionId.value)?.name ?? session.divisionId.value;
-  const determination = acting ? `Tier ${tier} (acting)` : held.length > C.operator.compartments.length ? `Tier ${tier} with compartments` : `Tier ${tier} baseline`;
+  const def = services.account.def.value;
+  const div = divisionLabel(def.divisionId, C.divisions);
+  const onIssue = def.compartments as string[];
+  const determination = acting ? `Tier ${tier} (acting)` : held.some((id) => !onIssue.includes(id)) ? `Tier ${tier} with compartments` : `Tier ${tier} baseline`;
 
   const rows: CompRow[] = held.map((id) => {
     const c = C.compartments.find((x) => x.id === id);
@@ -191,7 +206,7 @@ function SessionTab() {
       id,
       scope: c?.scope ?? '',
       briefing: c?.briefingDocNo ?? '',
-      recorded: C.operator.compartments.includes(id) ? 'On posting' : grant ? `${formatOscDate(grant.at)} ${zuluOf(grant.at)}` : 'Recorded',
+      recorded: onIssue.includes(id) ? 'On posting' : grant ? `${formatOscDate(grant.at)} ${zuluOf(grant.at)}` : 'Recorded',
     };
   });
   const cols: Column<CompRow>[] = [
@@ -217,9 +232,13 @@ function SessionTab() {
           columns={narrow ? 1 : 2}
           rows={[
             { label: 'Operator ID', value: s.operatorId.value, mono: true },
-            { label: 'Designation', value: session.displayName.value || 'Not recorded' },
-            { label: 'Site', value: `${session.site.value}, ${div}` },
-            { label: 'Probation', value: `Day ${s.probationDay.value} of ${session.PROBATION_LENGTH_DAYS}` },
+            { label: 'Designation', value: def.displayName || session.displayName.value || 'Not recorded' },
+            { label: 'Post', value: def.roleTitle || 'Not recorded' },
+            { label: 'Site', value: `${def.site}, ${div}` },
+            { label: 'Tier on issue', value: `Tier ${def.tier}` },
+            // No probation row for a credential not on probation (probationStart null).
+            ...(def.probationStart ? [{ label: 'Probation', value: `Day ${s.probationDay.value} of ${session.PROBATION_LENGTH_DAYS}` }] : []),
+            { label: 'Mailbox', value: def.email, mono: true },
             { label: 'Signed on', value: at ? `${session.zulu(new Date(at))} (${session.siteLocal(new Date(at))})` : 'Not signed on', mono: true },
             { label: 'Session time', value: sessionElapsed(now), mono: true },
           ]}
@@ -232,6 +251,8 @@ function SessionTab() {
             { label: 'Effective tier', value: `Tier ${tier}` },
             { label: 'Access determination', value: determination },
             { label: 'Compartments held', value: String(held.length), mono: true },
+            { label: 'Approval authority', value: def.approves.length ? def.approves.join(', ') : 'None' },
+            { label: 'Audit review', value: def.auditReader ? 'Office of Internal Assurance (read-only)' : 'No' },
             { label: 'Tier 1 material', value: 'Not releasable to this workstation' },
           ]}
         />

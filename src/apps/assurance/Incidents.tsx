@@ -147,7 +147,7 @@ function TicketBody({ entry, onBack, onRefuseEdit }: { entry: RouteEntry; onBack
   // The ticket's access log, with this operator's own recorded access appended in the log's columns.
   const ticketState: DocState = useMemo(() => {
     if (!doc) return state;
-    const operator = `${services.session.operatorId.value} (${canon.operator.pn})`;
+    const operator = `${services.session.operatorId.value} (${services.account.def.value.pn})`;
     return { status: 'ready', doc: withOwnAccess(doc, { entries: all, terms, workstation: WORKSTATION_ID, operator }) };
   }, [doc, all, terms]);
 

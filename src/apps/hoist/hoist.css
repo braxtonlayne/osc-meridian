@@ -1,0 +1,210 @@
+/* Shaft Hoist Control. Tokens only. */
+.hst {
+  container-type: inline-size;
+  container-name: hst;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+}
+.hst > :not(.hst-main) {
+  flex: none;
+}
+.hst-calls,
+.hst-data {
+  overflow-x: auto;
+}
+.hst-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--chrome-face);
+}
+.hst-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  align-items: start;
+}
+.hst-shaft {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  padding: var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+}
+.hst-shaft {
+  position: sticky;
+  top: 0;
+}
+.hst-elev {
+  width: 300px;
+}
+.hst-panel {
+  display: flex;
+  width: 100%;
+}
+.hst-ind {
+  flex: none;
+}
+.hst-side {
+  min-width: 0;
+}
+.hst-docpad {
+  padding: var(--sp-3);
+  background: var(--surface);
+  min-height: 100%;
+}
+.hst-note {
+  margin: 0 0 var(--sp-2);
+  color: var(--text-2);
+  max-width: 72ch;
+}
+.hst-small {
+  font-size: var(--fs-sm);
+  max-width: 28ch;
+}
+.hst-dim {
+  color: var(--text-3);
+}
+.hst-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-2) 0;
+}
+.hst-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: flex-start;
+}
+.hst-span2 {
+  grid-column: span 2;
+}
+.hst-btnrow {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.hst-link {
+  font: inherit;
+  color: var(--link);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.hst-link:focus-visible {
+  outline: var(--focus-ring);
+}
+
+/* ---- tables ---- */
+.hst-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 var(--sp-3);
+  background: var(--surface);
+}
+.hst-table caption {
+  text-align: left;
+  font-weight: var(--fw-bold);
+  padding: var(--sp-1) 0;
+}
+.hst-table th {
+  background: var(--th-bg);
+  text-align: left;
+  font-weight: var(--fw-semibold);
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--row-rule);
+  white-space: nowrap;
+}
+.hst-table td {
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--row-rule);
+  vertical-align: middle;
+}
+.hst-table tbody tr:nth-child(even) {
+  background: var(--zebra);
+}
+.hst-table tr.is-here td {
+  font-weight: var(--fw-semibold);
+}
+.hst-table .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.hst-table .num {
+  text-align: right;
+}
+.hst-data {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* ---- handheld / narrow window ---- */
+@container hst (max-width: 860px) {
+  .hst-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hst-shaft {
+    position: static;
+    justify-content: center;
+    order: 2;
+  }
+  .hst-elev {
+    width: min(240px, 60%);
+  }
+}
+@container hst (max-width: 520px) {
+  .hst-body {
+    padding: var(--sp-1);
+  }
+  .hst-panel {
+    padding: 12px 8px 16px;
+  }
+  /* PanelFrame sets its grid inline; one section per row on a handheld. */
+  .hst-panel > .pk-panel__body {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .hst-panel > .pk-panel__body > * {
+    grid-column: auto !important;
+    min-width: 0;
+  }
+  .hst-table {
+    font-size: var(--fs-sm);
+  }
+  .hst-table .hst-opt {
+    display: none;
+  }
+  .hst-calls .hst-table {
+    table-layout: fixed;
+  }
+  .hst-calls .hst-table th:first-child {
+    width: 4.5em;
+  }
+  .hst-calls .hst-table th:nth-child(4),
+  .hst-calls .hst-table th:nth-child(5) {
+    width: 76px;
+  }
+  .hst-calls .hst-table td {
+    overflow: hidden;
+  }
+  .hst-panel > .pk-panel__body > * {
+    overflow-x: auto;
+  }
+}
+@container hst (max-width: 480px) {
+  .hst-ind {
+    display: none;
+  }
+  .hst-elev {
+    width: 100%;
+  }
+}

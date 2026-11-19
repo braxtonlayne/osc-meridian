@@ -279,9 +279,30 @@
   word-break: break-word;
 }
 
+/* Action queue (pass two): list on the left, filed copy and decision on the right. */
+.fx-split--queue {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+.fx-queue__detail {
+  padding: var(--sp-3);
+}
+.fx-queue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.fx-queue__basis {
+  margin: 0 0 var(--sp-3);
+}
+.fx-queue .fx-sheet {
+  max-width: none;
+}
+
 /* Handheld and narrow windows: one column of boxes, list above particulars. */
 @container fx (max-width: 620px) {
-  .fx-split {
+  .fx-split,
+  .fx-split--queue {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(160px, 1fr) auto;
   }

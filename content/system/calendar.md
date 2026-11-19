@@ -1,6 +1,7 @@
 ---
 id: system-calendar
 route: /system/calendar
+t4: true
 app: system
 family: system
 template: index

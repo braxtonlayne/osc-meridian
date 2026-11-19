@@ -48,6 +48,7 @@ import type { ViewCtx } from "./Views";
 import { MarkingStripById, Refusal, useOnce, useWidth } from "./parts";
 import { printExtract } from "./print";
 import "./ledger-app.css";
+import { T4Home, t4Refused } from "./acct";
 
 const canon = canonJson as unknown as Canon;
 
@@ -70,7 +71,14 @@ function highestMarking(entries: RouteEntry[]): MarkingId | null {
   return best;
 }
 
-export default function App({ win, route }: AppProps) {
+export default function App(props: AppProps) {
+  const services = useServices();
+  const entry = props.route ?? services.docs.byRoute(HOME_ROUTE) ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Programme Accounts" docNo={entry?.docNo ?? "OSC-LDG-IDX"} />;
+  return <LedgerApp {...props} />;
+}
+
+function LedgerApp({ win, route }: AppProps) {
   const services = useServices();
   const ledgerRoutes = services.docs.all().filter((r) => r.app === "ledger");
   const available = ledgerRoutes.map((r) => r.route);

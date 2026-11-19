@@ -68,6 +68,12 @@ Personnel below grade who are approached by a journalist, in any setting, report
 
 Published material is monitored for references to cover facilities and cover line items by Intelligence & Analysis (ALPHA-01) and summarised weekly to Cover Operations. Items of no significance are not reported; the weekly summary is sent whether or not it contains items.
 
+Published commentary on the events of :c[realEvents.RE-10.dateText] that attributes them to departments or agencies of government does not refer to a facility, the network or the programme, and is not reported as an item. Its volume is noted in the weekly summary as a count only. Handling is set out in :x[OSC-MEM-06-0417].
+
+:::redact{compartment=BRIAR auth="OIA" ref="OIA-PROT-07"}
+No prepared statement is held under the protocol for the events of that date, and none is to be prepared.
+:::
+
 ## 5. Contingency protocol
 
 | Designation | Title | Revision | Pages | Withholding authority | Reference |

@@ -1,6 +1,7 @@
 ---
 id: system-about
 route: /system/about
+t4: true
 app: system
 family: system
 template: record

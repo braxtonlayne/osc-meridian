@@ -9,9 +9,10 @@ import { appById, isAppId } from '@apps/index';
 import { DepthPreview, DepthViewerPane } from './DepthPanel';
 import { DocPane, type DocLoad } from './DocPane';
 import { MapInset, useSize } from './MapView';
-import { cell, connectionsLabel, dossierRoute, figureCell, facilityFromRoute, isOpen, locationLabel, networkName, staffingBars, sustainmentText, type Viewer, type Withheld } from './model';
+import { cell, connectionsLabel, depthOf, dossierRoute, figureCell, facilityFromRoute, isOpen, locationLabel, networkName, staffingBars, sustainmentText, type Viewer, type Withheld } from './model';
 import { Bar, CellView, RxText, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 import type { TelemetryState } from './telemetry';
+import { t2Value, useCanonT2 } from './acct';
 
 type PanelModule = typeof import('./TelemetryPanel');
 let panelPromise: Promise<PanelModule> | null = null;
@@ -125,6 +126,7 @@ function Loading({ what }: { what: string }) {
 
 function SidePanel(p: DossierProps & { panels: PanelModule | null; reactorRx: Withheld | null; onLevel: (n: number) => void }) {
   const { f, viewer, audit } = p;
+  const t2 = useCanonT2(p.services);
   const [ref, size] = useSize<HTMLDivElement>();
   const w = Math.max(220, size.w - 18);
   const c = <T,>(field: Parameters<typeof cell>[1], v: T, display?: string) => cell(f, field, v, viewer, display);
@@ -136,7 +138,7 @@ function SidePanel(p: DossierProps & { panels: PanelModule | null; reactorRx: Wi
     { label: 'Codename', value: <CellView c={c('codename', f.codename)} id={`${f.id}:codename`} audit={audit} /> },
     { label: 'Location', value: <CellView c={position} id={`${f.id}:location`} audit={audit} /> },
     { label: 'Cover identity', value: <CellView c={c('cover', f.coverIdentity)} id={`${f.id}:cover`} audit={audit} /> },
-    { label: 'Depth', value: <CellView c={c('depth', f.depthFt)} id={`${f.id}:depth`} audit={audit} fmt={(v) => (v == null ? '' : `${fmt(v)} ft`)} />, mono: true },
+    { label: 'Depth', value: <CellView c={c('depth', depthOf(f, t2))} id={`${f.id}:depth`} audit={audit} fmt={(v) => (v == null ? '' : `${fmt(v)} ft`)} />, mono: true },
     { label: 'Berthing (surge)', value: <CellView c={figureCell(f, 'capacity', f.capacity, viewer)} id={`${f.id}:capacity`} audit={audit} fmt={fmt} />, mono: true },
     { label: 'Posted staff', value: <CellView c={figureCell(f, 'staff', f.staff, viewer)} id={`${f.id}:staff`} audit={audit} fmt={fmt} />, mono: true },
     { label: 'Sustainment', value: sustainmentText(canon, f) },
@@ -216,6 +218,8 @@ function SidePanel(p: DossierProps & { panels: PanelModule | null; reactorRx: Wi
 
 function SectionTab(p: DossierProps & { level: number | null; onLevel: (n: number) => void }) {
   const tier = p.services.session.tier.value;
+  const t2 = useCanonT2(p.services);
+  const lvText = (v: string, n: number, k: 'name' | 'notes') => t2Value(v, `facilities.${p.f.id}.levels.${n}.${k}`, t2) ?? v;
   const reduced = p.services.settings.reducedMotion.value;
   const levels = p.f.levels ?? [];
   const lv = levels.find((l) => l.n === p.level) ?? null;
@@ -231,7 +235,7 @@ function SectionTab(p: DossierProps & { level: number | null; onLevel: (n: numbe
               <dt>Level</dt>
               <dd class="reg-mono">{lv.n}</dd>
               <dt>Name</dt>
-              <dd>{lv.tier < tier ? <WithheldText text={lv.name} id={`${p.f.id}:L${lv.n}:name`} audit={p.audit} tier={lv.tier} /> : <RxText text={lv.name} id={`${p.f.id}:L${lv.n}:name`} audit={p.audit} />}</dd>
+              <dd>{lv.tier < tier ? <WithheldText text={lv.name} id={`${p.f.id}:L${lv.n}:name`} audit={p.audit} tier={lv.tier} /> : <RxText text={lvText(lv.name, lv.n, 'name')} id={`${p.f.id}:L${lv.n}:name`} audit={p.audit} />}</dd>
               <dt>Depth</dt>
               <dd class="reg-mono">
                 {fmt(lv.topFt)} to {fmt(lv.topFt + lv.heightFt)} ft
@@ -239,14 +243,14 @@ function SectionTab(p: DossierProps & { level: number | null; onLevel: (n: numbe
               <dt>Access</dt>
               <dd>Tier {lv.tier} and above</dd>
               <dt>Notes</dt>
-              <dd>{lv.tier < tier ? <WithheldText text={lv.notes} id={`${p.f.id}:L${lv.n}:notes`} audit={p.audit} tier={lv.tier} /> : <RxText text={lv.notes} id={`${p.f.id}:L${lv.n}:notes`} audit={p.audit} />}</dd>
+              <dd>{lv.tier < tier ? <WithheldText text={lv.notes} id={`${p.f.id}:L${lv.n}:notes`} audit={p.audit} tier={lv.tier} /> : <RxText text={lvText(lv.notes, lv.n, 'notes')} id={`${p.f.id}:L${lv.n}:notes`} audit={p.audit} />}</dd>
             </dl>
           ) : (
             <p class="reg-note">Select a level in the drawing or its index. Arrow keys step through the levels.</p>
           )}
         </GroupBox>
         <p class="reg-note">
-          Depths from the facility record. Horizontal extents schematic. {levels.length} levels to the rail terminal floor at <span class="reg-mono">{fmt(p.f.depthFt ?? 0)} ft</span>.
+          Depths from the facility record. Horizontal extents schematic. {levels.length} levels to the rail terminal floor at <span class="reg-mono">{fmt(depthOf(p.f, t2) ?? 0)} ft</span>.
         </p>
       </div>
     </div>

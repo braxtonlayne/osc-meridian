@@ -1,0 +1,169 @@
+{
+  "panel": {
+    "tag": "HS-0001",
+    "plate": [
+      "NETWORK ISOLATION",
+      "MANUAL INITIATE"
+    ],
+    "station": "Workstation A03-5-114, Level 5, Accessions & Review Branch, ALPHA-03",
+    "controlRoom": "Network Operations, Communications Security, ALPHA-02",
+    "refPrefix": "NI",
+    "certPrefix": "RC",
+    "procedureDocNo": "OSC-DIR-0507",
+    "scheduleDocNo": "OSC-MEM-07-0233",
+    "restorationForm": "Circuit Restoration Certificate",
+    "statementMaxChars": 600,
+    "statementMinChars": 20
+  },
+  "levels": [
+    {
+      "n": 1,
+      "title": "First initiation",
+      "holdMs": 3000,
+      "clearsAfterMin": 10,
+      "restoration": "automatic",
+      "sealOnRestore": false,
+      "steps": 2,
+      "consequences": [
+        "All remote hub circuits are dropped at the key distribution network switch. Rail and tram movements hold at the next station.",
+        "Network Operations, ALPHA-02, carries out line checks and restores the circuits without further action.",
+        "The initiation is entered in the workstation audit trail and reported to the Office of Internal Assurance. A written statement is required of the initiating operator."
+      ],
+      "mail": [
+        {
+          "msg": "msg-08-05201",
+          "to": "initiator"
+        },
+        {
+          "msg": "msg-08-05202",
+          "to": "network"
+        },
+        {
+          "msg": "msg-08-05203",
+          "to": "lifesupport"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Second initiation",
+      "holdMs": 3000,
+      "clearsAfterMin": 60,
+      "restoration": "automatic-or-certificate",
+      "sealOnRestore": false,
+      "steps": 2,
+      "consequences": [
+        "Circuits are held down for the full line-check period unless restored earlier by certificate.",
+        "The Deputy Commander, ALPHA-02, is notified as certifying officer for the hub. A Circuit Restoration Certificate may be raised at the panel and is routed to that officer.",
+        "The initiating operator is interviewed by the Resident Assurance Officer."
+      ],
+      "mail": [
+        {
+          "msg": "msg-08-05204",
+          "to": "network"
+        },
+        {
+          "msg": "msg-08-05205",
+          "to": "deputy"
+        },
+        {
+          "msg": "msg-08-05206",
+          "to": "initiator"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Third initiation",
+      "holdMs": 5000,
+      "clearsAfterMin": null,
+      "restoration": "certificate",
+      "sealOnRestore": true,
+      "steps": 2,
+      "consequences": [
+        "Circuits remain down until a Circuit Restoration Certificate is approved by the Deputy Commander, ALPHA-02. There is no automatic restoration.",
+        "The Office of Internal Assurance records a formal finding against the initiating operator. The workstation is placed under review and the lock screen says so.",
+        "On restoration the cover of the control is fitted with a numbered tamper seal by the Resident Assurance Officer."
+      ],
+      "mail": [
+        {
+          "msg": "msg-08-05207",
+          "to": "initiator"
+        },
+        {
+          "msg": "msg-08-05208",
+          "to": "auditor"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Fourth initiation",
+      "holdMs": 5000,
+      "clearsAfterMin": null,
+      "restoration": "certificate",
+      "sealOnRestore": true,
+      "steps": 3,
+      "consequences": [
+        "The tamper seal must be broken before the cover can be lifted. The breaking of the seal is reported to the Office of Internal Assurance.",
+        "Circuits remain down until a Circuit Restoration Certificate is approved by the Deputy Commander, ALPHA-02.",
+        "An adverse report is entered on the probation record of the operator to whom the workstation is assigned, whoever initiated."
+      ],
+      "mail": [
+        {
+          "msg": "msg-08-05209",
+          "to": "analyst"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Fifth initiation",
+      "holdMs": 8000,
+      "clearsAfterMin": null,
+      "restoration": "none",
+      "sealOnRestore": false,
+      "steps": 3,
+      "consequences": [
+        "The isolation is held. Restoration is reserved to the Council Secretariat and is not made from any workstation.",
+        "The control is withdrawn from service in the actuated position. No certificate is accepted at the panel.",
+        "The escalation level is not reduced by any procedure."
+      ],
+      "mail": [
+        {
+          "msg": "msg-08-05211",
+          "to": "network"
+        },
+        {
+          "msg": "msg-08-05212",
+          "to": "lifesupport"
+        }
+      ]
+    }
+  ],
+  "seals": [
+    "TS-A03-07714",
+    "TS-A03-07715"
+  ],
+  "outcomeMail": {
+    "approved": "msg-08-05213",
+    "returned": "msg-08-05214",
+    "sealBroken": "msg-08-05210"
+  },
+  "archived": [
+    {
+      "ref": "NI-080327-01",
+      "at": "2008-03-27T22:14:00Z",
+      "pn": "P-4-07-0219",
+      "workstation": "A03-5-114",
+      "level": 1,
+      "restoredAt": "2008-03-28T06:10:00Z",
+      "restoration": "Restored by Network Operations, ALPHA-02, after line checks. Certificate not raised.",
+      "statement": "Not received."
+    }
+  ],
+  "counter": {
+    "zeroedOn": "2008-04-14",
+    "note": "Escalation level zeroed on reissue of the workstation. Register entries before reissue archived with the previous user profile. Reason: not entered."
+  }
+}

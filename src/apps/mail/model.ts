@@ -187,6 +187,10 @@ export interface DirEntry {
   name: string; // may be a redaction sentinel
   role?: string;
   site?: string;
+  /** Personnel number (roster and account entries), for Tier 2 release lookups. */
+  pn?: string;
+  /** Issued account that owns this mailbox (pass two). */
+  account?: string;
 }
 
 export type Resolution =
