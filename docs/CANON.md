@@ -1144,3 +1144,23 @@ PASS  calendar has segment 04 possession with no times
 - `threatDetail[].ownerDivision` is a division **name**, because extended-a's division ids were not available while B was written. The merge should map it to A's `Division.id`, or A's names should be adopted. Names used: Operations and Continuity Planning, Facility Engineering, Security Forces Command, Office of Internal Assurance, Office of General Counsel, Cover Programs Office.
 - Calendar `originator` uses `CODE/SITE` with provisional division codes (RD, SEC, ENG, LOG, ADM, MED, SAF, TRG, IS, TC, CPO, CC, PER). These should be reconciled with A's division codes.
 
+
+## Client canon
+
+`content/canon/canon.json` is the full canon, read by path by build scripts (`scripts/content/**`, prerender) and tests. The browser bundle imports `content/canon/canon.client.json` through the `@canon` alias (vite.config.ts, tsconfig.json). canon-merge writes both files on every run (`buildClientCanon` in `scripts/canon-merge.ts`); the client file has the same shape and parses against `clientCanonSchema` (`src/core/canon-schema.ts`).
+
+**Sentinels.** A restricted string becomes `[[RX:<key>:<len>]]`, where `key` is `T1`, `T2` or a compartment id and `len` is the character length of the withheld text (the only thing the bundle learns). A restricted number, coordinate or bearing becomes `null`. `src/core/rx.ts` provides `isRx(v)`, `rxInfo(v)` (returns `{ key, len }`), `splitRx(s)` for strings with an embedded sentinel, and `rxPlain(s)` for canvas or aria text. UI code draws a redaction bar of length `len`; the real value reaches the browser only through release files (content pages), never from canon.
+
+**Rules.**
+
+| Record | Condition | Withheld | Key |
+|---|---|---|---|
+| `roster[]` | `tier` 1 or 2 | `name`, `email` | `T<tier>` |
+| `facilities[].levels[]` | `tier` 1 or 2 | `name`, `notes` | `T<tier>` |
+| `facilities[]` | `class` DELTA | `locationText`, `terrain`, `coverIdentity`, `coverStory`, `anchor.city`, `anchor.state`, `anchor.areaLabel` (strings); `anchor.miles`, `anchor.bearing`, `anchor.cityLat`, `anchor.cityLon`, `lat`, `lon` (null) | `SEXTANT` |
+| `reserves.items[]` | `tier` 1 or 2 | `label`, `text` (strings); `value` (null). `id`, `category`, `unit`, `site`, `tier` stay | `T<tier>` |
+| `threatDetail[].protocol` | `titleWithheld` | `title` (null in canon) becomes a T1 bar; length 18 + (FNV-1a of the designation mod 24), stable between builds | `T1` |
+
+Not restricted: reactors, council seats (holder labels are role descriptors only), headline figures, classes, tiers, budget, contractors, DELTA codenames, capacities, staff and functions. DELTA positions are still in the full canon; the map draws DELTA only when a caller passes facilities with positions (`UsMap facilities=...`).
+
+**Scrub pass.** Every withheld string of 8 or more characters (reserve labels and texts and two-letter states excepted) is also searched for in every other client string and replaced by the same sentinel, so a name quoted in a note does not survive. canon-merge fails if any such string is still present in the serialised client file. `tests/unit/client-canon.test.ts` checks the rules, that headline figures are identical, and that the committed client file matches what canon-merge derives from canon.json.

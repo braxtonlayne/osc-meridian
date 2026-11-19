@@ -5,6 +5,7 @@
  */
 import canonJson from '@canon';
 import type { Canon, ClassId, Division, Facility, Person } from '../../core/canon-types';
+import { isRx, rxInfo } from '../../core/rx';
 
 export const canon = canonJson as unknown as Canon;
 
@@ -204,5 +205,11 @@ export function buildModel(root: OrgRoot | undefined): OrgModel {
   return { root: n, seats: true, open: [n.id, 'g:divisions', 'g:facilities', `d:${ACCOUNTING_DIVISION}`, 'acct'] };
 }
 
-/** True when the session may not see this person's name. */
-export const nameWithheld = (p: Person, sessionTier: number): boolean => p.tier < sessionTier;
+/**
+ * True when the session may not see this person's name: the tier is more restricted than
+ * the session's, or the client canon carries only a redaction sentinel for it.
+ */
+export const nameWithheld = (p: Person, sessionTier: number): boolean => isRx(p.name) || p.tier < sessionTier;
+
+/** Character length of the person's name, also when the client canon withholds it. */
+export const nameLength = (p: Person): number => rxInfo(p.name)?.len ?? p.name.length;

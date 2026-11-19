@@ -26,6 +26,8 @@ export interface CompileContext {
   manifest: Set<string>;
   /** Dry run: an :x[] to a planned-but-missing page is a warning instead of an error. */
   pendingXrefsAreWarnings: boolean;
+  /** --lenient real build: unresolved :x[] renders as plain text with a warning. */
+  lenient: boolean;
   // outputs
   problems: Problem[];
   warnings: Problem[];

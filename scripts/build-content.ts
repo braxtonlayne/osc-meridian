@@ -1,7 +1,7 @@
 /**
  * npm run content
  *   tsx scripts/build-content.ts [--content <dir>] [--canon <file>] [--out <dir>] [--base </x/>]
- *                                [--manifest <file>] [--dry-run] [--only <dir>]
+ *                                [--manifest <file>] [--dry-run] [--only <dir>] [--lenient]
  * Defaults: content/, content/canon/canon.json, repo root, $MERIDIAN_BASE or "/",
  * content/manifest.json when it exists. Flags are documented in scripts/content/README.md.
  * Exits 1 with file:line problems on any error.
@@ -27,6 +27,7 @@ const canonPath = resolve(root, arg('canon') ?? 'content/canon/canon.json');
 const outDir = resolve(root, arg('out') ?? '.');
 const base = arg('base') ?? process.env.MERIDIAN_BASE ?? '/';
 const dryRun = flag('dry-run');
+const lenient = flag('lenient');
 const only = arg('only');
 const manifestArg = arg('manifest');
 const manifestPath = manifestArg ? resolve(root, manifestArg) : resolve(contentDir, 'manifest.json');
@@ -59,6 +60,7 @@ try {
     displayRoot: root,
     manifestDocNos,
     pendingXrefsAreWarnings: dryRun,
+    lenient,
     onlyDir: only ? resolve(root, only) : undefined,
   });
   if (r.warnings.length) console.warn(`[content] ${r.warnings.length} warning(s):\n${r.warnings.map(fmt).join('\n')}`);
@@ -66,7 +68,7 @@ try {
   const fam = new Map<string, number>();
   for (const e of r.routes) fam.set(e.family, (fam.get(e.family) ?? 0) + 1);
   console.log(
-    `[content]${dryRun ? ' DRY RUN (nothing written)' : ''}${only ? ` scope ${only}` : ''} ` +
+    `[content]${dryRun ? ' DRY RUN (nothing written)' : ''}${lenient ? ' LENIENT' : ''}${only ? ` scope ${only}` : ''} ` +
       `${r.routes.length} routes (${[...fam].map(([f, n]) => `${f} ${n}`).join(', ') || 'none'}); ` +
       `releases ${keys.join(' ') || 'none'}; ${r.figures.length} drift rules; ` +
       `manifest ${manifestDocNos ? `${manifestDocNos.size} docNos` : 'none'}; base ${base}; ${Date.now() - t0} ms`,

@@ -140,14 +140,14 @@ describe('positions', () => {
   it('anchored facilities sit the stated distance from their city', () => {
     for (const f of canon.facilities) {
       if (typeof f.anchor.miles !== 'number') continue;
-      const d = greatCircleMi(f.anchor.cityLat, f.anchor.cityLon, f.lat!, f.lon!);
+      const d = greatCircleMi(f.anchor.cityLat!, f.anchor.cityLon!, f.lat!, f.lon!);
       expect(Math.abs(d - f.anchor.miles), f.id).toBeLessThan(0.1);
     }
   });
   it('area offsets are deterministic and small', () => {
     expect(areaOffset('GAMMA-01')).toEqual(areaOffset('GAMMA-01'));
     for (const f of canon.facilities.filter((x) => x.class === 'GAMMA')) {
-      const d = greatCircleMi(f.anchor.cityLat, f.anchor.cityLon, f.lat!, f.lon!);
+      const d = greatCircleMi(f.anchor.cityLat!, f.anchor.cityLon!, f.lat!, f.lon!);
       expect(d).toBeGreaterThanOrEqual(3.9);
       expect(d).toBeLessThanOrEqual(9.1);
     }

@@ -6,6 +6,20 @@ export function xref(node: MdNode, ctx: CompileContext): void {
   const docNo = mdText(node).trim();
   const target = ctx.docsByNo.get(docNo);
   if (!target) {
+    if (ctx.lenient && !(ctx.manifest.has(docNo) && ctx.pendingXrefsAreWarnings)) {
+      const line = node.position?.start?.line;
+      ctx.warnings.push({
+        file: ctx.file,
+        line: line !== undefined ? line + ctx.lineOffset : undefined,
+        message: `:x[${docNo}] does not resolve; rendered as plain text`,
+      });
+      node.type = 'text';
+      node.value = docNo;
+      delete node.children;
+      delete node.attributes;
+      delete node.data;
+      return;
+    }
     if (ctx.manifest.has(docNo) && ctx.pendingXrefsAreWarnings) {
       const line = node.position?.start?.line;
       ctx.warnings.push({

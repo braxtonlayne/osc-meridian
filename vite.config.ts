@@ -23,7 +23,7 @@ export default defineConfig({
       '@graphics': r('./src/graphics'),
       '@sim': r('./src/sim'),
       '@narrative': r('./src/narrative'),
-      '@canon': r('./content/canon/canon.json'),
+      '@canon': r('./content/canon/canon.client.json'),
       '@generated': r('./.generated'),
     },
   },

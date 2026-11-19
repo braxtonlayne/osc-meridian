@@ -230,6 +230,112 @@ describe('validation modes for parallel content agents', () => {
   });
 });
 
+describe('aliases, lenient builds and structured frontmatter', () => {
+  const MAIL = {
+    ...FM,
+    id: 'msg-0012',
+    route: '/mail/msg-0012',
+    family: 'mail',
+    app: 'mail',
+    template: 'message',
+    docNo: 'OSC-MSG-08-0012',
+    aliases: ['OSC-CB-012'],
+  };
+
+  it('resolves :x[] and frontmatter xrefs through aliases and keeps the primary docNo', async () => {
+    const dir = tempContent({
+      'directives/a.md': md({ ...FM, xrefs: ['OSC-CB-012'] }, 'Briefing :x[OSC-CB-012] applies.'),
+      'mail/m.md': md(MAIL, 'Briefing text.'),
+    });
+    try {
+      const r = buildContent({ contentDir: dir, canonPath: CANON });
+      const a = r.docs.find((d) => d.id === 'dir-0099')!;
+      expect(a.html).toContain('<a href="/mail/msg-0012" data-xref="/mail/msg-0012" class="xref">OSC-CB-012</a>');
+      expect(a.xrefs).toEqual([{ docNo: 'OSC-CB-012', route: '/mail/msg-0012', title: MAIL.title }]);
+      const m = r.routes.find((x) => x.id === 'msg-0012')! as RouteEntry & { aliases?: string[] };
+      expect(m.docNo).toBe('OSC-MSG-08-0012');
+      expect(m.aliases).toEqual(['OSC-CB-012']);
+      const docs = createDocs({ satisfies: () => true, routes: r.routes, fetchJson: async () => ({}) });
+      expect(docs.byDocNo('OSC-CB-012')?.route).toBe('/mail/msg-0012');
+      const search = createSearch({ satisfies: () => true, byRoute: docs.byRoute, loadIndex: async () => r.searchJson });
+      const hit = (await search('OSC-CB-012'))[0]!;
+      expect(hit.route.route).toBe('/mail/msg-0012');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+    expectBuildError(
+      tempContent({ 'mail/m.md': md(MAIL, 'x'), 'directives/a.md': md({ ...FM, aliases: ['OSC-CB-012'] }, 'y') }),
+      /duplicate document number "OSC-CB-012"/,
+    );
+  });
+
+  it('lenient real build skips failing files with warnings and writes the rest', () => {
+    const dir = tempContent({
+      'directives/a.md': md(FM, 'Good page linking :x[OSC-MEM-08-0300] and :x[OSC-NOPE-1].'),
+      'records/b.md': md({ ...FM, id: 'mem-0300', route: '/records/mem-0300', family: 'records', app: 'records', docNo: 'OSC-MEM-08-0300' }, 'Broken :c[headline.nope].'),
+      'records/c.md': md({ ...FM, id: 'mem-0301', route: '/records/mem-0301', family: 'records', app: 'records', docNo: 'OSC-MEM-08-0301', date: '2009-01-01' }, 'Bad date.'),
+    });
+    const out = mkdtempSync(join(tmpdir(), 'meridian-len-'));
+    try {
+      expectBuildErrorNoCleanup(dir);
+      const r = buildContent({ contentDir: dir, canonPath: CANON, outDir: out, lenient: true, displayRoot: dir });
+      expect(r.routes.map((x) => x.id)).toEqual(['dir-0099']);
+      const html = r.docs[0]!.html;
+      expect(html).toContain('linking OSC-MEM-08-0300 and OSC-NOPE-1.'); // plain text, no link
+      expect(html).not.toContain('href="/records');
+      const w = r.warnings.map((x) => `${x.file}:${x.line ?? ''} ${x.message}`).join('\n');
+      expect(w).toMatch(/records\/b\.md:\d+ skipped: .*headline\.nope/);
+      expect(w).toMatch(/records\/c\.md:12 skipped: frontmatter date/);
+      expect(w).toMatch(/OSC-NOPE-1.*plain text/);
+      expect(readdirSync(join(out, 'public', 'data', 'docs'))).toEqual(['dir-0099.json']);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+      rmSync(out, { recursive: true, force: true });
+    }
+  });
+
+  it('passes structured template blocks through and drops planning fields', () => {
+    const form = {
+      formNo: 'OSC-F-114',
+      edition: '03/2007',
+      routing: ['SUPERVISOR', 'RD/ALPHA-03'],
+      blocks: [{ n: 1, label: 'Requester', fields: [{ name: 'pn', label: 'Personnel no.', type: 'text', required: true, pattern: '^\\d-\\d{4}$', width: 12, extra: 'kept' }] }],
+      submit: { receiptPrefix: 'LV', consequence: { mail: 'msg-0012' } },
+    };
+    const message = { from: 'a@a03.rd.mer', to: ['b@a03.rd.mer'], cc: [], precedence: 'ROUTINE', sent: '2008-05-02T14:30:00Z', folder: 'inbox', thread: 't1', inReplyTo: null, readReceipt: true, arrival: { after: 'login', minutes: 5 } };
+    const fm = { ...FM, form, message, minutes: { present: ['RT'], date: '2008-05-01' }, audience: 3, synopsis: 'internal planning note', plants: ['x'], owner: 'forms', dateMode: 'delivery', slotTemplate: 'a' };
+    const dir = tempContent({ 'directives/a.md': md(fm, 'Body.') });
+    try {
+      const r = buildContent({ contentDir: dir, canonPath: CANON });
+      const f = r.docs[0]!.frontmatter;
+      expect(f.form).toEqual(form);
+      expect(f.message).toEqual(message);
+      expect(f.minutes).toEqual({ present: ['RT'], date: '2008-05-01' });
+      for (const k of ['audience', 'synopsis', 'plants', 'owner', 'dateMode', 'slotTemplate']) expect(f).not.toHaveProperty(k);
+      expect(JSON.stringify(r.docs) + r.searchJson).not.toContain('internal planning note');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+    expectBuildError(tempContent({ 'directives/a.md': md({ ...FM, form: { formNo: 'X', blocks: 'nope' } }, 'B.') }), /frontmatter form\.blocks/);
+    expectBuildError(tempContent({ 'directives/a.md': md({ ...FM, message: { from: 'a', to: [] } }, 'B.') }), /frontmatter message\.to/);
+  });
+
+  it.skipIf(!existsSync(resolve(__dirname, '../../content/manifest.json')))('reads the real manifest, including aliases', () => {
+    const path = resolve(__dirname, '../../content/manifest.json');
+    const m = JSON.parse(readFileSync(path, 'utf8')) as { pages: { docNo: string; aliases?: string[] }[] };
+    const planned = loadManifestDocNos(path);
+    for (const p of m.pages) {
+      expect(planned.has(p.docNo), p.docNo).toBe(true);
+      for (const a of p.aliases ?? []) expect(planned.has(a), a).toBe(true);
+    }
+    expect(planned.size).toBe(m.pages.length + m.pages.reduce((n, p) => n + (p.aliases?.length ?? 0), 0));
+  });
+});
+
+function expectBuildErrorNoCleanup(dir: string): void {
+  expect(() => buildContent({ contentDir: dir, canonPath: CANON })).toThrow(ContentBuildError);
+}
+
 describe('fixtures against the real canon', () => {
   const REAL = resolve(__dirname, '../../content/canon/canon.json');
   it.skipIf(!existsSync(REAL))('builds, keeps headline figures and never ships tier-1/2 roster names in baseline', () => {

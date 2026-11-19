@@ -25,7 +25,7 @@ Orchestrator: Claude (Opus 5.5 / Fable 5.2 session). Graphics agents run with mo
 
 | # | Agent | Model | Owns | Brief | Result |
 |---|---|---|---|---|---|
-| N1 | Narrative designer + page manifest planner | inherit | content/manifest.json, docs/MANIFEST.md, docs/NARRATIVE.md, src/narrative/plan.json | All 240 pages with id/route/docNo/marking/synopsis/plants/owner; ≥12-step unlock graph; scripted mail queue; ≥8 audit consequences; segment 04 event; undocumented terminal commands; anomaly paper trails | pending |
+| N1 | Narrative designer + page manifest planner | inherit | content/manifest.json, docs/MANIFEST.md, docs/NARRATIVE.md, src/narrative/plan.json | All 240 pages with id/route/docNo/marking/synopsis/plants/owner; ≥12-step unlock graph; scripted mail queue; ≥8 audit consequences; segment 04 event; undocumented terminal commands; anomaly paper trails | Done; 240 pages, 15-step unlock graph, plan.json; orchestrator wrote shared briefs from it. |
 | G3 | US base map + facility markers | **Fable** | src/graphics/map/** | Albers USA, bundled us-atlas, class-coded marker shapes from computed lat/lon, DELTA hidden unless revealed, legend/scale | Done. Pre-simplified CONUS topology (+11.6 KB gz); 0 label overlaps; keyboard cycling; 8 vitest checks incl. ALPHA-03 24 mi S of Lexington inside KY (test lives under the folder's own vitest config). Orchestrator reviewed 1200x760 render: passes. |
 | G4 | Rail + tram schematic | **Fable** | src/graphics/schematic/** | SCADA-style mimic, block occupancy, trains, segment 04 dashed, suppressed consists | Done. 64 focusable links/nodes; 30 trains at 4 Hz ≈ 5 ms/update; per-block occupancy keys `02#3`; compact form below 0.8 scale; suppressed consist prints ########. Note for all SVG modules: use lowercase `tabindex` on SVG (Preact writes tabIndex verbatim). Block counts are drafting convention in SCHEMATIC_LAYOUT, not canon. |
 | G5 | Geographic tunnel map | **Fable** | src/graphics/tunnelmap/** | Engineering vs certified (exactly 847 mi) layers, drawing title block | Done; 6/6 tests incl. certified sum = canon 847. Certified set: five whole tram links (see DECISIONS). Own projection with room for title block. Invented drawing nos OSC-TRN-MAP-ENG/CRT/REC. |
@@ -34,3 +34,38 @@ Orchestrator: Claude (Opus 5.5 / Fable 5.2 session). Graphics agents run with mo
 | G8 | Budget Sankey + ledger charts | **Fable** | src/graphics/ledger/** | Source → line items → category Sankey, FY chart, bars; totals unit-tested vs canon | Done; 14 tests (node totals = canon source/category totals in every mode; FY sums = canon). NodeRef {kind,id} for highlight/onSelect (DOD/DOE/FEMA are both sources and departments). Ochre via color-mix; a chart-palette token would be cleaner (integration). |
 | G9 | Org chart + tier pyramid | **Fable** | src/graphics/org/** | d3-hierarchy org chart with tier redaction, non-expandable DETACHED / UNPOSTED node, pyramid with 790 bracket | Done. Hanging-column layout for collapsed siblings; personnel accounting under Personnel & Vetting, open by default; unposted node refuses with "No organisational assignment of record."; pyramid sqrt-scaled with linear reconciliation bracket (3,057 posted / 790 unposted / 3,847). Orchestrator reviewed pyramid render: passes. |
 | G10 | Reactor one-lines + telemetry gauges | **Fable** | src/graphics/reactor/** | Parametric single-line diagrams for 8 reactors, SCADA gauges, uPlot wrapper, seal state | Done; tsc/eslint clean. buildPlant/solve exported for the telemetry sim. RX-B08 offline: diesels carry bus E-A, surface supply carries E-B, utility tie OPEN. Feeder loads/voltages derived from MWe (rules in README); not canon. TelemetryChart x = Unix seconds. |
+
+## Wave B, part 2: content, applications, narrative engine
+
+| # | Agent | Model | Owns | Brief | Result |
+|---|---|---|---|---|---|
+| A6b | Content pipeline follow-up | inherit | scripts/content/**, src/core/{docs,search}.ts | Aliases, --lenient build, structured frontmatter passthrough, real manifest loader | Done; 30 pipeline tests pass; strict/lenient/dry-run builds OK. RouteEntry.aliases added to contracts by orchestrator. |
+| A7 | Sanitised client canon | inherit | canon-merge buildClientCanon, content/canon/canon.client.json, src/core/rx.ts | Strip tier-1/2 values from browser canon; isRx/rxInfo sentinels; @canon alias switch | Done; 104 tests + tsc pass. 226 values withheld as [[RX:key:len]] sentinels or null; vite bundle scanned: 0 of 188 restricted strings present. depth3d/org/Dialogs updated to render bars. Note: an acting-T2 operator still sees bars for T2 canon values (client never carries them). |
+| C1 | Content: facilities-alpha | inherit | content/** pages with owner facilities-alpha | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C2 | Content: facilities-beta | inherit | content/** pages with owner facilities-beta | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C3 | Content: facilities-gamma-delta | inherit | content/** pages with owner facilities-gamma-delta | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C4 | Content: transit | inherit | content/** pages with owner transit | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C5 | Content: personnel | inherit | content/** pages with owner personnel | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C6 | Content: council | inherit | content/** pages with owner council | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C7 | Content: reserves | inherit | content/** pages with owner reserves | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C8 | Content: ledger | inherit | content/** pages with owner ledger | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C9 | Content: assurance | inherit | content/** pages with owner assurance | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C10 | Content: directives-1 | inherit | content/** pages with owner directives-1 | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C11 | Content: directives-2 | inherit | content/** pages with owner directives-2 | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C12 | Content: forms | inherit | content/** pages with owner forms | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C13 | Content: mail-1 | inherit | content/** pages with owner mail-1 | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C14 | Content: mail-2 | inherit | content/** pages with owner mail-2 | docs/BRIEF-CONTENT.md + manifest plants | running |
+| C15 | Content: help | inherit | content/** pages with owner help | docs/BRIEF-CONTENT.md + manifest plants | running |
+| P1 | App: registry | inherit | src/apps/registry/** + src/sim/telemetry.worker.ts | docs/BRIEF-APPS.md, SPEC §8, port 5200 | running |
+| P2 | App: transit | inherit | src/apps/transit/** + src/sim/transit.worker.ts | docs/BRIEF-APPS.md, SPEC §8, port 5201 | running |
+| P3 | App: personnel | inherit | src/apps/personnel/** | docs/BRIEF-APPS.md, SPEC §8, port 5202 | running |
+| P4 | App: records | inherit | src/apps/records/** | docs/BRIEF-APPS.md, SPEC §8, port 5203 | running |
+| P5 | App: mail | inherit | src/apps/mail/** | docs/BRIEF-APPS.md, SPEC §8, port 5204 | running |
+| P6 | App: ledger | inherit | src/apps/ledger/** | docs/BRIEF-APPS.md, SPEC §8, port 5205 | running |
+| P7 | App: reserves | inherit | src/apps/reserves/** | docs/BRIEF-APPS.md, SPEC §8, port 5206 | running |
+| P8 | App: assurance | inherit | src/apps/assurance/** | docs/BRIEF-APPS.md, SPEC §8, port 5207 | running |
+| P9 | App: directives | inherit | src/apps/directives/** | docs/BRIEF-APPS.md, SPEC §8, port 5208 | running |
+| P10 | App: forms | inherit | src/apps/forms/** | docs/BRIEF-APPS.md, SPEC §8, port 5209 | running |
+| P11 | App: terminal | inherit | src/apps/terminal/** | docs/BRIEF-APPS.md, SPEC §8, port 5210 | running |
+| P12 | App: system | inherit | src/apps/system/** | docs/BRIEF-APPS.md, SPEC §8, port 5211 | running |
+| E1 | Narrative engine | inherit | src/narrative/engine.ts (+ minimal services wiring) | Pure (state,event)→effects; S01–S15, mail arrivals, OIA consequences, persisted | running |

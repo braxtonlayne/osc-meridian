@@ -30,12 +30,14 @@ export interface Marking {
 
 export interface Anchor {
   /** "N miles DIRECTION of CITY" form (ALPHA, BETA, some DELTA). */
-  miles?: number;
-  bearing?: Bearing;
-  city: string; // "Lexington"
+  /** null only in the client canon (redacted; see src/core/rx.ts). */
+  miles?: number | null;
+  bearing?: Bearing | null;
+  city: string; // "Lexington" (a redaction sentinel in the client canon for DELTA)
   state: string; // "KY"
-  cityLat: number; // public coordinates of the named city centre
-  cityLon: number;
+  /** Public coordinates of the named city centre. null only in the client canon (redacted). */
+  cityLat: number | null;
+  cityLon: number | null;
   /** For GAMMA "area" descriptions, the area label as written. */
   areaLabel?: string;
 }
@@ -51,9 +53,10 @@ export interface Facility {
   codename: string | null; // "RAVEN MOUNTAIN"
   locationText: string; // as written (or extended)
   anchor: Anchor;
-  /** Computed by canon-merge from anchor (great-circle destination). Never hand-typed. */
-  lat?: number;
-  lon?: number;
+  /** Computed by canon-merge from anchor (great-circle destination). Never hand-typed.
+   *  null only in the client canon, where the position is redacted (DELTA). */
+  lat?: number | null;
+  lon?: number | null;
   terrain: string | null; // "Blue Ridge Mountains. Hidden beneath defunct quarry site."
   coverIdentity: string | null;
   coverStory: string | null; // extended: 2-4 sentence public-facing cover story

@@ -65,7 +65,10 @@ async function defaultFetchJson(url: string): Promise<unknown> {
 export function createDocs(deps: DocsDeps): DocsService {
   const routes = [...(deps.routes ?? GENERATED_ROUTES)];
   const byRouteMap = new Map(routes.map((r) => [r.route, r]));
-  const byDocNoMap = new Map(routes.map((r) => [r.docNo, r]));
+  // routes.json entries may carry `aliases` (other docNos the page answers for); primary docNo wins.
+  const byDocNoMap = new Map<string, RouteEntry>();
+  for (const r of routes) for (const a of (r as RouteEntry & { aliases?: string[] }).aliases ?? []) byDocNoMap.set(a, r);
+  for (const r of routes) byDocNoMap.set(r.docNo, r);
   const fetchJson = deps.fetchJson ?? defaultFetchJson;
   const docCache = new Map<string, Promise<DocJson>>();
   const releaseCache = new Map<string, Promise<Record<string, string>>>();

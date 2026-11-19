@@ -146,7 +146,7 @@ export function DepthSection2D({ facilityId, tier, selected = null, onSelectLeve
               {!withheld && <tspan x={labelX + 58}>{name}</tspan>}
             </text>
             {withheld && (
-              <rect class="d3v2-rx" x={labelX + 58} y={ly - 4} width={Math.min(30, Math.max(8, l.short.length)) * 5.4} height={9}>
+              <rect class="d3v2-rx" x={labelX + 58} y={ly - 4} width={Math.min(30, Math.max(8, l.shortLen)) * 5.4} height={9}>
                 <title>Designation withheld</title>
               </rect>
             )}

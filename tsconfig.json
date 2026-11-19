@@ -26,7 +26,7 @@
       "@graphics/*": ["./src/graphics/*"],
       "@sim/*": ["./src/sim/*"],
       "@narrative/*": ["./src/narrative/*"],
-      "@canon": ["./content/canon/canon.json"],
+      "@canon": ["./content/canon/canon.client.json"],
       "@generated/*": ["./.generated/*"]
     }
   },

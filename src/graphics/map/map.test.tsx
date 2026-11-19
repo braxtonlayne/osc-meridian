@@ -8,12 +8,15 @@ import type { ComponentChild } from 'preact';
 import { geoContains, geoDistance } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Feature, MultiPolygon } from 'geojson';
-import canonJson from '@canon';
+import clientJson from '@canon';
+// Positions are checked against the full canon: the client canon ('@canon') has DELTA redacted.
+import canonJson from '../../../content/canon/canon.json';
 import type { Canon, Facility } from '@core/canon-types';
 import topo from './geo/conus.topo.json';
 import { UsMap, projectionFor } from './index';
 
 const canon = canonJson as unknown as Canon;
+const client = clientJson as unknown as Canon;
 const MI = 3958.8;
 
 interface Placed extends Facility {
@@ -53,7 +56,7 @@ describe('projectionFor', () => {
   it('puts ALPHA-03 due south of Lexington KY by its anchor distance', () => {
     const f = site('ALPHA-03');
     const [sx, sy] = xy(f.lon, f.lat);
-    const [cx, cy] = xy(f.anchor.cityLon, f.anchor.cityLat);
+    const [cx, cy] = xy(f.anchor.cityLon!, f.anchor.cityLat!);
     expect(f.anchor.city).toBe('Lexington');
     expect(sy).toBeGreaterThan(cy); // south is down the frame
     const px = Math.hypot(sx - cx, sy - cy);
@@ -66,14 +69,14 @@ describe('projectionFor', () => {
   it('puts ALPHA-02 north-west of Denver and ALPHA-04 east of Reno', () => {
     const a2 = site('ALPHA-02');
     const [x2, y2] = xy(a2.lon, a2.lat);
-    const [dx, dy] = xy(a2.anchor.cityLon, a2.anchor.cityLat);
+    const [dx, dy] = xy(a2.anchor.cityLon!, a2.anchor.cityLat!);
     expect(x2).toBeLessThan(dx);
     expect(y2).toBeLessThan(dy);
     expect(stateOf(a2.lon, a2.lat)).toBe('CO');
 
     const a4 = site('ALPHA-04');
     const [x4] = xy(a4.lon, a4.lat);
-    const [rx] = xy(a4.anchor.cityLon, a4.anchor.cityLat);
+    const [rx] = xy(a4.anchor.cityLon!, a4.anchor.cityLat!);
     expect(x4).toBeGreaterThan(rx);
     expect(stateOf(a4.lon, a4.lat)).toBe('NV');
   });
@@ -139,7 +142,11 @@ describe('UsMap', () => {
     const hidden = mount(<UsMap width={900} height={570} />);
     expect(hidden.querySelectorAll('.um-marker').length).toBe(35);
     expect(hidden.querySelectorAll('.um-marker[data-id^="DELTA"]').length).toBe(0);
-    const shown = mount(<UsMap width={900} height={570} revealDelta />);
+    // The client canon has no DELTA positions: revealing draws nothing for them and does not throw.
+    const bare = mount(<UsMap width={900} height={570} revealDelta />);
+    expect(client.facilities.filter((f) => f.class === 'DELTA').every((f) => f.lat === null && f.lon === null)).toBe(true);
+    expect(bare.querySelectorAll('.um-marker[data-id^="DELTA"]').length).toBe(0);
+    const shown = mount(<UsMap width={900} height={570} revealDelta facilities={canon.facilities} />);
     expect(shown.querySelectorAll('.um-marker').length).toBe(canon.facilities.length);
     expect(shown.querySelectorAll('.um-marker[data-id^="DELTA"]').length).toBe(12);
   });

@@ -21,13 +21,33 @@ npx tsx scripts/build-content.ts --dry-run --only content/directives
 | `--dry-run` | off | Compile and validate everything. Writes **nothing** to `.generated/` or `public/data/`. |
 | `--only <dir>` | all | Requires `--dry-run`. Reports problems and warnings only for files under `<dir>`. All content is still loaded, so `:x[]` references into other families resolve. The summary line says how many problems in other folders were not shown. |
 | `--manifest <file>` | `content/manifest.json` if it exists | Planned document numbers. An `:x[DOCNO]` (or a frontmatter `xrefs` entry) naming a planned docNo that has no page yet is a **warning** in `--dry-run` and an **error** in a real build. A docNo that is neither on a page nor in the manifest is always an error. |
+| `--lenient` | off | **Real build** that never fails on one bad file. A file that fails validation or compile is skipped and listed as a `file:line  skipped: ...` warning; everything else is written. An `:x[]` that does not resolve renders as plain text, with a warning. An unresolved frontmatter `xrefs` entry is dropped, with a warning. Use it for app test data while content is being edited. CI and the real `npm run build` stay strict. |
 | `--content <dir>` | `content` | Directory scanned for `<family>/<slug>.md`. `content/canon/` and `README.md` files are skipped. |
 | `--canon <file>` | `content/canon/canon.json` | Canon used by `:c[]`, `::canon-table` and the drift rules. |
 | `--out <dir>` | repo root | Root that receives `.generated/` and `public/data/` (ignored with `--dry-run`). |
 | `--base </path/>` | `$MERIDIAN_BASE` or `/` | Base path baked into cross-reference hrefs. In Git Bash, prefer `MERIDIAN_BASE=/osc-meridian/`. Git Bash rewrites a bare `/osc-meridian/` argument into a Windows path, and the build refuses that. |
 
 Manifest shapes accepted: an array of docNo strings, records anywhere in the JSON carrying a
-`docNo` field, `docNos: [...]` arrays, or an object keyed by docNo.
+`docNo` field (the current `content/manifest.json` has `pages: [{ docNo, aliases, ... }]`),
+`docNos: [...]` or `aliases: [...]` arrays, or an object keyed by docNo.
+
+## Frontmatter beyond the core keys
+
+- `aliases: [OSC-CB-012, ...]`: other document numbers this page answers for, such as the
+  briefing numbers carried by mail. `:x[]` and frontmatter `xrefs` resolve against aliases too.
+  A link keeps the number as written and points to the page's route. RouteEntry and DocJson keep
+  the primary `docNo`. `routes.json` entries carry `aliases`, `docs.byDocNo()` resolves them, and
+  search indexes them. A docNo or alias may belong to only one page.
+- Structured template blocks, passed through unchanged into `DocJson.frontmatter`:
+  - `form`, validated: `{ formNo, edition?, routing?[], blocks: [{ n, label, fields: [{ name, label, type, required?, options?, pattern?, help?, width? }] }], submit: { receiptPrefix, consequence? } }`
+  - `message`, validated: `{ from, to[] (at least one), cc?[], precedence?, sent?, folder?, thread?, inReplyTo?, readReceipt?, arrival? }`
+  - `minutes`, `directive`, `memo`, `cable`, `ledger`, `dossier`, `help`: any object.
+
+  Unknown extra fields inside these blocks are kept. YAML dates become `YYYY-MM-DD`, or a full
+  ISO string when a time is given.
+- Manifest planning fields `audience`, `synopsis`, `plants`, `owner`, `dateMode` and
+  `slotTemplate` are accepted and **dropped**: they never reach any output.
+- Any other unknown key is passed through to `DocJson.frontmatter`.
 
 ## Directive cheat sheet
 

@@ -21,6 +21,8 @@ export interface RouteEntry {
   family: string;
   template: Template;
   docNo: string;
+  /** Additional docNos that resolve to this route (e.g. cable/briefing numbers). */
+  aliases?: string[];
   title: string;
   marking: MarkingId;
   originator: string;

@@ -12,7 +12,7 @@ import type { JSX } from 'preact';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { BOX_H, BOX_W, SEAT_DROP, SEAT_H, SEAT_W, computeLayout, seatX } from './layout';
 import type { Layout, Placed } from './layout';
-import { UNPOSTED_REFUSAL, buildModel, canon, nameWithheld } from './model';
+import { UNPOSTED_REFUSAL, buildModel, canon, nameLength, nameWithheld } from './model';
 import type { OrgNode, OrgRoot } from './model';
 import './org.css';
 
@@ -213,7 +213,7 @@ export function OrgChart(props: OrgChartProps): JSX.Element {
           <span class="org-box__name">
             {n.person ? (
               withheld ? (
-                <WithheldName length={n.person.name.length} />
+                <WithheldName length={nameLength(n.person)} />
               ) : (
                 <>
                   {n.person.rank ? <span class="org-box__rank">{n.person.rank} </span> : null}

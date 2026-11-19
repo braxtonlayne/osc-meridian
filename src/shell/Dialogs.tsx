@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { interpretRun, pushRunHistory, runHistory, searchAll, services } from '@core/services';
 import type { RunResult } from '@core/services';
 import * as session from '@core/session';
+import { isRx } from '@core/rx';
 import { canonNow, markingById } from './adapters';
 import type { SearchHit } from './adapters';
 import { cascade, tile, minimizeAll } from './wm';
@@ -185,7 +186,7 @@ export function SearchPalette() {
       const tier = session.tier.peek();
       // Roster entries visible at the operator's tier or below; senior staff are not indexed for this tier.
       const ppl = canonNow()
-        .roster.filter((p) => p.tier >= tier && (p.name.toLowerCase().includes(lower) || p.role.toLowerCase().includes(lower) || p.pn.toLowerCase().includes(lower)))
+        .roster.filter((p) => p.tier >= tier && !isRx(p.name) && (p.name.toLowerCase().includes(lower) || p.role.toLowerCase().includes(lower) || p.pn.toLowerCase().includes(lower)))
         .slice(0, 6)
         .map((p) => ({ pn: p.pn, name: p.name, role: p.role, site: p.site }));
       setPeople(ppl);

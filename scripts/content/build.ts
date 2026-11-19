@@ -20,7 +20,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import type { DocJson, RedactionInfo, RouteEntry } from '../../src/core/contracts';
 import { SEARCH_OPTIONS, type SearchDoc } from '../../src/core/search';
-import { CORE_KEYS, FrontmatterSchema, type Frontmatter } from './schema.ts';
+import { CORE_KEYS, PLANNING_KEYS, FrontmatterSchema, type Frontmatter } from './schema.ts';
 import { loadCanon, type CanonData } from './canon.ts';
 import { figureRules, type FigureRule } from './figures.ts';
 import { COMPARTMENT_IDS, ContentBuildError, isTier1Key, normalizeBase, type Problem } from './util.ts';
@@ -47,6 +47,8 @@ export interface BuildOptions {
    */
   manifestDocNos?: Set<string>;
   pendingXrefsAreWarnings?: boolean;
+  /** Real build that skips files failing validation/compile (as warnings) and writes the rest. */
+  lenient?: boolean;
   /** Report problems/warnings only for files under this directory; all content is still loaded. */
   onlyDir?: string;
 }
@@ -111,7 +113,7 @@ export function loadManifestDocNos(path: string): Set<string> {
       for (const [k, x] of Object.entries(v)) {
         if (DOCNO_RE.test(k) && k.includes('-')) out.add(k); // keyed by docNo
         if (k === 'docNo' && typeof x === 'string') out.add(x);
-        else if (k === 'docNos' && Array.isArray(x)) addStrings(x);
+        else if ((k === 'docNos' || k === 'aliases') && Array.isArray(x)) addStrings(x);
         else if (x && typeof x === 'object') walk(x);
       }
     }
@@ -119,6 +121,17 @@ export function loadManifestDocNos(path: string): Set<string> {
   if (Array.isArray(json)) addStrings(json);
   walk(json);
   return out;
+}
+
+/** YAML Dates -> "YYYY-MM-DD" (midnight UTC) or full ISO strings, recursively. */
+function plainData(v: unknown): unknown {
+  if (v instanceof Date) {
+    const iso = v.toISOString();
+    return iso.endsWith('T00:00:00.000Z') ? iso.slice(0, 10) : iso;
+  }
+  if (Array.isArray(v)) return v.map(plainData);
+  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plainData(x)]));
+  return v;
 }
 
 function lineOfKey(raw: string, key: string): number | undefined {
@@ -164,26 +177,62 @@ function parseFiles(files: string[], contentDir: string, displayRoot: string, pr
     }
     if (relParts[0] !== fm.family) {
       problems.push({ file, line: lineOfKey(raw, 'family'), message: `family "${fm.family}" must match its folder "${relParts[0]}"` });
+      continue;
     }
     const bodyStart = raw.length - gm.content.length;
     const lineOffset = raw.slice(0, bodyStart).split('\n').length - 1;
     const extras: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(fm)) if (!CORE_KEYS.has(k)) extras[k] = v instanceof Date ? v.toISOString().slice(0, 10) : v;
+    for (const [k, v] of Object.entries(fm)) if (!CORE_KEYS.has(k) && !PLANNING_KEYS.has(k)) extras[k] = plainData(v);
     parsed.push({ file, fm, raw, body: gm.content, lineOffset, extras });
   }
   return parsed;
 }
 
-function checkUnique(parsed: Parsed[], problems: Problem[]): void {
-  for (const key of ['id', 'route', 'docNo'] as const) {
+/** Duplicate id/route/docNo/alias: report, and return the files that keep their claim (first wins). */
+function checkUnique(parsed: Parsed[], problems: Problem[]): Parsed[] {
+  const losers = new Set<Parsed>();
+  for (const key of ['id', 'route'] as const) {
     const seen = new Map<string, string>();
     for (const p of parsed) {
       const v = p.fm[key];
       const prev = seen.get(v);
-      if (prev) problems.push({ file: p.file, line: undefined, message: `duplicate ${key} "${v}" (also in ${prev})` });
-      else seen.set(v, p.file);
+      if (prev) {
+        problems.push({ file: p.file, line: lineOfKey(p.raw, key), message: `duplicate ${key} "${v}" (also in ${prev})` });
+        losers.add(p);
+      } else seen.set(v, p.file);
     }
   }
+  // docNo and aliases share one namespace
+  const numbers = new Map<string, string>();
+  for (const p of parsed) {
+    for (const [no, key] of [[p.fm.docNo, 'docNo'], ...(p.fm.aliases ?? []).map((a) => [a, 'aliases'])] as [string, string][]) {
+      const prev = numbers.get(no);
+      if (prev && prev !== p.file) {
+        problems.push({ file: p.file, line: lineOfKey(p.raw, key), message: `duplicate document number "${no}" (${key}; also in ${prev})` });
+        losers.add(p);
+      } else numbers.set(no, p.file);
+    }
+  }
+  return parsed.filter((p) => !losers.has(p));
+}
+
+interface Shared {
+  base: string;
+  canon: CanonData | null;
+  docsByNo: Map<string, { route: string; title: string }>;
+  compartments: Set<string>;
+  manifest: Set<string>;
+  pendingXrefsAreWarnings: boolean;
+  lenient: boolean;
+}
+
+interface Compiled {
+  p: Parsed;
+  problems: Problem[];
+  warnings: Problem[];
+  doc?: DocJson;
+  sd?: SearchDoc;
+  releases?: Map<string, Map<string, string>>;
 }
 
 function compileBody(p: Parsed, ctx: CompileContext): string {
@@ -202,8 +251,91 @@ function compileBody(p: Parsed, ctx: CompileContext): string {
   return String(processor.stringify(hast as never)).trim();
 }
 
+function compileOne(p: Parsed, sh: Shared): Compiled {
+  const out: Compiled = { p, problems: [], warnings: [] };
+  const ctx: CompileContext = {
+    file: p.file,
+    lineOffset: p.lineOffset,
+    docId: p.fm.id,
+    docNo: p.fm.docNo,
+    base: sh.base,
+    canon: sh.canon,
+    docsByNo: sh.docsByNo,
+    compartments: sh.compartments,
+    manifest: sh.manifest,
+    pendingXrefsAreWarnings: sh.pendingXrefsAreWarnings,
+    lenient: sh.lenient,
+    problems: out.problems,
+    warnings: out.warnings,
+    xrefsUsed: [],
+    redactions: [],
+    releases: new Map(),
+    headings: [],
+    plainText: '',
+  };
+  let html: string;
+  try {
+    html = compileBody(p, ctx);
+  } catch (e) {
+    out.problems.push({ file: p.file, message: `compile failed: ${(e as Error).message}` });
+    return out;
+  }
+  if (p.fm.access?.compartment && !sh.compartments.has(p.fm.access.compartment)) {
+    out.problems.push({ file: p.file, line: lineOfKey(p.raw, 'access'), message: `access compartment "${p.fm.access.compartment}" is not a canon compartment` });
+  }
+  // frontmatter xrefs must resolve too (against docNos and aliases)
+  const xrefNos: string[] = [];
+  for (const no of p.fm.xrefs ?? []) {
+    if (sh.docsByNo.has(no)) {
+      xrefNos.push(no);
+      continue;
+    }
+    const line = lineOfKey(p.raw, 'xrefs');
+    const planned = sh.manifest.has(no);
+    if ((planned && sh.pendingXrefsAreWarnings) || sh.lenient) {
+      out.warnings.push({ file: p.file, line, message: planned ? `xrefs: "${no}" is in the manifest but has no page yet` : `xrefs: unknown document number "${no}" (dropped)` });
+    } else {
+      out.problems.push({
+        file: p.file,
+        line,
+        message: planned ? `xrefs: "${no}" is planned in the manifest but its page does not exist` : `xrefs: unknown document number "${no}"`,
+      });
+    }
+  }
+  for (const no of ctx.xrefsUsed) if (!xrefNos.includes(no)) xrefNos.push(no);
+  if (out.problems.length) return out;
+
+  const redactions: RedactionInfo[] = ctx.redactions
+    .filter((r) => r.shipped)
+    .map(({ id, key, len, auth, ref }) => ({ id, key, len, auth, ref }));
+  const doc: DocJson = {
+    ...routeEntry(p.fm),
+    html,
+    redactions,
+    xrefs: xrefNos.map((no) => ({ docNo: no, ...sh.docsByNo.get(no)! })),
+    headings: ctx.headings,
+    frontmatter: p.extras,
+  };
+  if (p.fm.distribution) doc.distribution = p.fm.distribution;
+  if (p.fm.supersedes) doc.supersedes = p.fm.supersedes;
+  const sd: SearchDoc = {
+    id: p.fm.id,
+    route: p.fm.route,
+    title: p.fm.title,
+    docNo: p.fm.docNo,
+    summary: p.fm.summary,
+    text: ctx.plainText,
+    marking: p.fm.marking,
+    app: p.fm.app,
+  };
+  if (p.fm.aliases?.length) sd.aliases = p.fm.aliases.join(' ');
+  if (p.fm.access?.tier) sd.tier = p.fm.access.tier;
+  if (p.fm.access?.compartment) sd.compartment = p.fm.access.compartment;
+  return { ...out, doc, sd, releases: ctx.releases };
+}
+
 function routeEntry(fm: Frontmatter): RouteEntry {
-  const e: RouteEntry = {
+  const e: RouteEntry & { aliases?: string[] } = {
     id: fm.id,
     route: fm.route,
     app: fm.app,
@@ -219,6 +351,7 @@ function routeEntry(fm: Frontmatter): RouteEntry {
   };
   if (fm.access) e.access = fm.access as RouteEntry['access'];
   if (fm.facility) e.facility = fm.facility as RouteEntry['facility'];
+  if (fm.aliases?.length) e.aliases = fm.aliases;
   return e;
 }
 
@@ -228,6 +361,7 @@ export function buildContent(opts: BuildOptions): BuildResult {
   const base = normalizeBase(opts.base);
   const canon = loadCanon(resolve(opts.canonPath));
   if (opts.onlyDir && opts.outDir) throw new Error('onlyDir is a validation mode: it cannot be combined with outDir');
+  const lenient = !!opts.lenient;
   const problems: Problem[] = [];
   const warnings: Problem[] = [];
   const manifest = opts.manifestDocNos ?? new Set<string>();
@@ -237,112 +371,59 @@ export function buildContent(opts: BuildOptions): BuildResult {
   const inScope = (p: Problem) => !onlyPrefix || p.file.startsWith(onlyPrefix);
   const check = () => {
     const reported = problems.filter(inScope);
-    if (reported.length) throw new ContentBuildError(reported);
+    if (reported.length && !lenient) throw new ContentBuildError(reported);
   };
 
-  const parsed = parseFiles(listMarkdown(contentDir), contentDir, displayRoot, problems);
-  checkUnique(parsed, problems);
+  let candidates = checkUnique(parseFiles(listMarkdown(contentDir), contentDir, displayRoot, problems), problems);
   check();
 
-  const docsByNo = new Map(parsed.map((p) => [p.fm.docNo, { route: p.fm.route, title: p.fm.title }]));
   const compartments = new Set<string>(
     canon && Array.isArray(canon.compartments)
       ? (canon.compartments as { id: string }[]).map((c) => c.id)
       : COMPARTMENT_IDS,
   );
 
+  // Lenient: drop failing files and recompile until stable, so nobody links to a skipped page.
+  let results: Compiled[] = [];
+  for (let round = 0; round < 10; round++) {
+    const docsByNo = new Map<string, { route: string; title: string }>();
+    for (const p of candidates) {
+      for (const no of [p.fm.docNo, ...(p.fm.aliases ?? [])]) docsByNo.set(no, { route: p.fm.route, title: p.fm.title });
+    }
+    const sh: Shared = { base, canon, docsByNo, compartments, manifest, pendingXrefsAreWarnings: !!opts.pendingXrefsAreWarnings, lenient };
+    results = candidates.map((p) => compileOne(p, sh));
+    const failed = results.filter((r) => r.problems.length);
+    if (!lenient || !failed.length) break;
+    for (const r of failed) problems.push(...r.problems);
+    candidates = candidates.filter((p) => !failed.some((r) => r.p === p));
+  }
+  for (const r of results) {
+    if (!lenient) problems.push(...r.problems);
+    warnings.push(...r.warnings);
+  }
+  check();
+  if (lenient) {
+    const skipped = new Set(problems.map((p) => p.file));
+    for (const p of problems) warnings.push({ ...p, message: `skipped: ${p.message}` });
+    if (skipped.size) warnings.push({ file: '(lenient)', message: `${skipped.size} file(s) skipped: ${[...skipped].join(', ')}` });
+  }
+
   const docs: DocJson[] = [];
   const releases = new Map<string, Map<string, string>>();
   const search: SearchDoc[] = [];
-
-  for (const p of parsed) {
-    const ctx: CompileContext = {
-      file: p.file,
-      lineOffset: p.lineOffset,
-      docId: p.fm.id,
-      docNo: p.fm.docNo,
-      base,
-      canon,
-      docsByNo,
-      compartments,
-      problems,
-      warnings,
-      manifest,
-      pendingXrefsAreWarnings: !!opts.pendingXrefsAreWarnings,
-      xrefsUsed: [],
-      redactions: [],
-      releases: new Map(),
-      headings: [],
-      plainText: '',
-    };
-    let html: string;
-    try {
-      html = compileBody(p, ctx);
-    } catch (e) {
-      problems.push({ file: p.file, message: `compile failed: ${(e as Error).message}` });
-      continue;
-    }
-    if (p.fm.access?.compartment && !compartments.has(p.fm.access.compartment)) {
-      problems.push({ file: p.file, line: lineOfKey(p.raw, 'access'), message: `access compartment "${p.fm.access.compartment}" is not a canon compartment` });
-    }
-    // frontmatter xrefs must resolve too
-    const xrefNos = [...(p.fm.xrefs ?? [])];
-    for (const no of xrefNos) {
-      if (docsByNo.has(no)) continue;
-      const line = lineOfKey(p.raw, 'xrefs');
-      if (manifest.has(no) && opts.pendingXrefsAreWarnings) {
-        warnings.push({ file: p.file, line, message: `xrefs: "${no}" is in the manifest but has no page yet` });
-      } else {
-        problems.push({
-          file: p.file,
-          line,
-          message: manifest.has(no)
-            ? `xrefs: "${no}" is planned in the manifest but its page does not exist`
-            : `xrefs: unknown document number "${no}"`,
-        });
-      }
-    }
-    for (const no of ctx.xrefsUsed) if (!xrefNos.includes(no)) xrefNos.push(no);
-
-    for (const [key, m] of ctx.releases) {
+  for (const r of results) {
+    if (!r.doc || !r.sd || r.problems.length) continue;
+    docs.push(r.doc);
+    search.push(r.sd);
+    for (const [key, m] of r.releases ?? []) {
       if (isTier1Key(key)) continue; // belt and braces; redaction.ts never adds them
       let all = releases.get(key);
       if (!all) releases.set(key, (all = new Map()));
       for (const [id, h] of m) all.set(id, h);
     }
-    const redactions: RedactionInfo[] = ctx.redactions
-      .filter((r) => r.shipped)
-      .map(({ id, key, len, auth, ref }) => ({ id, key, len, auth, ref }));
-
-    const entry = routeEntry(p.fm);
-    const doc: DocJson = {
-      ...entry,
-      html,
-      redactions,
-      xrefs: xrefNos.filter((no) => docsByNo.has(no)).map((no) => ({ docNo: no, ...docsByNo.get(no)! })),
-      headings: ctx.headings,
-      frontmatter: p.extras,
-    };
-    if (p.fm.distribution) doc.distribution = p.fm.distribution;
-    if (p.fm.supersedes) doc.supersedes = p.fm.supersedes;
-    docs.push(doc);
-
-    const sd: SearchDoc = {
-      id: p.fm.id,
-      route: p.fm.route,
-      title: p.fm.title,
-      docNo: p.fm.docNo,
-      summary: p.fm.summary,
-      text: ctx.plainText,
-      marking: p.fm.marking,
-      app: p.fm.app,
-    };
-    if (p.fm.access?.tier) sd.tier = p.fm.access.tier;
-    if (p.fm.access?.compartment) sd.compartment = p.fm.access.compartment;
-    search.push(sd);
   }
-  check();
-  const suppressed = problems.length;
+  const parsed = candidates;
+  const suppressed = lenient ? 0 : problems.length;
 
   docs.sort((a, b) => a.route.localeCompare(b.route));
   const fmById = new Map(parsed.map((p) => [p.fm.id, p.fm]));

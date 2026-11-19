@@ -18,12 +18,14 @@
  *  - `headline` and `meta` are always computed/kept by this script; extended values ignored.
  *  - lat/lon are computed for every facility from its anchor (great-circle destination).
  *  - The result is validated (Zod structure + cross-checks) and written with schema key order.
+ *  - It also writes content/canon/canon.client.json, the sanitised copy the browser imports
+ *    through '@canon' (docs/CANON.md, "Client canon"; sentinels in src/core/rx.ts).
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { Bearing, Canon, Facility } from '../src/core/canon-types';
-import { canonCrossChecks, canonSchema } from '../src/core/canon-schema';
+import { canonCrossChecks, canonSchema, clientCanonSchema } from '../src/core/canon-schema';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const CANON_DIR = resolve(ROOT, 'content/canon');
@@ -100,6 +102,7 @@ export function areaOffset(id: string): { miles: number; bearingDeg: number } {
 
 export function positionFacility(f: Pick<Facility, 'id' | 'anchor'>): { lat: number; lon: number } {
   const a = f.anchor;
+  if (typeof a.cityLat !== 'number' || typeof a.cityLon !== 'number') throw new Error(`${f.id}: anchor has no city coordinates`);
   if (typeof a.miles === 'number' && a.bearing) return destination(a.cityLat, a.cityLon, BEARING_DEG[a.bearing], a.miles);
   const o = areaOffset(f.id);
   return destination(a.cityLat, a.cityLon, o.bearingDeg, o.miles);
@@ -329,13 +332,121 @@ export function tunnelShorterThanCrowFlies(c: Canon): { kind: string; label: str
   const check = (kind: string, label: string, a: string, b: string, miles: number) => {
     const fa = pos.get(a as Facility['id']);
     const fb = pos.get(b as Facility['id']);
-    if (!fa || !fb || fa.lat === undefined || fb.lat === undefined || fa.lon === undefined || fb.lon === undefined) return;
+    if (!fa || !fb || typeof fa.lat !== 'number' || typeof fb.lat !== 'number' || typeof fa.lon !== 'number' || typeof fb.lon !== 'number') return;
     const d = greatCircleMi(fa.lat, fa.lon, fb.lat, fb.lon);
     if (miles < d) out.push({ kind, label, statedMi: miles, straightMi: Math.round(d) });
   };
   for (const s of c.railSegments) check('rail', `segment ${s.no} ${s.a}-${s.b}`, s.a, s.b, s.miles);
   for (const n of c.tramNetworks) for (const l of n.links) check('tram', `${l.from}-${l.to}`, l.from, l.to, l.miles);
   return out;
+}
+
+// ---------------------------------------------------------------------------------------
+// Client canon (docs/CANON.md, "Client canon"). The browser bundle imports
+// content/canon/canon.client.json through '@canon'; every restricted value is replaced by
+// a sentinel `[[RX:<key>:<len>]]` (strings) or null (numbers, coordinates, bearing), so the
+// withheld text is not in the shipped JS at all. Build scripts and tests read canon.json.
+// ---------------------------------------------------------------------------------------
+
+/** Compartment that governs DELTA location detail in the client canon. */
+export const DELTA_LOCATION_KEY = 'SEXTANT';
+
+export interface ClientCanonResult {
+  client: Canon;
+  /** Every withheld original string (used for the scrub pass and by tests). */
+  withheld: { path: string; key: string; text: string; scrub: boolean }[];
+  /** Other fields where a withheld string was found and replaced by its sentinel. */
+  scrubbed: string[];
+}
+
+/** Withheld strings shorter than this are not searched for inside other fields. */
+const SCRUB_MIN = 8;
+
+export function buildClientCanon(canon: Canon): ClientCanonResult {
+  const c = structuredClone(canon);
+  const withheld: ClientCanonResult['withheld'] = [];
+  const scrubKeys = new Map<string, string>(); // original text -> sentinel
+  const rx = (path: string, key: string, text: string, scrub = true): string => {
+    const s = `[[RX:${key}:${text.length}]]`;
+    const doScrub = scrub && text.length >= SCRUB_MIN;
+    withheld.push({ path, key, text, scrub: doScrub });
+    if (doScrub && !scrubKeys.has(text)) scrubKeys.set(text, s);
+    return s;
+  };
+
+  // Roster: tier 1 and 2 names and in-world addresses.
+  for (const p of c.roster) {
+    if (p.tier > 2) continue;
+    const key = `T${p.tier}`;
+    p.name = rx(`roster.${p.pn}.name`, key, p.name);
+    p.email = rx(`roster.${p.pn}.email`, key, p.email);
+  }
+
+  for (const f of c.facilities) {
+    // Restricted levels: designation and notes.
+    for (const l of f.levels ?? []) {
+      if (l.tier > 2) continue;
+      const key = `T${l.tier}`;
+      l.name = rx(`facilities.${f.id}.levels.${l.n}.name`, key, l.name);
+      if (l.notes) l.notes = rx(`facilities.${f.id}.levels.${l.n}.notes`, key, l.notes);
+    }
+    // DELTA: every location and cover detail. Real values ship only in release files.
+    if (f.class === 'DELTA') {
+      const k = DELTA_LOCATION_KEY;
+      const p = `facilities.${f.id}`;
+      f.locationText = rx(`${p}.locationText`, k, f.locationText);
+      if (f.terrain) f.terrain = rx(`${p}.terrain`, k, f.terrain);
+      if (f.coverIdentity) f.coverIdentity = rx(`${p}.coverIdentity`, k, f.coverIdentity);
+      if (f.coverStory) f.coverStory = rx(`${p}.coverStory`, k, f.coverStory);
+      const a = f.anchor;
+      a.city = rx(`${p}.anchor.city`, k, a.city);
+      a.state = rx(`${p}.anchor.state`, k, a.state, false);
+      if (a.areaLabel) a.areaLabel = rx(`${p}.anchor.areaLabel`, k, a.areaLabel);
+      a.miles = null;
+      a.bearing = null;
+      a.cityLat = null;
+      a.cityLon = null;
+      f.lat = null;
+      f.lon = null;
+    }
+  }
+
+  // Reserves: tier 1 and 2 items keep id, category, unit, site and tier only.
+  for (const it of c.reserves.items) {
+    if (it.tier > 2) continue;
+    const key = `T${it.tier}`;
+    it.label = rx(`reserves.${it.id}.label`, key, it.label, false);
+    it.text = rx(`reserves.${it.id}.text`, key, it.text, false);
+    it.value = null;
+  }
+
+  // Contingency protocols whose titles are withheld: a tier 1 bar (no title exists in canon;
+  // the bar length is derived from the designation so it is stable between builds).
+  for (const t of c.threatDetail) {
+    if (t.protocol.titleWithheld) t.protocol.title = `[[RX:T1:${18 + (fnv1a(t.protocol.designation) % 24)}]]`;
+  }
+
+  // Scrub pass: a withheld string quoted anywhere else (notes, glossary, cover text) is
+  // replaced by the same sentinel. Longest first, so a name inside an address is not split.
+  const scrubbed: string[] = [];
+  const needles = [...scrubKeys.entries()].sort((a, b) => b[0].length - a[0].length);
+  const walk = (v: unknown, path: string): unknown => {
+    if (typeof v === 'string') {
+      let s = v;
+      for (const [text, sentinel] of needles) if (s !== sentinel && s.includes(text)) s = s.split(text).join(sentinel);
+      if (s !== v) scrubbed.push(path);
+      return s;
+    }
+    if (Array.isArray(v)) return v.map((x, i) => walk(x, `${path}[${i}]`));
+    if (v && typeof v === 'object') {
+      const o = v as Record<string, unknown>;
+      for (const k of Object.keys(o)) o[k] = walk(o[k], path ? `${path}.${k}` : k);
+      return o;
+    }
+    return v;
+  };
+  walk(c, '');
+  return { client: c, withheld, scrubbed };
 }
 
 /** JSON with stable formatting (schema key order is already applied by Zod parse). */
@@ -354,6 +465,25 @@ function main(): void {
   }
   const out = resolve(CANON_DIR, 'canon.json');
   writeFileSync(out, serialize(canon));
+
+  const { client, withheld, scrubbed } = buildClientCanon(canon);
+  const cp = clientCanonSchema.safeParse(client);
+  if (!cp.success) {
+    for (const issue of cp.error.issues) console.error(`canon-merge: error: client schema: ${issue.path.join('.')}: ${issue.message}`);
+    process.exit(1);
+  }
+  const clientText = serialize(client);
+  // Scrubbed kinds must not occur anywhere. (Two-letter states and generic reserve labels
+  // such as "Small arms" are not searched for; they occur legitimately elsewhere.)
+  const hard = withheld.filter((w) => w.scrub && clientText.includes(JSON.stringify(w.text).slice(1, -1)));
+  if (hard.length) {
+    for (const w of hard) console.error(`canon-merge: error: client canon still contains withheld ${w.path}`);
+    process.exit(1);
+  }
+  const clientOut = resolve(CANON_DIR, 'canon.client.json');
+  writeFileSync(clientOut, clientText);
+  console.log(`canon-merge: wrote ${clientOut} (${withheld.length} values withheld${scrubbed.length ? `; scrubbed from ${scrubbed.join(', ')}` : ''})`);
+
   const h = canon.headline;
   console.log(
     `canon-merge: wrote ${out} (${canon.facilities.length} facilities; staff ${h.staffTotal} = posted ${h.staffPosted} + unposted ${h.staffUnposted}; ` +

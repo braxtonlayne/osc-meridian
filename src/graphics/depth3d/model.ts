@@ -15,6 +15,7 @@
  */
 import canonJson from '@canon';
 import type { Canon, Facility, FacilityLevel, RailSegment, TierNo } from '@core/canon-types';
+import { isRx, rxInfo } from '@core/rx';
 
 const canon = canonJson as unknown as Canon;
 
@@ -62,8 +63,12 @@ export interface LevelModel extends Box {
   n: number;
   /** Canon name, complete ("Level 6: Administration and Secretariat Offices"). */
   name: string;
-  /** Canon name without the "Level N:" prefix. */
+  /** Canon name without the "Level N:" prefix. Empty when the client canon withholds it. */
   short: string;
+  /** Length of the short name, also when withheld (sizes the redaction bar). */
+  shortLen: number;
+  /** The client canon carries only a redaction sentinel for this name (src/core/rx.ts). */
+  redacted: boolean;
   topFt: number;
   heightFt: number;
   floorFt: number;
@@ -136,8 +141,12 @@ export interface SiteModel {
 
 export const fmtFt = (n: number): string => n.toLocaleString('en-US');
 
-/** A level name is withheld when its tier is more restricted than the session's (1 = most restricted). */
-export const isWithheld = (level: { tier: number }, sessionTier: number): boolean => level.tier < sessionTier;
+/**
+ * A level name is withheld when its tier is more restricted than the session's (1 = most
+ * restricted), or when the client canon does not carry it at all (redaction sentinel).
+ */
+export const isWithheld = (level: { tier: number; redacted?: boolean }, sessionTier: number): boolean =>
+  !!level.redacted || level.tier < sessionTier;
 
 export function alphaSiteIds(): string[] {
   return canon.facilities.filter((f) => f.class === 'ALPHA' && (f.levels?.length ?? 0) > 0).map((f) => f.id);
@@ -218,15 +227,19 @@ function build(facilityId: string): SiteModel | null {
       : upper
         ? { x0: PLAN.upperX0, x1: PLAN.upperX1, z0: -PLAN.upperZ, z1: PLAN.upperZ }
         : { x0: PLAN.slabX0, x1: PLAN.slabX1, z0: -PLAN.slabZ, z1: PLAN.slabZ };
+    const rx = rxInfo(l.name);
+    const short = rx ? '' : l.name.replace(/^Level\s+\d+:\s*/i, '');
     return {
       n: l.n,
-      name: l.name,
-      short: l.name.replace(/^Level\s+\d+:\s*/i, ''),
+      name: rx ? `Level ${l.n}` : l.name,
+      short,
+      shortLen: rx ? Math.max(1, rx.len - `Level ${l.n}: `.length) : short.length,
+      redacted: !!rx,
       topFt: l.topFt,
       heightFt: l.heightFt,
       floorFt,
       tier: l.tier,
-      notes: l.notes,
+      notes: rx || isRx(l.notes) ? '' : l.notes,
       upper,
       terminal,
       ...plan,

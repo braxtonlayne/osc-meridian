@@ -16,6 +16,8 @@ export interface SearchDoc {
   route: string;
   title: string;
   docNo: string;
+  /** Other docNos this page answers for, space-separated (indexed, not stored). */
+  aliases?: string;
   summary: string;
   text: string;
   marking: string;
@@ -27,10 +29,10 @@ export interface SearchDoc {
 /** Shared by the index builder and the client loader; must stay identical on both sides. */
 export const SEARCH_OPTIONS: Options<SearchDoc> = {
   idField: 'id',
-  fields: ['title', 'docNo', 'summary', 'text'],
+  fields: ['title', 'docNo', 'aliases', 'summary', 'text'],
   storeFields: ['route', 'title', 'docNo', 'marking', 'app', 'summary', 'tier', 'compartment'],
   searchOptions: {
-    boost: { docNo: 4, title: 3, summary: 2 },
+    boost: { docNo: 4, aliases: 4, title: 3, summary: 2 },
     prefix: true,
     fuzzy: 0.2,
   },

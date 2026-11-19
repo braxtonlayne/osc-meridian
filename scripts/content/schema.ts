@@ -20,6 +20,58 @@ export const ROUTE_RE = /^\/[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)
 export const RESERVED_ROUTE_ROOTS = ['assets', 'data', 'fonts', '404', 'index'];
 
 const docNoList = z.array(z.string().min(1));
+const DOCNO_RE = /^[A-Z0-9]+(?:[-/.][A-Z0-9]+)+$/;
+
+/** Template blocks are validated loosely: known fields are type-checked, extra fields pass through. */
+const looseRecord = z.record(z.string(), z.unknown());
+
+const FormField = z
+  .object({
+    name: z.string().min(1),
+    label: z.string().min(1),
+    type: z.string().min(1),
+    required: z.boolean().optional(),
+    options: z.array(z.union([z.string(), z.object({}).loose()])).optional(),
+    pattern: z.string().optional(),
+    help: z.string().optional(),
+    width: z.union([z.string(), z.number()]).optional(),
+  })
+  .loose();
+
+export const FormSchema = z
+  .object({
+    formNo: z.string().min(1),
+    edition: z.union([z.string(), z.number()]).optional(),
+    routing: z.array(z.string()).optional(),
+    blocks: z.array(
+      z
+        .object({
+          n: z.union([z.number(), z.string()]),
+          label: z.string().min(1),
+          fields: z.array(FormField),
+        })
+        .loose(),
+    ),
+    submit: z.object({ receiptPrefix: z.string().min(1), consequence: z.unknown().optional() }).loose(),
+  })
+  .loose();
+
+const stringish = z.preprocess((v) => (v instanceof Date ? v.toISOString() : v), z.union([z.string(), z.number()]));
+
+export const MessageSchema = z
+  .object({
+    from: z.string().min(1),
+    to: z.array(z.string()).min(1),
+    cc: z.array(z.string()).optional(),
+    precedence: z.string().optional(),
+    sent: stringish.optional(),
+    folder: z.string().optional(),
+    thread: z.string().optional(),
+    inReplyTo: z.string().nullable().optional(),
+    readReceipt: z.boolean().optional(),
+    arrival: z.unknown().optional(),
+  })
+  .loose();
 
 export const FrontmatterSchema = z
   .object({
@@ -52,13 +104,35 @@ export const FrontmatterSchema = z
     xrefs: docNoList.optional(),
     facility: z.string().regex(/^(ALPHA|BETA|GAMMA|DELTA)-\d{2}$/, 'facility must be a FacilityId like ALPHA-03').optional(),
     summary: z.string().min(10, 'summary is required (one line for search results)'),
+    /** Other document numbers this page answers for (e.g. OSC-CB-0NN briefing numbers). */
+    aliases: z.array(z.string().regex(DOCNO_RE, 'aliases must be canon document numbers')).optional(),
+    // template-specific structured blocks: passed through to DocJson.frontmatter unchanged
+    form: FormSchema.optional(),
+    message: MessageSchema.optional(),
+    minutes: looseRecord.optional(),
+    directive: looseRecord.optional(),
+    memo: looseRecord.optional(),
+    cable: looseRecord.optional(),
+    ledger: looseRecord.optional(),
+    dossier: looseRecord.optional(),
+    help: looseRecord.optional(),
+    // manifest planning fields: accepted, then dropped (never shipped)
+    audience: z.unknown().optional(),
+    synopsis: z.unknown().optional(),
+    plants: z.unknown().optional(),
+    owner: z.unknown().optional(),
+    dateMode: z.unknown().optional(),
+    slotTemplate: z.unknown().optional(),
   })
   .loose();
+
+/** Manifest planning fields: validated as present-or-absent only, never written to outputs. */
+export const PLANNING_KEYS = new Set(['audience', 'synopsis', 'plants', 'owner', 'dateMode', 'slotTemplate']);
 
 export type Frontmatter = z.infer<typeof FrontmatterSchema>;
 
 /** Keys that are part of RouteEntry/DocJson; everything else goes to DocJson.frontmatter. */
 export const CORE_KEYS = new Set([
   'id', 'route', 'app', 'family', 'template', 'docNo', 'title', 'marking', 'originator',
-  'revision', 'date', 'access', 'distribution', 'supersedes', 'xrefs', 'facility', 'summary',
+  'revision', 'date', 'access', 'distribution', 'supersedes', 'xrefs', 'facility', 'summary', 'aliases',
 ]);

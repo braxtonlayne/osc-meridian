@@ -43,7 +43,7 @@ export function fillDesignation(el: HTMLElement, level: LevelModel, tier: number
   el.textContent = '';
   if (isWithheld(level, tier)) {
     const bar = h('span', 'd3v-rx');
-    bar.style.width = `${Math.min(30, Math.max(8, level.short.length))}ch`;
+    bar.style.width = `${Math.min(30, Math.max(8, level.shortLen))}ch`;
     bar.setAttribute('role', 'img');
     bar.setAttribute('aria-label', 'designation withheld');
     el.append(bar);
