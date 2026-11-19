@@ -5,7 +5,7 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      include: ['tests/unit/**/*.test.ts', 'tests/unit/**/*.test.tsx'],
+      include: ['tests/unit/**/*.test.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
       environment: 'happy-dom',
     },
   }),
