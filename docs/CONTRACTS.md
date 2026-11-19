@@ -1,0 +1,102 @@
+# MERIDIAN build contracts (read before touching code)
+
+The full product spec is `docs/SPEC.md`. This file fixes the interfaces so parallel agents can work without colliding.
+If a contract is wrong, do not silently change it: build to it, and put the proposed change in your final report.
+
+## Ground rules for every agent
+- **File ownership is exclusive.** Only write inside the paths your brief assigns you. Never edit `package.json`, `tsconfig.json`, `vite.config.ts`, or another agent's folder. Need a dependency? Say so in your report.
+- **Do not commit.** The orchestrator commits.
+- **No external URLs at runtime**, no CDN, no fonts from the web. Every runtime URL goes through `asset(path)` from `src/core/base.ts` (respects the Pages subpath).
+- **No hard-coded colours** outside `src/design/tokens.css` (and the marking colours in canon). Use `var(--token)`.
+- **No emoji, no Unicode warning symbols as icons**, no scanlines/glow/CRT/typewriter effects. Status = 10px square + word.
+- **No placeholder text** ("TODO", "lorem", "coming soon", "placeholder", "TBD") in anything that ships.
+- **Every number comes from canon** (`import canon from '@canon'`, typed by `src/core/canon-types.ts`). Never type a headline figure by hand.
+- **Fiction guardrails:** no real person named as an OSC member; no `.gov` strings presented as this site's address; no US Web Design System; no copied federal banner/privacy text; the login never asks for real credentials. Real agencies appear only as cover identities and funding lines.
+- **Voice:** bureaucratic, specific, unexcited, never winks. Dates `12 MAY 2008`. Times Zulu with local in brackets: `1430Z (1030 EDT)`. In-world date never passes 31 MAY 2008.
+- Stack: Vite 8, TypeScript strict, Preact 11 + @preact/signals, hand-written CSS (cascade layers, container queries, custom properties). Path aliases: `@core @design @shell @apps @graphics @sim @narrative @canon @generated`.
+
+## Directory ownership
+| Path | Owner |
+|---|---|
+| `content/canon/source.json`, `scripts/canon-merge.ts`, `src/core/canon-schema.ts`, `tests/unit/canon*.test.ts` | canon extractor |
+| `content/canon/extended-a.json` | canon extender A |
+| `content/canon/extended-b.json` | canon extender B |
+| `docs/CANON.md` | extractor writes "From source"; extenders append their own `## Extended (A)` / `## Extended (B)` sections in separate files `docs/canon/extended-a.md`, `docs/canon/extended-b.md` which the orchestrator merges |
+| `src/design/**`, `docs/STYLE.md` | design system agent |
+| `src/shell/**`, `src/core/services.ts`, `src/core/router.ts`, `src/core/session.ts`, `src/core/audit.ts`, `src/core/persist.ts`, `src/main.tsx`, `index.html` | shell agent |
+| `scripts/build-content.ts`, `scripts/content/**`, `scripts/prerender.ts`, `scripts/verify-dist.ts`, `src/core/docs.ts`, `src/core/search.ts`, `src/core/base.ts`, `tests/unit/pipeline*.test.ts` | pipeline agent |
+| `src/apps/<app>/**` | that app's agent |
+| `content/<family>/**` | that family's content agent |
+| `src/graphics/<family>/**` | that graphics (Fable) agent |
+| `src/sim/**` | transit app agent (transit worker) / reserves+registry (telemetry worker) as briefed |
+| `src/narrative/**` | integration phase |
+
+## Core types (src/core/contracts.ts, orchestrator-owned)
+See the file. Key shapes: `AppId`, `RouteEntry`, `DocJson`, `AppDefinition`, `AppProps`, `WindowHandle`, `Services`.
+
+## Content format
+One Markdown file per route under `content/<family>/<slug>.md`, YAML frontmatter validated by Zod (pipeline):
+```yaml
+id: dir-0412                 # unique, kebab
+route: /directives/dir-0412  # unique; no base, no trailing slash
+app: directives              # AppId that opens it
+family: directives
+template: directive          # memo|directive|cable|minutes|dossier|ledger|form|message|help|record|charter|scan|index
+docNo: OSC-DIR-0412          # canon numbering scheme (docs/CANON.md)
+title: Handling of Compartmented Records in Shared Workspaces
+marking: UMBRA-C             # MarkingId
+originator: RD/ALPHA-03      # division code / site
+revision: 3
+date: 2008-04-22             # ISO; must be <= 2008-05-31
+access: { tier: 3 }          # optional: below this the window opens as an in-world refusal; compartment optional
+distribution: [ ... ]        # optional list
+supersedes: OSC-DIR-0398     # optional
+xrefs: [OSC-DIR-0398, OSC-MEM-08-0211]  # docNos referenced
+facility: ALPHA-03           # optional (dossiers, reactor pages)
+summary: one line for search results
+```
+Body Markdown (GFM) plus directives (remark-directive):
+- `:r[hidden text]{tier=2 auth="OIA" ref="OIA-08-114"}` inline redaction; `compartment=KESTREL` optional. Requirement key = `T<tier>` or `<COMPARTMENT>` or `<COMPARTMENT>+T<tier>`.
+- `:::redact{tier=2 auth="CSO" ref="..."}` … `:::` block redaction.
+- `:c[headline.staffTotal]` inline canon value (formatted, e.g. 3,847). Paths are dot paths into canon; arrays by id: `:c[facilities.ALPHA-03.depthFt]`.
+- `:x[OSC-DIR-0398]` cross-reference link (resolved to that doc's route; build fails on unknown docNo).
+- `::canon-table{source="facilities" class="BETA" cols="id,anchor,coverIdentity,capacity,staff"}` static table rendered from canon.
+- `:::margin{hand="RT" seed=3}` handwritten marginal note (rendered by scan kit); `::stamp{kind="RECEIVED" date="2008-05-02"}`; `::routing{initials="JH,MKB"}`.
+- `:::scan{seed=7 rotate=-0.6}` wrap content as a scanned page.
+
+Redaction is resolved **at build time**: baseline HTML contains only `<span class="rx" data-rx="<id>" data-len="<chars>" data-auth=".." data-ref="..">` with no hidden text; hidden HTML goes to `public/data/releases/<KEY>.json` (never emitted for tier 1). The client fetches a release file only once the session satisfies its key.
+
+## Generated outputs (pipeline)
+- `.generated/routes.json` — `RouteEntry[]` (imported by the shell at build time)
+- `public/data/docs/<id>.json` — `DocJson`
+- `public/data/releases/<KEY>.json` — `{ [rxId]: html }`
+- `public/data/search.json` — MiniSearch index over baseline (already-redacted) text
+- `dist/<route>/index.html` for every route (prerender), plus `dist/404.html`, `dist/.nojekyll`
+
+## Apps
+`src/apps/index.ts` (orchestrator) registers 12 apps; each app's entry is `src/apps/<id>/App.tsx` with `export default function App(props: AppProps)`. Each app is its own lazy chunk. An app receives the route it was opened for (or null for its home), renders its own menu bar and status bar using design primitives, and calls `props.win.setTitle(...)` / `setMarking(...)`.
+App ids: `registry transit personnel records mail ledger reserves assurance directives forms terminal system`.
+
+## Services (src/core/services.ts, shell agent implements, apps consume)
+`openRoute(path)`, `openApp(id)`, `audit.log(kind, detail)`, `session` (signals: operator, tier, compartments, probationDay, actingTier2), `clearance.grant(key, reason)`, `clearance.satisfies(key)`, `docs.load(id)` (pipeline: fetch DocJson + applicable releases), `search(q)`, `mail.deliver(msgId)`, `sound.play(cue)`, `settings` (signals), `notify(text)`, `print(docId)`.
+Audit `kind` values: `window.open window.close doc.read search redaction.hover print form.submit mail.read mail.send terminal.cmd transit.watch clearance.grant login logout timeout`.
+
+## Graphics export points (each owned by one Fable agent)
+| Module | Exports |
+|---|---|
+| `@graphics/seal` | `Seal({size, variant:'full'|'mono'|'tiny'})`, `DivisionMark({division, size})` |
+| `@graphics/icons` | `Icon({id, size:16|32})`, `type IconId` |
+| `@graphics/scan` | `ScanPage({seed, rotate, children})`, `MarginNote({hand, seed, children})`, `RoutingInitials({initials, seed})`, `PunchHoles()`, `Stain/Toner` helpers |
+| `@graphics/banners` | `ClassificationBanner({marking, position})`, `MarkingStrip({marking})`, `CoverSheet({...})`, `Stamp({kind, date?})` |
+| `@graphics/lock` | `AccessCard({operatorId, passphrase, ...})`, `SmartToken({inserted})`, `DesktopWatermark()` |
+| `@graphics/forms` | `CheckboxMark`, `SignatureBlock`, `Barcode({value})`, `FormNumberMark` |
+| `@graphics/states` | `EmptyState`, `ErrorState`, `RefusalState({authority, ref, reason})` |
+| `@graphics/map` | `UsMap(...)`, facility marker system |
+| `@graphics/schematic` | rail/tram line diagram |
+| `@graphics/tunnelmap` | geographic tunnel map, certified + engineering layers |
+| `@graphics/depth3d` | `mountDepthViewer(el, facilityId, opts) => dispose` (Three.js, lazy) |
+| `@graphics/tunnel3d` | `mountTunnelView(el, opts) => dispose` (Three.js, lazy) |
+| `@graphics/ledger` | Sankey + ledger charts |
+| `@graphics/org` | org chart + tier pyramid |
+| `@graphics/reactor` | reactor one-line diagrams + telemetry gauges |
+Each module has an `index.ts(x)` and a `README.md` with a rendered check (an SVG/PNG snapshot or a test page under `src/graphics/<family>/preview.html`).
