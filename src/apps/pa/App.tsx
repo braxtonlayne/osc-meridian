@@ -43,6 +43,7 @@ import { DocBody, RouteRefusal, useDoc, useT2Names } from './shared';
 import { PA_EMPTY, type PaRequest, type PaState } from './types';
 import './pa.css';
 import { isolatedAt } from '@apps/isolate/state';
+import { useFlash } from '@apps/shared/flash';
 
 type View = 'console' | 'log' | 'zones';
 const TITLE = 'Emergency Broadcast and Public Address';
@@ -372,7 +373,8 @@ export default function App({ win, route }: AppProps) {
   const onAirN = channel.filter((r) => r.status === 'ON AIR').length;
   const queuedN = channel.filter((r) => r.status === 'QUEUED').length;
   const authority = account.auditReader ? 'REVIEW ONLY' : account.tier === 4 ? `${ownShort} ZONES` : account.tier === 3 ? 'DIVISION ZONE' : 'SITE COMMAND';
-  const message = route
+  const [flash, say] = useFlash();
+  const message = flash ?? (route
     ? `${route.docNo} · Rev ${route.revision}`
     : view === 'console'
       ? isolated
@@ -382,7 +384,7 @@ export default function App({ win, route }: AppProps) {
           : `Console ${pa.system.consoleNo}, ${own}. ${site !== own ? `Viewing ${site} controller.` : 'Select zones and a message, then BROADCAST.'}`
       : view === 'log'
         ? `${allRows.length} calls on record. Enter shows a call.`
-        : `Zone table, ${zoneSite} controller.`;
+        : `Zone table, ${zoneSite} controller.`);
 
   useEffect(() => {
     win.setTitle(route ? route.title : VIEW_TITLE[view], route?.docNo ?? '');
@@ -448,7 +450,7 @@ export default function App({ win, route }: AppProps) {
         { label: '&Broadcast log', shortcut: 'Ctrl+2', radio: true, checked: !route && view === 'log', onSelect: () => goView('log') },
         { label: '&Zone table', shortcut: 'Ctrl+3', radio: true, checked: !route && view === 'zones', onSelect: () => goView('zones') },
         { separator: true },
-        { label: '&Refresh', shortcut: 'F5', onSelect: () => setNonce((n) => n + 1) },
+        { label: '&Refresh', shortcut: 'F5', onSelect: () => (setNonce((n) => n + 1), say(`Refreshed from the ${site} controller. No change.`)) },
       ],
     },
     {
@@ -457,9 +459,9 @@ export default function App({ win, route }: AppProps) {
         { label: '&Broadcast', shortcut: 'Ctrl+B', onSelect: () => (route ? goView('console') : broadcast()) },
         { label: '&Cancel selected call', onSelect: cancel },
         { separator: true },
-        { label: '&Site all-call', checked: allCall, onSelect: () => setAllCall((a) => !a) },
+        { label: '&Site all-call', checked: allCall, onSelect: () => (say(allCall ? `Site all-call deselected.` : `Site all-call selected: every zone at ${site}.`), setAllCall((a) => !a)) },
         { label: '&Network all-call...', onSelect: networkLocked },
-        { label: 'C&lear zone selection', onSelect: () => (setSelection([]), setAllCall(false)) },
+        { label: 'C&lear zone selection', onSelect: () => (say(selection.length || allCall ? 'Zone selection cleared.' : 'No zones were selected.'), setSelection([]), setAllCall(false)) },
       ],
     },
     {

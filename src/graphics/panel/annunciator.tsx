@@ -112,7 +112,9 @@ export function Annunciator(props: AnnunciatorProps) {
                 {t.spare
                   ? null
                   : lines.map((l, k) => (
+                      // A space between lines keeps the visible text equal to the accessible name.
                       <span class="pk-tile__line" key={k}>
+                        {k > 0 ? ' ' : null}
                         {l}
                       </span>
                     ))}

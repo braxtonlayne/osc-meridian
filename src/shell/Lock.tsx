@@ -278,7 +278,9 @@ function Colophon({ onClose }: { onClose: () => void }) {
             <>
               <p>
                 <strong>This is a work of fiction.</strong> MERIDIAN, the Office of Strategic Continuity, its facilities, staff,
-                documents and figures are invented. No real agency, programme or person is depicted.
+                documents and figures are invented. Some real public figures, agencies, companies and events are named. They
+                appear only as the public record has them, or in invented background roles. Nothing here is a claim about real
+                people.
               </p>
               <p>
                 The site is static. It makes no network requests to anyone, collects nothing, and asks for no real credentials. The

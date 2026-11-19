@@ -25,6 +25,7 @@ import { CompareView, RegisterView, statusOf } from './RegisterView';
 import { DocPane, MODEL_MARKING, REGISTER_HOST, S, canon, facilityById, fill, fmtKt, frag, registerId, useDoc, whenText } from './shared';
 import { STRIKE_EMPTY, STRIKE_KEY, type StrikeScenario, type StrikeState } from './types';
 import './strike.css';
+import { useFlash } from '@apps/shared/flash';
 
 const TITLE = 'Hardened Site Survivability Estimator';
 const HOME = '/strike';
@@ -94,6 +95,11 @@ function Estimator({ win, route }: AppProps) {
   const [kt, setKt] = useState<number>(S.yieldsKt.includes(frag.defaultYieldKt) ? frag.defaultYieldKt : S.yieldsKt[0]!);
   const [rangeMi, setRangeMi] = useState<number>(frag.defaultListingRangeMi);
   const [ev, setEv] = useState<Evaluation | null>(null);
+  const [flash, say] = useFlash();
+  /** Listing filters act on an estimate; before one exists, say so on the status bar. */
+  const noEstimate = () => {
+    if (!ev) say('Listing setting kept. It applies once an estimate is run (F5).');
+  };
   const [evLabel, setEvLabel] = useState('');
   const [stale, setStale] = useState(false);
   const [selSite, setSelSite] = useState<string | null>(null);
@@ -415,6 +421,7 @@ function Estimator({ win, route }: AppProps) {
         {
           label: '&Clear point',
           onSelect: () => {
+            say(point ? 'Point cleared.' : 'No point is set.');
             setPoint(null);
             setPointLabel('');
             setEv(null);
@@ -443,10 +450,10 @@ function Estimator({ win, route }: AppProps) {
       items: [
         ...tabs.map((t, i): MenuItem => ({ label: `&${i + 1} ${t.label}`, radio: true, checked: tab === t.id, onSelect: () => setTab(t.id) })),
         { separator: true },
-        { label: 'Show sites &not evaluated', checked: showWithheld, onSelect: () => setShowWithheld(!showWithheld) },
-        { label: 'Show &DELTA (not modelled)', checked: showDelta, onSelect: () => setShowDelta(!showDelta) },
+        { label: 'Show sites &not evaluated', checked: showWithheld, onSelect: () => (setShowWithheld(!showWithheld), noEstimate()) },
+        { label: 'Show &DELTA (not modelled)', checked: showDelta, onSelect: () => (setShowDelta(!showDelta), noEstimate()) },
         { separator: true },
-        ...frag.listingRangesMi.map((m): MenuItem => ({ label: `List within ${m} mi`, radio: true, checked: rangeMi === m, onSelect: () => setRangeMi(m) })),
+        ...frag.listingRangesMi.map((m): MenuItem => ({ label: `List within ${m} mi`, radio: true, checked: rangeMi === m, onSelect: () => (setRangeMi(m), noEstimate()) })),
       ],
     },
     {
@@ -482,7 +489,7 @@ function Estimator({ win, route }: AppProps) {
 
   /* ---------------------------------------------------------- status */
   const sum = ev ? summarize(S, ev) : null;
-  const msg = stale && ev ? 'Inputs changed; run the estimate.' : ev && sum ? `${fmtKt(ev.kt)} at ${evLabel}: ${sum.affected} affected${sum.worst ? `, worst ${sum.worst}` : ''}.` : 'Ready. Set a point and run the estimate (F5).';
+  const msg = flash ?? (stale && ev ? 'Inputs changed; run the estimate.' : ev && sum ? `${fmtKt(ev.kt)} at ${evLabel}: ${sum.affected} affected${sum.worst ? `, worst ${sum.worst}` : ''}.` : 'Ready. Set a point and run the estimate (F5).');
   const regLink = isolated ? `Register ${REGISTER_HOST}: DOWN` : `Register ${REGISTER_HOST}: ${def.site === REGISTER_HOST ? 'LOCAL' : 'UP'}`;
   const drillText = drill && (drill.phase === 'propagating' || drill.phase === 'sealed') ? `Seal drill ${drill.id}: ${drill.phase.toUpperCase()}` : null;
 

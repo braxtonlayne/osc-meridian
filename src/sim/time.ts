@@ -9,7 +9,9 @@
  */
 
 // Named JSON import: Vite bundles only the meta object, not the whole client canon.
-import { meta as canonMeta } from '@canon';
+// The shell slice of the client canon (canon-merge writes it): keeps the full canon out of the shell.
+import shellCanon from '../../content/canon/canon.shell.json';
+const canonMeta = shellCanon.meta;
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];

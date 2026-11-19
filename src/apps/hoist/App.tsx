@@ -249,6 +249,10 @@ export default function App({ win, route }: AppProps) {
   }, [abnSig, h?.id]);
   const tiles: AnnunciatorTile[] = TILE_DEFS.map((t) => ({ id: t.id, legend: t.legend, priority: t.priority, seq: ann.points[t.id]?.seq ?? 'normal' }));
   const annAck = (ids: string[]) => {
+    if (!ids.length) {
+      setMessage('No alarm window is flashing. Nothing to acknowledge.');
+      return;
+    }
     setAnn((prev) => {
       const points = { ...prev.points };
       for (const id of ids) if (points[id]) points[id] = annunciatorStep(points[id], 'ack');

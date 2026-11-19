@@ -80,7 +80,7 @@ export function Gantt({ rows, width, now, span, selected, onSelect, label, words
       role="listbox"
       aria-label={label}
       aria-activedescendant={selected ? `dg-row-${selected}` : undefined}
-      tabIndex={0}
+      tabindex={0}
       onKeyDown={onKey}
     >
       <g class="dg-axis" aria-hidden="true">

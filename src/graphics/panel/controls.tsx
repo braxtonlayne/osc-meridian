@@ -122,6 +122,12 @@ export interface PushButtonProps {
   tag?: string;
 }
 
+/** True when `words` occur in `text` as whole words, ignoring case ("ACK" is not in "Acknowledge"). */
+function containsWords(text: string, words: string): boolean {
+  const esc = words.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^A-Za-z0-9])${esc}([^A-Za-z0-9]|$)`, 'i').test(text);
+}
+
 /** Square illuminated pushbutton (22mm class) in a black bezel. Native <button>. */
 export function PushButton(props: PushButtonProps) {
   const { legend, label, mode = 'momentary', pressed, lit = false, color = 'grey', size = 'md', disabled = false, tag } = props;
@@ -152,7 +158,12 @@ export function PushButton(props: PushButtonProps) {
   const fs = size === 'sm' ? 7.5 : 8.5;
   const lh = fs + 1.5;
   const y0 = inset + off + cap / 2 - ((lines.length - 1) * lh) / 2 + fs * 0.36;
-  const name = props.ariaLabel ?? `${label ? legendText(label) + ': ' : ''}${legendText(legend)}`;
+  // The accessible name always contains the engraved legend (WCAG 2.5.3, label in name): an
+  // override such as "Acknowledge 3 alarms" is said after the legend it belongs to.
+  const engraved = legendText(legend);
+  const name = props.ariaLabel
+    ? containsWords(props.ariaLabel, engraved) ? props.ariaLabel : `${engraved}: ${props.ariaLabel}`
+    : `${label ? legendText(label) + ': ' : ''}${engraved}`;
 
   return (
     <div class={cx('pk-ctl', 'pk-pb', `pk-lens--${color}`, illuminated ? (lit ? 'is-lit' : 'is-dark') : 'is-cap', down && 'is-down', disabled && 'is-disabled')}>
@@ -201,6 +212,7 @@ export function PushButton(props: PushButtonProps) {
           />
           {lines.map((l, i) => (
             <text x={inset + off + cap / 2} y={y0 + i * lh} text-anchor="middle" class="pk-cap-ink" font-size={fs} key={i}>
+              {i > 0 ? ' ' : null}
               {l}
             </text>
           ))}

@@ -22,6 +22,7 @@ import { DocPane, RouteRefusal, routeKey } from './docs';
 import { printCloseout } from './print';
 import './muster.css';
 import { isolatedAt } from '@apps/isolate/state';
+import { useFlash } from '@apps/shared/flash';
 
 type View = 'network' | 'site' | 'point' | 'closeout';
 const HOME = '/muster';
@@ -300,6 +301,7 @@ export default function App({ win, route }: AppProps) {
   const condSig = TILES.map((t) => (cond[t.id] ? '1' : '0')).join('');
   const annKey = `${site}|${cur?.run.id ?? ''}`;
   const [ann, setAnn] = useState<{ key: string; pts: Record<string, AnnPoint> }>({ key: '', pts: {} });
+  const [flash, say] = useFlash();
   const alarming = useRef(false);
   useEffect(() => {
     setAnn((prev) => {
@@ -331,6 +333,10 @@ export default function App({ win, route }: AppProps) {
     ...Array.from({ length: SPARES }, (_, i) => ({ id: `spare${i}`, legend: ['SPARE'], seq: 'normal' as const, spare: true })),
   ];
   const onAck = (ids: string[]) => {
+    if (!ids.length && !Object.values(ann.pts).some((p) => p.seq === 'unack')) {
+      say('No annunciator window is flashing. Nothing to acknowledge.');
+      return;
+    }
     setAnn((prev) => {
       const pts = { ...prev.pts };
       for (const id of ids.length ? ids : Object.keys(pts)) if (pts[id]) pts[id] = annunciatorStep(pts[id]!, 'ack');
@@ -453,7 +459,7 @@ export default function App({ win, route }: AppProps) {
 
   const statusNow = siteStatus(offline(site) ? null : cur, offline(site));
   const title = route ? route.title : view === 'network' ? 'Muster Board, network' : `Muster Board, ${site}`;
-  const message = route
+  const message = flash ?? (route
     ? `${route.docNo} · ${route.originator}`
     : view === 'network'
       ? 'Latest muster at each site. Enter opens a site board.'
@@ -461,7 +467,7 @@ export default function App({ win, route }: AppProps) {
         ? `${cur.run.id} · ${tPlus(cur.elapsedMin)} · present ${fmt(cur.totals.present)} of ${fmt(cur.totals.assigned)}`
         : offline(site)
           ? `${site}: no data, hub circuit down`
-          : `${site}: no muster in progress`;
+          : `${site}: no muster in progress`);
   useEffect(() => {
     win.setTitle(title, route?.docNo ?? '');
     win.setMarking(route?.marking ?? MARKING);

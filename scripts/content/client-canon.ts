@@ -8,6 +8,7 @@ import { buildClientCanon } from '../canon-merge.ts';
 import type { Canon } from '../../src/core/canon-types';
 import type { CanonData } from './canon.ts';
 import { releaseKey } from './util.ts';
+import type { RedactionCorpus } from './redaction-corpus.ts';
 
 export interface Withheld {
   path: string;
@@ -22,7 +23,7 @@ export interface Restrictions {
 }
 
 /** buildClientCanon over a possibly partial canon (test fixtures): missing collections are empty. */
-export function deriveRestrictions(canon: CanonData | null): Restrictions | null {
+export function deriveRestrictions(canon: CanonData | null, corpus?: RedactionCorpus): Restrictions | null {
   if (!canon) return null;
   const c = structuredClone(canon) as Record<string, unknown>;
   c.roster ??= [];
@@ -31,7 +32,7 @@ export function deriveRestrictions(canon: CanonData | null): Restrictions | null
   if (!c.reserves || typeof c.reserves !== 'object') c.reserves = { items: [] };
   const r = c.reserves as { items?: unknown[] };
   r.items ??= [];
-  const { client, withheld } = buildClientCanon(c as unknown as Canon);
+  const { client, withheld } = buildClientCanon(c as unknown as Canon, corpus);
   return { client: client as unknown as CanonData, withheld };
 }
 

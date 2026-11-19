@@ -50,12 +50,12 @@
   padding: var(--sp-5);
 }
 .pt-muted {
-  color: var(--text-3);
+  color: var(--text-2);
   margin: var(--sp-2) 0;
 }
 .pt-hint {
   margin: var(--sp-2) 0 0;
-  color: var(--text-3);
+  color: var(--text-2);
   font-size: var(--fs-sm);
   max-width: 560px;
 }

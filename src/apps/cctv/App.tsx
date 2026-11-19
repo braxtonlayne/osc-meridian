@@ -782,13 +782,13 @@ export default function App({ win, route }: AppProps) {
               <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(1, 0, 0)} aria-label="Pan right">
                 Right
               </button>
-              <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(0, 0, -1)} aria-label="Zoom out">
+              <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(0, 0, -1)} aria-label="Wide (zoom out)">
                 Wide
               </button>
               <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(0, -1, 0)} aria-label="Tilt down">
                 Down
               </button>
-              <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(0, 0, 1)} aria-label="Zoom in">
+              <button type="button" class="cctv-btn" disabled={!selCam?.ptz} onClick={() => nudge(0, 0, 1)} aria-label="Tele (zoom in)">
                 Tele
               </button>
             </div>

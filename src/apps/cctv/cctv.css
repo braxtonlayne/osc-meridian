@@ -173,13 +173,14 @@
 }
 .cctv-mark--e {
   width: 3px;
-  background: var(--st-degraded);
+  background: var(--text-1);
 }
 .cctv-gap {
   position: absolute;
   top: 0;
   bottom: 0;
-  background: var(--st-offline);
+  /* Recording gap: neutral hatch, not a status fill. */
+  background: repeating-linear-gradient(45deg, var(--chrome-shadow) 0 2px, transparent 2px 5px);
 }
 .cctv-cursor {
   position: absolute;

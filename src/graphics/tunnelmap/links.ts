@@ -8,6 +8,7 @@
 import canonJson from '@canon';
 import type { Canon, Facility, FacilityId, NetworkId } from '@core/canon-types';
 import { geoDistance } from 'd3-geo';
+import { hasRx } from '@core/rx';
 
 export const canon = canonJson as unknown as Canon;
 
@@ -99,7 +100,7 @@ function build(): TunnelLink[] {
         inRevenueService: true,
         network: n.id,
         networkName: n.name,
-        designation: `${n.name.toUpperCase()} ${l.label.toUpperCase()}`,
+        designation: hasRx(l.label) ? n.name.toUpperCase() : `${n.name.toUpperCase()} ${l.label.toUpperCase()}`,
       });
     }
   }

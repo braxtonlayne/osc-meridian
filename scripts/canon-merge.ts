@@ -37,6 +37,8 @@ import type {
 import { APP_IDS, EXTENDED_C_KEYS, canonCrossChecks, canonSchema, clientCanonSchema, landingDepthFt } from '../src/core/canon-schema';
 import { encodeRelease, releaseFileName } from '../src/core/release-codec';
 import { CANON_T2_KEY } from '../src/core/canon-release';
+import { readRedactionCorpus, type RedactionCorpus } from './content/redaction-corpus.ts';
+import { resolvePath } from './content/canon.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const CANON_DIR = resolve(ROOT, 'content/canon');
@@ -675,7 +677,23 @@ export interface ClientCanonResult {
 /** Withheld strings shorter than this are not searched for inside other fields. */
 const SCRUB_MIN = 8;
 
-export function buildClientCanon(canon: Canon): ClientCanonResult {
+/**
+ * Content corpus for the client canon (F2): tier-1 and compartment text the Markdown withholds.
+ * Read once per process from content/ (an empty corpus when content/ is absent).
+ */
+let corpusCache: RedactionCorpus | undefined;
+export function contentCorpus(): RedactionCorpus {
+  corpusCache ??= existsSync(resolve(ROOT, 'content')) ? readRedactionCorpus(resolve(ROOT, 'content')) : { restricted: [], publicElsewhere: 0, paths: [] };
+  return corpusCache;
+}
+
+/**
+ * Build the client canon. `corpus` (default: none, for fixtures) adds the content rule: a canon
+ * value that a document prints only inside a tier-1 or compartment redaction (`:r[:c[path]]`)
+ * is withheld under that key, and any tier-1 or compartment-withheld text fragment that a
+ * document copies as a literal is replaced by a sentinel wherever it occurs in the client canon.
+ */
+export function buildClientCanon(canon: Canon, corpus?: RedactionCorpus): ClientCanonResult {
   const c = structuredClone(canon);
   const withheld: ClientCanonResult['withheld'] = [];
   const scrubKeys = new Map<string, string>(); // original text -> sentinel
@@ -711,6 +729,10 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     // Tier 1 rows keep pn and role only (seat roles are public on the Council composition
     // page). Tier 2 notes stay: the personnel directory shows them at baseline.
     if (p.tier === 1) {
+      // Tier 1 rows carry nothing in clear (personnel/directory.md redacts every cell at tier 1).
+      // shipClientCanon drops them from the shipped file; the pn stays here so the pipeline can
+      // pair rows with the full canon.
+      p.role = rx(`roster.${p.pn}.role`, key, p.role);
       p.notes = rx(`roster.${p.pn}.notes`, key, p.notes);
       p.site = rx(`roster.${p.pn}.site`, key, p.site, false);
       if (p.rank) p.rank = rx(`roster.${p.pn}.rank`, key, p.rank, false);
@@ -834,6 +856,45 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     if (t.protocol.titleWithheld) t.protocol.title = `[[RX:T1:${18 + (fnv1a(t.protocol.designation) % 24)}]]`;
   }
 
+  // Tram link labels name the far site's city: SEXTANT unless that site is released (own,
+  // adjacent, RELEASED_SITES) or a GAMMA site (metro areas are open). transit/net-*.md redact them.
+  const classOf = new Map(c.facilities.map((f) => [f.id as string, f.class as string]));
+  for (const n of c.tramNetworks ?? []) {
+    for (const l of n.links ?? []) {
+      if (near.has(l.to) || released.has(l.to) || classOf.get(l.to) === 'GAMMA' || !l.label) continue;
+      l.label = rx(`tramNetworks.${n.id}.links.${l.from}>${l.to}.label`, DELTA_LOCATION_KEY, l.label, false);
+    }
+  }
+
+  // Content rule (F2): canon values documents print only inside tier-1/compartment redactions.
+  for (const { path, key } of corpus?.paths ?? []) {
+    const cut = path.lastIndexOf('.');
+    if (cut < 0) continue;
+    const parent = resolvePath(c as unknown as Record<string, unknown>, path.slice(0, cut));
+    const field = path.slice(cut + 1);
+    if (!parent.found || !parent.value || typeof parent.value !== 'object' || Array.isArray(parent.value)) continue;
+    const o = parent.value as Record<string, unknown>;
+    const v = o[field];
+    // Free text only: ids, facility designations and status words (no space) are structure the
+    // apps run on, and roster rows follow the tier rules above.
+    if (typeof v === 'string' && /\s/.test(v) && !path.startsWith('roster.')) {
+      if (/^\[\[RX:[A-Z0-9+]+:\d+\]\]$/.test(v)) continue;
+      // A value that carries a tier-1 fragment (ALPHA-02's function ends in a tier-1 sentence) is
+      // tier 1 as a whole, so no release (documents or canon) ever carries that sentence.
+      const t1 = corpus?.restricted.some((r) => r.key === 'T1' && v.includes(r.text));
+      // Only this field: the same words may be printed in clear elsewhere (ALPHA-01's terrain is
+      // part of its released location line), which documents already show at baseline.
+      o[field] = rx(path, t1 ? 'T1' : key, v, false);
+    }
+  }
+  // Literal copies: tier-1/compartment text a document withholds, longest first.
+  for (const r of corpus?.restricted ?? []) {
+    if (!scrubKeys.has(r.text)) {
+      scrubKeys.set(r.text, `[[RX:${r.key}:${r.text.length}]]`);
+      withheld.push({ path: `content:${r.file}`, key: r.key, text: r.text, scrub: true });
+    }
+  }
+
   // Scrub pass: a withheld string quoted anywhere else (notes, glossary, cover text) is
   // replaced by the same sentinel. Longest first, so a name inside an address is not split.
   const scrubbed: string[] = [];
@@ -886,9 +947,9 @@ export function adjacentSites(c: Pick<Canon, 'railSegments' | 'tramNetworks'>, h
 
 export const RELEASES_DIR = resolve(ROOT, 'public/data/releases');
 
-export function buildCanonT2(canon: Canon): Record<string, string> {
+export function buildCanonT2(canon: Canon, corpus?: RedactionCorpus): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const w of buildClientCanon(canon).withheld) if (w.key === 'T2') out[w.path] = w.text;
+  for (const w of buildClientCanon(canon, corpus).withheld) if (w.key === 'T2') out[w.path] = w.text;
   // Numbers the client canon nulls under T2: GAMMA depth of record, tier 2 reserve values.
   for (const f of canon.facilities) if (f.class === 'GAMMA' && typeof f.depthFt === 'number') out[`facilities.${f.id}.depthFt`] = String(f.depthFt);
   for (const it of canon.reserves.items) if (it.tier === 2 && it.value !== null) out[`reserves.${it.id}.value`] = String(it.value);
@@ -907,11 +968,29 @@ export function buildCanonT2(canon: Canon): Record<string, string> {
 export const canonT2File = (dir = RELEASES_DIR): string => resolve(dir, `${releaseFileName(CANON_T2_KEY)}.json`);
 
 /** Write the encoded CANON-T2 release; returns the file path. */
-export function writeCanonT2Release(canon: Canon, dir = RELEASES_DIR): string {
+export function writeCanonT2Release(canon: Canon, dir = RELEASES_DIR, corpus?: RedactionCorpus): string {
   mkdirSync(dir, { recursive: true });
   const file = canonT2File(dir);
-  writeFileSync(file, JSON.stringify(encodeRelease(CANON_T2_KEY, buildCanonT2(canon))));
+  writeFileSync(file, JSON.stringify(encodeRelease(CANON_T2_KEY, buildCanonT2(canon, corpus))));
   return file;
+}
+
+/**
+ * The client canon as shipped: tier-1 roster rows are dropped entirely (every cell is withheld,
+ * and their personnel numbers are tier-1 too). Build scripts keep the full-length roster from
+ * buildClientCanon so rows pair with the full canon by index.
+ */
+export function shipClientCanon(client: Canon): Canon {
+  return { ...client, roster: client.roster.filter((p) => p.tier !== 1) };
+}
+
+/**
+ * content/canon/canon.shell.json: the parts of the shipped client canon that the shell and core
+ * need at boot (meta for the in-world clock, accounts for the lock screen). Same values, so it
+ * withholds exactly what the client canon withholds.
+ */
+export function shellCanon(client: Canon): Pick<Canon, 'meta' | 'accounts'> {
+  return { meta: client.meta, accounts: client.accounts };
 }
 
 /** JSON with stable formatting (schema key order is already applied by Zod parse). */
@@ -934,7 +1013,10 @@ async function main(): Promise<void> {
   const out = resolve(CANON_DIR, 'canon.json');
   writeFileSync(out, serialize(canon));
 
-  const { client, withheld, scrubbed } = buildClientCanon(canon);
+  const corpus = contentCorpus();
+  const built = buildClientCanon(canon, corpus);
+  const { withheld, scrubbed } = built;
+  const client = shipClientCanon(built.client);
   const cp = clientCanonSchema.safeParse(client);
   if (!cp.success) {
     for (const issue of cp.error.issues) console.error(`canon-merge: error: client schema: ${issue.path.join('.')}: ${issue.message}`);
@@ -950,9 +1032,14 @@ async function main(): Promise<void> {
   }
   const clientOut = resolve(CANON_DIR, 'canon.client.json');
   writeFileSync(clientOut, clientText);
+  // The shell's own slice of the client canon (F2, shell budget): the boot path imports only
+  // this, so the full client canon stays in the app chunks that need it.
+  const shellOut = resolve(CANON_DIR, 'canon.shell.json');
+  writeFileSync(shellOut, JSON.stringify(shellCanon(client), null, 2) + '\n');
+  console.log(`canon-merge: content corpus: ${corpus.restricted.length} tier-1/compartment fragments, ${corpus.paths.length} redacted canon paths (${corpus.publicElsewhere} fragments public elsewhere)`);
   console.log(`canon-merge: wrote ${clientOut} (${withheld.length} values withheld${scrubbed.length ? `; scrubbed from ${scrubbed.join(', ')}` : ''})`);
-  const t2 = writeCanonT2Release(canon);
-  console.log(`canon-merge: wrote ${t2} (${CANON_T2_KEY}, ${Object.keys(buildCanonT2(canon)).length} values)`);
+  const t2 = writeCanonT2Release(canon, undefined, corpus);
+  console.log(`canon-merge: wrote ${t2} (${CANON_T2_KEY}, ${Object.keys(buildCanonT2(canon, corpus)).length} values)`);
 
   // Info only: stated tunnel lengths come from the lore source (docs/canon/inconsistencies.md item 16).
   const short = tunnelShorterThanCrowFlies(canon);

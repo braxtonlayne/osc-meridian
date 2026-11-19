@@ -94,11 +94,14 @@
   height: 9px;
   background: var(--zebra);
 }
+/* Neutral fill: status colour only as the square + word beside the bar. */
 .mus-bar span.on {
-  background: var(--st-nominal);
+  background: var(--text-2);
 }
-.mus-bar--over span.on {
-  background: var(--st-degraded);
+.mus-bar-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
 }
 .mus-co__runs select {
   font: var(--fs-base) var(--font-mono);

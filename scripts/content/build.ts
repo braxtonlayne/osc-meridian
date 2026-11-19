@@ -32,6 +32,7 @@ import { encodeRelease, releaseFileName } from '../../src/core/release-codec';
 import { CORE_KEYS, PLANNING_KEYS, FrontmatterSchema, type Frontmatter } from './schema.ts';
 import { loadCanon, type CanonData } from './canon.ts';
 import { deriveRestrictions, type Restrictions } from './client-canon.ts';
+import { readRedactionCorpus } from './redaction-corpus.ts';
 import { figureRules, type FigureRule } from './figures.ts';
 import { ACCOUNT_IDS, CANON_RELEASE_KEYS, COMPARTMENT_IDS, ContentBuildError, VARIANTS_DIR, isTier1Key, normalizeBase, type AccountIdLit, type Problem } from './util.ts';
 import type { CompileContext } from './plugins/context.ts';
@@ -453,7 +454,8 @@ export function buildContent(opts: BuildOptions): BuildResult {
 
   let restrictions: Restrictions | null;
   try {
-    restrictions = deriveRestrictions(canon);
+    // Same content corpus as canon-merge, so documents and the client canon withhold the same values.
+    restrictions = deriveRestrictions(canon, canon ? readRedactionCorpus(contentDir) : undefined);
   } catch (e) {
     throw new ContentBuildError([{ file: relative(displayRoot, resolve(opts.canonPath)).split(sep).join("/"), message: `cannot derive client canon restrictions: ${(e as Error).message}` }]);
   }

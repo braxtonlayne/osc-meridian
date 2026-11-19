@@ -12,7 +12,9 @@
 import { signal } from '@preact/signals';
 import type { ReadonlySignal } from '@preact/signals';
 import type { AccountDef, AccountId } from './contracts';
-import { accounts as canonAccounts } from '@canon';
+// Shell slice of the client canon, not '@canon' (which would preload the whole client canon).
+import shellCanon from '../../content/canon/canon.shell.json';
+const canonAccounts = shellCanon.accounts;
 
 export const ACCOUNT_IDS: readonly AccountId[] = ['analyst', 'lifesupport', 'deputy', 'auditor'];
 export const POINTER_KEY = 'meridian:activeAccount';

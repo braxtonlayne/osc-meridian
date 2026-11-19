@@ -24,8 +24,10 @@
 import { computed, signal } from '@preact/signals';
 import type { CompartmentId, TierNo } from './canon-types';
 import { load, save } from './persist';
-// Named JSON import: Vite bundles only the meta object, not the whole client canon.
-import { meta as canonMeta } from '@canon';
+// The shell slice of the client canon (canon-merge writes content/canon/canon.shell.json): a
+// named import from '@canon' still pulls the whole client canon into the shell chunk graph.
+import shellCanon from '../../content/canon/canon.shell.json';
+const canonMeta = shellCanon.meta;
 
 /** The in-world date, ISO ("2008-05-19"), from canon. */
 export const IN_WORLD_DATE_ISO: string = canonMeta.inWorldDate;

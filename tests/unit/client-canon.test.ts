@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { RELEASED_SITES, adjacentSites, buildClientCanon, serialize } from '../../scripts/canon-merge';
+import { RELEASED_SITES, adjacentSites, buildClientCanon, contentCorpus, serialize, shipClientCanon } from '../../scripts/canon-merge';
 import { clientCanonSchema } from '../../src/core/canon-schema';
 import type { Canon } from '../../src/core/canon-types';
 import { isRx, rxInfo, splitRx, rxPlain } from '../../src/core/rx';
@@ -30,8 +30,8 @@ describe('client canon', () => {
   });
 
   it('is exactly what canon-merge derives from the full canon (regenerate with npm run canon)', () => {
-    expect(serialize(buildClientCanon(full).client)).toBe(text);
-  });
+    expect(serialize(shipClientCanon(buildClientCanon(full, contentCorpus()).client))).toBe(text);
+  }, 60_000);
 
   it('carries no tier 1 or tier 2 roster name or address', () => {
     const restricted = full.roster.filter((p) => p.tier <= 2);
@@ -39,8 +39,15 @@ describe('client canon', () => {
     for (const p of restricted) {
       expect(appears(p.name), p.name).toBe(false);
       expect(appears(p.email), p.email).toBe(false);
-      const c = client.roster.find((x) => x.pn === p.pn)!;
-      expect(rxInfo(c.name)).toEqual({ key: `T${p.tier}`, len: p.name.length });
+      const c = client.roster.find((x) => x.pn === p.pn);
+      // Tier 1 rows are not shipped at all (personnel/directory.md withholds every cell at tier 1).
+      if (p.tier === 1) {
+        expect(c, p.pn).toBeUndefined();
+        expect(appears(p.pn), p.pn).toBe(false);
+        expect(appears(p.role), p.role).toBe(false);
+        continue;
+      }
+      expect(rxInfo(c!.name)).toEqual({ key: `T${p.tier}`, len: p.name.length });
     }
   });
 
@@ -85,7 +92,9 @@ describe('client canon', () => {
     expect(client.headline).toEqual(full.headline);
     expect(client.classes).toEqual(full.classes);
     expect(client.tiers).toEqual(full.tiers);
-    expect(client.budget).toEqual(full.budget);
+    // budget.auditNote is tier 1 (content/ledger/overview.md); everything else is identical.
+    expect(rxInfo(client.budget.auditNote)?.key).toBe('T1');
+    expect({ ...client.budget, auditNote: full.budget.auditNote }).toEqual(full.budget);
     expect(client.reactors.map((r) => [r.id, r.status, r.thermalMWt])).toEqual(full.reactors.map((r) => [r.id, r.status, r.thermalMWt]));
     const open = (c: Canon) => c.facilities.filter((f) => f.class !== 'DELTA').map((f) => [f.id, f.staff, f.capacity]);
     expect(open(client)).toEqual(open(full));

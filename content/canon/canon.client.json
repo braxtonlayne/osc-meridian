@@ -167,9 +167,9 @@
       },
       "lat": 38.8778,
       "lon": -77.6523,
-      "terrain": "Blue Ridge Mountains. Hidden beneath defunct quarry site.",
+      "terrain": "[[RX:SEXTANT:57]]",
       "coverIdentity": null,
-      "coverStory": "The Blue Ridge Quarry Reclamation Site is a former limestone quarry under a federal-state abandoned mine land reclamation agreement. Slope stabilization, backfill and groundwater monitoring work continue on the property, and heavy vehicle movements relate to that work. The site is closed to the public because of unstable highwalls and open water. Enquiries should be directed to the regional reclamation field office.",
+      "coverStory": "[[RX:SEXTANT:419]]",
       "depthFt": 2100,
       "completed": "2003-11",
       "capacity": 4500,
@@ -201,7 +201,7 @@
           "count": 18
         }
       ],
-      "function": "Primary OSC command facility. Houses central council chambers. Full government-in-exile capability. Presidential continuity suite. Strategic planning and intelligence fusion center.",
+      "function": "[[RX:SEXTANT:181]]",
       "connectionsText": "Direct lines to ALPHA-02, ALPHA-03, ALPHA-05. Primary hub for Eastern Network.",
       "network": "EASTERN",
       "reactor": true,
@@ -317,7 +317,7 @@
           "topFt": 2054,
           "heightFt": 46,
           "tier": 3,
-          "notes": "Platforms 1-3 inter-hub rail (ALPHA-02, ALPHA-03, ALPHA-05); platforms 4-5 Eastern Network tram."
+          "notes": "[[RX:SEXTANT:96]]"
         }
       ],
       "origin": "mixed"
@@ -375,7 +375,7 @@
           "count": 16
         }
       ],
-      "function": "Western Command Hub. Military operations coordination. Deep continuity for DoD/Joint Chiefs. Hardened communications array. Weapons research oversight.",
+      "function": "[[RX:T1:151]]",
       "connectionsText": "[[RX:SEXTANT:69]]",
       "network": "MOUNTAIN_WESTERN",
       "reactor": true,
@@ -695,7 +695,7 @@
           "count": 13
         }
       ],
-      "function": "West Coast regional command. Pacific theater monitoring. Port security continuity. Resource extraction oversight post-event.",
+      "function": "[[RX:SEXTANT:124]]",
       "connectionsText": "[[RX:SEXTANT:58]]",
       "network": "MOUNTAIN_WESTERN",
       "reactor": true,
@@ -787,7 +787,7 @@
           "topFt": 1608,
           "heightFt": 42,
           "tier": 3,
-          "notes": "Platform 1 inter-hub rail (ALPHA-02); platforms 2-4 tram (BETA-07, BETA-08, GAMMA-12)."
+          "notes": "[[RX:SEXTANT:86]]"
         }
       ],
       "origin": "mixed"
@@ -807,9 +807,9 @@
       },
       "lat": 29.8122,
       "lon": -98.0454,
-      "terrain": "Texas Hill Country.",
+      "terrain": "[[RX:SEXTANT:19]]",
       "coverIdentity": "FEMA Regional Coordination Complex",
-      "coverStory": "The FEMA Regional Coordination Complex supports federal disaster response coordination for the south-central states. The complex hosts exercises, stores response equipment and conducts scheduled generator and communications testing, which may be heard from adjacent roads. It is not a disaster assistance center; members of the public seeking assistance should contact the published disaster assistance line.",
+      "coverStory": "[[RX:SEXTANT:408]]",
       "depthFt": 1400,
       "completed": "2005-07",
       "capacity": 3100,
@@ -845,7 +845,7 @@
           "count": 14
         }
       ],
-      "function": "Southern command facility. Border continuity operations. Energy infrastructure oversight (oil/gas preservation). Secondary government reconstitution site.",
+      "function": "[[RX:SEXTANT:154]]",
       "connectionsText": "Direct lines to ALPHA-01, ALPHA-03. Hub for Southern Network.",
       "network": "SOUTHERN",
       "reactor": true,
@@ -2978,7 +2978,7 @@
         {
           "from": "ALPHA-01",
           "to": "BETA-01",
-          "label": "(Maine)",
+          "label": "[[RX:SEXTANT:7]]",
           "miles": 527,
           "hours": 5.9,
           "kind": "BETA"
@@ -2986,7 +2986,7 @@
         {
           "from": "ALPHA-01",
           "to": "BETA-02",
-          "label": "(Pittsburgh)",
+          "label": "[[RX:SEXTANT:12]]",
           "miles": 218,
           "hours": 2.4,
           "kind": "BETA"
@@ -2994,7 +2994,7 @@
         {
           "from": "ALPHA-01",
           "to": "BETA-10",
-          "label": "(Chicago)",
+          "label": "[[RX:SEXTANT:9]]",
           "miles": 671,
           "hours": 7.5,
           "kind": "BETA"
@@ -3036,7 +3036,7 @@
         {
           "from": "ALPHA-05",
           "to": "BETA-03",
-          "label": "(Atlanta)",
+          "label": "[[RX:SEXTANT:9]]",
           "miles": 792,
           "hours": 8.8,
           "kind": "BETA"
@@ -3044,7 +3044,7 @@
         {
           "from": "ALPHA-05",
           "to": "BETA-12",
-          "label": "(New Orleans)",
+          "label": "[[RX:SEXTANT:13]]",
           "miles": 438,
           "hours": 4.9,
           "kind": "BETA"
@@ -3052,7 +3052,7 @@
         {
           "from": "ALPHA-05",
           "to": "BETA-05",
-          "label": "(Kansas City)",
+          "label": "[[RX:SEXTANT:13]]",
           "miles": 647,
           "hours": 7.2,
           "kind": "BETA"
@@ -3111,7 +3111,7 @@
         {
           "from": "ALPHA-02",
           "to": "BETA-04",
-          "label": "(Minneapolis)",
+          "label": "[[RX:SEXTANT:13]]",
           "miles": 713,
           "hours": 7.9,
           "kind": "BETA"
@@ -3119,7 +3119,7 @@
         {
           "from": "ALPHA-02",
           "to": "BETA-11",
-          "label": "(Salt Lake City)",
+          "label": "[[RX:SEXTANT:16]]",
           "miles": 389,
           "hours": 4.3,
           "kind": "BETA"
@@ -3127,7 +3127,7 @@
         {
           "from": "ALPHA-02",
           "to": "BETA-06",
-          "label": "(Phoenix)",
+          "label": "[[RX:SEXTANT:9]]",
           "miles": 587,
           "hours": 6.5,
           "kind": "BETA"
@@ -3135,7 +3135,7 @@
         {
           "from": "ALPHA-04",
           "to": "BETA-07",
-          "label": "(Seattle)",
+          "label": "[[RX:SEXTANT:9]]",
           "miles": 819,
           "hours": 9.1,
           "kind": "BETA"
@@ -3143,7 +3143,7 @@
         {
           "from": "ALPHA-04",
           "to": "BETA-08",
-          "label": "(Las Vegas)",
+          "label": "[[RX:SEXTANT:11]]",
           "miles": 341,
           "hours": 3.8,
           "kind": "BETA"
@@ -3703,7 +3703,7 @@
       "DHS",
       "FEMA"
     ],
-    "auditNote": "Audit Exposure Risk: MINIMAL. Network cost distribution and classification protocols prevent single-point discovery. Congressional oversight committees possess no awareness of program existence.",
+    "auditNote": "[[RX:T1:194]]",
     "fiscalYears": [
       {
         "fy": "FY2001",
@@ -6774,28 +6774,6 @@
     }
   ],
   "roster": [
-    {
-      "pn": "P-1-01-0004",
-      "name": "[[RX:T1:17]]",
-      "rank": null,
-      "role": "Member, Core Council (Seat 10)",
-      "tier": 1,
-      "site": "[[RX:T1:8]]",
-      "divisionId": null,
-      "email": "[[RX:T1:17]]",
-      "notes": "[[RX:T1:89]]"
-    },
-    {
-      "pn": "P-1-03-0009",
-      "name": "[[RX:T1:15]]",
-      "rank": null,
-      "role": "Member, Core Council (Seat 11)",
-      "tier": 1,
-      "site": "[[RX:T1:8]]",
-      "divisionId": null,
-      "email": "[[RX:T1:15]]",
-      "notes": "[[RX:T1:89]]"
-    },
     {
       "pn": "P-2-01-0031",
       "name": "[[RX:T2:18]]",

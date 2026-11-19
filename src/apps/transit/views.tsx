@@ -13,6 +13,7 @@ import { SEG04_LABEL } from '@sim/seg04';
 import { blockId, diagramBlockCounts, envReading, incNo, stamp, type BoardState, type LogEntry, type Movement, type MoveStatus, type PossessionState, type SimLink, type SimModel, type TrainState } from '@sim/transit-model';
 import { durText, hhmmZ, isoDateText } from '@sim/time';
 import type { TimetableDoc } from './board';
+import { hasRx } from '@core/rx';
 
 export type Snapshot = BoardState;
 
@@ -45,7 +46,7 @@ export function runningText(min: number | null): string {
 }
 
 export function linkTitle(l: SimLink): string {
-  return l.kind === 'RAIL' ? `Segment ${l.key}, ${l.a} to ${l.b}` : `Tram link ${l.a} to ${l.b} ${l.label}`;
+  return l.kind === 'RAIL' ? `Segment ${l.key}, ${l.a} to ${l.b}` : `Tram link ${l.a} to ${l.b}${hasRx(l.label) ? '' : ` ${l.label}`}`;
 }
 
 export function statusWord(l: SimLink, s: Snapshot | null): { status: 'NOMINAL' | 'DEGRADED' | 'FAULT' | 'OFFLINE'; word: string } {
@@ -161,7 +162,7 @@ function LinkDetail({ link, state, model, tt }: { link: SimLink } & Pick<Diagram
       <PropertyGrid
         caption={link.kind === 'RAIL' ? `SEGMENT ${link.key}` : 'TRAM LINK'}
         rows={[
-          { label: 'Between', value: `${link.a} and ${link.b}${link.kind === 'TRAM' ? ` ${link.label}` : ''}` },
+          { label: 'Between', value: `${link.a} and ${link.b}${link.kind === 'TRAM' && !hasRx(link.label) ? ` ${link.label}` : ''}` },
           { label: 'Length (engineering)', value: `${link.miles.toLocaleString('en-US')} mi`, mono: true },
           { label: 'Running time (booked)', value: durText(link.bookedHours * 60), mono: true },
           { label: 'Line speed', value: unbooked ? '--' : `${link.speedMph} mph`, mono: true },

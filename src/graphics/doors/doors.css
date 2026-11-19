@@ -9,6 +9,7 @@
   }
   .dm-bg { fill: var(--paper); }
   .dm-svg.is-stale .dm-item,
+  .dm-svg.is-stale .dm-deco,
   .dm-svg.is-stale .dm-lvname { opacity: 0.45; }
   .dm-title { font-size: 11px; font-weight: var(--fw-bold); letter-spacing: var(--tracking-caps); fill: var(--text-1); }
   .dm-note { font-size: 9px; font-weight: var(--fw-semibold); letter-spacing: 0.04em; fill: var(--text-2); }
@@ -20,6 +21,7 @@
 
   .dm-item { cursor: pointer; outline: none; }
   .dm-withheld { cursor: default; }
+  .dm-deco { pointer-events: none; }
   .dm-hit { fill: transparent; }
   .dm-item:hover .dm-hit { fill: var(--row-hover); }
   .dm-item:focus-visible .dm-hit { stroke: var(--text-1); stroke-dasharray: 1 2; stroke-width: 1; }
@@ -30,21 +32,23 @@
   .dm-pocket { stroke: var(--text-3); stroke-width: 1; fill: none; stroke-dasharray: 2 2; }
   .dm-gap { fill: var(--surface); }
   .dm-leafrect { fill: var(--text-1); stroke: var(--text-1); stroke-width: 1; }
+  /* Status colour appears only as the 10px square + word (.dm-alm); drawing fills stay neutral. */
   .dm-leaf.is-travel .dm-leafrect,
-  .dm-key-travel { fill: var(--st-degraded); }
-  .dm-leaf.is-open .dm-gap { fill: var(--st-nominal); }
+  .dm-key-travel { fill: var(--paper); stroke-dasharray: 2 1; }
+  .dm-leaf.is-open .dm-gap { fill: var(--paper); }
   .dm-bolts path,
   .dm-bolts-key { stroke: var(--text-1); stroke-width: 3; }
-  .dm-item.is-alarm .dm-jamb { stroke: var(--st-fault); }
-  .dm-item.is-alarm .dm-tag { fill: var(--st-fault); font-weight: var(--fw-bold); }
-  .dm-ovr { fill: var(--st-degraded); stroke: var(--text-1); stroke-width: 0.5; }
-  .dm-held { stroke: var(--st-offline); stroke-width: 3; }
+  .dm-item.is-alarm .dm-tag { font-weight: var(--fw-bold); }
+  .dm-alm-sq { fill: var(--st-fault); stroke: var(--text-1); stroke-width: 0.5; }
+  .dm-alm { font-family: var(--font-mono); font-size: 10px; font-weight: var(--fw-bold); fill: var(--text-1); }
+  .dm-ovr { fill: var(--text-1); }
+  .dm-held { stroke: var(--text-2); stroke-width: 3; }
 
   .dm-tag { font-family: var(--font-mono); font-size: 10px; fill: var(--text-1); }
   .dm-side { font-family: var(--font-mono); font-size: 8px; fill: var(--text-3); }
   .dm-chamber { fill: var(--surface); stroke: var(--text-1); stroke-width: 1; }
   .dm-press { fill: var(--chrome-shadow); }
-  .dm-airlock.is-decon .dm-press { fill: var(--st-degraded); }
+  .dm-airlock.is-decon .dm-press { fill: var(--text-3); }
 
   .dm-key text { font-size: 9px; fill: var(--text-2); }
 

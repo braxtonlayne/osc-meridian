@@ -309,7 +309,8 @@
   border-color: var(--chrome-dark);
 }
 .pk-plate--warning {
-  background: var(--st-degraded);
+  /* Lightened amber: black engraving at about 6.6:1 (plain amber is 4.0:1). */
+  background: color-mix(in srgb, var(--st-degraded) 70%, var(--surface));
   color: var(--text-1);
   border-color: var(--toner);
 }
@@ -442,8 +443,9 @@
   --pk-lit-fg: var(--surface);
   --pk-inv-fg: var(--st-fault);
   --pk-inv-border: var(--st-fault);
-  --pk-unlit-bg: color-mix(in srgb, var(--chrome-face) 72%, var(--chrome-shadow));
-  --pk-unlit-fg: color-mix(in srgb, var(--text-3) 70%, var(--pk-unlit-bg));
+  /* Unlit legends stay readable (WCAG AA, about 5:1): a light window with --text-2 legend. */
+  --pk-unlit-bg: color-mix(in srgb, var(--chrome-face) 88%, var(--chrome-shadow));
+  --pk-unlit-fg: var(--text-2);
   --pk-dim-bg: color-mix(in srgb, var(--pk-lit-bg) 38%, var(--pk-unlit-bg));
   display: flex;
   flex-direction: column;
@@ -463,7 +465,8 @@
   cursor: default;
 }
 .pk-tile--warning {
-  --pk-lit-bg: var(--st-degraded);
+  /* Amber lens lightened so the black legend reaches AA (about 6.6:1; plain amber is 4.0:1). */
+  --pk-lit-bg: color-mix(in srgb, var(--st-degraded) 70%, var(--surface));
   --pk-lit-fg: var(--text-1);
   --pk-inv-fg: var(--text-1);
   --pk-inv-border: var(--st-degraded);

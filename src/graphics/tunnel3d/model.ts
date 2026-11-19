@@ -7,6 +7,7 @@ import { geoAlbersUsa, geoInterpolate } from 'd3-geo';
 import canonJson from '@canon';
 import type { Canon, ClassId, FacilityId } from '@core/canon-types';
 import { PLATE_H, PLATE_W } from './plate-data';
+import { hasRx } from '@core/rx';
 
 const canon = canonJson as unknown as Canon;
 
@@ -183,7 +184,7 @@ export function buildTunnelModel(): TunnelModel {
   for (const n of canon.tramNetworks) {
     for (const l of n.links) {
       add(`${l.from}>${l.to}`, 'tram', l.from, l.to, {
-        note: l.label,
+        note: hasRx(l.label) ? `(${l.to})` : l.label,
         network: n.name,
         miles: l.miles,
         hours: l.hours,

@@ -203,6 +203,9 @@
 .sc-tag-sel .sc-tagbg {
   fill: var(--select-bg);
 }
+.sc-linktext {
+  pointer-events: none;
+}
 .sc-tag-sel .sc-tagtext {
   fill: var(--select-fg);
 }

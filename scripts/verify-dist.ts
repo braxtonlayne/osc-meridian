@@ -30,6 +30,12 @@
  *     with variants. Rules 2, 3, 6 and 7 already cover variant JSON and the account indexes
  *     (they scan every dist file; variant files count as baseline document files).
  * 10. every app in src/apps/index.ts (APPS) has a static home page, with no headline drift.
+ * 11. (F2) no tier-1 or compartment-withheld text in any JS/worker chunk (dist .js/.mjs) or in
+ *     content/canon/canon.client.json: the full-canon values buildClientCanon withholds under T1 or
+ *     a compartment (rule 7's corpus), plus every fragment content Markdown withholds at tier 1 or
+ *     behind a compartment (scripts/content/redaction-corpus.ts), in clear, JSON-, quote- and
+ *     unicode-escaped forms.
+ * 12. (F2) the initial shell (index.html entry script plus its modulepreloads) is < 180 KB gzip.
  * dist directory: $MERIDIAN_DIST or --dist <dir> (default dist/).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -42,6 +48,8 @@ import { ACCOUNT_IDS, CANON_RELEASE_KEYS, escapeHtml, isTier1Key, normalizeBase,
 import { readAppHomes } from './prerender.ts';
 import { decodeRelease, isEncodedRelease, releaseFileName } from '../src/core/release-codec';
 import { deriveRestrictions, type Withheld } from './content/client-canon.ts';
+import { readRedactionCorpus, type RestrictedText } from './content/redaction-corpus.ts';
+import { gzipSync } from 'node:zlib';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** $MERIDIAN_DIST or --dist <dir> (default dist/), so a scratch build can be checked. */
@@ -332,6 +340,39 @@ export function findWithheld(text: string, needles: Needle[]): { index: number; 
   return out;
 }
 
+/** Forms a string can take inside a bundled JS chunk or a JSON file. */
+export function bundleForms(text: string): string[] {
+  const json = JSON.stringify(text).slice(1, -1);
+  const uEsc = json.replace(/[\u0080-￿]/g, (ch) => `\\u${ch.charCodeAt(0).toString(16).padStart(4, '0')}`);
+  const sq = (s: string) => s.replace(/'/g, "\\'");
+  return [...new Set([text, json, sq(json), uEsc, sq(uEsc)])];
+}
+
+const isRestrictedBundleKey = (k: string): boolean => isTier1Key(k) || /^[A-Z]{3,}(\+T\d)?$/.test(k);
+
+/**
+ * Rule 11 needles: full-canon values withheld under tier 1 or a compartment (rule 7's corpus,
+ * same exemptions) plus the content corpus fragments. Tier 2 values stay under rule 7.
+ */
+export function bundleNeedles(canonNeedles: Needle[], corpus: RestrictedText[]): Needle[] {
+  const out: Needle[] = canonNeedles
+    .filter((n) => isRestrictedBundleKey(n.key))
+    .map((n) => ({ ...n, forms: [...new Set(n.forms.flatMap(bundleForms))] }));
+  for (const r of corpus) out.push({ path: `content/${r.file}`, key: r.key, forms: bundleForms(r.text) });
+  return out;
+}
+
+/** Initial shell budget (SPEC budgets), gzip -9 over the entry script and its modulepreloads. */
+export const SHELL_BUDGET_GZ = 180 * 1024;
+
+/** The entry script and every modulepreload that index.html loads before any interaction. */
+export function shellFiles(indexHtml: string): string[] {
+  const out: string[] = [];
+  for (const m of indexHtml.matchAll(/<script[^>]*type="module"[^>]*src="([^"]+)"/g)) out.push(m[1]!);
+  for (const m of indexHtml.matchAll(/<link[^>]*rel="modulepreload"[^>]*href="([^"]+)"/g)) out.push(m[1]!);
+  return [...new Set(out)];
+}
+
 function inferBase(): string {
   if (process.env.MERIDIAN_BASE) return normalizeBase(process.env.MERIDIAN_BASE);
   const idx = join(dist, 'index.html');
@@ -539,9 +580,10 @@ function main(): number {
 
   // 7. values withheld from the client canon never reach baseline output
   const canonPath = join(root, 'content', 'canon', 'canon.json');
+  const corpus = readRedactionCorpus(join(root, 'content'));
   if (existsSync(canonPath)) {
     const fullCanon = JSON.parse(readFileSync(canonPath, 'utf8')) as { budget?: { departments?: string[] } };
-    const r = deriveRestrictions(fullCanon as Record<string, unknown>);
+    const r = deriveRestrictions(fullCanon as Record<string, unknown>, corpus);
     const needles = withheldNeedles(r?.withheld ?? [], r?.client, fullCanon.budget?.departments ?? []);
     const releasesDir = join(dist, 'data', 'releases');
     for (const f of distFiles) {
@@ -563,6 +605,46 @@ function main(): number {
       }
     }
   }
+
+  // 11. no tier-1 / compartment text in JS chunks, workers or the client canon
+  if (existsSync(canonPath)) {
+    const fullCanon = JSON.parse(readFileSync(canonPath, 'utf8')) as { budget?: { departments?: string[] } };
+    const r = deriveRestrictions(fullCanon as Record<string, unknown>, corpus);
+    const needles = bundleNeedles(withheldNeedles(r?.withheld ?? [], r?.client, fullCanon.budget?.departments ?? []), corpus.restricted);
+    const clientPath = join(root, 'content', 'canon', 'canon.client.json');
+    const targets = [...distFiles.filter((f) => /\.(?:js|mjs)$/i.test(f)), ...(existsSync(clientPath) ? [clientPath] : [])];
+    let hits = 0;
+    for (const f of targets) {
+      const text = readFileSync(f, 'utf8');
+      for (const hit of findWithheld(text, needles)) {
+        hits++;
+        fail('bundle-leak', `${rel(f)}:${lineAt(text, hit.index)} contains ${hit.key} text from ${hit.path}`);
+      }
+    }
+    console.log(`[bundle-leak] ${needles.length} tier-1/compartment needles (${corpus.restricted.length} from content) over ${targets.length} JS/worker chunks + client canon: ${hits} hit(s)`);
+  }
+
+  // 12. initial shell budget
+  const indexPath = join(dist, 'index.html');
+  if (existsSync(indexPath)) {
+    const files = shellFiles(readFileSync(indexPath, 'utf8'));
+    let total = 0;
+    const parts: string[] = [];
+    for (const url of files) {
+      const local = url.startsWith(base) ? url.slice(base.length) : url.replace(/^\.?\//, '');
+      const abs = join(dist, ...local.split('/'));
+      if (!existsSync(abs)) {
+        fail('shell-budget', `index.html loads ${url}, which is not in dist/`);
+        continue;
+      }
+      const gz = gzipSync(readFileSync(abs), { level: 9 }).length;
+      total += gz;
+      parts.push(`${local.split('/').pop()} ${(gz / 1024).toFixed(1)}`);
+    }
+    console.log(`[shell-budget] initial shell ${(total / 1024).toFixed(1)} KB gz over ${files.length} files (budget < ${SHELL_BUDGET_GZ / 1024} KB): ${parts.join(', ')}`);
+    if (!files.length) fail('shell-budget', 'dist/index.html loads no module script');
+    if (total >= SHELL_BUDGET_GZ) fail('shell-budget', `initial shell is ${(total / 1024).toFixed(1)} KB gz; budget < ${SHELL_BUDGET_GZ / 1024} KB`);
+  } else fail('shell-budget', 'dist/index.html not found');
 
   if (failures.length) {
     const shown = failures.slice(0, 400);

@@ -11,7 +11,7 @@ marking: TSSCI-OSC
 originator: CMS/ALPHA-02
 revision: 1
 date: 2008-05-01
-summary: Outside the fiction. MERIDIAN is a work of fiction; no real agency, facility or person. Credits for fonts and open-source libraries; nothing typed is transmitted.
+summary: Outside the fiction. MERIDIAN is a work of fiction; the OSC, its staff and its documents are invented. Credits for fonts and open-source libraries; nothing typed is transmitted.
 help:
   kbNo: Colophon
   appliesTo: This website
@@ -23,9 +23,9 @@ help:
 
 MERIDIAN is a piece of interactive fiction presented as a government intranet. It is a toy and a work of worldbuilding.
 
-- The Office of Strategic Continuity does not exist. Neither do its Council, divisions, facilities, tunnels, reserves, budgets, documents or personnel.
-- Every person named in it is invented. Any resemblance to a real person is coincidental.
-- Real government bodies and programmes mentioned in it appear only as fictional cover identities and funding lines. Nothing here describes their actual activities, and nothing here is endorsed by them.
+- The Office of Strategic Continuity does not exist. Neither do its Council, divisions, facilities, tunnels, reserves, budgets or documents. Its staff are invented people.
+- Some real public figures, government agencies, companies, laws and events are named. They appear only as the public record has them, or in invented background roles, such as a name on a distribution list, a seat in a set of minutes or a cover identity or funding line. The story built around them is invented.
+- Nothing here is a claim about real people, or about what any real person, agency or company knew or did. None of them has endorsed or been involved with this work.
 - The markings, notices and warnings are original writing in an official style. They are not real classification markings and carry no authority.
 - The in-world date is May 2008. The "now" on the clock is your own.
 

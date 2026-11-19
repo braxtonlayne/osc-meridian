@@ -362,7 +362,8 @@ export default function App({ win, route }: AppProps) {
               />
             </nav>
           )}
-          <main class="sys-body" aria-label={title}>
+          {/* Focusable so the scrolling page can be read with the keyboard (axe scrollable-region-focusable). */}
+          <main class="sys-body" aria-label={title} tabIndex={0}>
             {body}
           </main>
         </div>

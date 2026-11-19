@@ -90,6 +90,18 @@ function Leaf({ x, y, w, h, leaf, heavy }: { x: number; y: number; w: number; h:
   );
 }
 
+/** Alarm: the house status square (10px) and word. The glyph's accessible name says "alarm". */
+function AlarmMark({ x, y }: { x: number; y: number }) {
+  return (
+    <g class="dm-deco" aria-hidden="true">
+      <rect x={x} y={y} width={10} height={10} class="dm-alm-sq" />
+      <text x={x + 13} y={y + 9} class="dm-alm">
+        ALM
+      </text>
+    </g>
+  );
+}
+
 function DoorGlyph({ d, x, y, selected, onSelect }: { d: MimicDoor; x: number; y: number; selected: boolean; onSelect?: (id: string) => void }) {
   const w = 30;
   const h = 22;
@@ -107,28 +119,32 @@ function DoorGlyph({ d, x, y, selected, onSelect }: { d: MimicDoor; x: number; y
       </g>
     );
   }
+  // The button's only text is its tag, which leads its accessible name (WCAG 2.5.3); the alarm
+  // mark is drawn beside it in an aria-hidden layer.
   return (
-    <g
-      class={`dm-item${selected ? ' is-selected' : ''}${d.alarm ? ' is-alarm' : ''}`}
-      transform={`translate(${x} ${y})`}
-      role="button"
-      tabIndex={0}
-      aria-label={d.title}
-      aria-pressed={selected}
-      onClick={() => onSelect?.(d.id)}
-      onKeyDown={act}
-    >
-      <rect x={0} y={0} width={SLOT_W - 12} height={ROW_H - 10} class="dm-hit" />
-      {/* jambs and pocket */}
-      <path d={`M8 4 v${h} M${8 + w} 4 v${h}`} class={`dm-jamb${heavy ? ' dm-jamb--heavy' : ''}`} />
-      <path d={`M${8 + w} 6 h${w - 6} M${8 + w} ${h + 2} h${w - 6}`} class="dm-pocket" />
-      <Leaf x={8} y={4} w={w} h={h} leaf={d.leaf} heavy={heavy} />
-      {d.override ? <rect x={2} y={1} width={4} height={4} class="dm-ovr" /> : null}
-      {d.held ? <path d={`M2 ${h + 1} h4`} class="dm-held" /> : null}
-      <text x={8} y={h + 15} class="dm-tag">
-        {d.tag}
-      </text>
-      {selected ? <rect x={0.5} y={0.5} width={SLOT_W - 13} height={ROW_H - 11} class="dm-sel" /> : null}
+    <g transform={`translate(${x} ${y})`}>
+      <g
+        class={`dm-item${selected ? ' is-selected' : ''}${d.alarm ? ' is-alarm' : ''}`}
+        role="button"
+        tabindex={0}
+        aria-label={`${d.tag}: ${d.title}${d.alarm ? ', alarm' : ''}`}
+        aria-pressed={selected}
+        onClick={() => onSelect?.(d.id)}
+        onKeyDown={act}
+      >
+        <rect x={0} y={0} width={SLOT_W - 12} height={ROW_H - 10} class="dm-hit" />
+        {/* jambs and pocket */}
+        <path d={`M8 4 v${h} M${8 + w} 4 v${h}`} class={`dm-jamb${heavy ? ' dm-jamb--heavy' : ''}`} />
+        <path d={`M${8 + w} 6 h${w - 6} M${8 + w} ${h + 2} h${w - 6}`} class="dm-pocket" />
+        <Leaf x={8} y={4} w={w} h={h} leaf={d.leaf} heavy={heavy} />
+        {d.override ? <rect x={2} y={1} width={4} height={4} class="dm-ovr" /> : null}
+        {d.held ? <path d={`M2 ${h + 1} h4`} class="dm-held" /> : null}
+        <text x={8} y={h + 15} class="dm-tag">
+          {d.tag}
+        </text>
+        {selected ? <rect x={0.5} y={0.5} width={SLOT_W - 13} height={ROW_H - 11} class="dm-sel" /> : null}
+      </g>
+      {d.alarm ? <AlarmMark x={30} y={h + 6} /> : null}
     </g>
   );
 }
@@ -154,35 +170,40 @@ function AirlockGlyph({ a, x, y, selected, onSelect }: { a: MimicAirlock; x: num
   const chX = 8 + w + 4;
   const fill = Math.max(0, Math.min(1, a.chamber));
   return (
-    <g
-      class={`dm-item dm-airlock${selected ? ' is-selected' : ''}${a.alarm ? ' is-alarm' : ''}${a.decon ? ' is-decon' : ''}`}
-      transform={`translate(${x} ${y})`}
-      role="button"
-      tabIndex={0}
-      aria-label={a.title}
-      aria-pressed={selected}
-      onClick={() => onSelect?.(a.id)}
-      onKeyDown={act}
-    >
-      <rect x={0} y={0} width={total} height={ROW_H - 10} class="dm-hit" />
-      {/* outer leaf (left, outside), chamber, inner leaf (right, inside) */}
-      <text x={2} y={h / 2 + 7} class="dm-side">
-        O
-      </text>
-      <path d={`M8 4 v${h} M${8 + w} 4 v${h}`} class="dm-jamb" />
-      <Leaf x={8} y={4} w={w} h={h} leaf={a.outer} heavy={false} />
-      <rect x={chX} y={4} width={chW} height={h} class="dm-chamber" />
-      <rect x={chX + 2} y={4 + h - 2 - (h - 4) * fill} width={chW - 4} height={(h - 4) * fill} class="dm-press" />
-      <path d={`M${chX + chW + 4} 4 v${h} M${chX + chW + 4 + w} 4 v${h}`} class="dm-jamb" />
-      <Leaf x={chX + chW + 4} y={4} w={w} h={h} leaf={a.inner} heavy={false} />
-      <text x={chX + chW + w + 12} y={h / 2 + 7} class="dm-side">
-        I
-      </text>
-      <text x={8} y={h + 15} class="dm-tag">
-        {a.tag}
-        {a.decon ? ' DECON' : ''}
-      </text>
-      {selected ? <rect x={0.5} y={0.5} width={total - 1} height={ROW_H - 11} class="dm-sel" /> : null}
+    <g transform={`translate(${x} ${y})`}>
+      <g
+        class={`dm-item dm-airlock${selected ? ' is-selected' : ''}${a.alarm ? ' is-alarm' : ''}${a.decon ? ' is-decon' : ''}`}
+        role="button"
+        tabindex={0}
+        aria-label={`${a.tag}${a.decon ? ' DECON' : ''}: ${a.title}${a.alarm ? ', alarm' : ''}`}
+        aria-pressed={selected}
+        onClick={() => onSelect?.(a.id)}
+        onKeyDown={act}
+      >
+        <rect x={0} y={0} width={total} height={ROW_H - 10} class="dm-hit" />
+        {/* outer leaf (left, outside), chamber, inner leaf (right, inside) */}
+        <path d={`M8 4 v${h} M${8 + w} 4 v${h}`} class="dm-jamb" />
+        <Leaf x={8} y={4} w={w} h={h} leaf={a.outer} heavy={false} />
+        <rect x={chX} y={4} width={chW} height={h} class="dm-chamber" />
+        <rect x={chX + 2} y={4 + h - 2 - (h - 4) * fill} width={chW - 4} height={(h - 4) * fill} class="dm-press" />
+        <path d={`M${chX + chW + 4} 4 v${h} M${chX + chW + 4 + w} 4 v${h}`} class="dm-jamb" />
+        <Leaf x={chX + chW + 4} y={4} w={w} h={h} leaf={a.inner} heavy={false} />
+        <text x={8} y={h + 15} class="dm-tag">
+          {a.tag}
+          {a.decon ? ' DECON' : ''}
+        </text>
+        {selected ? <rect x={0.5} y={0.5} width={total - 1} height={ROW_H - 11} class="dm-sel" /> : null}
+      </g>
+      {/* outside (O) and inside (I) side letters, beside the button */}
+      <g class="dm-deco" aria-hidden="true">
+        <text x={2} y={h / 2 + 7} class="dm-side">
+          O
+        </text>
+        <text x={chX + chW + w + 12} y={h / 2 + 7} class="dm-side">
+          I
+        </text>
+      </g>
+      {a.alarm ? <AlarmMark x={total - 40} y={h + 6} /> : null}
     </g>
   );
 }

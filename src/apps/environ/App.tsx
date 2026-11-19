@@ -155,6 +155,10 @@ export default function App({ win, route }: AppProps) {
   useEffect(() => () => services.sound.stop('alarm'), []);
 
   const ackAll = (ids?: string[]) => {
+    if (!ids && !Object.values(ann).some((p) => p.seq === 'unack')) {
+      setMsg('No alarm window is flashing. Nothing to acknowledge.');
+      return;
+    }
     setAnn((prev) => {
       const next = { ...prev };
       for (const id of ids ?? Object.keys(prev)) next[id] = annunciatorStep(prev[id] ?? ANN_NORMAL, 'ack');
@@ -165,12 +169,17 @@ export default function App({ win, route }: AppProps) {
     setMsg('Alarms acknowledged.');
   };
   const resetAll = (ids?: string[]) => {
+    if (!ids && !Object.values(ann).some((p) => p.seq === 'ringback')) {
+      setMsg('No cleared alarm is waiting for reset.');
+      return;
+    }
     setAnn((prev) => {
       const next = { ...prev };
       for (const id of ids ?? Object.keys(prev)) next[id] = annunciatorStep(prev[id] ?? ANN_NORMAL, 'reset');
       return next;
     });
     services.sound.play('button');
+    setMsg('Cleared alarms reset.');
   };
 
   /* ------------------------------------------------------------- actions */

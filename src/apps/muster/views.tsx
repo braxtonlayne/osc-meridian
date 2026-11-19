@@ -199,11 +199,15 @@ export function SiteBoard(p: SitePanelProps) {
         const acc = r.pv.present + r.pv.located + r.pv.roster;
         const frac = Math.min(1, acc / Math.max(1, r.assigned));
         const over = acc + r.pv.unknown > r.assigned;
+        // Bar segments are neutral; an over-count is said with the status square + word.
         return (
-          <span class={over ? 'mus-bar mus-bar--over' : 'mus-bar'} role="meter" aria-valuemin={0} aria-valuemax={r.assigned} aria-valuenow={acc} aria-label={`${r.id} accounted ${acc} of ${r.assigned}`}>
-            {Array.from({ length: 10 }, (_, i) => (
-              <span key={i} class={i < Math.floor(frac * 10) ? 'on' : undefined} />
-            ))}
+          <span class="mus-bar-cell">
+            <span class="mus-bar" role="meter" aria-valuemin={0} aria-valuemax={r.assigned} aria-valuenow={acc} aria-label={`${r.id} accounted ${acc} of ${r.assigned}`}>
+              {Array.from({ length: 10 }, (_, i) => (
+                <span key={i} class={i < Math.floor(frac * 10) ? 'on' : undefined} />
+              ))}
+            </span>
+            {over ? <StatusLight status="DEGRADED" word="OVER" /> : null}
           </span>
         );
       },
