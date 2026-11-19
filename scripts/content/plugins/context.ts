@@ -17,6 +17,8 @@ export interface CompileContext {
   file: string; // repo-relative path for messages
   lineOffset: number; // lines before the Markdown body (frontmatter)
   docId: string;
+  /** Prefix for redaction ids (default docId). Account variants use "<account>-<docId>". */
+  rxPrefix?: string;
   docNo: string;
   base: string; // normalised "/" or "/osc-meridian/"
   canon: CanonData | null;

@@ -9,11 +9,16 @@
  * release-codec.ts: obfuscated, not secret) are fetched at most once each, and only for keys
  * the session satisfies. Tier-1 keys are never requested (none ship).
  *
+ * Accounts (pass two): pass `account: () => <active AccountId>` (e.g. `() => services.account.id.value`).
+ * load(id) then prefers that account's variant (data/docs/@<account>/<id>.json) when the route
+ * entry lists the account in `variants`; any failure to fetch it falls back to the base document.
+ * A variant's frontmatter carries `variant: <account>`. Without `account`, only base documents load.
+ *
  * Released text replaces the baseline bar:
  *   inline  <span class="rx-released" data-rx="<id>" data-key data-auth data-ref>…</span>
  *   block   <div class="rx-released rx-block" data-rx="<id>" data-key data-auth data-ref>…</div>
  */
-import type { DocJson, ReleaseKey, RouteEntry, Services } from './contracts';
+import type { AccountId, DocJson, ReleaseKey, RouteEntry, Services } from './contracts';
 import { asset } from './base';
 import { decodeRelease, releaseFileName } from './release-codec';
 
@@ -47,6 +52,26 @@ export interface DocsDeps {
   routes?: RouteEntry[];
   /** Defaults to fetch(url).then(r => r.json()). */
   fetchJson?: (url: string) => Promise<unknown>;
+  /** Active account (pass two). Read on every load(); null/undefined = base documents only. */
+  account?: () => AccountId | null | undefined;
+}
+
+/** URL path (before asset()) of a document's JSON, base or an account's variant. */
+export function docDataPath(id: string, account?: AccountId | null): string {
+  return account ? `data/docs/@${account}/${encodeURIComponent(id)}.json` : `data/docs/${encodeURIComponent(id)}.json`;
+}
+
+/** Whether `account` has its own variant of this route (RouteEntry.variants). */
+export function hasVariant(r: Pick<RouteEntry, 'variants'> | undefined, account: AccountId | null | undefined): boolean {
+  return !!account && !!r?.variants?.includes(account);
+}
+
+/**
+ * Tier 4 rule (SPEC-2 §1): a base document opens for the Tier 4 account only if it is marked
+ * `t4: true` or has a `lifesupport` variant. Everything else is an in-world refusal.
+ */
+export function readableByTier4(r: Pick<RouteEntry, 't4' | 'variants'>): boolean {
+  return r.t4 === true || !!r.variants?.includes('lifesupport');
 }
 
 export type DocsService = Services['docs'] & {
@@ -115,11 +140,14 @@ export function createDocs(deps: DocsDeps): DocsService {
   let routes: RouteEntry[] = [];
   const byRouteMap = new Map<string, RouteEntry>();
   const byDocNoMap = new Map<string, RouteEntry>();
+  const byIdMap = new Map<string, RouteEntry>();
   const index = (list: RouteEntry[]) => {
     routes = [...list];
     byRouteMap.clear();
     byDocNoMap.clear();
+    byIdMap.clear();
     for (const r of routes) byRouteMap.set(r.route, r);
+    for (const r of routes) byIdMap.set(r.id, r);
     // routes.json entries may carry `aliases` (other docNos the page answers for); primary docNo wins.
     for (const r of routes) for (const a of (r as RouteEntry & { aliases?: string[] }).aliases ?? []) byDocNoMap.set(a, r);
     for (const r of routes) byDocNoMap.set(r.docNo, r);
@@ -129,14 +157,20 @@ export function createDocs(deps: DocsDeps): DocsService {
   const docCache = new Map<string, Promise<DocJson>>();
   const releaseCache = new Map<string, Promise<Record<string, string>>>();
 
-  const getDoc = (id: string) => {
-    let p = docCache.get(id);
+  const fetchDoc = (id: string, account: AccountId | null) => {
+    const ck = account ? `@${account}/${id}` : id;
+    let p = docCache.get(ck);
     if (!p) {
-      p = fetchJson(asset(`data/docs/${encodeURIComponent(id)}.json`)) as Promise<DocJson>;
-      p.catch(() => docCache.delete(id));
-      docCache.set(id, p);
+      p = fetchJson(asset(docDataPath(id, account))) as Promise<DocJson>;
+      p.catch(() => docCache.delete(ck));
+      docCache.set(ck, p);
     }
     return p;
+  };
+  const getDoc = (id: string): Promise<DocJson> => {
+    const account = deps.account?.() ?? null;
+    if (!hasVariant(byIdMap.get(id), account)) return fetchDoc(id, null);
+    return fetchDoc(id, account).catch(() => fetchDoc(id, null));
   };
 
   const getRelease = (key: string) => {

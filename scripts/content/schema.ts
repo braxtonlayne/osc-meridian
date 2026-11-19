@@ -106,6 +106,8 @@ export const FrontmatterSchema = z
     summary: z.string().min(10, 'summary is required (one line for search results)'),
     /** Other document numbers this page answers for (e.g. OSC-CB-0NN briefing numbers). */
     aliases: z.array(z.string().regex(DOCNO_RE, 'aliases must be canon document numbers')).optional(),
+    /** Pass two: readable by the Tier 4 account (RouteEntry.t4). */
+    t4: z.boolean().optional(),
     // template-specific structured blocks: passed through to DocJson.frontmatter unchanged
     form: FormSchema.optional(),
     message: MessageSchema.optional(),
@@ -135,4 +137,5 @@ export type Frontmatter = z.infer<typeof FrontmatterSchema>;
 export const CORE_KEYS = new Set([
   'id', 'route', 'app', 'family', 'template', 'docNo', 'title', 'marking', 'originator',
   'revision', 'date', 'access', 'distribution', 'supersedes', 'xrefs', 'facility', 'summary', 'aliases',
+  't4',
 ]);

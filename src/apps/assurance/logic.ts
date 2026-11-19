@@ -77,6 +77,8 @@ export const ACTION_LABELS: Record<AuditKind, string> = {
   logout: 'LOGGED OFF',
   timeout: 'SESSION LOCKED',
   system: 'SYSTEM NOTICE',
+  control: 'CONTROL OPERATED',
+  trace: 'ROUTED ITEM RECEIVED',
 };
 
 /** Filter groups offered in the activity view. */

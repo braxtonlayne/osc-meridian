@@ -1,22 +1,35 @@
 /** Icon registry and rasterisation. No JSX here, so build scripts and the render check can import it. */
 import { APPS } from './apps';
 import { Cv, toPaths, type IconDef, type InkPath } from './canvas';
+import { CONTROLS } from './controls';
 import { MORE } from './more';
 import { FILES } from './files';
+import { PLANT_APPS } from './plant';
 import { UI } from './ui';
 
-const DEFS = { ...APPS, ...FILES, ...UI, ...MORE } as const;
+const DEFS = { ...APPS, ...PLANT_APPS, ...FILES, ...UI, ...MORE, ...CONTROLS } as const;
 
 export type IconId = keyof typeof DEFS;
 export type IconSize = 16 | 32;
 /** `button` (default) draws caption, sort and toolbar glyphs on a raised face; `glyph` draws them bare. Other icons ignore it. */
 export type IconVariant = 'button' | 'glyph';
 
-export const APP_ICON_IDS = Object.keys(APPS) as ReadonlyArray<keyof typeof APPS>;
+/** The first twelve applications, then the twelve plant set pieces; each id equals its AppId. */
+export const APP_ICON_IDS = [...Object.keys(APPS), ...Object.keys(PLANT_APPS)] as ReadonlyArray<
+  keyof typeof APPS | keyof typeof PLANT_APPS
+>;
 export const FILE_ICON_IDS = Object.keys(FILES) as ReadonlyArray<keyof typeof FILES>;
 export const UI_ICON_IDS = Object.keys(UI) as ReadonlyArray<keyof typeof UI>;
 export const MORE_ICON_IDS = Object.keys(MORE) as ReadonlyArray<keyof typeof MORE>;
-export const ICON_IDS: readonly IconId[] = [...APP_ICON_IDS, ...FILE_ICON_IDS, ...UI_ICON_IDS, ...MORE_ICON_IDS];
+/** Plant toolbar and state icons (pass two). */
+export const CONTROL_ICON_IDS = Object.keys(CONTROLS) as ReadonlyArray<keyof typeof CONTROLS>;
+export const ICON_IDS: readonly IconId[] = [
+  ...APP_ICON_IDS,
+  ...FILE_ICON_IDS,
+  ...UI_ICON_IDS,
+  ...MORE_ICON_IDS,
+  ...CONTROL_ICON_IDS,
+];
 
 /** Ids that have a separate bare-glyph drawing. */
 export const BUTTON_ICON_IDS: readonly IconId[] = ICON_IDS.filter((id) => (DEFS[id] as IconDef).sg !== undefined);

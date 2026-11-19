@@ -1,6 +1,6 @@
 # @graphics/icons
 
-Application, file-type and shell icons for the MERIDIAN workstation. 93 identifiers, each drawn
+Application, file-type, shell and plant-control icons for the MERIDIAN workstation. 132 identifiers, each drawn
 twice: a 16px drawing and a separate 32px drawing. The 16px version is never a reduction of the
 32px one. The brief is a contractor-made Windows 2000-era enterprise set: heavy 1px outlines,
 one bevel, a short muted palette.
@@ -15,13 +15,13 @@ import { Icon, IconSprite, ICON_IDS, type IconId } from '@graphics/icons';
 <IconSprite />                                   // gallery of the whole set
 ```
 
-Also exported: `APP_ICON_IDS`, `FILE_ICON_IDS`, `UI_ICON_IDS`, `MORE_ICON_IDS`, `BUTTON_ICON_IDS`,
+Also exported: `APP_ICON_IDS`, `FILE_ICON_IDS`, `UI_ICON_IDS`, `MORE_ICON_IDS`, `CONTROL_ICON_IDS`, `BUTTON_ICON_IDS`,
 `isIconId(id)`, `iconPaths(id, size, variant?)`, `iconSvg(id, size, scale?, variant?)` (standalone
 SVG string for prerender), `ICON_PALETTE`, `type IconVariant`.
 
 ### `variant`
 
-`close minimize maximize restore refresh back forward sort-asc sort-desc` are drawn by default as a
+`close minimize maximize restore refresh back forward sort-asc sort-desc play pause record rewind` are drawn by default as a
 raised face-coloured button (white top/left edge, grey and dark bottom/right edge) carrying a dark
 glyph, so they read on the active title bar, the inactive title bar, the chrome face and white.
 `tree-expand tree-collapse` default to the white boxed plus/minus. `variant="glyph"` gives the bare
@@ -30,8 +30,9 @@ bar. Every other id ignores the prop.
 
 ## Identifiers
 
-- **Applications (12):** `registry transit personnel records mail ledger reserves assurance
-  directives forms terminal system`
+- **Applications (24):** `registry transit personnel records mail ledger reserves assurance
+  directives forms terminal system`, then the pass-two plant set pieces (`plant.ts`; each id equals
+  its AppId): `strike isolate drill cctv plant doors dispatch hoist environ pa muster patch`
 - **File types (16):** `doc-memo doc-directive doc-cable doc-minutes doc-form doc-scan doc-ledger
   doc-dossier doc-message doc-help doc-table doc-map doc-charter folder folder-open folder-locked`
 - **Shell (33):** `close minimize maximize restore search print printer-queue lock key-token
@@ -42,6 +43,13 @@ bar. Every other id ignores the prop.
   help-desk reactor seed-vault genetic-vault up home stop filter redacted compartment briefing
   logoff sound-on sound-off handheld check rail-train tram possession timetable sankey org-chart
   calculator barcode stamp`
+- **Plant controls (27, `controls.ts`):** `camera-grid play pause record rewind door-open door-closed
+  door-locked airlock-cycle alarm-ack alarm-silence signal-clear signal-stop route-set cage-up cage-down
+  estop fan chime badge jack loopback yield target-point drill-start drill-abort key`
+
+The plant applications reuse existing ids rather than duplicate them: `filter` (filtration),
+`sound-on` / `sound-off` (speaker on / off). `key` is the brass key for a key switch; `key-token` stays
+the smart token. `stop` is the no-entry disc; `estop` is the mushroom-head emergency stop.
 
 ## Palette
 
@@ -80,7 +88,9 @@ from CSS custom properties. Every ink is either a design token or one step from 
 3. Light comes from the top left. Objects are seen square-on; the only perspective is the turned
    page corner, the raked folder flap and the block in `3d-view`.
 4. One sheet of paper (`page16`, `page32`), one folder, one envelope, one monitor, one padlock:
-   shared parts live in `shapes.ts` and are reused, not redrawn differently per icon.
+   shared parts live in `shapes.ts` and are reused, not redrawn differently per icon. The plant parts
+   follow the same rule: one fan (`fanAt`, computed petals from 18px, hand-pixelled below), one blast
+   door, one industrial door, one alarm bell, one signal head, one hung ID badge.
 5. Text is greeked as 1px `q` rules; a `n` bar is a heading; oxblood marks the one thing on a
    document that matters (seal, precedence line, flagged entry).
 6. Caption, sort and toolbar glyphs carry their own raised button (`shapes.ts`, `face`/`btn`):
@@ -95,6 +105,7 @@ from CSS custom properties. Every ink is either a design token or one step from 
 - `canvas.ts`: pixel canvas, palette, path builder.
 - `shapes.ts`: shared parts (page, folder, envelope, monitor, gear, padlock).
 - `apps.ts`, `files.ts`, `ui.ts`, `more.ts`: the drawings (`s` = 16px, `l` = 32px, `sg`/`lg` = bare glyphs).
+- `plant.ts`: the twelve pass-two application icons. `controls.ts`: plant toolbar and state icons.
 - `pixels.ts`: registry, `IconId`, `iconPaths`, `iconSvg` (no JSX, importable from scripts).
 - `index.tsx`: `Icon`, `IconSprite`.
 
@@ -109,7 +120,7 @@ Renders every icon through Playwright Chromium at device scale 1 into `check/`:
 - `check/sheet-1x.png`: all icons at 16 and 32, plus the 16px set on face, white, workspace and
   title-bar grounds and the 32px set on face and workspace.
 - `check/sheet-4x-apps.png`, `check/sheet-4x-files.png`, `check/sheet-4x-ui.png`,
-  `check/sheet-4x-more.png`: the same drawings at 4x (integer scale, so the result is exact
+  `check/sheet-4x-more.png`, `check/sheet-4x-controls.png`: the same drawings at 4x (integer scale, so the result is exact
   nearest-neighbour).
 - `check/sheet-buttons.png`: both variants of the caption, sort, tree and toolbar glyphs on the
   active title bar, inactive title bar, face and white, at 1x and 4x.
@@ -122,4 +133,5 @@ fails if any 16px row is not 16 wide or uses an ink outside the palette.
 ![4x file types](check/sheet-4x-files.png)
 ![4x shell](check/sheet-4x-ui.png)
 ![4x application detail](check/sheet-4x-more.png)
+![4x plant controls](check/sheet-4x-controls.png)
 ![buttons](check/sheet-buttons.png)

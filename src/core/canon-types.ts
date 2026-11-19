@@ -9,8 +9,9 @@
  *   extended-b.json  -> canon extender B (glossary, ledger line items, fiscal years, contractors, covers)
  * Field-level origin: anything in source.json is "from source"; anything else is "extended".
  */
+import type { AccountDef } from './contracts';
 
-export type ClassId = 'ALPHA' | 'BETA' | 'GAMMA' | 'DELTA';
+export type ClassId ='ALPHA' | 'BETA' | 'GAMMA' | 'DELTA';
 export type FacilityId = `${ClassId}-${string}`; // ALPHA-01 .. DELTA-12
 export type TierNo = 1 | 2 | 3 | 4;
 export type MarkingId = 'TSSCI-OSC' | 'UMBRA-R' | 'UMBRA-C' | 'UMBRA-U' | 'UMBRA-EO';
@@ -327,6 +328,152 @@ export interface AnomalyNote {
   notes: string;
 }
 
+// ---- Pass two: extended-c (accounts and shared plant data; docs/canon/extended-c.md) ----
+
+/** Hardening class of planning model PM-3. */
+export type HardeningClassId = 'H1' | 'H2' | 'H3' | 'H4';
+export type SurvivabilityCondition = 'OPERATIONAL' | 'DEGRADED' | 'ISOLATED' | 'NOT ASSURED';
+
+/** Strike-effects planning model (strike app). A plainly simplified, notional model. */
+export interface Survivability {
+  model: {
+    id: string; // "PM-3"
+    title: string;
+    revision: number;
+    date: string; // ISO
+    originator: string; // "OCP/ALPHA-01"
+    marking: MarkingId;
+    disclaimer: string;
+    method: string[]; // the model's rules in words (apps implement exactly these)
+  };
+  classes: { id: HardeningClassId; name: string; description: string; ratedPsi: number; depthCoupling: number }[];
+  /** Model depth for a GAMMA site when the depth of record is not held (client canon: depthFt null). */
+  gammaPlanningDepthFt: number;
+  /** Ordered; condition = first whose maxRatio >= site psi / effective rating (null = otherwise). */
+  conditions: { id: SurvivabilityCondition; maxRatio: number | null; text: string }[];
+  /** Range (mi) = rangeCoeffMi x yieldKt^(1/3). Ordered by psi ascending (range descending). */
+  contours: { psi: number; rangeCoeffMi: number }[];
+  yieldsKt: number[];
+  /** Every non-DELTA facility. */
+  facilities: { facility: FacilityId; hardeningClass: HardeningClassId }[];
+  notModelled: { classId: 'DELTA'; text: string };
+}
+
+export type DrillClassId = 'ALPHA' | 'BETA' | 'GAMMA';
+
+/** One site's place in the seal drill order (computed by canon-merge from rail/tram links). */
+export interface SealDrillStep {
+  facility: FacilityId;
+  network: NetworkId | null;
+  /** Site that relays the order (null for the origin). */
+  via: FacilityId | null;
+  relay: 'origin' | 'rail' | 'tram' | 'voice';
+  /** Relay hops from the origin. */
+  hop: number;
+  /** Drill minutes from the order to this site receiving it. */
+  offsetMin: number;
+}
+
+export interface SealDrill {
+  /** Drill minutes per real minute (the drill runs compressed). */
+  timeScale: number;
+  origin: FacilityId;
+  /** Minutes from receipt of the order: acknowledge, door cycle, report sealed (sealMin >= ackMin + doorCycleMin). */
+  classes: { classId: DrillClassId; ackMin: number; doorCycleMin: number; sealMin: number }[];
+  relay: { hubHopMin: number; tramHopMin: number; unlinkedMin: number };
+  rules: string[];
+  excluded: { classId: 'DELTA'; text: string };
+  /** Every non-DELTA facility, in order of receipt (computed). */
+  sequence: SealDrillStep[];
+}
+
+export interface PlantLevel {
+  n: number;
+  name: string;
+}
+
+export type DoorKind = 'portal' | 'blast' | 'airlock';
+export interface DoorDef {
+  id: string; // "A01-BD3", "G08-PD1"
+  level: number; // ALPHA: facility level n; BETA/GAMMA: templateLevels n
+  location: string;
+  kind: DoorKind;
+  normal: 'open' | 'closed';
+  cycleSec: number;
+  ratedPsi: number | null;
+  sealsOnDrill: boolean;
+  /** Minimum tier to see this door (the level's tier for ALPHA). */
+  tier: TierNo;
+}
+export interface AirlockDef {
+  id: string; // "A01-AL1"
+  level: number;
+  location: string;
+  outer: string; // DoorDef id (kind airlock); interlocked with `inner`
+  inner: string;
+  cycleSec: number;
+  deconSec: number | null;
+  tier: TierNo;
+}
+export interface SiteDoors {
+  facility: FacilityId;
+  source: 'detailed' | 'template';
+  doors: DoorDef[];
+  airlocks: AirlockDef[];
+}
+
+export type CameraKind = 'corridor' | 'portal' | 'platform' | 'vault' | 'hoist' | 'plant' | 'assembly';
+export interface CameraDef {
+  id: string; // "A03-C14"
+  level: number;
+  location: string;
+  kind: CameraKind;
+  ptz: boolean;
+  tier: TierNo;
+}
+export interface SiteCameras {
+  facility: FacilityId;
+  source: 'detailed' | 'template';
+  cameras: CameraDef[];
+}
+
+export interface Hoist {
+  id: string; // "A01-H1"
+  facility: FacilityId; // ALPHA only
+  name: string;
+  kind: 'personnel' | 'vehicle' | 'freight' | 'egress';
+  /** Levels served (facility level numbers), ascending; the first is the collar. */
+  levels: number[];
+  speedFpm: number;
+  accelSec: number;
+  cagePersons: number;
+  payloadLb: number;
+  /** Computed: landing depth = level topFt + heightFt (the level floor). */
+  stops: { level: number; depthFt: number }[];
+  /** Computed: deepest landing minus collar landing. */
+  travelFt: number;
+}
+
+export interface MusterPoint {
+  id: string; // "A02-MP1"
+  level: number;
+  location: string;
+  capacity: number;
+  /** Posted staff assigned to this point; per site these sum to the facility's staff. */
+  assigned: number;
+}
+export interface SiteMuster {
+  facility: FacilityId;
+  source: 'detailed' | 'template';
+  points: MusterPoint[];
+}
+
+/**
+ * Per-app canon fragments: content/canon/apps/<appId>.json, validated by the optional
+ * src/core/canon-apps/<appId>.ts `schema`. Each app narrows its own entry with its schema type.
+ */
+export type CanonApps = Record<string, unknown>;
+
 export interface Canon {
   anomalyNotes: Record<string, AnomalyNote>;
   threatDetail: ThreatDetail[];
@@ -414,4 +561,20 @@ export interface Canon {
     supervisorPn: string;
     email: string;
   };
+  /* ---- pass two (extended-c) ---- */
+  /** The four issued credentials (client-safe: never a Tier 2 name). */
+  accounts: AccountDef[];
+  survivability: Survivability;
+  sealDrill: SealDrill;
+  /** Level names for BETA and GAMMA plant records (ALPHA uses facilities[].levels). */
+  templateLevels: Record<'BETA' | 'GAMMA', PlantLevel[]>;
+  /** Every non-DELTA facility. */
+  doors: SiteDoors[];
+  /** Every non-DELTA facility. */
+  cameras: SiteCameras[];
+  /** ALPHA shafts. */
+  hoists: Hoist[];
+  /** Every non-DELTA facility. */
+  musterPoints: SiteMuster[];
+  apps: CanonApps;
 }

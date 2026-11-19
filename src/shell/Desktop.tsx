@@ -3,7 +3,9 @@
  */
 import { signal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
-import { APPS } from '@apps/index';
+import { appById } from '@apps/index';
+import type { AppDefinition } from '@core/contracts';
+import { activeDef } from '@core/accounts';
 import { dismissToast, handheldActive, services, toasts } from '@core/services';
 import { DesktopWatermark, Icon } from './adapters';
 import { WindowFrame } from './Window';
@@ -14,8 +16,10 @@ import { runOpen, searchOpen } from './state';
 const selectedIcon = signal(0);
 const iconOrder = signal<'default' | 'name'>('default');
 
-function orderedApps() {
-  return iconOrder.value === 'name' ? [...APPS].sort((a, b) => a.title.localeCompare(b.title)) : APPS;
+/** This account's desktop icons (AccountDef.desktop order); the Directory lists every app. */
+function orderedApps(): AppDefinition[] {
+  const apps = activeDef.value.desktop.map((id) => appById(id)).filter((a): a is AppDefinition => !!a);
+  return iconOrder.value === 'name' ? [...apps].sort((a, b) => a.title.localeCompare(b.title)) : apps;
 }
 
 function DesktopIcons() {

@@ -140,3 +140,40 @@ Owner: integration (`src/narrative/**`). Started once from `src/main.tsx` after 
 - **Segment 04 scheduling:** each sign-in (not unlock) draws a due time 6–25 min after login. Once due, the movement starts at once if the session is unlocked and the board is shown (the engine ticks as soon as the board is reported visible). If it is locked when due, it starts within 60 s of unlock with the board shown (in practice on the next 5 s tick). If the board is never shown, it runs unwatched 20 min after it fell due (unlocked), so the withdrawal line still reaches audit tail. Never while locked; once per sign-in.
 - **`{date}` slot:** every triggered (non-login) delivery carries `slots.date` = the in-world date at the moment of delivery (`19 MAY 2008`, same clock as the taskbar); rule slots override it. Content that says "today" should use `{date}`, not a literal date. Login mail carries no slots.
 - Terminal: `clearance request acting` before the interim review should print "Not eligible: probationary (DIR-0247)"; check `services.session.flags.value.interimReview`.
+
+## Pass two (docs/SPEC-2.md)
+
+Types are in `src/core/contracts.ts` under "pass two": `AccountId`, `AccountDef`, `Trace`, `IsolationState`, `DrillState`, `DispatchedTrain`, `SharedStore`, the new `AppId`s, `AuditKind` `control` and `trace`, the new `SoundCue`s and `sound.stop`, and `Services.account`, `Services.traces`, `Services.shared`.
+
+**Directory ownership, pass two**
+| Path | Owner |
+|---|---|
+| `src/core/{services,session,audit,persist,router}.ts`, `src/core/{accounts,traces,shared}.ts`, `src/shell/**`, `src/main.tsx`, `src/apps/index.ts`, scaffold stubs of new apps | shell agent S2 (wave 2A) |
+| `scripts/build-content.ts`, `scripts/content/**`, `scripts/prerender.ts`, `scripts/verify-dist.ts`, `src/core/{docs,search}.ts` | pipeline agent P2 |
+| `content/canon/extended-c.json`, `content/canon/apps/` mechanism, `scripts/canon-merge.ts`, `src/core/{canon-schema,canon-types,canon-release}.ts`, `docs/canon/extended-c.md` | canon agent C2 |
+| `content/canon/apps/<appId>.json`, `src/core/canon-apps/<appId>.ts` | that app's agent (wave 2B) |
+| `src/graphics/panel/**` | panel kit agent GX1 |
+| `src/graphics/icons/**` | icons agent GX2 |
+| `src/apps/<new appId>/**`, `src/graphics/<new family>/**` it creates, `content/<appId>/**`, `content/mail/<appId>/**`, `docs/narrative-2/<appId>.md` | that app's agent (wave 2B) |
+| `content/variants/**`, Tier 4 flags in existing content | content agents (wave 2B) |
+
+**Shared plant state keys** (`services.shared`; only the owner writes):
+| Key | Type | Owner |
+|---|---|---|
+| `isolation` | `IsolationState` | isolate |
+| `drill` | `DrillState \| null` | drill |
+| `dispatch` | `DispatchedTrain[]` | dispatch |
+| `doors` | see `src/apps/doors/types.ts` | doors |
+| `plant` | see `src/apps/plant/types.ts` | plant |
+| `hoist` | see `src/apps/hoist/types.ts` | hoist |
+| `environ` | see `src/apps/environ/types.ts` | environ |
+| `pa` | see `src/apps/pa/types.ts` | pa |
+| `muster` | see `src/apps/muster/types.ts` | muster |
+| `patch` | see `src/apps/patch/types.ts` | patch |
+| `strike` | see `src/apps/strike/types.ts` | strike |
+| `traces` | `Trace[]` (use `services.traces`) | core |
+Readers import the owner's `types.ts` as a type-only import (`import type`), never its components.
+
+**Shell reactions (S2, wave 2A).** The shell reads shared key `isolation` and never writes it. While isolated (`active`, and `clearsAt` null or still in the future): every remote hub link in the taskbar notification area reports `DOWN` (fault square + word; the note names the latest initiation ref), and a plain notice line sits directly under the top classification banner: "Network isolated by manual initiate <ref> at <Zulu (local)>. Hub circuits down." (banner register: uppercase 11px bold on chrome face, no animation, no colour beyond the status square). At `level >= 3` the lock screen shows "Workstation A03-5-114 is under Internal Assurance review following network isolation <latest ref>." whether or not the isolation is still active. Helpers for apps: `isolation`, `isolatedAt(state, now)`, `latestInitiation(state)` in `src/shell/isolation.tsx` (read-only; apps may also read `services.shared.get('isolation', …)` directly).
+
+**Accounts and storage (S2, as implemented).** Persist keys are `meridian:acct:<accountId>:<key>`; global: `meridian:settings`, `meridian:activeAccount` (raw account id), and the shared store `meridian:shared:<key>` (localStorage JSON, BroadcastChannel `meridian-shared`, `storage`-event fallback). `persist.loadFrom(account, key, fallback)` is the read-only cross-account read (used by `services.account.readAudit`). A per-account `traces:arrived` key records which traces this account has received; on arrival the shell logs audit kind `trace` (subject = trace id; data `{ trace, kind, from, subject, msgId? }`), delivers `mail.deliver` traces once and marks them seen; every other kind stays unseen until the consuming app calls `traces.markSeen`. A trace an account posts to `all` is not logged as arriving at that account. Tier 4 rule: application home routes and messages already delivered to the account are exempt; the refusal cites `DIR-0301`. `session.probationDay` is `0` for accounts with `probationStart: null` (the session panel hides the row). The pass-one narrative engine (`startNarrative`) runs for `analyst` only.

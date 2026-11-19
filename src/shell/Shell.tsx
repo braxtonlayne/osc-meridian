@@ -29,7 +29,8 @@ import {
   tile,
   toggleMax,
 } from './wm';
-import { doLock, doLogin, doTimeout, runOpen, searchOpen } from './state';
+import { bootSkipped, doLock, doTimeout, signInAs, runOpen, searchOpen } from './state';
+import { IsolationNotice } from './isolation';
 import { f10ToMenuBar } from './focus';
 
 let ready: Promise<void> = Promise.resolve();
@@ -142,6 +143,8 @@ export function Shell() {
   }, []);
 
   if (phase === 'boot') {
+    // After an account switch the self-test is skipped (main.tsx moves on once ready).
+    if (bootSkipped.value) return <div class="boot-skipped" aria-busy="true" />;
     return <Boot reduced={motionReduced.value} onDone={() => void ready.then(() => (session.phase.value = 'locked'))} />;
   }
 
@@ -150,11 +153,12 @@ export function Shell() {
     <div class="shell">
       <div class="desk-root" inert={locked} aria-hidden={locked ? 'true' : undefined}>
         <ClassificationBanner marking={marking} position="top" />
+        <IsolationNotice />
         <Desktop />
         <Taskbar />
         <ClassificationBanner marking={marking} position="bottom" />
       </div>
-      {locked && <Lock onLogin={doLogin} />}
+      {locked && <Lock onLogin={signInAs} />}
       {!locked && runOpen.value && <RunDialog />}
       {!locked && searchOpen.value && <SearchPalette />}
       {!locked && menu.value && <ContextMenuHost />}

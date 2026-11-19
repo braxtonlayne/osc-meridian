@@ -98,6 +98,8 @@ export interface AccessCardProps {
   cardNo: string;
   /** Printed form reference in the card header. */
   formRef?: string;
+  /** Issuing office under the agency name (default "RECORDS DIVISION · SECURITY OFFICE"). */
+  issuer?: string;
   /** Replaces the default header seal (`<Seal size={34} variant="mono" />`). */
   seal?: ComponentChildren;
   class?: string;
@@ -114,6 +116,7 @@ export function AccessCard(props: AccessCardProps): JSX.Element {
     expires,
     cardNo,
     formRef = 'SO FORM 22 (REV 02-08)',
+    issuer = 'RECORDS DIVISION · SECURITY OFFICE',
     seal,
   } = props;
   const tierLabel = typeof tier === 'number' ? `TIER ${tier}` : tier;
@@ -124,7 +127,7 @@ export function AccessCard(props: AccessCardProps): JSX.Element {
         <div class="lk-card__seal">{seal ?? <Seal size={34} variant="mono" />}</div>
         <div class="lk-card__org">
           <div class="lk-card__org-name">OFFICE OF STRATEGIC CONTINUITY</div>
-          <div class="lk-card__org-sub">RECORDS DIVISION · SECURITY OFFICE</div>
+          <div class="lk-card__org-sub">{issuer}</div>
         </div>
         <div class="lk-card__form">{formRef}</div>
       </header>
@@ -178,7 +181,7 @@ export function AccessCard(props: AccessCardProps): JSX.Element {
       </div>
 
       <p class="lk-card__return">
-        PROPERTY OF THE OFFICE. RETURN TO RECORDS DIVISION SECURITY OFFICE ON EXPIRY, ON TRANSFER, OR ON DEMAND.
+        PROPERTY OF THE OFFICE. RETURN TO {issuer.replace(' · ', ' ')} ON EXPIRY, ON TRANSFER, OR ON DEMAND.
       </p>
 
       <footer class="lk-card__foot">

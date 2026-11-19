@@ -5,6 +5,7 @@
 import type { JSX } from 'preact';
 import {
   APP_ICON_IDS,
+  CONTROL_ICON_IDS,
   FILE_ICON_IDS,
   ICON_IDS,
   MORE_ICON_IDS,
@@ -18,6 +19,7 @@ import {
 export {
   APP_ICON_IDS,
   BUTTON_ICON_IDS,
+  CONTROL_ICON_IDS,
   FILE_ICON_IDS,
   ICON_IDS,
   MORE_ICON_IDS,
@@ -68,11 +70,14 @@ const GROUPS: ReadonlyArray<{ name: string; ids: readonly IconId[] }> = [
   { name: 'File types', ids: FILE_ICON_IDS },
   { name: 'Shell', ids: UI_ICON_IDS },
   { name: 'Application detail', ids: MORE_ICON_IDS },
+  { name: 'Plant controls', ids: CONTROL_ICON_IDS },
 ];
 
+const GROUP_INDEX = { apps: 0, files: 1, ui: 2, more: 3, controls: 4 } as const;
+
 /** Gallery of the whole set at both sizes, for the About panel and for review. */
-export function IconSprite({ group }: { group?: 'apps' | 'files' | 'ui' | 'more' }): JSX.Element {
-  const pick = group === 'apps' ? [GROUPS[0]] : group === 'files' ? [GROUPS[1]] : group === 'ui' ? [GROUPS[2]] : group === 'more' ? [GROUPS[3]] : GROUPS;
+export function IconSprite({ group }: { group?: keyof typeof GROUP_INDEX }): JSX.Element {
+  const pick = group ? [GROUPS[GROUP_INDEX[group]]] : GROUPS;
   return (
     <div data-icon-sprite={ICON_IDS.length}>
       {pick.map((g) =>

@@ -12,6 +12,8 @@
  *     whatever the visitor's real season.
  *
  * PROBATION DAY RULE:
+ *   Accounts not on probation (AccountDef.probationStart null) have probationDay 0;
+ *   the shell then hides the day count.
  *   probationDay = (in-world date - canon.operator.probationStart) in whole days + 1,
  *   clamped to 1..90 (the probationary transfer is 90 days). With the canonical
  *   start of 14 APR 2008 and the fixed date 19 MAY 2008 this yields day 36.
@@ -61,7 +63,8 @@ export function siteLocal(now: Date = new Date()): string {
   return `${pad2(h)}${pad2(now.getUTCMinutes())} EDT`;
 }
 
-export function probationDayFor(probationStartIso: string, now: Date = new Date()): number {
+export function probationDayFor(probationStartIso: string | null, now: Date = new Date()): number {
+  if (probationStartIso == null) return 0;
   const start = Date.parse(probationStartIso + 'T00:00:00Z');
   if (Number.isNaN(start)) return 1;
   const days = Math.floor((inWorldDate(now).getTime() - start) / 86400000) + 1;
@@ -81,7 +84,9 @@ export const baseTier = signal<TierNo>(3);
 export const site = signal('ALPHA-03');
 export const divisionId = signal('RD');
 export const displayName = signal('');
-export const probationStart = signal('2008-04-14');
+export const probationStart = signal<string | null>('2008-04-14');
+/** Role line for the session panel (AccountDef.roleTitle). */
+export const roleTitle = signal('');
 export const compartments = signal<CompartmentId[]>([]);
 export const actingTier2 = signal(false);
 export const flags = signal<Record<string, boolean>>({});
@@ -108,10 +113,12 @@ export async function initSession(op: {
   site: string;
   divisionId: string;
   displayName: string;
-  probationStart: string;
+  probationStart: string | null;
   compartments: CompartmentId[];
+  roleTitle?: string;
 }): Promise<void> {
   operatorId.value = op.operatorId;
+  roleTitle.value = op.roleTitle ?? '';
   baseTier.value = op.tier;
   site.value = op.site;
   divisionId.value = op.divisionId;

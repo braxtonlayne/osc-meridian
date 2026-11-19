@@ -5,7 +5,7 @@
 import { signal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import type { AppId } from '@core/contracts';
-import { APPS } from '@apps/index';
+import { APPS, OFFICE_APP_IDS, PLANT_APP_IDS, appById } from '@apps/index';
 import { printQueue, recent, services, handheldActive } from '@core/services';
 import * as session from '@core/session';
 import { Icon, canonNow } from './adapters';
@@ -15,13 +15,14 @@ import { MenuList, openMenu, SEP } from './Menu';
 import type { MenuItem } from './Menu';
 import { runOpen, searchOpen, doLock, doLogoff } from './state';
 import { seg04 } from '@narrative/seg04';
+import { isolatedAt, isolation, latestInitiation } from './isolation';
 
 export const directoryOpen = signal(false);
 const trayPopup = signal<'links' | 'session' | null>(null);
 
 /* ------------------------------------------------------------ hub links */
 
-export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED' | 'BUSY';
+export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED' | 'BUSY' | 'DOWN';
 
 /** Hub at the far end of segment 04 (the narrative movement runs ALPHA-05 to ALPHA-03). */
 const SEG04_HUB = 'ALPHA-05';
@@ -32,17 +33,22 @@ const SEG04_HUB = 'ALPHA-05';
  * per hub; during re-key the link is reported DEGRADED. Otherwise NOMINAL.
  * While the segment 04 movement is running (narrative engine, start..end) the
  * ALPHA-05 link reports BUSY: the hub is carrying the unbooked movement's traffic.
+ * While the network is isolated (shared key `isolation`) every remote hub is DOWN.
  */
 export function hubLinks(now: number): { id: string; state: LinkState; note: string }[] {
   const minute = new Date(now).getUTCMinutes();
   const ev = seg04.value;
   const segActive = !!ev && now >= ev.start && now <= ev.end;
+  const iso = isolation.value;
+  const isolated = isolatedAt(iso, now);
+  const isoRef = latestInitiation(iso)?.ref;
   const hubs = canonNow()
     .facilities.filter((f) => f.class === 'ALPHA')
     .map((f) => f.id)
     .sort();
   return hubs.map((id, i) => {
     if (id === session.site.value) return { id, state: 'LOCAL' as const, note: 'This site' };
+    if (isolated) return { id, state: 'DOWN' as const, note: `Hub circuit down; network isolated${isoRef ? ` by manual initiate ${isoRef}` : ''}` };
     if (segActive && id === SEG04_HUB) return { id, state: 'BUSY' as const, note: 'Link saturated; segment 04 movement traffic. Controlled mail queued' };
     const start = (i * 13 + 7) % 60;
     const inRekey = (minute - start + 60) % 60 < 3;
@@ -52,7 +58,7 @@ export function hubLinks(now: number): { id: string; state: LinkState; note: str
   });
 }
 
-const stClass = (s: LinkState) => (s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
+const stClass = (s: LinkState) => (s === 'DOWN' ? 'st-fault' : s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
 
 /* --------------------------------------------------------------- clock */
 
@@ -97,8 +103,12 @@ export function SessionPanel() {
           <th scope="row">Tier</th>
           <td>
             Tier {tier}
-            {acting ? ' (acting)' : ' (probationary analyst)'}
+            {acting ? ' (acting)' : ''}
           </td>
+        </tr>
+        <tr>
+          <th scope="row">Role</th>
+          <td>{session.roleTitle.value}</td>
         </tr>
         <tr>
           <th scope="row">Compartments</th>
@@ -110,12 +120,14 @@ export function SessionPanel() {
             {session.site.value}, {div}
           </td>
         </tr>
-        <tr>
-          <th scope="row">Probation</th>
-          <td>
-            Day {session.probationDay.value} of {session.PROBATION_LENGTH_DAYS}
-          </td>
-        </tr>
+        {session.probationStart.value != null && (
+          <tr>
+            <th scope="row">Probation</th>
+            <td>
+              Day {session.probationDay.value} of {session.PROBATION_LENGTH_DAYS}
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );
@@ -147,7 +159,13 @@ export function DirectoryMenu() {
     return () => window.removeEventListener('pointerdown', down, true);
   }, []);
 
-  const appItems: MenuItem[] = APPS.map((a) => ({ label: a.title, action: () => services.openApp(a.id as AppId) }));
+  const items = (ids: readonly AppId[]): MenuItem[] =>
+    ids.flatMap((id) => {
+      const a = appById(id);
+      return a ? [{ label: a.title, action: () => services.openApp(a.id) }] : [];
+    });
+  const appItems = items(OFFICE_APP_IDS);
+  const plantItems = items(PLANT_APP_IDS);
   // App home routes are already listed (Applications, and the shortcuts above), so recent
   // documents show documents only.
   const recents = recent.value.filter((p) => !APPS.some((a) => a.homeRoute === p)).slice(0, 6);
@@ -189,6 +207,10 @@ export function DirectoryMenu() {
         <div class="dir-col">
           <div class="dir-col-h">Applications</div>
           <MenuList items={appItems} label="Applications" onDone={close} />
+        </div>
+        <div class="dir-col">
+          <div class="dir-col-h">Plant and Operations</div>
+          <MenuList items={plantItems} label="Plant and Operations" onDone={close} autoFocus={false} />
         </div>
         <div class="dir-col">
           <div class="dir-col-h">Documents and recent</div>

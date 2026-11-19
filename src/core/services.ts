@@ -4,19 +4,24 @@
  * or the `useServices()` hook.
  */
 import { computed, signal } from '@preact/signals';
-import type { AppId, DocJson, MailDeliverOptions, MailMeta, RouteEntry, Services, SoundCue } from './contracts';
+import { effect } from '@preact/signals';
+import type { AccountId, AppId, AuditEntry, DocJson, MailDeliverOptions, MailMeta, RouteEntry, Services, SoundCue } from './contracts';
 import type { CompartmentId, TierNo } from './canon-types';
 import * as audit from './audit';
 import * as session from './session';
-import { loadSync, saveSync, load, save } from './persist';
+import { loadSync, saveSync, load, save, loadFrom, flush } from './persist';
+import * as accounts from './accounts';
+import { shared } from './shared';
+import { createTraces, processArrivals } from './traces';
 import { hashOf, normalize, pushPath, replacePath } from './router';
 import { heldHits, isHeldEntry } from './search';
+import { readableByTier4 } from './docs';
 import { APPS, appById, appForPath, isAppId } from '@apps/index';
 import { canonNow, loadDoc, markingById, printDocument, searchRoutes } from '@shell/adapters';
 import type { SearchHit } from '@shell/adapters';
 import * as wm from '@shell/wm';
 import type { Win } from '@shell/wm';
-import { playCue } from '@shell/sound';
+import { playCue, stopCue } from '@shell/sound';
 
 /* ------------------------------------------------------------- settings */
 
@@ -145,6 +150,21 @@ function routeKey(r: RouteEntry): string | null {
   return r.access.compartment ? `${r.access.compartment}+${t}` : t;
 }
 
+/**
+ * Tier 4 rule (docs/SPEC-2.md §1, mechanism 1): a Tier 4 account sees a document only if
+ * its RouteEntry is marked `t4` or the account has its own variant of it. Application
+ * home routes are exempt (the application decides what it shows), and so is a message
+ * that has been delivered to this account (it was addressed to the operator).
+ */
+export function t4Blocked(r: RouteEntry, tier: TierNo = session.baseTier.peek(), account: AccountId = accounts.activeId.peek()): boolean {
+  if (tier !== 4 || readableByTier4(r) || r.variants?.includes(account)) return false;
+  if (r.family === 'mail' && mailState.delivered.peek().includes(r.id)) return false;
+  return !APPS.some((a) => a.homeRoute === normalize(r.route));
+}
+
+/** Short-form reference cited by the Tier 4 refusal (canon numbering: "DIR-0301"). */
+export const T4_REFUSAL_REF = 'DIR-0301';
+
 function appTitle(id: AppId | null): string {
   return (id && appById(id)?.title) || 'MERIDIAN';
 }
@@ -171,7 +191,13 @@ function onNavigate(w: Win, target: string): void {
   const hash = hashOf(target);
   const entry = byRouteMap.get(p);
   const owner = entry ? appById(entry.app) : appForPath(p);
-  if (!owner || owner.id !== w.appId || (entry && !heldEntry(entry)) || (entry && routeKey(entry) && !session.satisfies(routeKey(entry)!))) {
+  if (
+    !owner ||
+    owner.id !== w.appId ||
+    (entry && !heldEntry(entry)) ||
+    (entry && t4Blocked(entry)) ||
+    (entry && routeKey(entry) && !session.satisfies(routeKey(entry)!))
+  ) {
     openRoute(p + hash);
     return;
   }
@@ -320,6 +346,20 @@ function openRouteNew(p: string, push: boolean, hash: string): Win | null {
     pushIt();
     return w;
   }
+  if (entry && t4Blocked(entry)) {
+    const w = openRefusal(
+      p,
+      entry.title,
+      {
+        authority: 'Classification Control, Office of Internal Assurance',
+        ref: T4_REFUSAL_REF,
+        reason: `Requires Tier 3 access determination. Display of ${entry.docNo} to this operator is not authorised.`,
+      },
+      entry.docNo,
+    );
+    pushIt();
+    return w;
+  }
   if (entry) {
     const def = appById(entry.app);
     const key = routeKey(entry);
@@ -464,7 +504,7 @@ export async function searchAll(q: string): Promise<{ hits: SearchHit[]; withhel
   let withheld = 0;
   for (const h of raw) {
     const key = routeKey(h.route);
-    if (key && !session.satisfies(key)) withheld++;
+    if (t4Blocked(h.route) || (key && !session.satisfies(key))) withheld++;
     else hits.push(h);
   }
   if (q.trim()) {
@@ -483,6 +523,72 @@ function grant(key: CompartmentId | 'ACTING-T2', reason: string): void {
   audit.log('clearance.grant', key, `${what} recorded against operator ${session.operatorId.peek()}. Basis: ${reason}`);
   notify(`${what} has been recorded against your access determination. Withheld material covered by it will be released on next display.`, {
     from: 'Classification Control',
+  });
+}
+
+/* ------------------------------------------------------ accounts, traces */
+
+/**
+ * Leave this account for `id`: log off (if signed in), point storage at `id`, and
+ * reload into its namespace. The next load skips the self-test; with `autologin`
+ * (the visitor already signed in with that card) it goes straight to the desktop,
+ * otherwise to the lock screen with that card selected.
+ */
+export async function switchAccount(id: AccountId, autologin: boolean): Promise<void> {
+  if (session.signedIn.peek() && session.lockReason.peek() !== 'logoff') {
+    audit.log('logout', session.operatorId.peek());
+  }
+  accounts.writePointer(id);
+  accounts.writeSwitchNote({ to: id, autologin });
+  stopCue('alarm');
+  await flush();
+  location.reload();
+}
+
+async function readAudit(id: AccountId): Promise<AuditEntry[]> {
+  const me = accounts.activeDef.peek();
+  if (!me.auditReader) {
+    throw new Error(`Audit review is not open to operator ${session.operatorId.peek()}. Office of Internal Assurance auditors only.`);
+  }
+  if (id === me.id) return audit.entries.peek().slice();
+  if (!accounts.accountById(id)) throw new Error(`No account ${id}.`);
+  return (await loadFrom<AuditEntry[]>(id, 'audit', [])).slice();
+}
+
+const traces = createTraces(shared, () => accounts.activeId.peek(), () => session.inWorldIso());
+
+/**
+ * Receive traces addressed to this account: once at sign-in (silent mail delivery)
+ * and then live while signed in. Call after the audit trail and mail stores loaded.
+ */
+export async function startTraceWatch(): Promise<void> {
+  const arrived = new Set(await load<string[]>('traces:arrived', []));
+  let batch = true;
+  const run = () => {
+    if (!session.signedIn.peek()) return;
+    const fresh = processArrivals(traces.mine.peek(), {
+      me: accounts.activeId.peek(),
+      arrived,
+      accountById: accounts.accountById,
+      opShort: accounts.operatorShort,
+      log: (kind, subject, detail, data) => void audit.log(kind, subject, detail, data),
+      deliver: deliverMail,
+      markSeen: (id) => traces.markSeen(id),
+      silent: batch,
+    });
+    batch = false;
+    if (fresh.length) save('traces:arrived', [...arrived]);
+  };
+  audit.subscribe((e) => {
+    if (e.kind === 'login') {
+      batch = true;
+      queueMicrotask(run);
+    }
+  });
+  effect(() => {
+    void traces.mine.value;
+    // Outside the effect: arrival writes back to the store (markSeen) and the audit trail.
+    queueMicrotask(run);
   });
 }
 
@@ -526,7 +632,25 @@ export const services: Services = {
     play(cue: SoundCue) {
       if (sSound.peek()) playCue(cue);
     },
+    stop(cue: SoundCue) {
+      stopCue(cue);
+    },
   },
+  account: {
+    id: accounts.activeId,
+    def: accounts.activeDef,
+    all: accounts.allAccounts,
+    switchTo: (id) => void switchAccount(id, false),
+    readAudit,
+    byEmail: accounts.accountByEmail,
+  },
+  traces: {
+    post: (t) => traces.post(t),
+    all: traces.all,
+    mine: traces.mine,
+    markSeen: (id) => traces.markSeen(id),
+  },
+  shared,
   settings: {
     sound: sSound,
     density: sDensity,
@@ -537,6 +661,7 @@ export const services: Services = {
       else if (key === 'density') sDensity.value = value === 'compact' ? 'compact' : 'standard';
       else if (key === 'reducedMotion') sReduced.value = Boolean(value);
       else if (key === 'handheld') sHandheld.value = value === 'on' || value === 'off' ? value : 'auto';
+      if (key === 'sound' && !sSound.peek()) stopCue('alarm');
       persistSettings();
     },
   },
