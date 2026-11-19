@@ -139,18 +139,26 @@ interface Geometry {
   /** Board origin and scale, for the legend anchor. */
   ox: number;
   oy: number;
+  /** Narrow diagram: the legend has its own band under the board instead of sitting on it. */
+  legendBelow: boolean;
 }
 
 const HEAD_H = 16;
+/** At or below this width the legend moves under the board (it would cover the track); transit passes 600 as its narrow minimum. */
+const LEGEND_BELOW_W = 640;
+/** Band reserved for the one-column legend: up to six rows of 13px plus its title. */
+const LEGEND_BAND_H = 6 * 13 + 22 + 8;
 
 const pathD = (pts: readonly Pt[]) =>
   pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
 
 function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
   const L = SCHEMATIC_LAYOUT;
-  const s = Math.max(0.2, Math.min(width / L.width, height / L.height));
+  const legendBelow = width <= LEGEND_BELOW_W;
+  const boardH = legendBelow ? Math.max(40, height - LEGEND_BAND_H) : height;
+  const s = Math.max(0.2, Math.min(width / L.width, boardH / L.height));
   const ox = Math.round((width - L.width * s) / 2);
-  const oy = Math.round((height - L.height * s) / 2);
+  const oy = Math.round((boardH - L.height * s) / 2);
   const compact = s < 0.8;
   const sz: Sizes = compact
     ? { compact, s, railO: 4, railI: 2, tram: 1, tramOcc: 3, dark: 1, ch: 4.8, alphaW: Math.max(42, 96 * s), alphaH: 17, beta: 9, gamma: 5 }
@@ -188,7 +196,7 @@ function buildGeometry(width: number, height: number, blockCounts?: Readonly<Rec
     return { node, x, y };
   });
 
-  return { width, height, sz, links, byKey: new Map(links.map((g) => [g.link.key, g])), nodes, ox, oy };
+  return { width, height, sz, links, byKey: new Map(links.map((g) => [g.link.key, g])), nodes, ox, oy, legendBelow };
 }
 
 /* ------------------------------------------------------------------ */
@@ -558,8 +566,8 @@ function Legend({ g, hatch, showTram }: { g: Geometry; hatch: string; showTram: 
   const colW = sz.compact ? 172 : 196;
   const w = cols * colW + 8;
   const h = perCol * rowH + 22;
-  const x0 = Math.round(g.ox + 30 * sz.s);
-  const y0 = Math.round(g.oy + (L.height - 14) * sz.s) - h;
+  const x0 = g.legendBelow ? 4 : Math.round(g.ox + 30 * sz.s);
+  const y0 = g.legendBelow ? g.height - h - 4 : Math.round(g.oy + (L.height - 14) * sz.s) - h;
   return (
     <g transform={`translate(${x0} ${y0})`} aria-hidden="true">
       <rect class="sc-legend" x={0.5} y={0.5} width={w - 1} height={h - 1} />

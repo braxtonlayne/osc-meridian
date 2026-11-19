@@ -57,6 +57,13 @@ export interface DataTableProps<T> {
   empty?: ComponentChildren;
   /** Totals row(s): rendered in a sticky tfoot. Pass <tr> elements. */
   footer?: ComponentChildren;
+  /**
+   * Minimum width in px of each column without a numeric width (default 96). The table is
+   * `table-layout: fixed`, so when the fixed columns fill the well the flexible ones would get
+   * 0px and wrap one word per line; instead the table keeps this floor and the well scrolls
+   * sideways.
+   */
+  flexMin?: number;
   /** Scroll container max height (CSS length). Default fills parent. */
   maxHeight?: string;
   rowClass?: (row: T) => string | undefined;
@@ -81,6 +88,11 @@ function compare(a: unknown, b: unknown): number {
  * Keyboard (table focused): Up/Down, PageUp/PageDown, Home/End move; Shift extends (multi);
  * Space toggles (multi); Ctrl+A selects all (multi); Enter activates.
  */
+/** Sum of numeric column widths, with `flex` px for each column that has none (or a CSS length). */
+export function tableMinWidth(columns: ReadonlyArray<{ width?: number | string }>, flex = 96): number {
+  return columns.reduce((a, c) => a + (typeof c.width === 'number' ? c.width : flex), 0);
+}
+
 export function DataTable<T>(props: DataTableProps<T>) {
   const {
     columns,
@@ -99,7 +111,9 @@ export function DataTable<T>(props: DataTableProps<T>) {
     rowClass,
     sortRows = true,
     onRowContextMenu,
+    flexMin = 96,
   } = props;
+  const minWidth = tableMinWidth(columns, flexMin);
   const [sort, setSort] = useControllable<SortState | null>(props.sort, props.defaultSort ?? null, props.onSortChange);
   const [selected, setSelected] = useControllable<string[]>(props.selected, props.defaultSelected ?? [], props.onSelectionChange);
   const [cursor, setCursor] = useState(0);
@@ -234,6 +248,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
       <div ref={wellRef} class="well" style={{ maxHeight, flex: '1 1 auto' }}>
         <table
           class={cx('dt', zebra && 'dt--zebra', dense && 'dt--dense', wrap && 'dt--wrap')}
+          style={{ minWidth: `${minWidth}px` }}
           role="grid"
           aria-label={label}
           aria-rowcount={sorted.length + 1}

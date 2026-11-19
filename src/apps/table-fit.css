@@ -1,7 +1,0 @@
-/* See table-fit.tsx. Unlayered, so it beats the primitives layer. */
-.app-dt-fit {
-  display: contents;
-}
-.app-dt-fit > .u-stack > .well > .dt {
-  min-width: var(--app-dt-min, 0);
-}

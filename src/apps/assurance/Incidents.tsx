@@ -7,7 +7,6 @@ import { Button, DataTable, GroupBox, PropertyGrid, Select, Tabs, formatOscDate,
 import { EmptyState } from '@graphics/states';
 import { accessLogRows, accessRecord, accessionsIn, appendRowsAfterHeading, actionLabel, auditDate, auditRef, auditTime, normalizeFields, ticketFields, ticketSubject, WORKLOG_HEADING, type TicketFields } from './logic';
 import { DocBody, RouteRefusal, RxText, canRead, canon, markingOf, useDoc, useGridCols, type DocState } from './shared';
-import { TableFit } from '../table-fit';
 
 /* ---------------------------------------------------------------- queue */
 
@@ -84,20 +83,19 @@ export function IncidentQueue({
           />
         </div>
       </div>
-      <TableFit columns={cols} flex={180}>
-        <DataTable
-          label="Incident tickets"
-          columns={cols}
-          rows={rows}
-          rowKey={(r) => r.entry.id}
-          selection="single"
-          selected={selected ? [selected] : []}
-          onSelectionChange={(k) => k[0] && onSelect(k[0])}
-          onActivate={(r) => onOpen(r.entry.id)}
-          defaultSort={{ key: 'no', dir: 'desc' }}
-          empty={<EmptyState title="No tickets in this queue" body="No incident tickets match the selected filter." icon="tray" />}
-        />
-      </TableFit>
+      <DataTable
+        flexMin={180}
+        label="Incident tickets"
+        columns={cols}
+        rows={rows}
+        rowKey={(r) => r.entry.id}
+        selection="single"
+        selected={selected ? [selected] : []}
+        onSelectionChange={(k) => k[0] && onSelect(k[0])}
+        onActivate={(r) => onOpen(r.entry.id)}
+        defaultSort={{ key: 'no', dir: 'desc' }}
+        empty={<EmptyState title="No tickets in this queue" body="No incident tickets match the selected filter." icon="tray" />}
+      />
       <div class="asr-hint">Select a ticket and press Enter, or double-click it, to open the ticket.</div>
     </div>
   );

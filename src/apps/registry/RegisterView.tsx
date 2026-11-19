@@ -2,7 +2,6 @@
 import type { ClassId } from '@core/canon-types';
 import { Checkbox, DataTable, TextField, type Column, type SortState } from '@design/index';
 import { MarkerGlyph } from '@graphics/map';
-import { TableFit } from '../table-fit';
 import { CLASS_IDS, isOpen, sortKey, totals, type RegRow, type RowFilter } from './model';
 import { CellView, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 
@@ -79,7 +78,7 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
       ),
     },
     { key: 'codename', header: 'Codename', width: 140, sortValue: (r) => sortKey(r.codename), render: (r) => <CellView c={r.codename} id={`${r.id}:codename`} audit={audit} nil="" /> },
-    // Location and Cover identity share the remaining width (TableFit floor 170px each).
+    // Location and Cover identity share the remaining width (DataTable flexMin floor 170px each).
     { key: 'location', header: 'Location', sortValue: (r) => sortKey(r.location), render: (r) => <CellView c={r.location} id={`${r.id}:location`} audit={audit} /> },
     { key: 'cover', header: 'Cover identity', sortValue: (r) => sortKey(r.cover), render: (r) => <CellView c={r.cover} id={`${r.id}:cover`} audit={audit} nil="Not entered" /> },
     { key: 'depth', header: 'Depth ft', width: 72, align: 'right', mono: true, sortValue: (r) => sortKey(r.depth), render: (r) => <CellView c={r.depth} id={`${r.id}:depth`} audit={audit} fmt={(v) => (v == null ? '' : fmt(v))} /> },
@@ -103,8 +102,8 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
     </span>
   );
   return (
-    <TableFit columns={cols} flex={170}>
     <DataTable<RegRow>
+      flexMin={170}
       label="Register of installations"
       columns={cols}
       rows={rows}
@@ -120,7 +119,6 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
       rowClass={(r) => (r.id === canon.operator.site ? 'reg-row-home' : undefined)}
       empty={<span class="reg-note">No installation matches the filter.</span>}
     />
-    </TableFit>
   );
 }
 

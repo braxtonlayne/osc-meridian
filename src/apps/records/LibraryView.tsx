@@ -4,7 +4,6 @@ import type { RouteEntry } from '@core/contracts';
 import { Button, DataTable, PropertyGrid, Select, Splitter, TextField, Tree, formatOscDate, type Column, type TreeNode } from '@design/index';
 import { EmptyFolder } from '@graphics/states';
 import { accessKeyOf, accessWords, buildFolderGroups, divisionOf, seriesOf } from './lib';
-import { TableFit } from '../table-fit';
 import { DIVISIONS, MARKINGS, MATCHERS, MarkingTag, divisionName, familyLabel, markingRank } from './shared';
 
 export interface LibraryProps {
@@ -86,7 +85,7 @@ export function LibraryView(p: LibraryProps) {
 
   const columns: Column<RouteEntry>[] = [
     { key: 'docNo', header: 'Doc No', mono: true, width: 124 },
-    // Title takes the remaining width; TableFit keeps a floor under it.
+    // Title takes the remaining width; DataTable keeps a floor under it (flexMin).
     { key: 'title', header: 'Title', wrap: true },
     {
       key: 'marking',
@@ -157,21 +156,20 @@ export function LibraryView(p: LibraryProps) {
         <TextField label="Filter" value={filter} onInput={setFilter} width="22ch" hint={undefined} />
       </div>
       <div class="rec__scroll rec__well">
-        <TableFit columns={shown} flex={p.narrow ? 130 : 160}>
-          <DataTable
-            label={`Documents in ${folder.label}`}
-            columns={shown}
-            rows={items}
-            rowKey={(r) => r.route}
-            selection="single"
-            selected={sel ? [sel.route] : []}
-            onSelectionChange={(k) => p.onSelect(k[0] ?? null)}
-            onActivate={p.onOpen}
-            defaultSort={p.folderId === 'recent' ? null : { key: 'date', dir: 'desc' }}
-            dense
-            empty={<EmptyFolder name={folder.label} />}
-          />
-        </TableFit>
+        <DataTable
+          flexMin={p.narrow ? 130 : 160}
+          label={`Documents in ${folder.label}`}
+          columns={shown}
+          rows={items}
+          rowKey={(r) => r.route}
+          selection="single"
+          selected={sel ? [sel.route] : []}
+          onSelectionChange={(k) => p.onSelect(k[0] ?? null)}
+          onActivate={p.onOpen}
+          defaultSort={p.folderId === 'recent' ? null : { key: 'date', dir: 'desc' }}
+          dense
+          empty={<EmptyFolder name={folder.label} />}
+        />
       </div>
       {sel ? <Detail r={sel} onOpen={p.onOpen} satisfies={p.satisfies} /> : null}
     </div>

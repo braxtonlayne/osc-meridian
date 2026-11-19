@@ -68,7 +68,6 @@ import {
 } from './model';
 import { FieldGrid, fieldDomId, type DirectoryEntry } from './Fields';
 import { addReceipt, countFor, drafts, dropDraft, loadStore, receipts, saveDraft, type StoredReceipt } from './store';
-import { TableFit } from '../table-fit';
 import './forms-app.css';
 
 const canon = canonJson as unknown as Canon;
@@ -265,21 +264,20 @@ function Catalogue({ win }: AppProps) {
           {tab === 'catalogue' ? (
             <div class="fx-split">
               <div class="fx-split__list">
-                <TableFit columns={cols} flex={160}>
-                  <DataTable
-                    label="Forms on issue"
-                    columns={cols}
-                    rows={rows}
-                    rowKey={(r) => r.id}
-                    selection="single"
-                    selected={sel ? [sel] : []}
-                    onSelectionChange={(k) => setSel(k[0] ?? null)}
-                    onActivate={(r) => open(r)}
-                    defaultSort={{ key: 'docNo', dir: 'asc' }}
-                    dense
-                    empty={<EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />}
-                  />
-                </TableFit>
+                <DataTable
+                  flexMin={160}
+                  label="Forms on issue"
+                  columns={cols}
+                  rows={rows}
+                  rowKey={(r) => r.id}
+                  selection="single"
+                  selected={sel ? [sel] : []}
+                  onSelectionChange={(k) => setSel(k[0] ?? null)}
+                  onActivate={(r) => open(r)}
+                  defaultSort={{ key: 'docNo', dir: 'asc' }}
+                  dense
+                  empty={<EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />}
+                />
               </div>
               <div class="fx-split__detail">
                 {selected ? (
@@ -310,19 +308,18 @@ function Catalogue({ win }: AppProps) {
           ) : (
             <div class="fx-split">
               <div class="fx-split__list">
-                <TableFit columns={rcols} flex={160}>
-                  <DataTable
-                    label="Receipts held"
-                    columns={rcols}
-                    rows={rcpts}
-                    rowKey={rcptKey}
-                    selection="single"
-                    selected={selReceipt ? [selReceipt] : []}
-                    onSelectionChange={(k) => setSelReceipt(k[0] ?? null)}
-                    dense
-                    empty={<EmptyState title="No receipts held" body="Receipts for forms submitted from this workstation are listed here." icon="tray" />}
-                  />
-                </TableFit>
+                <DataTable
+                  flexMin={160}
+                  label="Receipts held"
+                  columns={rcols}
+                  rows={rcpts}
+                  rowKey={rcptKey}
+                  selection="single"
+                  selected={selReceipt ? [selReceipt] : []}
+                  onSelectionChange={(k) => setSelReceipt(k[0] ?? null)}
+                  dense
+                  empty={<EmptyState title="No receipts held" body="Receipts for forms submitted from this workstation are listed here." icon="tray" />}
+                />
               </div>
               <div class="fx-split__detail fx-paper">
                 {curReceipt ? <ReceiptView r={curReceipt} /> : <EmptyState title="No receipt selected" body="Select a receipt to show the slip." icon="tray" />}
