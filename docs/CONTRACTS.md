@@ -104,7 +104,7 @@ Audit `kind` values: `window.open window.close doc.read search redaction.hover p
 | `@graphics/schematic` | rail/tram line diagram |
 | `@graphics/tunnelmap` | geographic tunnel map, certified + engineering layers |
 | `@graphics/depth3d` | `mountDepthViewer(el, facilityId, opts) => dispose` (Three.js, lazy) |
-| `@graphics/tunnel3d` | `mountTunnelView(el, opts) => dispose` (Three.js, lazy) |
+| `@graphics/tunnel3d` | `mountTunnelView(el, opts) => { dispose, update(trains), select(key) }` and `TunnelView` (Three.js, lazy) |
 | `@graphics/ledger` | Sankey + ledger charts |
 | `@graphics/org` | org chart + tier pyramid |
 | `@graphics/reactor` | reactor one-line diagrams + telemetry gauges |
