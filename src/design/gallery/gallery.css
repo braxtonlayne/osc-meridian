@@ -1,0 +1,67 @@
+@layer primitives {
+  .gal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--chrome-face);
+  }
+  .gal > .tabs {
+    flex: 1 1 auto;
+  }
+  .gal-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+    padding: var(--sp-5);
+  }
+  .gal-sec {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .gal-frame {
+    border: 1px solid var(--chrome-shadow);
+    background: var(--chrome-face);
+  }
+  .gal-ctx {
+    padding: var(--sp-6) var(--sp-5);
+    color: var(--text-2);
+    background: var(--surface);
+  }
+  .gal-split {
+    height: 180px;
+    border: 1px solid var(--chrome-shadow);
+  }
+  .gal-pane {
+    height: 100%;
+    padding: var(--sp-4);
+    background: var(--surface);
+  }
+  .gal-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-4) var(--sp-6);
+  }
+  .gal-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sp-6);
+  }
+  .gal-p {
+    max-width: 70ch;
+  }
+  .gal-docs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+  }
+  .gal-docs__view {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    background: var(--chrome-face);
+  }
+}

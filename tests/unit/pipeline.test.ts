@@ -1,9 +1,10 @@
 // @vitest-environment node
 import { describe, expect, it, beforeAll } from 'vitest';
-import { mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { buildContent, type BuildResult } from '../../scripts/content/build.ts';
+import { spawnSync } from 'node:child_process';
+import { buildContent, loadManifestDocNos, type BuildResult } from '../../scripts/content/build.ts';
 import { FrontmatterSchema } from '../../scripts/content/schema.ts';
 import { ContentBuildError } from '../../scripts/content/util.ts';
 import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
@@ -169,6 +170,89 @@ describe('content pipeline', () => {
     expect(d.html).toContain('data-initials="JH 5/2,MKB 5/5"');
     expect(d.html).toContain('<span class="routing-initial" data-seq="2">MKB 5/5</span>');
     expectBuildError(tempContent({ 'directives/a.md': md(FM, 'x :ink[y]{mark=box}') }), /:ink mark="box"/);
+  });
+});
+
+describe('validation modes for parallel content agents', () => {
+  const FM2 = { ...FM, id: 'mem-0200', route: '/records/mem-0200', family: 'records', app: 'records', docNo: 'OSC-MEM-08-0200' };
+
+  it('onlyDir reports problems only for that dir but still resolves cross-family xrefs', () => {
+    const dir = tempContent({
+      'directives/a.md': md(FM, 'See :x[OSC-MEM-08-0200].'),
+      'records/b.md': md(FM2, 'Broken :c[headline.nope] here.'),
+    });
+    try {
+      const r = buildContent({ contentDir: dir, canonPath: CANON, onlyDir: join(dir, 'directives'), displayRoot: dir });
+      expect(r.docs.find((d) => d.id === 'dir-0099')!.html).toContain('href="/records/mem-0200"');
+      expect(r.suppressed).toBe(1);
+      expect(() => buildContent({ contentDir: dir, canonPath: CANON, onlyDir: join(dir, 'records'), displayRoot: dir })).toThrow(
+        /records\/b\.md:\d+.*headline\.nope/,
+      );
+      expect(() => buildContent({ contentDir: dir, canonPath: CANON, onlyDir: dir, outDir: dir })).toThrow(/cannot be combined/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('manifest xrefs to pages not yet written are warnings in dry run and errors otherwise', () => {
+    const dir = tempContent({
+      'directives/a.md': md({ ...FM, xrefs: ['OSC-LED-0001'] }, 'See :x[OSC-PER-0007] and :x[OSC-DIR-0099].'),
+      'manifest.json': JSON.stringify({ families: { personnel: [{ docNo: 'OSC-PER-0007' }] }, docNos: ['OSC-LED-0001'] }),
+    });
+    try {
+      const planned = loadManifestDocNos(join(dir, 'manifest.json'));
+      expect([...planned].sort()).toEqual(['OSC-LED-0001', 'OSC-PER-0007']);
+      const r = buildContent({ contentDir: dir, canonPath: CANON, manifestDocNos: planned, pendingXrefsAreWarnings: true, displayRoot: dir });
+      expect(r.warnings.map((w) => w.message).join('\n')).toMatch(/OSC-PER-0007[\s\S]*OSC-LED-0001|OSC-LED-0001[\s\S]*OSC-PER-0007/);
+      expect(r.warnings.find((w) => w.message.includes('OSC-PER-0007'))!.line).toBe(17);
+      expect(() => buildContent({ contentDir: dir, canonPath: CANON, manifestDocNos: planned, displayRoot: dir })).toThrow(
+        /planned in the manifest but its page does not exist/,
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('--dry-run writes nothing', () => {
+    const out = mkdtempSync(join(tmpdir(), 'meridian-dry-'));
+    try {
+      const res = spawnSync(
+        process.execPath,
+        ['--import', 'tsx', resolve(__dirname, '../../scripts/build-content.ts'), '--content', FIXTURES, '--canon', CANON, '--out', out, '--dry-run'],
+        { encoding: 'utf8' },
+      );
+      expect(res.status, res.stderr).toBe(0);
+      expect(res.stdout).toContain('DRY RUN');
+      expect(readdirSync(out)).toEqual([]);
+    } finally {
+      rmSync(out, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('fixtures against the real canon', () => {
+  const REAL = resolve(__dirname, '../../content/canon/canon.json');
+  it.skipIf(!existsSync(REAL))('builds, keeps headline figures and never ships tier-1/2 roster names in baseline', () => {
+    const canon = JSON.parse(readFileSync(REAL, 'utf8')) as {
+      headline: Record<string, number>;
+      roster: { name: string; tier: number }[];
+    };
+    const r = buildContent({ contentDir: FIXTURES, canonPath: REAL });
+    const html = r.docs.find((d) => d.id === 'dir-0001')!.html;
+    expect(html).toContain(`>${canon.headline.staffTotal!.toLocaleString('en-US')}<`);
+    expect(html).toContain(`>${canon.headline.tunnelCertifiedMi!.toLocaleString('en-US')}<`);
+    expect(r.figures.map((f) => f.id)).toEqual(
+      expect.arrayContaining(['tunnelCertifiedMi', 'capacitySustained', 'capacitySurge', 'staffTotal']),
+    );
+    const blobs = JSON.stringify(r.docs) + r.searchJson;
+    const t1 = canon.roster.filter((p) => p.tier === 1).map((p) => p.name);
+    const t2 = canon.roster.filter((p) => p.tier === 2).map((p) => p.name);
+    expect(t1.length + t2.length).toBeGreaterThan(0);
+    for (const n of [...t1, ...t2]) expect(blobs).not.toContain(n);
+    const released = JSON.stringify(r.releases);
+    for (const n of t1) expect(released).not.toContain(n);
+    for (const n of t2) expect(released).toContain(n);
+    for (const d of r.docs) expect(checkDrift(d.html.replace(/<[^>]+>/g, ' '), r.figures)).toEqual([]);
   });
 });
 

@@ -40,6 +40,15 @@ export interface BuildOptions {
   base?: string;
   /** Root used to print file paths in messages. */
   displayRoot?: string;
+  /**
+   * Document numbers planned in content/manifest.json. An :x[] (or frontmatter xref) to one of
+   * these whose page does not exist yet is a warning when pendingXrefsAreWarnings (dry run),
+   * otherwise an error that says the page is planned but missing.
+   */
+  manifestDocNos?: Set<string>;
+  pendingXrefsAreWarnings?: boolean;
+  /** Report problems/warnings only for files under this directory; all content is still loaded. */
+  onlyDir?: string;
 }
 
 export interface BuildResult {
@@ -50,6 +59,9 @@ export interface BuildResult {
   searchJson: string;
   figures: FigureRule[];
   canon: CanonData | null;
+  warnings: Problem[];
+  /** Problems in files outside onlyDir that were not reported. */
+  suppressed: number;
 }
 
 interface Parsed {
@@ -77,6 +89,35 @@ function listMarkdown(dir: string): string[] {
     }
   };
   walk(dir, 0);
+  return out;
+}
+
+const DOCNO_RE = /^[A-Z0-9]+(?:[-/.][A-Z0-9]+)+$/;
+
+/**
+ * Planned document numbers from a manifest file. Accepted shapes: an array of docNo strings,
+ * any nesting of objects/arrays whose records carry a `docNo` field, or an object keyed by docNo.
+ */
+export function loadManifestDocNos(path: string): Set<string> {
+  const out = new Set<string>();
+  const json = JSON.parse(readFileSync(path, 'utf8')) as unknown;
+  const addStrings = (arr: unknown[]) => {
+    for (const s of arr) if (typeof s === 'string' && DOCNO_RE.test(s)) out.add(s);
+  };
+  const walk = (v: unknown) => {
+    if (Array.isArray(v)) {
+      v.forEach(walk);
+    } else if (v && typeof v === 'object') {
+      for (const [k, x] of Object.entries(v)) {
+        if (DOCNO_RE.test(k) && k.includes('-')) out.add(k); // keyed by docNo
+        if (k === 'docNo' && typeof x === 'string') out.add(x);
+        else if (k === 'docNos' && Array.isArray(x)) addStrings(x);
+        else if (x && typeof x === 'object') walk(x);
+      }
+    }
+  };
+  if (Array.isArray(json)) addStrings(json);
+  walk(json);
   return out;
 }
 
@@ -186,11 +227,22 @@ export function buildContent(opts: BuildOptions): BuildResult {
   const displayRoot = resolve(opts.displayRoot ?? process.cwd());
   const base = normalizeBase(opts.base);
   const canon = loadCanon(resolve(opts.canonPath));
+  if (opts.onlyDir && opts.outDir) throw new Error('onlyDir is a validation mode: it cannot be combined with outDir');
   const problems: Problem[] = [];
+  const warnings: Problem[] = [];
+  const manifest = opts.manifestDocNos ?? new Set<string>();
+  const onlyPrefix = opts.onlyDir
+    ? `${relative(displayRoot, resolve(opts.onlyDir)).split(sep).join('/').replace(/\/+$/, '')}/`
+    : null;
+  const inScope = (p: Problem) => !onlyPrefix || p.file.startsWith(onlyPrefix);
+  const check = () => {
+    const reported = problems.filter(inScope);
+    if (reported.length) throw new ContentBuildError(reported);
+  };
 
   const parsed = parseFiles(listMarkdown(contentDir), contentDir, displayRoot, problems);
   checkUnique(parsed, problems);
-  if (problems.length) throw new ContentBuildError(problems);
+  check();
 
   const docsByNo = new Map(parsed.map((p) => [p.fm.docNo, { route: p.fm.route, title: p.fm.title }]));
   const compartments = new Set<string>(
@@ -214,6 +266,9 @@ export function buildContent(opts: BuildOptions): BuildResult {
       docsByNo,
       compartments,
       problems,
+      warnings,
+      manifest,
+      pendingXrefsAreWarnings: !!opts.pendingXrefsAreWarnings,
       xrefsUsed: [],
       redactions: [],
       releases: new Map(),
@@ -233,7 +288,19 @@ export function buildContent(opts: BuildOptions): BuildResult {
     // frontmatter xrefs must resolve too
     const xrefNos = [...(p.fm.xrefs ?? [])];
     for (const no of xrefNos) {
-      if (!docsByNo.has(no)) problems.push({ file: p.file, line: lineOfKey(p.raw, 'xrefs'), message: `xrefs: unknown document number "${no}"` });
+      if (docsByNo.has(no)) continue;
+      const line = lineOfKey(p.raw, 'xrefs');
+      if (manifest.has(no) && opts.pendingXrefsAreWarnings) {
+        warnings.push({ file: p.file, line, message: `xrefs: "${no}" is in the manifest but has no page yet` });
+      } else {
+        problems.push({
+          file: p.file,
+          line,
+          message: manifest.has(no)
+            ? `xrefs: "${no}" is planned in the manifest but its page does not exist`
+            : `xrefs: unknown document number "${no}"`,
+        });
+      }
     }
     for (const no of ctx.xrefsUsed) if (!xrefNos.includes(no)) xrefNos.push(no);
 
@@ -274,7 +341,8 @@ export function buildContent(opts: BuildOptions): BuildResult {
     if (p.fm.access?.compartment) sd.compartment = p.fm.access.compartment;
     search.push(sd);
   }
-  if (problems.length) throw new ContentBuildError(problems);
+  check();
+  const suppressed = problems.length;
 
   docs.sort((a, b) => a.route.localeCompare(b.route));
   const fmById = new Map(parsed.map((p) => [p.fm.id, p.fm]));
@@ -290,7 +358,17 @@ export function buildContent(opts: BuildOptions): BuildResult {
   }
   const figures = figureRules(canon);
 
-  const result: BuildResult = { routes, docs, releases: releasesObj, search, searchJson, figures, canon };
+  const result: BuildResult = {
+    routes,
+    docs,
+    releases: releasesObj,
+    search,
+    searchJson,
+    figures,
+    canon,
+    warnings: warnings.filter(inScope),
+    suppressed,
+  };
   if (opts.outDir) writeOutputs(resolve(opts.outDir), result);
   return result;
 }

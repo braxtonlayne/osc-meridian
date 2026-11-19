@@ -6,7 +6,18 @@ export function xref(node: MdNode, ctx: CompileContext): void {
   const docNo = mdText(node).trim();
   const target = ctx.docsByNo.get(docNo);
   if (!target) {
-    fail(ctx, node, `:x[${docNo}] cross-reference to unknown document number`);
+    if (ctx.manifest.has(docNo) && ctx.pendingXrefsAreWarnings) {
+      const line = node.position?.start?.line;
+      ctx.warnings.push({
+        file: ctx.file,
+        line: line !== undefined ? line + ctx.lineOffset : undefined,
+        message: `:x[${docNo}] is in the manifest but has no page yet`,
+      });
+    } else if (ctx.manifest.has(docNo)) {
+      fail(ctx, node, `:x[${docNo}] is planned in the manifest but its page does not exist`);
+    } else {
+      fail(ctx, node, `:x[${docNo}] cross-reference to unknown document number`);
+    }
     node.data = { hName: 'span', hProperties: { className: ['xref-missing'] } };
     node.children = [{ type: 'text', value: docNo }];
     return;

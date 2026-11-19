@@ -22,8 +22,13 @@ export interface CompileContext {
   docsByNo: Map<string, { route: string; title: string }>;
   /** Compartment ids accepted in redaction requirements. */
   compartments: Set<string>;
+  /** Planned docNos (content/manifest.json) that may not have a page yet. */
+  manifest: Set<string>;
+  /** Dry run: an :x[] to a planned-but-missing page is a warning instead of an error. */
+  pendingXrefsAreWarnings: boolean;
   // outputs
   problems: Problem[];
+  warnings: Problem[];
   xrefsUsed: string[];
   redactions: RedactionRecord[];
   /** rxId -> released HTML, per key; tier-1 keys are never added. */
