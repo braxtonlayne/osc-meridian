@@ -210,7 +210,7 @@ export function Register({
       case "source":
         return {
           ...base,
-          width: 150,
+          width: 120,
           render: (r) =>
             r.type === "item" ? (
               <span title={sourceName(r.item.sourceId)}>
@@ -223,7 +223,7 @@ export function Register({
       case "category":
         return {
           ...base,
-          width: 150,
+          width: 120,
           render: (r) =>
             r.type === "item" ? categoryName(r.item.categoryId) : "",
         };
@@ -474,7 +474,7 @@ export function Register({
       <div
         class="lga-grid"
         style={{
-          "--lga-min": `${columns.reduce((a, c) => a + (typeof c.width === "number" ? c.width : 260), 0)}px`,
+          "--lga-min": `${columns.reduce((a, c) => a + (typeof c.width === "number" ? c.width : 120), 0)}px`,
         }}
       >
         <DataTable

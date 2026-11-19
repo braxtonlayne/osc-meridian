@@ -46,7 +46,7 @@ import {
   sourceRoute,
 } from "./model";
 import type { AccountRow, Check, CrossRow, RegisterFilter } from "./model";
-import { CanonText, NavLink, SimpleTable, useWidth } from "./parts";
+import { CanonText, FitWidth, NavLink, SimpleTable, useWidth } from "./parts";
 import type { SimpleColumn } from "./parts";
 
 const canon = canonJson as unknown as Canon;
@@ -267,8 +267,6 @@ export function SummaryView({ ctx }: { ctx: ViewCtx }): JSX.Element {
   const checks = useMemo(() => reconcile(), []);
   const agree = checks.every((c) => c.agrees);
   const fys = budget.fiscalYears.map((f) => f.fy);
-  const half = width >= 760 ? Math.floor((width - 12) / 2) - 18 : width - 18;
-  const full = width - 18;
 
   const onSankey = (r: NodeRef) => {
     if (r.kind === "item") {
@@ -336,29 +334,41 @@ export function SummaryView({ ctx }: { ctx: ViewCtx }): JSX.Element {
       />
       <div class="lga-pair">
         <GroupBox title="By programme category" on="surface">
-          <CategoryBars
-            width={half}
-            highlight={highlight?.kind === "category" ? highlight.id : null}
-            onSelect={(id) => ctx.nav(categoryRoute(id))}
-          />
+          <FitWidth>
+            {(w) => (
+              <CategoryBars
+                width={w}
+                highlight={highlight?.kind === "category" ? highlight.id : null}
+                onSelect={(id) => ctx.nav(categoryRoute(id))}
+              />
+            )}
+          </FitWidth>
           <p class="lga-hint">Select a category to open its sheet.</p>
         </GroupBox>
         <GroupBox title="By funding source" on="surface">
-          <SourceBars
-            width={half}
-            highlight={highlight?.kind === "source" ? highlight.id : null}
-            onSelect={(id) => ctx.nav(sourceRoute(id))}
-          />
+          <FitWidth>
+            {(w) => (
+              <SourceBars
+                width={w}
+                highlight={highlight?.kind === "source" ? highlight.id : null}
+                onSelect={(id) => ctx.nav(sourceRoute(id))}
+              />
+            )}
+          </FitWidth>
           <p class="lga-hint">Select a source to open its sheet.</p>
         </GroupBox>
       </div>
       <GroupBox title="Obligations by fiscal year" on="surface">
-        <FiscalYearChart
-          width={full}
-          height={240}
-          highlight={highlight?.kind === "category" ? highlight.id : null}
-          onSelect={(fy) => ctx.nav(fyRoute(fy, ctx.available))}
-        />
+        <FitWidth>
+          {(w) => (
+            <FiscalYearChart
+              width={w}
+              height={240}
+              highlight={highlight?.kind === "category" ? highlight.id : null}
+              onSelect={(fy) => ctx.nav(fyRoute(fy, ctx.available))}
+            />
+          )}
+        </FitWidth>
         <p class="lga-hint">Select a year to open its fiscal-year sheet.</p>
       </GroupBox>
       <GroupBox
@@ -399,14 +409,18 @@ export function SummaryView({ ctx }: { ctx: ViewCtx }): JSX.Element {
           />
         </Toolbar>
         <div class="lga-sankey">
-          <BudgetSankey
-            key={mode}
-            width={full}
-            height={mode === "item" ? Math.max(520, Math.min(900, full)) : 380}
-            groupLineItems={mode}
-            highlight={highlight}
-            onSelect={onSankey}
-          />
+          <FitWidth>
+            {(w) => (
+              <BudgetSankey
+                key={mode}
+                width={w}
+                height={mode === "item" ? Math.max(520, Math.min(900, w)) : 380}
+                groupLineItems={mode}
+                highlight={highlight}
+                onSelect={onSankey}
+              />
+            )}
+          </FitWidth>
         </div>
         <p class="lga-hint">
           Select a source or category to trace it; select a department to expand
@@ -482,12 +496,16 @@ export function CategoryView({
         title={`Obligations by fiscal year, ${cat.name} emphasised`}
         on="surface"
       >
-        <FiscalYearChart
-          width={width - 18}
-          height={220}
-          highlight={id}
-          onSelect={(fy) => ctx.nav(fyRoute(fy, ctx.available))}
-        />
+        <FitWidth>
+          {(w) => (
+            <FiscalYearChart
+              width={w}
+              height={220}
+              highlight={id}
+              onSelect={(fy) => ctx.nav(fyRoute(fy, ctx.available))}
+            />
+          )}
+        </FitWidth>
       </GroupBox>
       <div class="lga-pair">
         <GroupBox title="By funding source" on="surface">
@@ -718,19 +736,23 @@ export function SourceView({
         ]}
       />
       <GroupBox title="Allocation to programme categories" on="surface">
-        <BudgetSankey
-          width={width - 18}
-          height={260}
-          groupLineItems="none"
-          highlight={{ kind: "source", id }}
-          onSelect={(r) =>
-            r.kind === "category"
-              ? ctx.nav(categoryRoute(r.id))
-              : r.kind === "source"
-                ? ctx.nav(sourceRoute(r.id))
-                : undefined
-          }
-        />
+        <FitWidth>
+          {(w) => (
+            <BudgetSankey
+              width={w}
+              height={260}
+              groupLineItems="none"
+              highlight={{ kind: "source", id }}
+              onSelect={(r) =>
+                r.kind === "category"
+                  ? ctx.nav(categoryRoute(r.id))
+                  : r.kind === "source"
+                    ? ctx.nav(sourceRoute(r.id))
+                    : undefined
+              }
+            />
+          )}
+        </FitWidth>
       </GroupBox>
       <div class="lga-pair">
         <GroupBox title="By programme category" on="surface">
@@ -932,14 +954,18 @@ export function FiscalYearView({
         ]}
       />
       <GroupBox title="Obligations by fiscal year" on="surface">
-        <FiscalYearChart
-          width={width - 18}
-          height={200}
-          legend={width >= 520}
-          onSelect={(y) =>
-            fys.includes(y) ? onFy(y) : ctx.nav(fyRoute(y, ctx.available))
-          }
-        />
+        <FitWidth>
+          {(w) => (
+            <FiscalYearChart
+              width={w}
+              height={200}
+              legend={w >= 520}
+              onSelect={(y) =>
+                fys.includes(y) ? onFy(y) : ctx.nav(fyRoute(y, ctx.available))
+              }
+            />
+          )}
+        </FitWidth>
       </GroupBox>
       <div class="lga-pair">
         <GroupBox title="By programme category" on="surface">

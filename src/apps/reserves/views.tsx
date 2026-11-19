@@ -8,6 +8,7 @@ import { CATEGORY_LABEL, CATEGORY_ORDER, canon, fmtN, houseDate, siteReleased } 
 import type { Category, ReserveItem } from './data';
 import { Bar, CanonText, LinkButton, useRsv } from './parts';
 import { describeDays, facilityWindow, networkSustainment, parseWhole } from './sustain';
+import { TableFit } from '../table-fit';
 
 const tierWord = (t: number) => (t === 1 ? 'Tier 1' : t === 2 ? 'Tier 2' : 'Tier 3');
 
@@ -25,7 +26,7 @@ export function PositionTable({ categories, onOpenSite }: { categories?: Categor
   const columns: Column<ReserveItem>[] = [
     { key: 'category', header: 'Category', width: 90, render: (r) => CATEGORY_LABEL[r.category], sortValue: (r) => CATEGORY_ORDER.indexOf(r.category) },
     { key: 'id', header: 'Line', width: 132, mono: true },
-    { key: 'label', header: 'Item', width: 190, render: (r) => <CanonText value={r.label} />, sortValue: (r) => (rxInfo(r.label) ? '' : r.label) },
+    { key: 'label', header: 'Item', width: 170, render: (r) => <CanonText value={r.label} />, sortValue: (r) => (rxInfo(r.label) ? '' : r.label) },
     {
       key: 'value',
       header: 'Quantity',
@@ -51,16 +52,19 @@ export function PositionTable({ categories, onOpenSite }: { categories?: Categor
     },
     { key: 'tier', header: 'Release', width: 64, render: (r) => tierWord(r.tier) },
   ];
+  const shown = narrow ? columns.filter((c) => ['label', 'text', 'site'].includes(c.key)) : columns;
   return (
-    <DataTable
-      columns={narrow ? columns.filter((c) => ['label', 'text', 'site'].includes(c.key)) : columns}
-      rows={rows}
-      rowKey={(r) => r.id}
-      label={`Reserve lines, ${rows.length} records`}
-      selection="single"
-      dense
-      wrap
-    />
+    <TableFit columns={shown} flex={narrow ? 160 : 220}>
+      <DataTable
+        columns={shown}
+        rows={rows}
+        rowKey={(r) => r.id}
+        label={`Reserve lines, ${rows.length} records`}
+        selection="single"
+        dense
+        wrap
+      />
+    </TableFit>
   );
 }
 

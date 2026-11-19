@@ -2,6 +2,7 @@
 import type { ClassId } from '@core/canon-types';
 import { Checkbox, DataTable, TextField, type Column, type SortState } from '@design/index';
 import { MarkerGlyph } from '@graphics/map';
+import { TableFit } from '../table-fit';
 import { CLASS_IDS, isOpen, sortKey, totals, type RegRow, type RowFilter } from './model';
 import { CellView, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 
@@ -77,13 +78,14 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
         </span>
       ),
     },
-    { key: 'codename', header: 'Codename', width: 150, sortValue: (r) => sortKey(r.codename), render: (r) => <CellView c={r.codename} id={`${r.id}:codename`} audit={audit} nil="" /> },
-    { key: 'location', header: 'Location', width: 200, sortValue: (r) => sortKey(r.location), render: (r) => <CellView c={r.location} id={`${r.id}:location`} audit={audit} /> },
-    { key: 'cover', header: 'Cover identity', width: 220, sortValue: (r) => sortKey(r.cover), render: (r) => <CellView c={r.cover} id={`${r.id}:cover`} audit={audit} nil="Not entered" /> },
+    { key: 'codename', header: 'Codename', width: 140, sortValue: (r) => sortKey(r.codename), render: (r) => <CellView c={r.codename} id={`${r.id}:codename`} audit={audit} nil="" /> },
+    // Location and Cover identity share the remaining width (TableFit floor 170px each).
+    { key: 'location', header: 'Location', sortValue: (r) => sortKey(r.location), render: (r) => <CellView c={r.location} id={`${r.id}:location`} audit={audit} /> },
+    { key: 'cover', header: 'Cover identity', sortValue: (r) => sortKey(r.cover), render: (r) => <CellView c={r.cover} id={`${r.id}:cover`} audit={audit} nil="Not entered" /> },
     { key: 'depth', header: 'Depth ft', width: 72, align: 'right', mono: true, sortValue: (r) => sortKey(r.depth), render: (r) => <CellView c={r.depth} id={`${r.id}:depth`} audit={audit} fmt={(v) => (v == null ? '' : fmt(v))} /> },
     { key: 'capacity', header: 'Berthing', width: 76, align: 'right', mono: true, sortValue: (r) => sortKey(r.capacity), render: (r) => <CellView c={r.capacity} id={`${r.id}:capacity`} audit={audit} fmt={fmt} /> },
     { key: 'staff', header: 'Posted', width: 64, align: 'right', mono: true, sortValue: (r) => sortKey(r.staff), render: (r) => <CellView c={r.staff} id={`${r.id}:staff`} audit={audit} fmt={fmt} /> },
-    { key: 'network', header: 'Network', width: 130, sortValue: (r) => sortKey(r.network), render: (r) => <CellView c={r.network} id={`${r.id}:network`} audit={audit} nil="" /> },
+    { key: 'network', header: 'Network', width: 120, sortValue: (r) => sortKey(r.network), render: (r) => <CellView c={r.network} id={`${r.id}:network`} audit={audit} nil="" /> },
     { key: 'reactor', header: 'Power', width: 70, sortValue: (r) => sortKey(r.reactor), render: (r) => <CellView c={r.reactor} id={`${r.id}:reactor`} audit={audit} fmt={(v) => (v ? 'Reactor' : 'Service')} /> },
     { key: 'completed', header: 'Completed', width: 84, mono: true, sortValue: (r) => sortKey(r.completed), render: (r) => <CellView c={r.completed} id={`${r.id}:completed`} audit={audit} fmt={(v) => (v ? fmtMonth(v) : '')} /> },
   ];
@@ -101,6 +103,7 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
     </span>
   );
   return (
+    <TableFit columns={cols} flex={170}>
     <DataTable<RegRow>
       label="Register of installations"
       columns={cols}
@@ -117,6 +120,7 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
       rowClass={(r) => (r.id === canon.operator.site ? 'reg-row-home' : undefined)}
       empty={<span class="reg-note">No installation matches the filter.</span>}
     />
+    </TableFit>
   );
 }
 

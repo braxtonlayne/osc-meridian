@@ -116,6 +116,8 @@ interface Row {
 
 const INBOX = 'Inbox';
 const SENT = 'Sent Items';
+/** Root width below which a right-hand reading pane is moved under the list. */
+const RIGHT_PANE_MIN_ROOT = 1100;
 
 function htmlToText(html: string): string {
   if (typeof DOMParser === 'undefined') return html.replace(/<[^>]+>/g, ' ');
@@ -170,7 +172,11 @@ export default function App({ win, route }: AppProps) {
   const [about, setAbout] = useState(false);
   const [book, setBook] = useState(false);
   const [status, setStatus] = useState<string>('');
-  const [narrow, setNarrow] = useState(false);
+  const [rootW, setRootW] = useState(1000);
+  const narrow = rootW < 700;
+  // A right-hand reading pane narrower than a cable line is unreadable: below
+  // RIGHT_PANE_MIN_ROOT the pane moves under the list until the window widens.
+  const pos = previewPos === 'right' && rootW < RIGHT_PANE_MIN_ROOT ? 'bottom' : previewPos;
   const [pane, setPane] = useState<'folders' | 'list' | 'message'>(route ? 'message' : 'list');
   const [lastCheck, setLastCheck] = useState<string>(() => zuluLocal(new Date().toISOString()));
   const seenCount = useRef(delivered.length);
@@ -179,7 +185,10 @@ export default function App({ win, route }: AppProps) {
   useEffect(() => {
     const el = rootRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(([e]) => setNarrow((e?.contentRect.width ?? 1000) < 700));
+    const ro = new ResizeObserver(([e]) => {
+      const w = Math.round(e?.contentRect.width ?? 0);
+      if (w > 0) setRootW(w);
+    });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -779,7 +788,7 @@ export default function App({ win, route }: AppProps) {
       render: (r) => <span class={byThread && r.thread && folderRows.find((x) => (x.thread ?? x.key) === r.thread)?.key !== r.key ? 'mt-indent' : undefined}>{r.subject}</span>,
     },
     { key: 'sent', header: folder === SENT ? 'Sent (DTG)' : 'Received (DTG)', width: 112, mono: true, sortValue: (r) => r.sortKey, render: (r) => r.sent },
-    ...(previewPos === 'right' || narrow ? [] : [{ key: 'docNo', header: 'Msg No', width: 128, mono: true, sortValue: (r: Row) => r.docNo, render: (r: Row) => r.docNo }]),
+    ...(pos === 'right' || narrow ? [] : [{ key: 'docNo', header: 'Msg No', width: 128, mono: true, sortValue: (r: Row) => r.docNo, render: (r: Row) => r.docNo }]),
   ];
 
   const listView = (
@@ -886,11 +895,12 @@ export default function App({ win, route }: AppProps) {
       </div>
     );
   } else {
+    const listW = Math.max(320, Math.min(620, Math.round((rootW - 190) * 0.52)));
     const right =
-      previewPos === 'off' ? (
+      pos === 'off' ? (
         listView
       ) : (
-        <Splitter key={previewPos} direction={previewPos === 'right' ? 'horizontal' : 'vertical'} initial={previewPos === 'right' ? 600 : 260} min={160} label="Resize reading pane">
+        <Splitter key={pos} direction={pos === 'right' ? 'horizontal' : 'vertical'} initial={pos === 'right' ? listW : 260} min={160} label="Resize reading pane">
           {listView}
           {preview}
         </Splitter>

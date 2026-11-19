@@ -49,12 +49,22 @@ const ZOOM_STEP = 1.2;
 
 const clampK = (k: number): number => Math.min(K_MAX, Math.max(K_MIN, k));
 
-function fitView(l: Layout, vw: number, vh: number): View {
+/**
+ * Smallest scale "Fit" will choose. Below about 70% the 11px box text is not
+ * legible; a chart wider than the window at this scale is panned instead.
+ */
+export const FIT_FLOOR = 0.7;
+
+/**
+ * Fit the chart's width (never its height: a deep chart scrolls by panning),
+ * no larger than 100% and no smaller than FIT_FLOOR. A chart still wider than
+ * the window is centred, which keeps the root box (top centre) in view.
+ */
+export function fitView(l: Layout, vw: number, vh: number): View {
+  void vh;
   const bw = l.bounds.x1 - l.bounds.x0;
-  const bh = l.bounds.y1 - l.bounds.y0;
   const availW = Math.max(1, vw - PAD * 2);
-  const availH = Math.max(1, vh - BAR_H - PAD * 2);
-  const k = clampK(Math.min(availW / bw, availH / bh, 1));
+  const k = clampK(Math.max(FIT_FLOOR, Math.min(availW / bw, 1)));
   return {
     k,
     tx: Math.round((vw - bw * k) / 2 - l.bounds.x0 * k),

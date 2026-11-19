@@ -233,6 +233,8 @@
   border-width: 2px;
 }
 .fx-disp__head {
+  margin: 0;
+  font-size: inherit;
   font-weight: 700;
   letter-spacing: var(--tracking-caps);
 }

@@ -242,7 +242,7 @@ function FieldBox(p: BoxProps) {
       {own.length ? (
         <div id={errId}>
           {own.map((i, k) => (
-            <FieldMessage key={k} kind={i.level === 'error' ? 'error' : 'notice'}>
+            <FieldMessage key={k} kind={i.level === 'error' ? 'error' : 'notice'} live={false}>
               {i.message}
             </FieldMessage>
           ))}

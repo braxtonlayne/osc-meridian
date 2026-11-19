@@ -42,6 +42,7 @@ export interface ConsoleHandle {
 }
 
 const ESC = '\x1b';
+const LEAVE_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 // eslint-disable-next-line no-control-regex
 const CONTROL = /[\x00-\x08\x0b-\x1f\x7f]/g;
 const clean = (s: string) => s.replace(CONTROL, '');
@@ -68,6 +69,8 @@ export async function mountConsole(el: HTMLElement, prompt: string, cb: ConsoleC
     scrollback: 2000,
     convertEol: false,
     allowProposedApi: false,
+    // Mirror output into an off-screen live region so screen readers hear it.
+    screenReaderMode: true,
     theme: {
       background: cssVar(el, '--surface'),
       foreground: fg,
@@ -316,8 +319,30 @@ export async function mountConsole(el: HTMLElement, prompt: string, cb: ConsoleC
     }
   };
 
+  // The terminal keeps Tab for completion, so it needs its own way out for keyboard users:
+  // Ctrl+Shift+Tab (where the browser passes it through), or Esc followed by Tab / Shift+Tab.
+  let escArmed = false;
+  const leave = (dir: 1 | -1) => {
+    const scope = el.closest<HTMLElement>('[data-win-id]') ?? document.body;
+    const all = [...scope.querySelectorAll<HTMLElement>(LEAVE_FOCUSABLE)].filter(
+      (n) => n.getClientRects().length > 0 && !n.closest('[role="menubar"], [role="menu"]') && (n === el || !el.contains(n)),
+    );
+    const list = [el, ...all.filter((n) => n !== el)].sort((a, b) => (a === b ? 0 : a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    const at = list.indexOf(el);
+    const next = list[at + dir] ?? list[dir === 1 ? 0 : list.length - 1];
+    if (next && next !== el) next.focus();
+    else term.blur();
+  };
+
   term.attachCustomKeyEventHandler((e) => {
     if (e.type !== 'keydown') return true;
+    if (e.key === 'Tab' && (e.ctrlKey ? e.shiftKey : escArmed)) {
+      escArmed = false;
+      e.preventDefault();
+      leave(e.ctrlKey || e.shiftKey ? -1 : 1);
+      return false;
+    }
+    if (e.key !== 'Shift') escArmed = e.key === 'Escape';
     // Leave window menus (F10, Alt+letter) and shell shortcuts (Ctrl+K search) to the host window.
     if (e.key === 'F10' || (e.altKey && !e.ctrlKey)) return false;
     if (e.ctrlKey && (e.key === 'k' || e.key === 'K')) return false;

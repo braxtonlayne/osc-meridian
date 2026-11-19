@@ -35,7 +35,8 @@
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  /* Scrolls sideways when the window is narrower than the diagram's minimum width. */
+  overflow: auto hidden;
   background: var(--paper);
 }
 .tr-split.is-stacked .tr-board {
@@ -146,8 +147,14 @@
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto hidden;
   background: var(--surface);
+}
+/* Drawn wider than a handheld window on purpose (see DIAGRAM_MIN_W, GEO_MIN_W):
+   the view scrolls rather than the reset's max-width shrinking it back. */
+.tr-board > svg,
+.tr-geo > svg {
+  max-width: none;
 }
 .tr-geo-live {
   position: absolute;
@@ -181,6 +188,20 @@
   position: relative;
   flex: 1 1 auto;
   min-height: 320px;
+}
+/* Handheld: thin the 3D model's labels to the hubs and the selected link, so they
+   do not pile up at phone width. Everything hidden is still reachable by selecting. */
+.tr-3d {
+  container-type: inline-size;
+  container-name: tr3d;
+}
+@container tr3d (max-width: 600px) {
+  .tr-3d .t3d__label--tick,
+  .tr-3d .t3d__label--train,
+  .tr-3d .t3d__label--seg:not([data-sel]),
+  .tr-3d .t3d__label--site:not([data-cls='ALPHA']):not([data-sel]) {
+    display: none;
+  }
 }
 .tr-root select.tr-tbsel {
   width: 170px;

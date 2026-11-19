@@ -86,7 +86,11 @@ export function useWidth<T extends HTMLElement>(
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    setW(Math.floor(el.clientWidth) || fallback);
+    // Content-box width, the same measure the ResizeObserver reports below.
+    const cs = getComputedStyle(el);
+    const pad =
+      (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+    setW(Math.floor(el.clientWidth - pad) || fallback);
     if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver((entries) => {
       const cw = Math.floor(entries[0]?.contentRect.width ?? 0);
@@ -96,6 +100,26 @@ export function useWidth<T extends HTMLElement>(
     return () => ro.disconnect();
   }, []);
   return [ref, w];
+}
+
+/**
+ * Measures the width actually available where it is placed (inside a group box,
+ * a grid column) and renders the chart at that width, so charts never draw past
+ * their frame whatever the window size.
+ */
+export function FitWidth({
+  children,
+  fallback = 320,
+}: {
+  children: (width: number) => ComponentChildren;
+  fallback?: number;
+}) {
+  const [ref, w] = useWidth<HTMLDivElement>(fallback);
+  return (
+    <div class="lga-fit" ref={ref}>
+      {children(w)}
+    </div>
+  );
 }
 
 /** An underlined in-window link that navigates through a callback (Ctrl/middle click keep normal behaviour). */

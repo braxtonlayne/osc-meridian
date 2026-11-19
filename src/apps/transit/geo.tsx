@@ -10,6 +10,8 @@ import { allLinkGeometry, tunnelProjection, type Pt } from '@graphics/tunnelmap/
 import { blockSpan, type SimModel } from '@sim/transit-model';
 import { useSize, type Snapshot } from './views';
 
+const GEO_MIN_W = 720;
+
 const mapId = (key: string) => (key.includes('>') ? `TRAM-${key.replace('>', ':')}` : `RAIL-${key}`);
 
 function along(pts: Pt[], f: number): Pt {
@@ -33,8 +35,10 @@ function slice(pts: Pt[], f0: number, f1: number): string {
 
 export function GeoView({ model, state, layer, selected, onSelect }: { model: SimModel; state: Snapshot | null; layer: TunnelLayer; selected: string | null; onSelect: (key: string | null) => void }) {
   const [ref, size] = useSize<HTMLDivElement>();
-  const w = Math.max(size.w, 320);
-  const h = Math.max(size.h, 240);
+  // Below GEO_MIN_W the map's site and consist labels pile up; draw it at that
+  // width and let the view scroll instead.
+  const w = Math.max(size.w, GEO_MIN_W);
+  const h = Math.max(size.w < GEO_MIN_W ? size.h - 14 : size.h, 240);
   const geo = useMemo(() => {
     const proj = tunnelProjection(tunnelMapLayout(w, h).mapBox);
     return new Map(allLinkGeometry(proj).map((g) => [g.link.id as string, g.pts]));

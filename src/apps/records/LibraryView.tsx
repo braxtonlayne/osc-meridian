@@ -4,6 +4,7 @@ import type { RouteEntry } from '@core/contracts';
 import { Button, DataTable, PropertyGrid, Select, Splitter, TextField, Tree, formatOscDate, type Column, type TreeNode } from '@design/index';
 import { EmptyFolder } from '@graphics/states';
 import { accessKeyOf, accessWords, buildFolderGroups, divisionOf, seriesOf } from './lib';
+import { TableFit } from '../table-fit';
 import { DIVISIONS, MARKINGS, MATCHERS, MarkingTag, divisionName, familyLabel, markingRank } from './shared';
 
 export interface LibraryProps {
@@ -84,12 +85,13 @@ export function LibraryView(p: LibraryProps) {
   );
 
   const columns: Column<RouteEntry>[] = [
-    { key: 'docNo', header: 'Doc No', mono: true, width: '19ch' },
-    { key: 'title', header: 'Title', wrap: true, width: '42%' },
+    { key: 'docNo', header: 'Doc No', mono: true, width: 124 },
+    // Title takes the remaining width; TableFit keeps a floor under it.
+    { key: 'title', header: 'Title', wrap: true },
     {
       key: 'marking',
       header: 'Marking',
-      width: '23ch',
+      width: 160,
       sortValue: (r) => markingRank(r.marking),
       render: (r) => <MarkingTag id={r.marking} />,
     },
@@ -98,20 +100,21 @@ export function LibraryView(p: LibraryProps) {
       header: 'Rev',
       align: 'right',
       mono: true,
-      width: '5ch',
+      width: 36,
     },
-    { key: 'originator', header: 'Originator', mono: true, width: '14ch' },
+    { key: 'originator', header: 'Originator', mono: true, width: 100 },
     {
       key: 'date',
       header: 'Date',
       mono: true,
-      width: '12ch',
+      width: 92,
       render: (r) => formatOscDate(r.date),
     },
     {
       key: 'access',
       header: 'Access',
-      width: '15ch',
+      width: 96,
+      wrap: true,
       sortValue: (r) => accessWords(r.access),
       render: (r) => {
         const k = accessKeyOf(r.access);
@@ -119,6 +122,9 @@ export function LibraryView(p: LibraryProps) {
       },
     },
   ];
+
+  // Handheld: keep Title readable; Rev, Originator and Access are in the detail pane.
+  const shown = p.narrow ? columns.filter((c) => ['docNo', 'title', 'marking'].includes(c.key)) : columns;
 
   const folderSelect = (
     <Select
@@ -151,19 +157,21 @@ export function LibraryView(p: LibraryProps) {
         <TextField label="Filter" value={filter} onInput={setFilter} width="22ch" hint={undefined} />
       </div>
       <div class="rec__scroll rec__well">
-        <DataTable
-          label={`Documents in ${folder.label}`}
-          columns={columns}
-          rows={items}
-          rowKey={(r) => r.route}
-          selection="single"
-          selected={sel ? [sel.route] : []}
-          onSelectionChange={(k) => p.onSelect(k[0] ?? null)}
-          onActivate={p.onOpen}
-          defaultSort={p.folderId === 'recent' ? null : { key: 'date', dir: 'desc' }}
-          dense
-          empty={<EmptyFolder name={folder.label} />}
-        />
+        <TableFit columns={shown} flex={p.narrow ? 130 : 160}>
+          <DataTable
+            label={`Documents in ${folder.label}`}
+            columns={shown}
+            rows={items}
+            rowKey={(r) => r.route}
+            selection="single"
+            selected={sel ? [sel.route] : []}
+            onSelectionChange={(k) => p.onSelect(k[0] ?? null)}
+            onActivate={p.onOpen}
+            defaultSort={p.folderId === 'recent' ? null : { key: 'date', dir: 'desc' }}
+            dense
+            empty={<EmptyFolder name={folder.label} />}
+          />
+        </TableFit>
       </div>
       {sel ? <Detail r={sel} onOpen={p.onOpen} satisfies={p.satisfies} /> : null}
     </div>

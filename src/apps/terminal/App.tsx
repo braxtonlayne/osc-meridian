@@ -96,7 +96,7 @@ export default function App({ win, route }: AppProps) {
           ? `Waiting for ${HOST}`
           : mode === 'disconnected'
             ? `Disconnected from ${HOST}. Press Enter or choose Session > Connect`
-            : note || `Connected to ${HOST}`;
+            : note || `Connected to ${HOST}. Ctrl+Shift+Tab (or Esc, Tab) leaves the terminal`;
 
   useEffect(() => {
     win.setStatus(mode === 'disconnected' ? `${HOST} disconnected` : mode === 'loading' ? `Connecting to ${HOST}` : `${HOST} session`);

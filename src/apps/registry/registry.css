@@ -198,7 +198,8 @@
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
+  /* Wide enough for the map legend table (name and count columns) plus margins. */
+  grid-template-columns: minmax(0, 1fr) 300px;
 }
 
 .reg-map__frame {
@@ -231,7 +232,9 @@
 }
 
 .reg-map__legend {
-  margin: var(--sp-3) var(--sp-4);
+  margin: var(--sp-3);
+  max-width: calc(100% - 2 * var(--sp-3));
+  overflow-x: auto;
 }
 
 @container reg (max-width: 700px) {
@@ -280,6 +283,13 @@
 
 .reg-sidepanel .pgrid__k {
   white-space: normal;
+}
+/* A withheld value is drawn at the length of the text it replaces, which can be
+   longer than the side panel is wide. Keep each bar inside its box. */
+.reg-sidepanel > *,
+.reg-sidepanel .pgrid__v {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .reg-actions {
@@ -461,6 +471,30 @@
   }
   .reg-tabbody > .reg-section {
     overflow: auto;
+  }
+}
+/* Handheld: the section viewer's level index sits above the drawing instead of
+   beside it, so the drawing gets the full width. */
+@container reg (max-width: 700px) {
+  .reg-section {
+    grid-template-rows: auto auto;
+  }
+  .reg-section__view,
+  .reg-depth-host {
+    min-height: 680px;
+  }
+  .reg-depth-host .d3v-body {
+    flex-direction: column;
+  }
+  .reg-depth-host .d3v-side {
+    width: auto;
+    flex: 0 0 auto;
+    max-height: 240px;
+    border-right: 0;
+    border-bottom: 1px solid var(--chrome-outer);
+  }
+  .reg-depth-host .d3v-view {
+    min-height: 360px;
   }
 }
 

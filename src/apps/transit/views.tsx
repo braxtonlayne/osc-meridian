@@ -85,6 +85,13 @@ export interface DiagramProps {
   compact: boolean;
 }
 
+/**
+ * Narrowest width the line diagram is drawn at. Below it the board's own legend
+ * (bottom left, fixed size) lands on the track and the tags overlap; a narrower
+ * window scrolls the board sideways instead.
+ */
+const DIAGRAM_MIN_W = 600;
+
 export function DiagramView(p: DiagramProps) {
   const [ref, size] = useSize<HTMLDivElement>();
   return (
@@ -92,8 +99,8 @@ export function DiagramView(p: DiagramProps) {
       <div class="tr-board" ref={ref}>
         {size.w > 0 && size.h > 0 && (
           <LineDiagram
-            width={size.w}
-            height={size.h}
+            width={Math.max(size.w, DIAGRAM_MIN_W)}
+            height={size.w < DIAGRAM_MIN_W ? Math.max(200, size.h - 14) : size.h}
             network={p.network}
             trains={trainsForDiagram(p.state)}
             occupancy={p.state?.occupancy ?? {}}

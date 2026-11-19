@@ -68,6 +68,7 @@ import {
 } from './model';
 import { FieldGrid, fieldDomId, type DirectoryEntry } from './Fields';
 import { addReceipt, countFor, drafts, dropDraft, loadStore, receipts, saveDraft, type StoredReceipt } from './store';
+import { TableFit } from '../table-fit';
 import './forms-app.css';
 
 const canon = canonJson as unknown as Canon;
@@ -221,9 +222,9 @@ function Catalogue({ win }: AppProps) {
   const cols: Column<RouteEntry>[] = [
     { key: 'docNo', header: 'Form No.', mono: true, width: 92, sortValue: (r) => r.docNo },
     { key: 'title', header: 'Title', sortValue: (r) => r.title, render: (r) => r.title },
-    { key: 'originator', header: 'Issued by', width: 110, mono: true, sortValue: (r) => r.originator },
-    { key: 'date', header: 'Edition', width: 92, sortValue: (r) => r.date, render: (r) => formatOscDate(r.date).slice(3) },
-    { key: 'held', header: 'Receipts', width: 70, align: 'right', sortValue: (r) => rcpts.filter((x) => x.route === r.route).length, render: (r) => String(rcpts.filter((x) => x.route === r.route).length) },
+    { key: 'originator', header: 'Issued by', width: 100, mono: true, sortValue: (r) => r.originator },
+    { key: 'date', header: 'Edition', width: 76, sortValue: (r) => r.date, render: (r) => formatOscDate(r.date).slice(3) },
+    { key: 'held', header: 'Receipts', width: 64, align: 'right', sortValue: (r) => rcpts.filter((x) => x.route === r.route).length, render: (r) => String(rcpts.filter((x) => x.route === r.route).length) },
   ];
   const rcols: Column<StoredReceipt>[] = [
     { key: 'no', header: 'Receipt No.', mono: true, width: 150, sortValue: (r) => r.receiptNo ?? '', render: (r) => r.receiptNo ?? 'NOT ISSUED' },
@@ -264,19 +265,21 @@ function Catalogue({ win }: AppProps) {
           {tab === 'catalogue' ? (
             <div class="fx-split">
               <div class="fx-split__list">
-                <DataTable
-                  label="Forms on issue"
-                  columns={cols}
-                  rows={rows}
-                  rowKey={(r) => r.id}
-                  selection="single"
-                  selected={sel ? [sel] : []}
-                  onSelectionChange={(k) => setSel(k[0] ?? null)}
-                  onActivate={(r) => open(r)}
-                  defaultSort={{ key: 'docNo', dir: 'asc' }}
-                  dense
-                  empty={<EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />}
-                />
+                <TableFit columns={cols} flex={160}>
+                  <DataTable
+                    label="Forms on issue"
+                    columns={cols}
+                    rows={rows}
+                    rowKey={(r) => r.id}
+                    selection="single"
+                    selected={sel ? [sel] : []}
+                    onSelectionChange={(k) => setSel(k[0] ?? null)}
+                    onActivate={(r) => open(r)}
+                    defaultSort={{ key: 'docNo', dir: 'asc' }}
+                    dense
+                    empty={<EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />}
+                  />
+                </TableFit>
               </div>
               <div class="fx-split__detail">
                 {selected ? (
@@ -307,17 +310,19 @@ function Catalogue({ win }: AppProps) {
           ) : (
             <div class="fx-split">
               <div class="fx-split__list">
-                <DataTable
-                  label="Receipts held"
-                  columns={rcols}
-                  rows={rcpts}
-                  rowKey={rcptKey}
-                  selection="single"
-                  selected={selReceipt ? [selReceipt] : []}
-                  onSelectionChange={(k) => setSelReceipt(k[0] ?? null)}
-                  dense
-                  empty={<EmptyState title="No receipts held" body="Receipts for forms submitted from this workstation are listed here." icon="tray" />}
-                />
+                <TableFit columns={rcols} flex={160}>
+                  <DataTable
+                    label="Receipts held"
+                    columns={rcols}
+                    rows={rcpts}
+                    rowKey={rcptKey}
+                    selection="single"
+                    selected={selReceipt ? [selReceipt] : []}
+                    onSelectionChange={(k) => setSelReceipt(k[0] ?? null)}
+                    dense
+                    empty={<EmptyState title="No receipts held" body="Receipts for forms submitted from this workstation are listed here." icon="tray" />}
+                  />
+                </TableFit>
               </div>
               <div class="fx-split__detail fx-paper">
                 {curReceipt ? <ReceiptView r={curReceipt} /> : <EmptyState title="No receipt selected" body="Select a receipt to show the slip." icon="tray" />}
@@ -365,6 +370,8 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
   const [confirm, setConfirm] = useState(false);
   const [message, setMessage] = useState<{ title: string; text: string; kind: 'info' | 'warning' | 'error' } | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
+  // Set when the operator confirms Submit: the receipt then takes focus once it is shown.
+  const focusReceipt = useRef(false);
   const [status, setStatus] = useState('Loading form.');
   const summaryRef = useRef<HTMLDivElement>(null);
   const idPrefix = `fx-${win.id}`;
@@ -576,6 +583,7 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
       }
       addReceipt(receipt);
       dropDraft(route.id);
+      focusReceipt.current = true;
       setOutcome({ receipt });
       setTab('receipt');
       setStatus(disposition === 'ACCEPTED' ? `Submitted. Receipt ${receiptNo}.` : `Returned without action.${receiptNo ? ` Control ${receiptNo}.` : ''}`);
@@ -750,7 +758,7 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
                 slots={{ Seal }}
               />
             ) : tab === 'receipt' && outcome ? (
-              <ReceiptView r={outcome.receipt} />
+              <ReceiptView r={outcome.receipt} focusHead={focusReceipt} />
             ) : (
               <>
                 {showHistory && <History spec={spec} />}
@@ -759,7 +767,7 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
                     <div class="fx-summary__head">FORM NOT ACCEPTED: {errors.length} BLOCK{errors.length > 1 ? 'S' : ''} REJECTED</div>
                     {errors.map((i, k) => (
                       <button key={k} type="button" class="fx-summary__item" onClick={() => focusField(i.field)}>
-                        <FieldMessage>{i.message}</FieldMessage>
+                        <FieldMessage live={false}>{i.message}</FieldMessage>
                       </button>
                     ))}
                   </div>
@@ -882,12 +890,21 @@ function History({ spec }: { spec: FormSpec }) {
 
 /* ============================================================= receipt */
 
-function ReceiptView({ r }: { r: StoredReceipt }) {
+function ReceiptView({ r, focusHead }: { r: StoredReceipt; focusHead?: { current: boolean } }) {
   const services = useServices();
+  const headRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (!focusHead?.current) return;
+    focusHead.current = false;
+    // After the confirm dialog has handed focus back.
+    requestAnimationFrame(() => headRef.current?.focus());
+  }, [r]);
   return (
     <div class="fx-receipt">
       <div class={r.disposition === 'ACCEPTED' ? 'fx-disp' : 'fx-disp fx-disp--returned'}>
-        <div class="fx-disp__head">{r.disposition === 'ACCEPTED' ? 'ACCEPTED FOR ROUTING' : 'RETURNED WITHOUT ACTION'}</div>
+        <h2 class="fx-disp__head" ref={headRef} tabIndex={-1}>
+          {r.disposition === 'ACCEPTED' ? 'ACCEPTED FOR ROUTING' : 'RETURNED WITHOUT ACTION'}
+        </h2>
         <p>{r.message}</p>
         {r.notes.map((n, i) => (
           <p key={i} class="fx-disp__note">

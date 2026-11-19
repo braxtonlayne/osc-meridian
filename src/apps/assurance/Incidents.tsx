@@ -7,6 +7,7 @@ import { Button, DataTable, GroupBox, PropertyGrid, Select, Tabs, formatOscDate,
 import { EmptyState } from '@graphics/states';
 import { accessLogRows, accessRecord, accessionsIn, appendRowsAfterHeading, actionLabel, auditDate, auditRef, auditTime, normalizeFields, ticketFields, ticketSubject, WORKLOG_HEADING, type TicketFields } from './logic';
 import { DocBody, RouteRefusal, RxText, canRead, canon, markingOf, useDoc, useGridCols, type DocState } from './shared';
+import { TableFit } from '../table-fit';
 
 /* ---------------------------------------------------------------- queue */
 
@@ -57,11 +58,11 @@ export function IncidentQueue({
     { key: 'no', header: 'Ticket', width: 92, mono: true, sortValue: (r) => r.entry.docNo, render: (r) => r.entry.docNo },
     { key: 'status', header: 'Status', width: 70, sortValue: (r) => r.fields?.status ?? '', render: (r) => (r.readable ? <span class="asr-caps">{r.fields?.status ?? ''}</span> : 'Withheld') },
     { key: 'subject', header: 'Subject', wrap: true, sortValue: (r) => ticketSubject(r.entry), render: (r) => ticketSubject(r.entry) },
-    { key: 'sev', header: 'Severity', width: 170, sortValue: (r) => r.fields?.severity ?? '', render: (r) => r.fields?.severity ?? '' },
-    { key: 'opened', header: 'Opened', width: 180, mono: true, sortValue: (r) => r.fields?.opened ?? '', render: (r) => r.fields?.opened ?? '' },
-    { key: 'officer', header: 'Action officer', width: 120, wrap: true, sortValue: (r) => r.fields?.officer ?? '', render: (r) => r.fields?.officer ?? '' },
+    { key: 'sev', header: 'Severity', width: 140, wrap: true, sortValue: (r) => r.fields?.severity ?? '', render: (r) => r.fields?.severity ?? '' },
+    { key: 'opened', header: 'Opened', width: 140, mono: true, wrap: true, sortValue: (r) => r.fields?.opened ?? '', render: (r) => r.fields?.opened ?? '' },
+    { key: 'officer', header: 'Action officer', width: 100, wrap: true, sortValue: (r) => r.fields?.officer ?? '', render: (r) => r.fields?.officer ?? '' },
     { key: 'susp', header: 'Suspense', width: 96, mono: true, sortValue: (r) => r.fields?.suspense ?? '', render: (r) => r.fields?.suspense ?? '' },
-    { key: 'mk', header: 'Marking', width: 170, render: (r) => markingOf(r.entry.marking)?.label ?? r.entry.marking },
+    { key: 'mk', header: 'Marking', width: 140, wrap: true, render: (r) => markingOf(r.entry.marking)?.label ?? r.entry.marking },
   ];
 
   return (
@@ -83,18 +84,20 @@ export function IncidentQueue({
           />
         </div>
       </div>
-      <DataTable
-        label="Incident tickets"
-        columns={cols}
-        rows={rows}
-        rowKey={(r) => r.entry.id}
-        selection="single"
-        selected={selected ? [selected] : []}
-        onSelectionChange={(k) => k[0] && onSelect(k[0])}
-        onActivate={(r) => onOpen(r.entry.id)}
-        defaultSort={{ key: 'no', dir: 'desc' }}
-        empty={<EmptyState title="No tickets in this queue" body="No incident tickets match the selected filter." icon="tray" />}
-      />
+      <TableFit columns={cols} flex={180}>
+        <DataTable
+          label="Incident tickets"
+          columns={cols}
+          rows={rows}
+          rowKey={(r) => r.entry.id}
+          selection="single"
+          selected={selected ? [selected] : []}
+          onSelectionChange={(k) => k[0] && onSelect(k[0])}
+          onActivate={(r) => onOpen(r.entry.id)}
+          defaultSort={{ key: 'no', dir: 'desc' }}
+          empty={<EmptyState title="No tickets in this queue" body="No incident tickets match the selected filter." icon="tray" />}
+        />
+      </TableFit>
       <div class="asr-hint">Select a ticket and press Enter, or double-click it, to open the ticket.</div>
     </div>
   );

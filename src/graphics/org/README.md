@@ -31,7 +31,7 @@ View controls:
 - Buttons top left: zoom in, zoom out, Fit, and the current zoom.
 - Keyboard, with focus anywhere in the chart: arrow keys pan, `+` / `-` zoom, `F` or `0` fits, `Esc` dismisses the unposted note.
 - Mouse: wheel zooms about the pointer, drag pans.
-- Each box with children has an expand / collapse button (`aria-expanded`). The toggled box keeps its place on screen. Fit is applied when the chart opens, when `root` changes and when the viewport resizes, never on expand.
+- Each box with children has an expand / collapse button (`aria-expanded`). The toggled box keeps its place on screen. Fit is applied when the chart opens, when `root` changes and when the viewport resizes, never on expand. Fit matches the chart's width, not its height, between `FIT_FLOOR` (70%, the smallest legible scale) and 100%; a chart that is still wider, or deeper than the window, is panned. Manual zoom still goes down to 25%.
 
 ### TierPyramid
 

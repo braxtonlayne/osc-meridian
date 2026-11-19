@@ -41,6 +41,13 @@
 .per-navsel {
   padding: var(--sp-2) var(--sp-2) 0;
 }
+/* A toolbar that wraps at handheld width keeps its full height in the flex column
+   instead of being squeezed to one row and overlapping the Section selector. */
+.per-app > .menubar,
+.per-app > .toolbar,
+.per-navsel {
+  flex-shrink: 0;
+}
 .per-pad {
   padding: var(--sp-5);
   overflow: auto;
