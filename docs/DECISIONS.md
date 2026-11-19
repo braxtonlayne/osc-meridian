@@ -2,6 +2,11 @@
 
 Choices made where the spec was silent. Newest at the bottom of each section.
 
+## Content
+- **Programme years are calendar years.** The Comptroller ledger reports by programme year (JAN–DEC), not federal fiscal year, so segment commissioning dates fall in the years the record cites; "to date" for 2008 means to 31 MAR 2008. Every ledger page states this.
+- **DELTA detail is Tier 1 only.** Nothing about a DELTA site beyond designation, class, the 72-hour basis and (at Tier 2) guard count can ever be released.
+- **Workstation ID** is A03-5-114 everywhere (shell, audit, mail, engine).
+
 ## Build and architecture
 - **Repo name / Pages base:** `osc-meridian`; `npm run build:pages` builds with base `/osc-meridian/`. Change `MERIDIAN_BASE` if the GitHub repo is named differently.
 - **Canon is generated.** `content/canon/canon.json` is produced by `scripts/canon-merge.ts` from `source.json` (lore facts) + `extended-a.json` + `extended-b.json` (invented canon), so "from source" and "extended" stay physically separate. Hand edits go to the inputs, never to canon.json.
