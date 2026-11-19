@@ -11,7 +11,7 @@ import * as session from './session';
 import { loadSync, saveSync, load, save } from './persist';
 import { normalize, pushPath, replacePath } from './router';
 import { APPS, appById, appForPath, isAppId } from '@apps/index';
-import { canonNow, loadDoc, markingById, searchRoutes } from '@shell/adapters';
+import { canonNow, loadDoc, markingById, printDocument, searchRoutes } from '@shell/adapters';
 import type { SearchHit } from '@shell/adapters';
 import * as wm from '@shell/wm';
 import type { Win } from '@shell/wm';
@@ -170,7 +170,7 @@ function onNavigate(w: Win, target: string): void {
 
 const hooks = { onFocus, onClose, onNavigate };
 
-function openRefusal(path: string, title: string, refusal: { authority: string; ref: string; reason: string }, docNo?: string): Win {
+function openRefusal(path: string, title: string, refusal: { authority: string; ref: string; reason: string; notFound?: boolean }, docNo?: string): Win {
   cue('error');
   const w = wm.openWindow({
     kind: 'refusal',
@@ -205,7 +205,7 @@ export function openRoute(path: string, opts: OpenRouteOptions = {}): void {
     const key = routeKey(entry);
     if (key && !session.satisfies(key)) {
       const comp = entry.access?.compartment;
-      const briefing = comp ? canonNow().full?.compartments.find((c) => c.id === comp)?.briefingDocNo : undefined;
+      const briefing = comp ? canonNow().compartments.find((c) => c.id === comp)?.briefingDocNo : undefined;
       openRefusal(
         p,
         entry.title,
@@ -234,7 +234,8 @@ export function openRoute(path: string, opts: OpenRouteOptions = {}): void {
   openRefusal(p, 'Path not found', {
     authority: 'MERIDIAN Directory Service',
     ref: 'DS-ERR-0404',
-    reason: `No document or application is registered at ${p}. The item may have been withdrawn, renumbered, or not released to this workstation. Report persistent errors to the Help Desk through System Tools.`,
+    reason: `No document or application is registered at ${p}.`,
+    notFound: true,
   });
   if (push) pushPath(p);
 }
@@ -298,40 +299,37 @@ export function dismissToast(id: number): void {
 
 /* ---------------------------------------------------------------- print */
 
+let printSeq = 0;
+
+/**
+ * Print a document (by RouteEntry id; falls back to the focused window's route):
+ * DocumentView with cover sheet in a .print-root under <body> (see adapters.printDocument).
+ */
 function print(docId: string): void {
-  const entry = byIdMap.get(docId);
-  let w = entry ? wm.windows.peek().find((x) => x.route.peek()?.id === docId) : undefined;
-  if (!w && entry) {
-    openRoute(entry.route);
-    setTimeout(() => print(docId), 700);
+  const entry = byIdMap.get(docId) ?? wm.activeWin.peek()?.route.peek() ?? undefined;
+  if (!entry) {
+    notify('Nothing to print. Open a document and select Print from its window menu.', { from: 'Print queue' });
     return;
   }
-  w = w ?? wm.activeWin.peek() ?? undefined;
-  if (!w) return;
-  const subject = entry?.docNo ?? (w.docNo.peek() || w.title.peek());
-  audit.log('print', subject);
+  audit.log('print', entry.docNo);
   printQueue.value = printQueue.peek() + 1;
-  setTimeout(() => (printQueue.value = Math.max(0, printQueue.peek() - 1)), 6000);
-  const el = document.querySelector<HTMLElement>(`[data-win-id="${w.id}"]`);
-  const root = document.documentElement;
-  el?.classList.add('print-target');
-  root.classList.add('print-doc');
-  root.dataset.printDoc = subject;
-  const cleanup = () => {
-    el?.classList.remove('print-target');
-    root.classList.remove('print-doc');
-    delete root.dataset.printDoc;
-    removeEventListener('afterprint', cleanup);
-  };
-  addEventListener('afterprint', cleanup);
-  setTimeout(() => {
-    try {
-      window.print();
-    } finally {
-      // Some browsers do not fire afterprint when print() is blocked.
-      setTimeout(cleanup, 1000);
-    }
-  }, 50);
+  const now = new Date();
+  const copyNo = `${String(++printSeq).padStart(3, '0')}`;
+  void loadDoc(entry.id)
+    .then((doc) =>
+      printDocument(doc, {
+        onNavigate: (r) => openRoute(r),
+        onRedactionHover: (i) => audit.log('redaction.hover', doc.docNo, `Operator ${session.operatorId.peek()} examined withheld material in ${doc.docNo} (${i.auth} ${i.ref}). No release was made.`),
+        copyNo,
+        printedBy: session.operatorId.peek(),
+        printedAt: `${session.formatInWorldDate(now)} ${session.zulu(now)}`,
+      }),
+    )
+    .catch(() => {
+      cue('error');
+      notify(`${entry.docNo} could not be spooled. The document is not available to this workstation.`, { from: 'Print queue' });
+    })
+    .finally(() => setTimeout(() => (printQueue.value = Math.max(0, printQueue.peek() - 1)), 4000));
 }
 
 /* --------------------------------------------------------------- search */
@@ -388,7 +386,7 @@ export const services: Services = {
     satisfies: session.satisfies,
   },
   docs: {
-    load: (id: string): Promise<DocJson> => loadDoc(id, session.satisfies),
+    load: (id: string): Promise<DocJson> => loadDoc(id),
     byRoute: (r) => byRouteMap.get(normalize(r)),
     byDocNo: (d) => byDocNoMap.get(d.toUpperCase()),
     all: () => routes.peek(),

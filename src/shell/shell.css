@@ -1,0 +1,1075 @@
+/*
+ * MERIDIAN shell styles. Colours and type come only from design tokens
+ * (src/design/tokens.css). The `shell` layer sits below any later design layers.
+ */
+@layer shell {
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--ws-bg);
+    color: var(--text-1);
+    font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  }
+  #app {
+    height: 100%;
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  :focus-visible {
+    outline: 1px dotted var(--focus-ring);
+    outline-offset: 1px;
+  }
+
+  /* --------------------------------------------------- shared chrome */
+  .sh-btn,
+  .win-btn,
+  .dir-button,
+  .task-btn,
+  .tray-item,
+  .win-ctl,
+  .toast-x {
+    font: inherit;
+    color: var(--text-1);
+    background: var(--chrome-face);
+    border: 1px solid;
+    border-color: var(--chrome-hi) var(--chrome-outer) var(--chrome-outer) var(--chrome-hi);
+    box-shadow: inset -1px -1px var(--chrome-shadow);
+    border-radius: 0;
+    cursor: default;
+  }
+  .sh-btn {
+    min-width: 72px;
+    padding: 2px 10px;
+  }
+  .sh-btn:active,
+  .win-btn:active,
+  .task-btn.is-active,
+  .dir-button.is-open {
+    border-color: var(--chrome-outer) var(--chrome-hi) var(--chrome-hi) var(--chrome-outer);
+    box-shadow: inset 1px 1px var(--chrome-shadow);
+  }
+  .sh-btn-default {
+    outline: 1px solid var(--text-1);
+    outline-offset: 0;
+  }
+  .sh-btn:disabled {
+    color: var(--text-3);
+  }
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: var(--text-1);
+    background: var(--surface);
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+    box-shadow: inset 1px 1px var(--chrome-outer);
+    padding: 2px 4px;
+    border-radius: 0;
+  }
+  .panel-bevel {
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+  }
+
+  /* ------------------------------------------------------------ boot */
+  .boot {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--chrome-shadow);
+    cursor: wait;
+  }
+  .boot-panel {
+    width: min(520px, calc(100vw - 32px));
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+    padding: 12px 14px;
+  }
+  .boot-head {
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--chrome-shadow);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  .boot-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    min-height: calc(11 * 16px);
+  }
+  .boot-table th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--text-2);
+    padding: 0 8px 0 0;
+  }
+  .boot-table td {
+    text-align: right;
+  }
+  .boot-progress {
+    display: flex;
+    gap: 2px;
+    margin: 10px 0 6px;
+    padding: 2px;
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  }
+  .boot-progress .seg {
+    flex: 1;
+    height: 10px;
+  }
+  .boot-progress .seg.is-on {
+    background: var(--title-active-bg);
+  }
+  .boot-foot {
+    color: var(--text-2);
+    font-size: 11px;
+  }
+
+  /* ------------------------------------------------------------ lock */
+  .lock {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: var(--ws-bg);
+  }
+  .lock-body {
+    overflow: auto;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+  .lock-panel {
+    width: min(940px, 100%);
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+  }
+  .lock-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--chrome-shadow);
+  }
+  .lock-agency {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .lock-env {
+    font-weight: 600;
+  }
+  .lock-ws {
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .lock-status {
+    margin: 10px 12px 0;
+    padding: 4px 8px;
+    background: var(--surface);
+    border: 1px solid var(--row-rule);
+  }
+  .lock-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  .lock-grid h2 {
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .lock-notice {
+    background: var(--surface);
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+    padding: 8px 10px;
+  }
+  .lock-notice p {
+    margin: 0 0 8px;
+  }
+  .lock-card-note {
+    color: var(--text-2);
+    font-size: 11px;
+    margin: 6px 0 8px;
+  }
+  .lock-form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 8px;
+    align-items: center;
+  }
+  .lock-form input {
+    font-family: var(--font-mono);
+  }
+  .lock-token,
+  .lock-actions {
+    grid-column: 1 / -1;
+  }
+  .lock-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .lock-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 12px;
+    border-top: 1px solid var(--chrome-shadow);
+    font-size: 11px;
+    color: var(--text-2);
+  }
+  a {
+    color: var(--link);
+    text-decoration: underline;
+  }
+  a:visited {
+    color: var(--link-visited);
+  }
+
+  /* ----------------------------------------------------------- desk */
+  .shell,
+  .desk-root {
+    position: fixed;
+    inset: 0;
+  }
+  .desk-root {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace {
+    position: relative;
+    overflow: hidden;
+    background: var(--ws-bg);
+    contain: layout paint;
+  }
+  .workspace-mark {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+  .desk-icons {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    bottom: 8px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(auto-fill, 74px);
+    grid-auto-columns: 88px;
+    gap: 4px;
+    align-content: start;
+  }
+  .desk-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 2px;
+    color: var(--chrome-hi);
+    text-align: center;
+    cursor: default;
+    user-select: none;
+    outline: none;
+  }
+  .desk-icon-label {
+    padding: 0 2px;
+    font-size: 11px;
+    line-height: 13px;
+  }
+  .desk-icon.is-sel .desk-icon-label {
+    background: var(--select-bg);
+    color: var(--select-fg);
+  }
+  .desk-icon:focus-visible .desk-icon-label {
+    outline: 1px dotted var(--chrome-hi);
+  }
+
+  /* -------------------------------------------------------- windows */
+  .win {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 3px;
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+    contain: layout paint style;
+  }
+  .win[hidden] {
+    display: none;
+  }
+  .win.is-dragging,
+  .win.is-resizing {
+    will-change: transform, width, height;
+  }
+  .win.is-dragging .win-body,
+  .win.is-resizing .win-body {
+    pointer-events: none;
+  }
+  .win-title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    padding: 0 2px;
+    background: var(--title-inactive-bg);
+    color: var(--title-inactive-fg);
+    font-weight: 600;
+    user-select: none;
+    touch-action: none;
+    cursor: default;
+    flex: none;
+  }
+  .win.is-active .win-title {
+    background: var(--title-active-bg);
+    color: var(--title-active-fg);
+  }
+  .win-ctl {
+    width: 18px;
+    height: 16px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-color: transparent;
+    box-shadow: none;
+    background: transparent;
+  }
+  .win-ctl-plain {
+    width: 10px;
+    height: 10px;
+    border: 1px solid currentColor;
+  }
+  .win-title-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .win-docno {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    margin-right: 8px;
+  }
+  .win-title-app {
+    font-weight: 400;
+  }
+  .win-buttons {
+    display: flex;
+    gap: 2px;
+    flex: none;
+  }
+  .win-btn {
+    position: relative;
+    width: 18px;
+    height: 16px;
+    padding: 0;
+  }
+  .win-btn-close {
+    margin-left: 2px;
+  }
+  .glyph {
+    position: absolute;
+    inset: 0;
+  }
+  .win-btn-min .glyph::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    bottom: 3px;
+    width: 7px;
+    height: 2px;
+    background: var(--text-1);
+  }
+  .win-btn-max .glyph::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 2px;
+    width: 8px;
+    height: 7px;
+    border: 1px solid var(--text-1);
+    border-top-width: 2px;
+  }
+  .win-btn-restore .glyph::before,
+  .win-btn-restore .glyph::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 5px;
+    border: 1px solid var(--text-1);
+    border-top-width: 2px;
+    background: var(--chrome-face);
+  }
+  .win-btn-restore .glyph::before {
+    left: 5px;
+    top: 1px;
+  }
+  .win-btn-restore .glyph::after {
+    left: 2px;
+    top: 5px;
+  }
+  .win-btn-close .glyph::before,
+  .win-btn-close .glyph::after,
+  .toast-x .glyph::before,
+  .toast-x .glyph::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 2px;
+    margin: -1px 0 0 -4.5px;
+    background: var(--text-1);
+    transform: rotate(45deg);
+  }
+  .win-btn-close .glyph::after,
+  .toast-x .glyph::after {
+    transform: rotate(-45deg);
+  }
+  .win-marking {
+    flex: none;
+    font-size: 10px;
+    line-height: 14px;
+    overflow: hidden;
+  }
+  .win-body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    background: var(--surface);
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+    box-shadow: inset 1px 1px var(--chrome-outer);
+  }
+  .win-pad {
+    padding: 12px;
+  }
+  .win-loading {
+    padding: 12px;
+    color: var(--text-2);
+  }
+  .win-status {
+    flex: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    height: 16px;
+    padding: 1px 4px 0;
+    font-size: 11px;
+    line-height: 14px;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .win-status-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .win.is-busy,
+  .win.is-busy * {
+    cursor: wait !important;
+  }
+  .win.is-kb-move .win-title {
+    cursor: move;
+    outline: 1px dotted var(--title-active-fg);
+    outline-offset: -2px;
+  }
+  .win.is-kb-size {
+    outline: 1px dotted var(--chrome-hi);
+  }
+  .win.is-max,
+  .win.is-snap {
+    box-shadow: inset 1px 1px var(--chrome-hi);
+  }
+  .win-edge {
+    position: absolute;
+    z-index: 2;
+    touch-action: none;
+  }
+  .win-edge-n,
+  .win-edge-s {
+    left: 8px;
+    right: 8px;
+    height: 6px;
+    cursor: ns-resize;
+  }
+  .win-edge-n {
+    top: -3px;
+  }
+  .win-edge-s {
+    bottom: -3px;
+  }
+  .win-edge-e,
+  .win-edge-w {
+    top: 8px;
+    bottom: 8px;
+    width: 6px;
+    cursor: ew-resize;
+  }
+  .win-edge-e {
+    right: -3px;
+  }
+  .win-edge-w {
+    left: -3px;
+  }
+  .win-edge-ne,
+  .win-edge-nw,
+  .win-edge-se,
+  .win-edge-sw {
+    width: 12px;
+    height: 12px;
+  }
+  .win-edge-ne {
+    top: -3px;
+    right: -3px;
+    cursor: nesw-resize;
+  }
+  .win-edge-sw {
+    bottom: -3px;
+    left: -3px;
+    cursor: nesw-resize;
+  }
+  .win-edge-nw {
+    top: -3px;
+    left: -3px;
+    cursor: nwse-resize;
+  }
+  .win-edge-se {
+    bottom: -3px;
+    right: -3px;
+    cursor: nwse-resize;
+  }
+  .wm-zoom {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9990;
+    box-sizing: border-box;
+    border: 2px solid var(--chrome-hi);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+  .snap-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 9991;
+    box-sizing: border-box;
+    border: 2px solid var(--chrome-hi);
+    outline: 1px solid var(--chrome-outer);
+    pointer-events: none;
+  }
+
+  /* -------------------------------------------------------- taskbar */
+  .taskbar {
+    min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 3px;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 2px;
+    background: var(--chrome-face);
+    border-top: 1px solid var(--chrome-hi);
+    box-shadow: inset 0 1px var(--chrome-face);
+    z-index: 9500;
+  }
+  .dir-button {
+    font-weight: 700;
+    padding: 0 10px;
+    flex: none;
+  }
+  .task-list {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 3px;
+    overflow: hidden;
+  }
+  .task-btn {
+    flex: 0 1 180px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 6px;
+    text-align: left;
+    overflow: hidden;
+  }
+  .task-btn.is-active {
+    background: var(--chrome-hi);
+    font-weight: 600;
+  }
+  .task-btn-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .task-btn-plain {
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--text-2);
+    flex: none;
+  }
+  .tray {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 4px;
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+    flex: none;
+  }
+  .tray-item {
+    border-color: transparent;
+    box-shadow: none;
+    background: transparent;
+    padding: 0 4px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .tray-item:hover {
+    border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+  }
+  .tray-links {
+    gap: 2px;
+  }
+  .st-sq {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    vertical-align: -1px;
+    box-sizing: border-box;
+  }
+  .st-nominal {
+    background: var(--st-nominal);
+  }
+  .st-degraded {
+    background: var(--st-degraded);
+  }
+  .st-fault {
+    background: var(--st-fault);
+  }
+  .st-offline {
+    background: var(--st-offline);
+  }
+  .st-local {
+    background: var(--st-nominal);
+    outline: 1px solid var(--text-1);
+    outline-offset: -1px;
+  }
+  .tray-clock {
+    display: flex;
+    gap: 6px;
+    padding: 0 4px;
+    white-space: nowrap;
+  }
+  .tray-clock-local,
+  .tray-clock-date {
+    color: var(--text-2);
+  }
+  .tray-pop {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 4px);
+    min-width: 280px;
+    padding: 6px 8px;
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+    z-index: 9600;
+  }
+  .tray-pop-h {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .tray-table,
+  .session-panel {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .tray-table th,
+  .tray-table td,
+  .session-panel th,
+  .session-panel td {
+    text-align: left;
+    padding: 1px 6px 1px 0;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  .session-panel th {
+    font-weight: 400;
+    color: var(--text-2);
+  }
+  .tray-note {
+    color: var(--text-2);
+    white-space: normal;
+  }
+
+  /* ---------------------------------------------------- directory */
+  .dir-menu {
+    position: absolute;
+    left: 2px;
+    bottom: calc(100% + 2px);
+    width: min(560px, calc(100vw - 8px));
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+    z-index: 9700;
+  }
+  .dir-head {
+    padding: 6px 8px;
+    background: var(--title-active-bg);
+    color: var(--title-active-fg);
+  }
+  .dir-head .session-panel th {
+    color: inherit;
+    opacity: 0.85;
+  }
+  .dir-head-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .dir-cols {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+  }
+  .dir-col + .dir-col {
+    border-left: 1px solid var(--chrome-shadow);
+  }
+  .dir-col-h {
+    padding: 4px 8px 0;
+    color: var(--text-2);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  /* --------------------------------------------------------- menus */
+  .ctx-menu {
+    position: fixed;
+    z-index: 10001;
+    min-width: 200px;
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+  }
+  .sh-menu {
+    list-style: none;
+    margin: 0;
+    padding: 2px;
+  }
+  .sh-menu-item {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: 4px;
+    padding: 2px 10px 2px 2px;
+    white-space: nowrap;
+    cursor: default;
+    outline: none;
+  }
+  .sh-menu-item:hover,
+  .sh-menu-item:focus {
+    background: var(--select-bg);
+    color: var(--select-fg);
+  }
+  .sh-menu-item.is-disabled {
+    color: var(--text-3);
+  }
+  .sh-menu-item.is-disabled:hover,
+  .sh-menu-item.is-disabled:focus {
+    background: transparent;
+    color: var(--text-3);
+  }
+  .sh-menu-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 360px;
+  }
+  .sh-menu-shortcut {
+    color: inherit;
+    opacity: 0.8;
+    padding-left: 16px;
+  }
+  .sh-menu-sep {
+    height: 0;
+    margin: 3px 2px;
+    border-top: 1px solid var(--chrome-shadow);
+    border-bottom: 1px solid var(--chrome-hi);
+  }
+  .sh-menu-tick {
+    display: inline-block;
+    width: 5px;
+    height: 9px;
+    margin-left: 4px;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* -------------------------------------------------------- dialogs */
+  .modal-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 10002;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: 12vh 8px 8px;
+  }
+  .dialog {
+    width: min(460px, calc(100vw - 16px));
+    background: var(--chrome-face);
+    border: 1px solid var(--chrome-outer);
+    box-shadow:
+      inset 1px 1px var(--chrome-hi),
+      inset -1px -1px var(--chrome-shadow);
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  .dialog-title {
+    background: var(--title-active-bg);
+    color: var(--title-active-fg);
+    font-weight: 600;
+    padding: 2px 4px;
+  }
+  .dialog-body {
+    padding: 10px 8px;
+  }
+  .dialog-lede {
+    margin: 0 0 8px;
+  }
+  .dialog-body label {
+    margin-right: 6px;
+  }
+  .run-dialog input {
+    width: calc(100% - 60px);
+    font-family: var(--font-mono);
+  }
+  .run-msg {
+    margin-top: 8px;
+    padding: 4px 6px;
+    background: var(--surface);
+    border: 1px solid var(--row-rule);
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+  }
+  .run-msg.is-error {
+    border-color: var(--st-fault);
+  }
+  .dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 0 8px 8px;
+  }
+  .lock-colophon {
+    width: min(620px, calc(100vw - 16px));
+  }
+  .lock-colophon .dialog-body {
+    background: var(--surface);
+    margin: 6px;
+    max-height: 60vh;
+    overflow: auto;
+  }
+  .search-dialog {
+    width: min(680px, calc(100vw - 16px));
+  }
+  .search-input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .search-meta {
+    margin: 4px 0;
+    color: var(--text-2);
+    font-size: 11px;
+  }
+  .search-results {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 50vh;
+    overflow: auto;
+    background: var(--surface);
+    border: 1px solid;
+    border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  }
+  .search-results:empty {
+    display: none;
+  }
+  .search-results li {
+    display: grid;
+    grid-template-columns: 150px 1fr auto;
+    gap: 2px 8px;
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--row-rule);
+    cursor: default;
+  }
+  .search-results li.is-sel {
+    background: var(--select-bg);
+    color: var(--select-fg);
+  }
+  .sr-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sr-mark {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .sr-snip {
+    grid-column: 2 / -1;
+    font-size: 11px;
+    opacity: 0.85;
+  }
+
+  /* --------------------------------------------------------- toasts */
+  .toasts {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    z-index: 9995;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: min(320px, calc(100% - 16px));
+  }
+  .toast {
+    background: var(--paper);
+    border: 1px solid var(--chrome-outer);
+    box-shadow: inset 1px 1px var(--chrome-hi);
+  }
+  .toast-h {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px 2px 1px 6px;
+    font-weight: 600;
+    background: var(--th-bg);
+  }
+  .toast-x {
+    position: relative;
+    width: 16px;
+    height: 14px;
+    padding: 0;
+  }
+  .toast-b {
+    padding: 4px 6px 6px;
+  }
+
+  /* --------------------------------------------- handheld (< 900px) */
+  .workspace.is-handheld .win {
+    inset: 0;
+    width: auto;
+    height: auto;
+    transform: none;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .workspace.is-handheld .win-title {
+    height: 28px;
+  }
+  .workspace.is-handheld .win-btn {
+    width: 28px;
+    height: 24px;
+  }
+  .workspace.is-handheld .desk-icons {
+    right: 8px;
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    grid-auto-rows: 80px;
+    overflow: auto;
+  }
+  .taskbar.is-handheld {
+    height: 44px;
+  }
+  .taskbar.is-handheld .task-list {
+    overflow-x: auto;
+  }
+  .taskbar.is-handheld .task-btn {
+    flex: 0 0 auto;
+    max-width: 160px;
+  }
+  .tray-compact {
+    gap: 6px;
+  }
+  .is-handheld .lock-grid {
+    grid-template-columns: 1fr;
+  }
+  .is-handheld .dir-cols {
+    grid-template-columns: 1fr;
+  }
+  .is-handheld .dir-menu {
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+  }
+
+  /* ---------------------------------------------- density: compact */
+  html[data-density='compact'] .win-title {
+    height: 18px;
+  }
+  html[data-density='compact'] .taskbar:not(.is-handheld) {
+    height: 24px;
+  }
+  html[data-density='compact'] .sh-menu-item {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+
+}
+
