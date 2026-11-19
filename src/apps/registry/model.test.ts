@@ -8,6 +8,7 @@ import {
   buildRows,
   classFromRoute,
   facilityFromRoute,
+  figureCell,
   filterRows,
   isOpen,
   locationLabel,
@@ -147,5 +148,16 @@ describe('registry model', () => {
     const g = canon.facilities.find((x) => x.class === 'GAMMA')!;
     const cls = canon.classes.find((c) => c.id === 'GAMMA')!;
     expect(sustainmentText(canon, g)).toContain(`${cls.sustainDaysMin} to ${cls.sustainDaysMax}`);
+  });
+
+  it('withholds reactor fitting where the client canon does, even under SEXTANT (no inferred UTILITY SERVICE)', () => {
+    const byId = (id: string) => canon.facilities.find((x) => x.id === id)!;
+    for (const id of ['BETA-03', 'BETA-08', 'BETA-01']) {
+      for (const v of [baseline, sextant]) expect(isOpen(figureCell(byId(id), 'reactor', byId(id).reactor, v))).toBe(false);
+    }
+    // BETA-09, adjacent to the home site, carries its unit in clear; ALPHA units are open
+    const b09 = byId('BETA-09');
+    expect(isOpen(figureCell(b09, 'reactor', b09.reactor, baseline))).toBe(true);
+    expect(isOpen(figureCell(byId('ALPHA-03'), 'reactor', byId('ALPHA-03').reactor, baseline))).toBe(true);
   });
 });

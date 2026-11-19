@@ -41,7 +41,9 @@ function since(s: number): string {
 }
 
 function sourceRow(r: Reading, p: PanelProps) {
-  if (p.reactorRx && r.power.source !== 'UTILITY SERVICE') {
+  // Reactor fitting withheld: the source is withheld whatever the simulator reports, so a
+  // clear UTILITY SERVICE cannot mark which sites do (or do not) carry a unit.
+  if (p.reactorRx) {
     return (
       <div class="reg-readout-rx">
         <span class="reg-readout-rx__label">Power source</span>

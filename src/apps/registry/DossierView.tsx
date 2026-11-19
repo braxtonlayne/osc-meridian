@@ -64,7 +64,9 @@ export function DossierView(p: DossierProps) {
   const [level, setLevel] = useState<number | null>(null);
   const [sideW, setSideW] = useState(420);
   const panels = usePanels();
-  const reactorCell = cell(p.f, 'reactor', true, p.viewer);
+  // Whether a reactor is fitted follows the client canon: null (BETA other than the released
+  // one, DELTA) is withheld for every viewer, SEXTANT included; nothing is inferred from telemetry.
+  const reactorCell = figureCell(p.f, 'reactor', p.f.reactor, p.viewer);
   const reactorRx: Withheld | null = isOpen(reactorCell) ? null : reactorCell.rx;
   const panelProps = { f: p.f, t: p.telemetry, reactorRx, audit: p.audit };
 
@@ -186,7 +188,7 @@ function SidePanel(p: DossierProps & { panels: PanelModule | null; reactorRx: Wi
           </div>
         </GroupBox>
       ) : null}
-      {canon.reactors.some((r) => r.site === f.id) ? (
+      {!p.reactorRx && canon.reactors.some((r) => r.site === f.id) ? (
         <GroupBox title="Reactor plant">
           {p.panels ? <p.panels.ReactorGauges f={f} t={p.telemetry} reactorRx={p.reactorRx} audit={audit} /> : <Loading what="reactor instruments" />}
           {p.reactorRx ? null : (
