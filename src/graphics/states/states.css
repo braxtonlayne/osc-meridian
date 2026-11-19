@@ -1,0 +1,425 @@
+/*
+ * @graphics/states: empty, error and refusal panels.
+ * Colours and faces come only from design tokens:
+ *   --chrome-face --chrome-hi --chrome-shadow --chrome-outer
+ *   --surface --paper --text-1 --text-2 --text-3
+ *   --font-ui --font-mono --redact --st-fault --st-offline
+ * All selectors are prefixed .st- (plus the shared .rx bar).
+ */
+
+.st {
+  box-sizing: border-box;
+  font: 12px/16px var(--font-ui);
+  color: var(--text-1);
+  text-align: left;
+}
+.st *,
+.st *::before,
+.st *::after {
+  box-sizing: border-box;
+}
+
+.st-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.st-break {
+  overflow-wrap: anywhere;
+}
+.st-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- glyphs ---------- */
+
+.st-glyph {
+  flex: none;
+  display: block;
+  color: var(--chrome-shadow);
+  fill: none;
+}
+.st-g-line {
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.st-g-face {
+  fill: var(--chrome-face);
+}
+.st-g-mid {
+  fill: var(--chrome-shadow);
+}
+.st-g-dark {
+  fill: var(--chrome-outer);
+}
+.st-g-hi-fill {
+  fill: var(--chrome-hi);
+}
+.st-g-hi-line {
+  fill: none;
+  stroke: var(--chrome-hi);
+  stroke-width: 1;
+}
+.st-g-soft-line {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}
+.st-g-idle {
+  fill: var(--st-offline);
+}
+.st-g-fault {
+  fill: var(--st-fault);
+}
+.st-g-fault-edge {
+  fill: none;
+  stroke: var(--chrome-hi);
+  stroke-width: 1;
+  opacity: 0.35;
+}
+.st-g-cross {
+  fill: none;
+  stroke: var(--chrome-hi);
+  stroke-width: 3.2;
+  stroke-linecap: butt;
+}
+
+/* ---------- message panel (refusal, error, path) ---------- */
+
+.st-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 14px 16px 10px;
+  overflow: auto;
+  background: var(--chrome-face);
+}
+
+.st-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: none;
+}
+.st-head__text {
+  min-width: 0;
+  max-width: 68ch;
+}
+.st-title {
+  margin: 0 0 4px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.st-lead {
+  margin: 0;
+}
+
+.st-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* aligns under the heading text: 32px glyph + 12px gap */
+  padding: 12px 0 0 44px;
+  max-width: calc(68ch + 44px);
+}
+.st-note {
+  margin: 10px 0 0;
+  color: var(--text-2);
+}
+
+.st-fields {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  background: var(--surface);
+  font: inherit;
+}
+.st-fields th,
+.st-fields td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--chrome-face);
+  vertical-align: top;
+  text-align: left;
+  font-weight: 400;
+}
+.st-fields tr:last-child > * {
+  border-bottom: 0;
+}
+.st-fields th {
+  width: 152px;
+  white-space: nowrap;
+  color: var(--text-2);
+  background: var(--paper);
+  border-right: 1px solid var(--chrome-face);
+}
+.st-fields td {
+  color: var(--text-1);
+}
+
+.st-actions {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--chrome-shadow);
+  box-shadow: inset 0 1px 0 var(--chrome-hi);
+}
+
+/* ---------- button ---------- */
+
+.st-btn {
+  appearance: none;
+  flex: none;
+  min-width: 75px;
+  height: 23px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--chrome-outer);
+  border-radius: 0;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1px 1px 0 var(--chrome-hi),
+    inset -1px -1px 0 var(--chrome-shadow);
+  color: var(--text-1);
+  font: 12px/16px var(--font-ui);
+  white-space: nowrap;
+  cursor: default;
+}
+.st-btn--default {
+  outline: 1px solid var(--chrome-outer);
+  outline-offset: 0;
+}
+.st-btn--small {
+  min-width: 0;
+  height: 20px;
+  padding: 0 8px;
+}
+.st-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--chrome-shadow),
+    inset -1px -1px 0 var(--chrome-hi);
+  padding: 1px 11px 0 13px;
+}
+.st-btn--small:active {
+  padding: 1px 7px 0 9px;
+}
+.st-btn:focus-visible {
+  outline: 1px dotted var(--text-1);
+  outline-offset: -4px;
+}
+
+/* ---------- refusal, compact ---------- */
+
+.st-refusal-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 6px 2px 4px;
+  border: 1px solid;
+  border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+  background: var(--chrome-face);
+  vertical-align: middle;
+}
+.st-refusal-compact__text {
+  min-width: 0;
+}
+.st-refusal-compact__text strong {
+  font-weight: 600;
+}
+.st-refusal-compact__ref {
+  color: var(--text-2);
+}
+
+/* ---------- empty ---------- */
+
+.st-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(16px, 14%, 72px) 24px 16px;
+  overflow: auto;
+  background: var(--surface);
+  text-align: center;
+}
+.st-empty__icon {
+  flex: none;
+  margin-bottom: 10px;
+}
+.st-empty__title {
+  margin: 0;
+  color: var(--text-1);
+}
+.st-empty__body {
+  margin: 4px 0 0;
+  max-width: 56ch;
+  color: var(--text-2);
+}
+
+/* ---------- error ---------- */
+
+.st-code {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.st-code__label {
+  color: var(--text-2);
+  margin-right: 2px;
+}
+.st-code__value {
+  height: 20px;
+  margin: 0;
+  padding: 0 4px;
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--text-1);
+  font-size: 12px;
+  line-height: 16px;
+}
+.st-code__value:focus-visible {
+  outline: 1px dotted var(--text-1);
+  outline-offset: 1px;
+}
+.st-code__status {
+  color: var(--text-3);
+}
+.st-trace {
+  margin: 10px 0 0;
+  padding: 5px 8px;
+  max-height: 172px;
+  overflow: auto;
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  background: var(--surface);
+  color: var(--text-1);
+  font-size: 11px;
+  line-height: 14px;
+  white-space: pre;
+  tab-size: 4;
+}
+.st-trace:focus-visible {
+  outline: 1px dotted var(--text-1);
+  outline-offset: 1px;
+}
+
+/* ---------- redaction bars ---------- */
+
+/*
+ * One bar. Width = character count x 1ch of the current font. 1ch is the
+ * advance of "0", which runs wide against average text in a proportional
+ * face, so --rx-ch-scale trims it; set it to 1 inside monospaced contexts.
+ */
+.st-rx,
+.st-rx__piece {
+  --rx-ch-scale: 0.9;
+  display: inline-block;
+  width: calc(var(--rx-len, 6) * 1ch * var(--rx-ch-scale));
+  max-width: 100%;
+  height: 1.08em;
+  vertical-align: -0.2em;
+  background: var(--redact);
+  /* bars survive printing and forced colours */
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  forced-color-adjust: none;
+  user-select: none;
+  cursor: help;
+}
+.st-mono .st-rx,
+.st-mono .st-rx__piece,
+.st-rx.st-mono {
+  --rx-ch-scale: 1;
+}
+.st-rx--field {
+  display: block;
+  width: 100%;
+}
+.st-rx--sentence {
+  display: inline;
+  width: auto;
+  height: auto;
+  background: none;
+}
+/* pieces butt together on a line and separate only where the line wraps */
+.st-rx--sentence .st-rx__piece {
+  max-width: none;
+}
+
+/* ---------- withheld block ---------- */
+
+.st-withheld {
+  display: block;
+  margin: 8px 0;
+  font: inherit;
+  color: inherit;
+  cursor: help;
+}
+.st-withheld__label {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.st-withheld__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.36em;
+  padding: 0.18em 0;
+}
+.st-withheld__line {
+  display: flex;
+  gap: 0.34em;
+  width: var(--wl-fill, 100%);
+  height: 1.08em;
+}
+.st-withheld__line--indent {
+  padding-left: 2em;
+}
+.st-withheld__bar {
+  flex: 1 1 0;
+  min-width: 0.6em;
+  background: var(--redact);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  forced-color-adjust: none;
+}
+.st-withheld__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 14px;
+  margin-top: 5px;
+  padding-top: 3px;
+  border-top: 1px solid var(--chrome-shadow);
+  font: 11px/14px var(--font-ui);
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.st-withheld__foot .st-mono {
+  font-size: 11px;
+  color: var(--text-1);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+@media print {
+  .st-actions,
+  .st-btn {
+    display: none;
+  }
+}

@@ -1,0 +1,208 @@
+/* Reserves application. Tokens only. */
+.rsv {
+  container-type: inline-size;
+  container-name: rsv;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+}
+
+.rsv-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.rsv-body--nonav {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rsv-nav {
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--chrome-shadow);
+}
+
+.rsv-main {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+}
+
+.rsv-pad {
+  padding: var(--sp-5);
+}
+
+.rsv-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.rsv-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-items: start;
+}
+.rsv-cols--wo {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+
+.rsv-doc {
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--row-rule);
+  scroll-margin-top: var(--sp-4);
+}
+
+.rsv-note {
+  margin: var(--sp-3) 0 0;
+  color: var(--text-2);
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.rsv-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Link-styled button: in-app navigation inside tables and notes. Always underlined. */
+.rsv-link {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.rsv-link:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.rsv-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.rsv-status__note {
+  margin: 0;
+  line-height: 16px;
+}
+
+.rsv-gauges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.rsv-readouts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 620px;
+}
+
+.rsv-drawing {
+  overflow: auto;
+  background: var(--paper);
+  border: 1px solid var(--chrome-shadow);
+}
+
+.rsv-catalogue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.rsv-catalogue .dt-wrap,
+.rsv-catalogue > .dt {
+  max-height: none;
+}
+
+.rsv-find {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.rsv-find__form {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.rsv-cites {
+  width: 100%;
+  margin-top: var(--sp-4);
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.rsv-cites th {
+  text-align: left;
+  font-weight: 600;
+  background: var(--th-bg);
+  border: 1px solid var(--row-rule);
+  padding: 2px var(--sp-3);
+}
+.rsv-cites td {
+  vertical-align: top;
+  border: 1px solid var(--row-rule);
+  padding: 3px var(--sp-3);
+  line-height: 16px;
+}
+.rsv-cites td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.rsv-excerpt {
+  font-family: var(--font-doc);
+}
+
+.rsv-row-end {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--sp-4);
+}
+
+/* Handheld: one column, no tree, a Go to selector instead. */
+.rsv-goto {
+  display: none;
+  padding: var(--sp-2) var(--sp-3);
+  border-top: 1px solid var(--chrome-hi);
+}
+
+@container rsv (max-width: 700px) {
+  .rsv-body,
+  .rsv-body--nonav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rsv-nav {
+    display: none;
+  }
+  .rsv-goto {
+    display: block;
+  }
+  .rsv-cols,
+  .rsv-cols--wo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rsv-pad {
+    padding: var(--sp-3);
+  }
+}

@@ -1,0 +1,554 @@
+/*
+ * @graphics/forms — form furniture.
+ *
+ * No colour or font is named in this file. Everything resolves through the
+ * alias block below (names from src/design/tokens.css). Rules sit in the
+ * `documents` cascade layer declared by src/design/base.css.
+ */
+@layer documents {
+  .oscf {
+    --oscf-ink: var(--text-1);
+    --oscf-ink-2: var(--text-2);
+    --oscf-ink-3: var(--text-3);
+    --oscf-paper: var(--paper);
+    --oscf-field: var(--surface);
+    --oscf-shade: var(--th-bg);
+    --oscf-rule-soft: var(--row-rule);
+    --oscf-edge: var(--paper-edge);
+    --oscf-pen: var(--stamp-ink);
+    --oscf-sans: var(--font-ui);
+    --oscf-mono: var(--font-mono);
+    --oscf-typed: var(--font-typed);
+  }
+
+  .oscf-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ---- Sheet ------------------------------------------------------- */
+
+  .oscf-sheet {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 760px;
+    padding: 18px 22px 12px;
+    background: var(--oscf-paper);
+    border: 1px solid var(--oscf-edge);
+    color: var(--oscf-ink);
+    font: 12px/16px var(--oscf-sans);
+  }
+  .oscf-sheet *,
+  .oscf-receipt * {
+    box-sizing: border-box;
+  }
+
+  /* ---- Corner label (shared) --------------------------------------- */
+
+  .oscf-label {
+    font: 500 8.5px/10px var(--oscf-sans);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--oscf-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .oscf-label__n {
+    font-weight: 700;
+    margin-right: 3px;
+  }
+  .oscf-label__hint {
+    text-transform: none;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--oscf-ink-2);
+  }
+
+  /* ---- Header ------------------------------------------------------ */
+
+  .oscf-header {
+    color: var(--oscf-ink);
+    font-family: var(--oscf-sans);
+  }
+  .oscf-header__top {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding-bottom: 5px;
+  }
+  .oscf-header__seal {
+    flex: none;
+    align-self: center;
+    line-height: 0;
+  }
+  .oscf-header__titles {
+    flex: 1;
+    min-width: 0;
+  }
+  .oscf-header__agency {
+    font: 600 9px/12px var(--oscf-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--oscf-ink-2);
+  }
+  .oscf-header__title {
+    margin: 0;
+    font: 700 15px/18px var(--oscf-sans);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .oscf-header__sub {
+    font: italic 400 10px/13px var(--oscf-sans);
+    color: var(--oscf-ink-2);
+  }
+  .oscf-header__no {
+    flex: none;
+    padding: 3px 8px;
+    border: 1px solid var(--oscf-ink);
+    font: 700 11px/14px var(--oscf-sans);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .oscf-header__notice {
+    border: 1px solid var(--oscf-ink);
+    border-bottom: 0;
+    box-shadow: 0 0 0 1px var(--oscf-ink);
+    padding: 3px 5px 4px;
+    font: 400 9px/11.5px var(--oscf-sans);
+  }
+  .oscf-header__noticehead {
+    font: 700 8.5px/11px var(--oscf-sans);
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+  .oscf-header__notice p {
+    margin: 1px 0 0;
+    text-align: justify;
+  }
+  .oscf-header__notice b {
+    font-weight: 700;
+  }
+
+  /* ---- Grid and blocks --------------------------------------------- */
+
+  .oscf-grid {
+    display: grid;
+    border-top: 1px solid var(--oscf-ink);
+    border-left: 1px solid var(--oscf-ink);
+    /* second line outside the grid makes the heavier outer frame */
+    box-shadow: 0 0 0 1px var(--oscf-ink);
+    color: var(--oscf-ink);
+    font: 12px/16px var(--oscf-sans);
+  }
+  /* a grid nested in a flush block supplies only the inner rules */
+  .oscf-block--flush > .oscf-block__body > .oscf-grid {
+    border: 0;
+    box-shadow: none;
+    margin: 0 -1px -1px 0;
+  }
+
+  .oscf-block {
+    min-width: 0;
+    padding: 2px 4px 3px;
+    border-right: 1px solid var(--oscf-ink);
+    border-bottom: 1px solid var(--oscf-ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .oscf-block--shade {
+    background: var(--oscf-shade);
+  }
+  .oscf-block--flush {
+    padding: 0;
+  }
+  .oscf-block--flush > .oscf-label {
+    padding: 2px 4px 0;
+  }
+  .oscf-block__body {
+    flex: 1;
+    min-height: 16px;
+    padding-top: 1px;
+  }
+
+  .oscf-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 1px 4px;
+    background: var(--oscf-shade);
+    border-right: 1px solid var(--oscf-ink);
+    border-bottom: 1px solid var(--oscf-ink);
+    font: 700 9.5px/13px var(--oscf-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .oscf-section__part::after {
+    content: '\2002\2013\2002';
+  }
+  .oscf-section__note {
+    font: italic 400 9px/13px var(--oscf-sans);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--oscf-ink-2);
+  }
+
+  .oscf-value {
+    font: 12px/16px var(--oscf-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--oscf-ink);
+    white-space: pre-wrap;
+  }
+  .oscf-value--typed {
+    font-family: var(--oscf-typed);
+  }
+
+  /* Working controls placed inside a block look like fill-in fields. */
+  .oscf-block__body :is(input:not([type='checkbox'], [type='radio']), select, textarea) {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0 2px;
+    border: 0;
+    border-radius: 0;
+    background: var(--oscf-field);
+    color: var(--oscf-ink);
+    font: 12px/16px var(--oscf-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .oscf-block__body textarea {
+    resize: vertical;
+    min-height: 48px;
+  }
+  .oscf-block__body :is(input, select, textarea):focus-visible {
+    outline: 1px dotted var(--oscf-ink);
+    outline-offset: 0;
+  }
+  .oscf-block__body :is(input, select, textarea)[aria-invalid='true'] {
+    box-shadow: inset 0 -2px 0 var(--oscf-ink);
+  }
+
+  /* ---- Checkbox ---------------------------------------------------- */
+
+  .oscf-check {
+    flex: none;
+    display: inline-block;
+    vertical-align: -2px;
+    color: var(--oscf-ink);
+  }
+  .oscf-check__box {
+    fill: var(--oscf-field);
+    stroke: currentColor;
+    stroke-width: 1;
+  }
+  .oscf-check__stroke {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  .oscf-check__fill {
+    fill: currentColor;
+  }
+
+  .oscf-checkitem {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 4px;
+    margin-right: 14px;
+    font: 11px/14px var(--oscf-sans);
+    color: var(--oscf-ink);
+  }
+  .oscf-checkitem .oscf-check {
+    margin-top: 1px;
+  }
+  .oscf-checkitem--live {
+    cursor: default;
+  }
+  .oscf-checkitem__input {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    opacity: 0;
+  }
+  .oscf-checkitem__input:focus-visible + .oscf-check {
+    outline: 1px dotted var(--oscf-ink);
+    outline-offset: 1px;
+  }
+  .oscf-checkitem.is-disabled {
+    color: var(--oscf-ink-3);
+  }
+
+  /* ---- Signature --------------------------------------------------- */
+
+  .oscf-sig {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 104px;
+    color: var(--oscf-ink);
+    font: 12px/16px var(--oscf-sans);
+  }
+  .oscf-sig__sign {
+    min-width: 0;
+    padding: 2px 4px 3px;
+  }
+  .oscf-sig__date {
+    padding: 2px 4px 3px;
+    border-left: 1px solid var(--oscf-ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .oscf-sig__area {
+    position: relative;
+    height: 30px;
+    margin: 0 2px;
+    border-bottom: 1px solid var(--oscf-ink);
+  }
+  .oscf-sig__ink {
+    position: absolute;
+    left: 6px;
+    /* baseline of the generated signature (70% of 48px) sits just on the rule */
+    bottom: -13px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .oscf-sig__ink path {
+    fill: none;
+    stroke: var(--oscf-pen);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .oscf-sig__name {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 1px 2px 0;
+    min-height: 14px;
+  }
+  .oscf-sig__caption {
+    flex: none;
+    font: 400 7.5px/10px var(--oscf-sans);
+    letter-spacing: 0.04em;
+    color: var(--oscf-ink-2);
+  }
+  .oscf-sig__typed {
+    font: 11px/14px var(--oscf-mono);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .oscf-sig__datevalue {
+    margin-top: auto;
+    padding-bottom: 15px;
+    font: 11px/14px var(--oscf-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ---- Barcode ----------------------------------------------------- */
+
+  .oscf-barcode {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--oscf-ink);
+    line-height: 0;
+  }
+  .oscf-barcode__bars {
+    display: block;
+  }
+  .oscf-barcode__bars rect {
+    fill: currentColor;
+  }
+  .oscf-barcode__text {
+    margin-top: 1px;
+    font: 8.5px/10px var(--oscf-mono);
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+  }
+
+  /* ---- Form number mark and footer --------------------------------- */
+
+  .oscf-formno {
+    display: flex;
+    flex-direction: column;
+    color: var(--oscf-ink);
+    font-family: var(--oscf-sans);
+  }
+  .oscf-formno__id {
+    font: 700 10px/12px var(--oscf-sans);
+    letter-spacing: 0.03em;
+  }
+  .oscf-formno__note {
+    font: 400 7.5px/10px var(--oscf-sans);
+    letter-spacing: 0.04em;
+  }
+
+  .oscf-footer {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 12px;
+    padding-top: 6px;
+  }
+  .oscf-footer__page {
+    font: 400 8.5px/10px var(--oscf-sans);
+    letter-spacing: 0.06em;
+    color: var(--oscf-ink);
+  }
+  .oscf-footer > :last-child {
+    justify-self: end;
+  }
+
+  /* ---- Receipt ----------------------------------------------------- */
+
+  .oscf-receipt {
+    width: 100%;
+    max-width: 760px;
+    background: var(--oscf-paper);
+    border: 1px solid var(--oscf-edge);
+    border-top: 0;
+    color: var(--oscf-ink);
+    font: 11px/14px var(--oscf-sans);
+  }
+  .oscf-receipt__perf {
+    position: relative;
+    height: 13px;
+    text-align: center;
+    font: 400 7.5px/13px var(--oscf-sans);
+    letter-spacing: 0.16em;
+    color: var(--oscf-ink-2);
+  }
+  .oscf-receipt__perf::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 6px;
+    border-top: 1px dashed var(--oscf-ink);
+  }
+  .oscf-receipt__perf span {
+    position: relative;
+    padding: 0 8px;
+    background: var(--oscf-paper);
+  }
+  .oscf-receipt__body {
+    display: flex;
+    gap: 0;
+    margin: 4px 22px 0;
+    border: 1px solid var(--oscf-ink);
+    box-shadow: 0 0 0 1px var(--oscf-ink);
+  }
+  .oscf-receipt__main {
+    flex: 1;
+    min-width: 0;
+  }
+  .oscf-receipt__head {
+    padding: 1px 4px;
+    background: var(--oscf-shade);
+    border-bottom: 1px solid var(--oscf-ink);
+    font: 700 9.5px/13px var(--oscf-sans);
+    letter-spacing: 0.06em;
+  }
+  .oscf-receipt__facts {
+    display: grid;
+    grid-template-columns: 78px 1fr;
+    margin: 0;
+    border-bottom: 1px solid var(--oscf-ink);
+  }
+  .oscf-receipt__facts dt {
+    padding: 1px 4px;
+    font: 500 8.5px/14px var(--oscf-sans);
+    letter-spacing: 0.03em;
+    border-right: 1px solid var(--oscf-rule-soft);
+  }
+  .oscf-receipt__facts dd {
+    margin: 0;
+    padding: 1px 6px;
+    font: 11px/14px var(--oscf-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .oscf-receipt__facts dt:nth-of-type(n + 2),
+  .oscf-receipt__facts dd:nth-of-type(n + 2) {
+    border-top: 1px solid var(--oscf-rule-soft);
+  }
+  .oscf-receipt__title {
+    font-family: var(--oscf-sans);
+    color: var(--oscf-ink-2);
+  }
+  .oscf-receipt__routing {
+    width: 100%;
+    border-collapse: collapse;
+    font: 11px/14px var(--oscf-mono);
+  }
+  .oscf-receipt__routing th {
+    padding: 1px 4px;
+    text-align: left;
+    font: 500 8.5px/12px var(--oscf-sans);
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--oscf-ink);
+  }
+  .oscf-receipt__routing td {
+    padding: 1px 4px;
+    height: 17px;
+  }
+  .oscf-receipt__routing :is(th, td) + :is(th, td) {
+    border-left: 1px solid var(--oscf-rule-soft);
+  }
+  .oscf-receipt__routing tr + tr td {
+    border-top: 1px solid var(--oscf-rule-soft);
+  }
+  .oscf-receipt__routing :is(th, td):nth-child(1) {
+    width: 38px;
+  }
+  .oscf-receipt__routing :is(th, td):nth-child(3) {
+    width: 70px;
+  }
+  .oscf-receipt__routing :is(th, td):nth-child(4) {
+    width: 92px;
+  }
+  .oscf-receipt__stub {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2px 6px 5px 4px;
+    border-left: 1px dashed var(--oscf-ink);
+  }
+  .oscf-receipt__no {
+    margin: 2px 0 auto;
+    padding-left: 10px;
+    font: 600 16px/20px var(--oscf-mono);
+    letter-spacing: 0.04em;
+  }
+  .oscf-receipt__foot {
+    margin: 4px 22px 8px;
+    font: 400 8.5px/11px var(--oscf-sans);
+    color: var(--oscf-ink);
+  }
+
+  /* ---- Print ------------------------------------------------------- */
+
+  @media print {
+    .oscf-sheet,
+    .oscf-receipt {
+      border-color: transparent;
+      max-width: none;
+    }
+    .oscf-receipt {
+      break-inside: avoid;
+    }
+  }
+}

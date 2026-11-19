@@ -1,0 +1,4810 @@
+{
+  "glossary": [
+    {
+      "term": "ACCESS ROSTER",
+      "def": "The list, maintained by the facility security officer, of persons authorised unescorted entry to a controlled area. Reissued on the first working day of each month and on any change of more than five names.",
+      "seeAlso": [
+        "BADGE",
+        "ESCORT",
+        "VISITOR LOG"
+      ]
+    },
+    {
+      "term": "ACCOUNT CODE",
+      "def": "The invented-for-purpose appropriation account string under which a line item is obligated. Format: agency prefix, four-digit account, three-digit sub-account. Account codes are not unique to the OSC and appear in the published accounts of the parent department.",
+      "seeAlso": [
+        "LINE ITEM",
+        "FUNDING SOURCE",
+        "PROGRAM ELEMENT"
+      ]
+    },
+    {
+      "term": "ACTING CREDENTIAL",
+      "def": "A time-limited elevation of an individual to the access level of the next higher tier for the duration of a named duty. Issued by a facility commander, recorded in the audit trail, and lapsing without notice at the end of the duty period. An acting credential does not confer the briefings associated with the higher tier.",
+      "seeAlso": [
+        "TIER",
+        "BRIEFING",
+        "COMPARTMENT"
+      ]
+    },
+    {
+      "term": "ACTION OFFICER",
+      "def": "The individual named on a routing slip as responsible for preparing the response to a tasking by its suspense date. Where no action officer is named, the action falls to the originating division head.",
+      "seeAlso": [
+        "ROUTING SLIP",
+        "SUSPENSE DATE",
+        "TASKING"
+      ]
+    },
+    {
+      "term": "ADMINISTRATIVE LEAVE",
+      "def": "Excused absence without charge to annual leave, granted at the discretion of the facility commander. Personnel on administrative leave remain subject to recall and may not leave the sustainment radius of their assigned facility.",
+      "seeAlso": [
+        "LEAVE REQUEST",
+        "RECALL"
+      ]
+    },
+    {
+      "term": "AIR HANDLING UNIT",
+      "def": "A packaged fan, coil and filter assembly serving one ventilation zone. Each AHU is tagged with its zone number and filter cycle. Abbreviated AHU.",
+      "seeAlso": [
+        "HVAC FILTER CYCLE",
+        "NBC SEAL",
+        "SEAL STATE"
+      ]
+    },
+    {
+      "term": "ALPHA-CLASS",
+      "def": "Command and control hub. Deep underground installation (800 to 2,400 ft) with full life support, independent power generation, rail terminal and government reconstitution capability. Five installations, ALPHA-01 to ALPHA-05.",
+      "seeAlso": [
+        "BETA-CLASS",
+        "RECONSTITUTION",
+        "DEPTH BAND"
+      ]
+    },
+    {
+      "term": "ANNUAL REFRESHER",
+      "def": "The yearly security awareness module required of all tiers. Completion is recorded against the personnel number; non-completion by the suspense date suspends print release and removable media privileges.",
+      "seeAlso": [
+        "TRAINING COMPLIANCE",
+        "PRINT RELEASE",
+        "REMOVABLE MEDIA"
+      ]
+    },
+    {
+      "term": "ARCHIVE HOLD",
+      "def": "A records-management instruction suspending scheduled destruction of a document or series pending review. Only the Records Division may place or lift an archive hold.",
+      "seeAlso": [
+        "RECORDS DESTRUCTION",
+        "DESTRUCTION CERTIFICATE"
+      ]
+    },
+    {
+      "term": "AUDIT CAMOUFLAGE",
+      "def": "The distribution of programme cost across 127 separate budget line items in DOD, DOE, DHS and FEMA appropriations so that no single account discloses the programme.",
+      "seeAlso": [
+        "LINE ITEM",
+        "FUNDING SOURCE",
+        "COVER INFRASTRUCTURE"
+      ]
+    },
+    {
+      "term": "AUDIT TRAIL",
+      "def": "The security office record of workstation activity: windows opened, searches made, documents printed, redactions examined. Retained for the life of the individual's access plus seven years. The audit trail may be read by its subject.",
+      "seeAlso": [
+        "MERIDIAN",
+        "SELF-REPORT",
+        "SESSION TIMEOUT"
+      ]
+    },
+    {
+      "term": "BADGE",
+      "def": "The photo-identification card issued with a personnel number and tier stripe. Worn above the waist and visible at all times below the surface cover facility. A badge is not an access credential on its own; entry also requires the smart token and passphrase.",
+      "seeAlso": [
+        "LOST BADGE PROCEDURE",
+        "SMART TOKEN",
+        "TIER"
+      ]
+    },
+    {
+      "term": "BADGE READER EXCEPTION",
+      "def": "A logged event in which a badge was presented at a reader for which it held no authorisation. Three exceptions in a thirty-day period are referred to the facility security officer.",
+      "seeAlso": [
+        "BADGE",
+        "ACCESS ROSTER"
+      ]
+    },
+    {
+      "term": "BERTH",
+      "def": "One sleeping position with its allocated share of air, water, rations and sanitation. Capacity figures are expressed in berths.",
+      "seeAlso": [
+        "SURGE BERTHING",
+        "SUSTAINED CAPACITY"
+      ]
+    },
+    {
+      "term": "BETA-CLASS",
+      "def": "Regional operations centre. Medium-depth installation (400 to 800 ft) for regional coordination and intelligence fusion, with tram connection to its local ALPHA facility and limited long-term sustainability. Twelve installations.",
+      "seeAlso": [
+        "ALPHA-CLASS",
+        "GAMMA-CLASS",
+        "TRAM"
+      ]
+    },
+    {
+      "term": "BLOCK",
+      "def": "A length of running line, bounded by signals, that may be occupied by one consist at a time. Rail blocks are numbered by segment and chainage; tram blocks by network and link.",
+      "seeAlso": [
+        "BLOCK OCCUPANCY",
+        "HEADWAY",
+        "SEGMENT"
+      ]
+    },
+    {
+      "term": "BLOCK OCCUPANCY",
+      "def": "The state of a block as reported by train detection: CLEAR, OCCUPIED, or POSSESSED. A block under possession reports POSSESSED regardless of detection.",
+      "seeAlso": [
+        "BLOCK",
+        "POSSESSION",
+        "CONSIST ID"
+      ]
+    },
+    {
+      "term": "BRIEFING",
+      "def": "The formal, recorded act of informing an individual of the existence and scope of a compartment, followed by signature of the compartment non-disclosure statement. A briefing is specific to a compartment and, where stated, to a facility.",
+      "seeAlso": [
+        "READ-IN",
+        "COMPARTMENT",
+        "DEBRIEFING"
+      ]
+    },
+    {
+      "term": "BURN BAG",
+      "def": "A striped paper sack for classified waste awaiting destruction. Burn bags are numbered, sealed when two-thirds full, and logged on collection.",
+      "seeAlso": [
+        "RECORDS DESTRUCTION",
+        "CLEAN DESK CHECK"
+      ]
+    },
+    {
+      "term": "CAFETERIA ROTATION",
+      "def": "The six-week menu cycle issued by Food Service at each staffed facility. Rotation is aligned network-wide so that ration drawdown is uniform across sites.",
+      "seeAlso": [
+        "RESERVES",
+        "ESSENTIAL PERSONNEL"
+      ]
+    },
+    {
+      "term": "CERTIFIED MILEAGE",
+      "def": "The tunnel length certified to the Council as operational: 847 miles. Certified mileage is the only tunnel figure used in Council reporting and Tier 1 summaries. It is not derived from, and is not reconciled with, engineering mileage.",
+      "seeAlso": [
+        "ENGINEERING MILEAGE",
+        "REVENUE SERVICE",
+        "SEGMENT"
+      ]
+    },
+    {
+      "term": "CLEAN DESK CHECK",
+      "def": "An unannounced end-of-shift inspection of workspaces for unsecured classified material. Findings are recorded as security violations against the occupant of the desk.",
+      "seeAlso": [
+        "SELF-REPORT",
+        "BURN BAG"
+      ]
+    },
+    {
+      "term": "COMPARTMENT",
+      "def": "A named body of information access to which requires a specific briefing in addition to tier. Compartments are designated by codeword. Holding a compartment does not confer knowledge of any other compartment, including its name.",
+      "seeAlso": [
+        "BRIEFING",
+        "READ-IN",
+        "TIER",
+        "NEED-TO-KNOW"
+      ]
+    },
+    {
+      "term": "CONSIST",
+      "def": "A train as formed for a movement: the vehicles coupled together, their order and their load. A consist is identified by its consist ID for the duration of the movement.",
+      "seeAlso": [
+        "CONSIST ID",
+        "ROLLING STOCK",
+        "BLOCK"
+      ]
+    },
+    {
+      "term": "CONSIST ID",
+      "def": "The movement identifier displayed on the dispatcher board, in the form segment, direction and serial. A consist ID may be suppressed on the board by Transit Control on instruction.",
+      "seeAlso": [
+        "CONSIST",
+        "BLOCK OCCUPANCY"
+      ]
+    },
+    {
+      "term": "CONTINUITY OF OPERATIONS",
+      "def": "The capability of an organisation to continue its essential functions under any circumstances. Used in OSC documents in its ordinary federal sense where cover documents require it. Abbreviated COOP.",
+      "seeAlso": [
+        "RECONSTITUTION",
+        "RELOCATION SITE"
+      ]
+    },
+    {
+      "term": "CONTROLLED MAIL",
+      "def": "Internal MERIDIAN mail carrying a marking. Controlled mail may be forwarded only to addressees eligible for its marking.",
+      "seeAlso": [
+        "MERIDIAN",
+        "MARKING",
+        "PRECEDENCE"
+      ]
+    },
+    {
+      "term": "COPY NUMBER",
+      "def": "The serial number of a physical copy of a controlled document, shown as COPY nn OF nn. Copies are accountable by number.",
+      "seeAlso": [
+        "DOCUMENT NUMBER",
+        "DISTRIBUTION LIST"
+      ]
+    },
+    {
+      "term": "COUNCIL",
+      "def": "The Core Council of eleven Tier 1 members holding UMBRA/OSC UNRESTRICTED access and full network awareness. Revision authority for controlled documents rests with a Council majority.",
+      "seeAlso": [
+        "TIER",
+        "UMBRA//OSC UNRESTRICTED"
+      ]
+    },
+    {
+      "term": "COVER IDENTITY",
+      "def": "The authentic government function under whose name a facility's surface installation is registered, staffed and budgeted. A cover identity is real at the surface: the staff are employed, the work is done and the reports are filed.",
+      "seeAlso": [
+        "COVER INFRASTRUCTURE",
+        "COVER STORY",
+        "COVER REVIEW"
+      ]
+    },
+    {
+      "term": "COVER INFRASTRUCTURE",
+      "def": "The surface-level government facilities at every ALPHA and BETA site that require regular cleared personnel access and so account for the movement of people and materiel above the underground installation.",
+      "seeAlso": [
+        "COVER IDENTITY",
+        "AUDIT CAMOUFLAGE"
+      ]
+    },
+    {
+      "term": "COVER REVIEW",
+      "def": "The periodic assessment of a cover identity's public-records posture, visible staffing and continued plausibility. Due at intervals not exceeding eighteen months.",
+      "seeAlso": [
+        "COVER IDENTITY",
+        "COVER STORY"
+      ]
+    },
+    {
+      "term": "COVER SHEET",
+      "def": "The coloured sheet bearing the marking that is attached to the front of every classified document while it is outside a container.",
+      "seeAlso": [
+        "MARKING",
+        "MARKING STRIP"
+      ]
+    },
+    {
+      "term": "COVER STORY",
+      "def": "The prepared public explanation for a facility, its traffic and its expenditure. Prepared cover stories exist for all facility types.",
+      "seeAlso": [
+        "COVER IDENTITY",
+        "COVER REVIEW",
+        "PARKING ALLOCATION"
+      ]
+    },
+    {
+      "term": "CROSS-REFERENCE",
+      "def": "A citation of another document by document number. A cross-reference does not confer access to the document cited.",
+      "seeAlso": [
+        "DOCUMENT NUMBER",
+        "NEED-TO-KNOW"
+      ]
+    },
+    {
+      "term": "DEBRIEFING",
+      "def": "The recorded withdrawal of a compartment from an individual, with signature of the termination statement. Debriefing follows any facility transfer, separation, or change in duty that removes the need-to-know.",
+      "seeAlso": [
+        "BRIEFING",
+        "PROBATIONARY TRANSFER"
+      ]
+    },
+    {
+      "term": "DELTA-CLASS",
+      "def": "Safe house or equipment cache at surface or minimal depth, for emergency staging and equipment storage. Sustainability 72 hours maximum. No integrated transit connection. Twelve installations; detailed records Tier 1.",
+      "seeAlso": [
+        "SAFE HOUSE",
+        "EXTRACTION ROUTE NODE"
+      ]
+    },
+    {
+      "term": "DEPTH BAND",
+      "def": "The range of depth below surface assigned to a facility class: ALPHA 800 to 2,400 ft; BETA 400 to 800 ft; GAMMA 150 to 500 ft; DELTA surface or minimal depth.",
+      "seeAlso": [
+        "ALPHA-CLASS",
+        "BETA-CLASS",
+        "GAMMA-CLASS",
+        "DELTA-CLASS"
+      ]
+    },
+    {
+      "term": "DESTRUCTION CERTIFICATE",
+      "def": "The form recording the destruction of a controlled document, signed by the destroying official and one witness, and filed with the Records Division.",
+      "seeAlso": [
+        "RECORDS DESTRUCTION",
+        "TWO-PERSON INTEGRITY"
+      ]
+    },
+    {
+      "term": "DETACHED / UNPOSTED",
+      "def": "Payroll category; see personnel accounting.",
+      "seeAlso": [
+        "PERSONNEL ACCOUNTING"
+      ]
+    },
+    {
+      "term": "DIRECTIVE",
+      "def": "A numbered policy issuance with purpose, applicability, policy, responsibilities, procedures, references and supersession. Directives bind all tiers to which they are distributed.",
+      "seeAlso": [
+        "DOCUMENT NUMBER",
+        "SUPERSESSION",
+        "EFFECTIVE DATE"
+      ]
+    },
+    {
+      "term": "DISTRIBUTION LIST",
+      "def": "The list of offices or copy numbers to which a document is issued. A document may not be passed to an office not on its distribution list without the originator's consent.",
+      "seeAlso": [
+        "COPY NUMBER",
+        "NEED-TO-KNOW"
+      ]
+    },
+    {
+      "term": "DIVISION CODE",
+      "def": "The two- to four-letter code identifying an originating division, used in document numbers, mail addresses and the originator field.",
+      "seeAlso": [
+        "DOCUMENT NUMBER",
+        "ORIGINATOR"
+      ]
+    },
+    {
+      "term": "DOCUMENT NUMBER",
+      "def": "The unique identifier assigned to an OSC document under the canon numbering scheme. Document numbers are never reused, including after destruction.",
+      "seeAlso": [
+        "DIVISION CODE",
+        "REVISION",
+        "COPY NUMBER"
+      ]
+    },
+    {
+      "term": "DOSIMETRY BADGE",
+      "def": "A personal radiation dosimeter issued to personnel working in reactor spaces. Exchanged monthly; readings are recorded against the personnel number.",
+      "seeAlso": [
+        "REACTOR SURVEILLANCE TEST",
+        "MEDICAL READINESS"
+      ]
+    },
+    {
+      "term": "DUTY OFFICER",
+      "def": "The officer holding authority for a facility outside normal hours. The duty officer's name is posted at the operations desk and in MERIDIAN at the start of each watch.",
+      "seeAlso": [
+        "SHIFT CHANGE",
+        "FACILITY COMMANDER"
+      ]
+    },
+    {
+      "term": "DUTY ROSTER",
+      "def": "The published schedule of watches and duties for a facility, issued weekly.",
+      "seeAlso": [
+        "DUTY OFFICER",
+        "SHIFT CHANGE"
+      ]
+    },
+    {
+      "term": "EFFECTIVE DATE",
+      "def": "The date from which a directive or instruction applies. Where none is stated, the date of signature.",
+      "seeAlso": [
+        "DIRECTIVE",
+        "SUPERSESSION"
+      ]
+    },
+    {
+      "term": "ENGINEERING MILEAGE",
+      "def": "The tunnel length measured by Transit engineering from segment and link survey: 6,074 miles of rail across six segments and 10,538 miles of tram across four regional networks. Used for maintenance, possession planning and the transit dispatcher board. Not used in Council reporting.",
+      "seeAlso": [
+        "CERTIFIED MILEAGE",
+        "SEGMENT",
+        "TRAM"
+      ]
+    },
+    {
+      "term": "EQUIPMENT ISSUE",
+      "def": "The signed transfer of accountable equipment to an individual. Equipment on issue is recorded against the personnel number and must be returned before any transfer.",
+      "seeAlso": [
+        "KEY CUSTODIAN",
+        "PROBATIONARY TRANSFER"
+      ]
+    },
+    {
+      "term": "ESCORT",
+      "def": "A cleared individual accompanying a visitor or a person without unescorted access. The escort remains within sight of the escorted person at all times and is accountable for them.",
+      "seeAlso": [
+        "ACCESS ROSTER",
+        "VISITOR LOG"
+      ]
+    },
+    {
+      "term": "ESSENTIAL PERSONNEL",
+      "def": "Persons whose preservation is required for continuity of government and of the functions the network supports. Selection criteria are set by the Council and are not published below Tier 2. GAMMA-class shelters are intended for essential personnel only.",
+      "seeAlso": [
+        "GAMMA-CLASS",
+        "RECONSTITUTION",
+        "GENETIC MATERIAL VAULT"
+      ]
+    },
+    {
+      "term": "EXTRACTION ROUTE NODE",
+      "def": "A point on a planned route for the movement of essential personnel to a sheltering facility. Certain DELTA-class sites are sited at extraction route nodes.",
+      "seeAlso": [
+        "DELTA-CLASS",
+        "ESSENTIAL PERSONNEL"
+      ]
+    },
+    {
+      "term": "FACILITY COMMANDER",
+      "def": "The Tier 2 officer in command of a facility, with full awareness of the assigned facility and its immediate connections.",
+      "seeAlso": [
+        "TIER",
+        "DUTY OFFICER"
+      ]
+    },
+    {
+      "term": "FIRE DRILL",
+      "def": "A scheduled evacuation-to-refuge exercise. Below the surface cover facility, personnel evacuate to the nearest refuge chamber rather than to the surface.",
+      "seeAlso": [
+        "REFUGE CHAMBER",
+        "SEAL STATE"
+      ]
+    },
+    {
+      "term": "FISCAL YEAR",
+      "def": "The federal fiscal year, 1 October to 30 September, named for the calendar year in which it ends. Ledger figures are shown by fiscal year, FY2001 to FY2008.",
+      "seeAlso": [
+        "LINE ITEM",
+        "FUNDING SOURCE"
+      ]
+    },
+    {
+      "term": "FULL OPERATIONAL CAPABILITY",
+      "def": "The Phase 4 objective (2009 to 2012): network staffing at 40 per cent of capacity, 9,360 personnel. Abbreviated FOC.",
+      "seeAlso": [
+        "PHASE",
+        "UTILIZATION"
+      ]
+    },
+    {
+      "term": "FUNDING SOURCE",
+      "def": "One of the five appropriation streams from which programme cost is drawn: black budget intelligence programmes (41 per cent), DOD infrastructure (28), FEMA emergency preparedness (17), DOE site management (9), miscellaneous and reclassified (5).",
+      "seeAlso": [
+        "LINE ITEM",
+        "AUDIT CAMOUFLAGE"
+      ]
+    },
+    {
+      "term": "GAMMA-CLASS",
+      "def": "Personnel shelter at shallow to medium depth (150 to 500 ft), for essential staff only. Basic life support; 90 to 180 day operational window. No rail connection. Eighteen installations.",
+      "seeAlso": [
+        "ESSENTIAL PERSONNEL",
+        "SUSTAINMENT WINDOW"
+      ]
+    },
+    {
+      "term": "GENERATOR RUN TEST",
+      "def": "The monthly loaded run of standby diesel generators. Diesel backup provides 180 days of runtime at all facilities.",
+      "seeAlso": [
+        "RESERVES",
+        "SEAL STATE"
+      ]
+    },
+    {
+      "term": "GENETIC MATERIAL VAULT",
+      "def": "The biological sample collection at ALPHA-03 (Level 9) holding genetic and biometric samples associated with essential personnel records. The holdings figure is controlled; see OSC-RSV-GENE.",
+      "seeAlso": [
+        "ESSENTIAL PERSONNEL",
+        "SEED VAULT"
+      ]
+    },
+    {
+      "term": "HANDHELD MODE",
+      "def": "The MERIDIAN display mode for small-screen field terminals: one window at a time, with an application switcher at the foot of the screen.",
+      "seeAlso": [
+        "MERIDIAN"
+      ]
+    },
+    {
+      "term": "HEADWAY",
+      "def": "The scheduled interval between successive consists over the same block in the same direction. Minimum headway on rail segments is set by block length and braking distance at line speed.",
+      "seeAlso": [
+        "BLOCK",
+        "CONSIST",
+        "TIMETABLE"
+      ]
+    },
+    {
+      "term": "HELP DESK TICKET",
+      "def": "A numbered request to Information Systems for workstation support. Tickets are visible to the requester, the help desk and the security office.",
+      "seeAlso": [
+        "MERIDIAN",
+        "AUDIT TRAIL"
+      ]
+    },
+    {
+      "term": "HVAC FILTER CYCLE",
+      "def": "The scheduled replacement interval for particulate and gas-phase filters in each air handling unit. Standard cycle is 90 days for particulate pre-filters and 180 days for gas-phase beds; reactor spaces and seal-capable zones are on shortened cycles.",
+      "seeAlso": [
+        "AIR HANDLING UNIT",
+        "NBC SEAL"
+      ]
+    },
+    {
+      "term": "INCIDENT REPORT",
+      "def": "The form used to record a security, safety or equipment incident. Every incident report receives a number and an assigned action officer.",
+      "seeAlso": [
+        "SELF-REPORT",
+        "ACTION OFFICER"
+      ]
+    },
+    {
+      "term": "KEY CUSTODIAN",
+      "def": "The individual responsible for issue, return and inventory of physical keys and combinations for a defined area.",
+      "seeAlso": [
+        "EQUIPMENT ISSUE",
+        "TWO-PERSON INTEGRITY"
+      ]
+    },
+    {
+      "term": "LEAVE REQUEST",
+      "def": "The form by which annual or sick leave is requested. Leave for personnel within a probationary period is approved by the receiving division head, not the immediate supervisor.",
+      "seeAlso": [
+        "ADMINISTRATIVE LEAVE",
+        "PROBATIONARY TRANSFER"
+      ]
+    },
+    {
+      "term": "LEVEL",
+      "def": "One numbered floor of an underground facility, counted downward from Level 0, the surface cover facility. Level names above the holder's tier are withheld in facility documentation.",
+      "seeAlso": [
+        "DEPTH BAND",
+        "COVER INFRASTRUCTURE"
+      ]
+    },
+    {
+      "term": "LINE ITEM",
+      "def": "One of 127 budget lines in DOD, DOE, DHS and FEMA appropriations through which programme cost is carried. Each line item has a cover title, account code, funding source and programme category.",
+      "seeAlso": [
+        "ACCOUNT CODE",
+        "AUDIT CAMOUFLAGE",
+        "PROGRAM ELEMENT"
+      ]
+    },
+    {
+      "term": "LINK STATE",
+      "def": "The status of a QKD circuit between two facilities as shown in the MERIDIAN notification area: UP, DEGRADED, or DOWN.",
+      "seeAlso": [
+        "QKD",
+        "MERIDIAN"
+      ]
+    },
+    {
+      "term": "LOST BADGE PROCEDURE",
+      "def": "Loss of a badge is reported to the facility security officer within one hour of discovery. The badge is revoked, a temporary badge issued under escort, and an incident report raised. A second loss within twelve months is a security violation.",
+      "seeAlso": [
+        "BADGE",
+        "INCIDENT REPORT",
+        "ESCORT"
+      ]
+    },
+    {
+      "term": "MAGLEV",
+      "def": "The modified magnetic levitation system used on the ALPHA-to-ALPHA rail network, operating at 180 mph average.",
+      "seeAlso": [
+        "SEGMENT",
+        "TRAM",
+        "ROLLING STOCK"
+      ]
+    },
+    {
+      "term": "MARKING",
+      "def": "The classification designation applied to a document, banner or window: one of UMBRA/OSC EYES ONLY, UMBRA/OSC UNRESTRICTED, UMBRA/OSC COMPARTMENTED, UMBRA/OSC RESTRICTED, or TOP SECRET/SCI with OSC compartment.",
+      "seeAlso": [
+        "MARKING STRIP",
+        "COVER SHEET",
+        "UMBRA"
+      ]
+    },
+    {
+      "term": "MARKING STRIP",
+      "def": "The marking shown on the title area of each MERIDIAN window. The classification banner displays the highest marking among open windows.",
+      "seeAlso": [
+        "MARKING",
+        "MERIDIAN"
+      ]
+    },
+    {
+      "term": "MEDICAL READINESS",
+      "def": "The annual certification that an individual is fit for extended duty below ground and under seal. Lapsed medical readiness removes the individual from the seal roster.",
+      "seeAlso": [
+        "SEAL STATE",
+        "DOSIMETRY BADGE"
+      ]
+    },
+    {
+      "term": "MERIDIAN",
+      "def": "The OSC closed internal network and its workstation environment, release 4.1.7. MERIDIAN has no external internet connectivity and carries traffic over the QKD network only.",
+      "seeAlso": [
+        "QKD",
+        "AUDIT TRAIL",
+        "MARKING STRIP"
+      ]
+    },
+    {
+      "term": "MINIMUM MANNING",
+      "def": "The lowest staffing at which a facility can maintain its life support, power and security watches. Current skeleton crews are held at approximately a 7:1 ratio of support to command staff.",
+      "seeAlso": [
+        "SKELETON CREW",
+        "RATIO MODEL"
+      ]
+    },
+    {
+      "term": "NBC SEAL",
+      "def": "The isolation of a facility from outside air, water and access for nuclear, biological or chemical threat. All facilities are NBC-rated with 180-day seal capability.",
+      "seeAlso": [
+        "SEAL STATE",
+        "SUSTAINMENT WINDOW",
+        "AIR HANDLING UNIT"
+      ]
+    },
+    {
+      "term": "NEED-TO-KNOW",
+      "def": "The determination that an individual requires specific information to perform an assigned duty. Tier and compartment establish eligibility; need-to-know establishes access.",
+      "seeAlso": [
+        "COMPARTMENT",
+        "TIER"
+      ]
+    },
+    {
+      "term": "NETWORK",
+      "def": "One of the four regional tram networks, Eastern, Southern, Mountain/Western and Central, each served by an ALPHA hub.",
+      "seeAlso": [
+        "TRAM",
+        "ENGINEERING MILEAGE"
+      ]
+    },
+    {
+      "term": "OFFICE OF STRATEGIC CONTINUITY",
+      "def": "The body established in 2001 to construct and operate the facility network. Abbreviated OSC. The name does not appear in any published appropriation.",
+      "seeAlso": [
+        "COUNCIL",
+        "MERIDIAN"
+      ]
+    },
+    {
+      "term": "OPERATOR ID",
+      "def": "The workstation login identifier issued with a temporary access card or a permanent smart token.",
+      "seeAlso": [
+        "TEMPORARY ACCESS CARD",
+        "PASSPHRASE",
+        "SMART TOKEN"
+      ]
+    },
+    {
+      "term": "ORIGINATOR",
+      "def": "The division and site that issued a document, shown as division code/facility.",
+      "seeAlso": [
+        "DIVISION CODE",
+        "DOCUMENT NUMBER"
+      ]
+    },
+    {
+      "term": "PARKING ALLOCATION",
+      "def": "The assignment of surface parking spaces at a cover facility. Allocation is set by the facility administrative officer so that vehicle counts at the surface are consistent with the cover identity's published staffing.",
+      "seeAlso": [
+        "COVER INFRASTRUCTURE",
+        "COVER IDENTITY"
+      ]
+    },
+    {
+      "term": "PASSPHRASE",
+      "def": "The memorised authenticator used with the operator ID and smart token. Passphrases are not written down outside the issuing envelope or temporary access card.",
+      "seeAlso": [
+        "OPERATOR ID",
+        "SMART TOKEN"
+      ]
+    },
+    {
+      "term": "PERSONNEL ACCOUNTING",
+      "def": "The monthly reconciliation of tier strength against posted facility strength, by payroll category. Categories other than POSTED are defined in the governing payroll issuance.",
+      "seeAlso": [
+        "DETACHED / UNPOSTED",
+        "PERSONNEL NUMBER",
+        "RECONCILIATION"
+      ]
+    },
+    {
+      "term": "PERSONNEL NUMBER",
+      "def": "The unique number assigned to each individual on appointment, used in payroll, access control and the audit trail. Personnel numbers are never reissued.",
+      "seeAlso": [
+        "BADGE",
+        "PERSONNEL ACCOUNTING"
+      ]
+    },
+    {
+      "term": "PHASE",
+      "def": "One of five programme periods: Foundation (2001 to 2003), Infrastructure Build (2004 to 2006), Network Integration (2007 to 2008, active), Full Operational Capability (2009 to 2012) and Strategic Depth (2013 to 2020).",
+      "seeAlso": [
+        "FULL OPERATIONAL CAPABILITY",
+        "STRATEGIC DEPTH"
+      ]
+    },
+    {
+      "term": "POSSESSION",
+      "def": "The exclusive occupation of a block or segment by engineering for maintenance, inspection or testing, during which no revenue movement is permitted. A possession is granted by Transit Control with stated limits and times.",
+      "seeAlso": [
+        "BLOCK OCCUPANCY",
+        "REVENUE SERVICE",
+        "SEGMENT"
+      ]
+    },
+    {
+      "term": "PRECEDENCE",
+      "def": "The handling priority of a message: ROUTINE, PRIORITY, IMMEDIATE, or FLASH. Precedence governs delivery order, not importance.",
+      "seeAlso": [
+        "MERIDIAN"
+      ]
+    },
+    {
+      "term": "PRIME CONTRACTOR",
+      "def": "A firm holding a direct construction or supply contract. Forty-seven primes, averaging 8.3 subcontractors each. No prime contractor is made aware of more than three facility sites.",
+      "seeAlso": [
+        "SUBCONTRACTOR",
+        "TITLE 50"
+      ]
+    },
+    {
+      "term": "PRINT RELEASE",
+      "def": "The action of releasing a held print job at a secure printer by presenting the badge. Unreleased jobs are purged after four hours and logged.",
+      "seeAlso": [
+        "BADGE",
+        "AUDIT TRAIL",
+        "REPRODUCTION REQUEST"
+      ]
+    },
+    {
+      "term": "PROBATIONARY TRANSFER",
+      "def": "Assignment to a new facility, which requires a new compartment briefing and a 90-day probationary period. During probation the individual may not hold an acting credential or approve their own leave.",
+      "seeAlso": [
+        "BRIEFING",
+        "ACTING CREDENTIAL",
+        "LEAVE REQUEST"
+      ]
+    },
+    {
+      "term": "PROGRAM ELEMENT",
+      "def": "A Defense budget classification number identifying a research, development or procurement programme, used as the cover title of some DOD line items.",
+      "seeAlso": [
+        "LINE ITEM",
+        "ACCOUNT CODE"
+      ]
+    },
+    {
+      "term": "QKD",
+      "def": "Quantum-key distribution. The encrypted communications network carrying all OSC traffic, independent of standard government communications infrastructure.",
+      "seeAlso": [
+        "MERIDIAN",
+        "LINK STATE"
+      ]
+    },
+    {
+      "term": "RATIO MODEL",
+      "def": "The standard personnel distribution for a fully staffed ALPHA facility, based on the ALPHA-01 capacity of 4,500, across ten functions from Command and Administration (8 per cent) to Maintenance (5 per cent).",
+      "seeAlso": [
+        "MINIMUM MANNING",
+        "SUSTAINED CAPACITY"
+      ]
+    },
+    {
+      "term": "REACTOR SURVEILLANCE TEST",
+      "def": "A scheduled test of a reactor protection or safety function, performed to a written procedure with results recorded in the reactor log. Eight installations are on the surveillance schedule.",
+      "seeAlso": [
+        "DOSIMETRY BADGE",
+        "SEAL STATE"
+      ]
+    },
+    {
+      "term": "READ-IN",
+      "def": "Informal term for the briefing into a compartment. \"Read in to\" a compartment; \"read out\" on debriefing.",
+      "seeAlso": [
+        "BRIEFING",
+        "DEBRIEFING",
+        "COMPARTMENT"
+      ]
+    },
+    {
+      "term": "RECALL",
+      "def": "The instruction to report to an assigned facility immediately, overriding leave. Recall is issued by the duty officer on Council or facility commander authority.",
+      "seeAlso": [
+        "ADMINISTRATIVE LEAVE",
+        "DUTY OFFICER"
+      ]
+    },
+    {
+      "term": "RECONCILIATION",
+      "def": "The comparison of two records of the same quantity, with differences explained or carried forward. A reconciliation may be closed with differences carried forward.",
+      "seeAlso": [
+        "PERSONNEL ACCOUNTING",
+        "LINE ITEM"
+      ]
+    },
+    {
+      "term": "RECONSTITUTION",
+      "def": "The re-establishment of the functions of government from a relocation site following a catastrophic event. ALPHA-01 holds full government-in-exile capability; ALPHA-05 is the secondary reconstitution site.",
+      "seeAlso": [
+        "ALPHA-CLASS",
+        "CONTINUITY OF OPERATIONS",
+        "ESSENTIAL PERSONNEL"
+      ]
+    },
+    {
+      "term": "RECORDS DESTRUCTION",
+      "def": "The authorised destruction of controlled records by approved method, witnessed and certified. The Facility Inventory is destroyed immediately upon succession of Council membership.",
+      "seeAlso": [
+        "DESTRUCTION CERTIFICATE",
+        "ARCHIVE HOLD",
+        "BURN BAG"
+      ]
+    },
+    {
+      "term": "REDACTION",
+      "def": "The withholding of text from a reader below the required tier or without the required compartment. A redaction shows the withholding authority and reference, and nothing of the withheld content.",
+      "seeAlso": [
+        "WITHHOLDING AUTHORITY",
+        "TIER",
+        "COMPARTMENT"
+      ]
+    },
+    {
+      "term": "REFUGE CHAMBER",
+      "def": "A sealed compartment with independent air supply, used as the muster point for fire and atmosphere emergencies below ground.",
+      "seeAlso": [
+        "FIRE DRILL",
+        "SEAL STATE"
+      ]
+    },
+    {
+      "term": "RELOCATION SITE",
+      "def": "A facility to which an organisation moves its essential functions in an emergency. Used in cover documents in its ordinary federal sense.",
+      "seeAlso": [
+        "CONTINUITY OF OPERATIONS",
+        "RECONSTITUTION"
+      ]
+    },
+    {
+      "term": "REMOVABLE MEDIA",
+      "def": "Any storage device that can be detached from a workstation. Removable media are prohibited on MERIDIAN workstations except under a signed reproduction request.",
+      "seeAlso": [
+        "REPRODUCTION REQUEST",
+        "ANNUAL REFRESHER"
+      ]
+    },
+    {
+      "term": "REPRODUCTION REQUEST",
+      "def": "The form required before any controlled document is copied, printed in more than one copy, or transferred to removable media. Documents marked for physical distribution only may not be reproduced.",
+      "seeAlso": [
+        "PRINT RELEASE",
+        "REMOVABLE MEDIA",
+        "COPY NUMBER"
+      ]
+    },
+    {
+      "term": "RESERVES",
+      "def": "The strategic stocks of food, water treatment, medical supply, energy and armaments held across the network, expressed at full 23,400-capacity scale unless otherwise noted.",
+      "seeAlso": [
+        "SUSTAINED CAPACITY",
+        "SUSTAINMENT WINDOW"
+      ]
+    },
+    {
+      "term": "REVENUE SERVICE",
+      "def": "The operation of a segment or link for scheduled movements of personnel and materiel. A segment may be complete and commissioned but NOT IN REVENUE SERVICE.",
+      "seeAlso": [
+        "POSSESSION",
+        "SEGMENT",
+        "CERTIFIED MILEAGE"
+      ]
+    },
+    {
+      "term": "REVISION",
+      "def": "The numbered issue of a document. Revision authority for the Facility Inventory rests with a Council majority vote; for other documents, with the originator.",
+      "seeAlso": [
+        "DOCUMENT NUMBER",
+        "SUPERSESSION"
+      ]
+    },
+    {
+      "term": "ROLLING STOCK",
+      "def": "The vehicles of the rail and tram systems, registered by vehicle number, type and home depot.",
+      "seeAlso": [
+        "CONSIST",
+        "MAGLEV",
+        "TRAM"
+      ]
+    },
+    {
+      "term": "ROUTING SLIP",
+      "def": "The sheet attached to a document in circulation, listing offices in order of routing, the action officer, the suspense date and spaces for initials.",
+      "seeAlso": [
+        "ACTION OFFICER",
+        "SUSPENSE DATE"
+      ]
+    },
+    {
+      "term": "SAFE HOUSE",
+      "def": "A DELTA-class surface or near-surface facility for emergency staging. Staffed by rotating guard only.",
+      "seeAlso": [
+        "DELTA-CLASS",
+        "EXTRACTION ROUTE NODE"
+      ]
+    },
+    {
+      "term": "SEAL STATE",
+      "def": "The current isolation condition of a facility or zone as displayed on telemetry: OPEN, CONDITIONED, SEALED, or SEALED (DRILL).",
+      "seeAlso": [
+        "NBC SEAL",
+        "SUSTAINMENT WINDOW"
+      ]
+    },
+    {
+      "term": "SEED VAULT",
+      "def": "The agricultural seed collection at ALPHA-03, 1.2 million samples.",
+      "seeAlso": [
+        "GENETIC MATERIAL VAULT",
+        "RESERVES"
+      ]
+    },
+    {
+      "term": "SEGMENT",
+      "def": "One of six numbered ALPHA-to-ALPHA rail tunnels, 01 to 06, each between two hubs.",
+      "seeAlso": [
+        "ENGINEERING MILEAGE",
+        "REVENUE SERVICE",
+        "BLOCK"
+      ]
+    },
+    {
+      "term": "SELF-REPORT",
+      "def": "The voluntary report by an individual of their own security violation. A timely self-report is considered in mitigation.",
+      "seeAlso": [
+        "INCIDENT REPORT",
+        "CLEAN DESK CHECK"
+      ]
+    },
+    {
+      "term": "SESSION TIMEOUT",
+      "def": "The automatic locking of a MERIDIAN workstation after a period without input. Session state is preserved; re-authentication is required.",
+      "seeAlso": [
+        "MERIDIAN",
+        "SMART TOKEN"
+      ]
+    },
+    {
+      "term": "SHIFT CHANGE",
+      "def": "The handover between watches, with signed transfer of the watch log. No possessions are granted or surrendered during shift change.",
+      "seeAlso": [
+        "DUTY OFFICER",
+        "POSSESSION"
+      ]
+    },
+    {
+      "term": "SITE-LOCAL TIME",
+      "def": "The civil time at a facility's surface location, shown in brackets after Zulu time.",
+      "seeAlso": [
+        "ZULU TIME"
+      ]
+    },
+    {
+      "term": "SKELETON CREW",
+      "def": "The reduced complement maintaining a facility during low-manning periods, held at approximately 7:1 support-to-command to preserve institutional knowledge.",
+      "seeAlso": [
+        "MINIMUM MANNING",
+        "RATIO MODEL"
+      ]
+    },
+    {
+      "term": "SMART TOKEN",
+      "def": "The cryptographic card inserted at the workstation to open a session. Removal of the token locks the session.",
+      "seeAlso": [
+        "OPERATOR ID",
+        "PASSPHRASE",
+        "SESSION TIMEOUT"
+      ]
+    },
+    {
+      "term": "SPACE ALLOCATION",
+      "def": "The assignment of office and berthing space within a facility, set by the facility administrative officer. Requests are reviewed quarterly.",
+      "seeAlso": [
+        "BERTH",
+        "PARKING ALLOCATION"
+      ]
+    },
+    {
+      "term": "SSBI",
+      "def": "Single Scope Background Investigation, conducted with the OSC supplement covering multi-generational family citizenship, financial independence from foreign-connected entities, psychological assessment for ideological reliability and social network mapping.",
+      "seeAlso": [
+        "VETTING SUPPLEMENT",
+        "TIER"
+      ]
+    },
+    {
+      "term": "STRATEGIC DEPTH",
+      "def": "The Phase 5 objective (2013 to 2020): network staffing at 75 per cent of capacity, 17,550 personnel, with full redundancy across all facilities.",
+      "seeAlso": [
+        "PHASE",
+        "FULL OPERATIONAL CAPABILITY"
+      ]
+    },
+    {
+      "term": "SUBCONTRACTOR",
+      "def": "A firm engaged by a prime contractor. Subcontractors are not told the identity of the end user.",
+      "seeAlso": [
+        "PRIME CONTRACTOR",
+        "TITLE 50"
+      ]
+    },
+    {
+      "term": "SUPERSESSION",
+      "def": "The replacement of a document by a later one, stated on the later document as \"Supersedes\".",
+      "seeAlso": [
+        "DIRECTIVE",
+        "REVISION"
+      ]
+    },
+    {
+      "term": "SURGE BERTHING",
+      "def": "The total number of berths across all 47 facilities: 34,700 (ALPHA 16,000, BETA 10,780, GAMMA 6,940, DELTA 980). Surge berthing is a physical count of berths and is not supported by reserves at full occupancy. Compare sustained capacity.",
+      "seeAlso": [
+        "SUSTAINED CAPACITY",
+        "BERTH"
+      ]
+    },
+    {
+      "term": "SUSPENSE DATE",
+      "def": "The date by which an action is due back to the tasking office. Written in the form 12 MAY 2008.",
+      "seeAlso": [
+        "ACTION OFFICER",
+        "ROUTING SLIP"
+      ]
+    },
+    {
+      "term": "SUSTAINED CAPACITY",
+      "def": "The number of personnel the network can support for the planned sustainment period at full reserves: 23,400. Used as the denominator of utilisation and as the scale at which reserves are stated. Compare surge berthing.",
+      "seeAlso": [
+        "SURGE BERTHING",
+        "RESERVES",
+        "UTILIZATION"
+      ]
+    },
+    {
+      "term": "SUSTAINMENT WINDOW",
+      "def": "The period a facility can operate without resupply: ALPHA 12 to 18 months by site; GAMMA 90 to 180 days; DELTA 72 hours maximum; BETA limited.",
+      "seeAlso": [
+        "NBC SEAL",
+        "SEAL STATE",
+        "RESERVES"
+      ]
+    },
+    {
+      "term": "TASKING",
+      "def": "A written instruction to a division or individual to take an action, with an action officer and a suspense date.",
+      "seeAlso": [
+        "ACTION OFFICER",
+        "SUSPENSE DATE"
+      ]
+    },
+    {
+      "term": "TBM",
+      "def": "Tunnel boring machine. Rail and tram tunnels were driven by deep TBMs from 2002 to 2007 under classification as utility infrastructure and geological survey operations.",
+      "seeAlso": [
+        "SEGMENT",
+        "ENGINEERING MILEAGE"
+      ]
+    },
+    {
+      "term": "TEMPORARY ACCESS CARD",
+      "def": "A printed card issued to a newly assigned individual bearing an operator ID and initial passphrase, valid until a permanent smart token is issued.",
+      "seeAlso": [
+        "OPERATOR ID",
+        "PASSPHRASE",
+        "PROBATIONARY TRANSFER"
+      ]
+    },
+    {
+      "term": "TIER",
+      "def": "One of four personnel levels determining clearance and knowledge scope: Tier 1 Core Council (11); Tier 2 Facility Command Staff (247); Tier 3 Specialised Personnel (1,891); Tier 4 Essential Support (1,698). Total 3,847.",
+      "seeAlso": [
+        "COMPARTMENT",
+        "ACTING CREDENTIAL",
+        "NEED-TO-KNOW"
+      ]
+    },
+    {
+      "term": "TIMETABLE",
+      "def": "The working timetable of scheduled rail and tram movements, issued by Transit Control. Unscheduled movements are entered in the incident log.",
+      "seeAlso": [
+        "HEADWAY",
+        "CONSIST",
+        "REVENUE SERVICE"
+      ]
+    },
+    {
+      "term": "TITLE 50",
+      "def": "The title of the United States Code governing war and national defence, under whose secrecy provisions all OSC contractors are bound.",
+      "seeAlso": [
+        "PRIME CONTRACTOR",
+        "SUBCONTRACTOR"
+      ]
+    },
+    {
+      "term": "TOP SECRET/SCI WITH OSC COMPARTMENT",
+      "def": "The clearance held by Tier 3: Top Secret, Sensitive Compartmented Information, with access to one or more OSC compartments. Tier 4 holds TS/SCI with limited compartments.",
+      "seeAlso": [
+        "MARKING",
+        "TIER",
+        "COMPARTMENT"
+      ]
+    },
+    {
+      "term": "TRAINING COMPLIANCE",
+      "def": "The percentage of assigned training modules completed by their suspense dates, reported monthly by division.",
+      "seeAlso": [
+        "ANNUAL REFRESHER",
+        "SUSPENSE DATE"
+      ]
+    },
+    {
+      "term": "TRAM",
+      "def": "The high-speed electric system linking ALPHA hubs to BETA facilities and BETA facilities to GAMMA facilities, operating at 90 mph average.",
+      "seeAlso": [
+        "NETWORK",
+        "MAGLEV",
+        "ROLLING STOCK"
+      ]
+    },
+    {
+      "term": "TRAVEL AUTHORIZATION",
+      "def": "The form authorising official travel. Travel between facilities by rail or tram is authorised by Transit Control; surface travel by the division head.",
+      "seeAlso": [
+        "TIMETABLE",
+        "PROBATIONARY TRANSFER"
+      ]
+    },
+    {
+      "term": "TWO-PERSON INTEGRITY",
+      "def": "The requirement that two authorised individuals be present for an action, each able to detect an incorrect act by the other.",
+      "seeAlso": [
+        "KEY CUSTODIAN",
+        "DESTRUCTION CERTIFICATE"
+      ]
+    },
+    {
+      "term": "UMBRA",
+      "def": "The control system for OSC information. Markings are formed as UMBRA/OSC followed by a caveat.",
+      "seeAlso": [
+        "MARKING"
+      ]
+    },
+    {
+      "term": "UMBRA//OSC COMPARTMENTED",
+      "def": "Marking and clearance held by Tier 2: full awareness of the assigned facility and its immediate connections; limited awareness of the broader network. Written in source documents as UMBRA/OSC COMPARTMENTED.",
+      "seeAlso": [
+        "MARKING",
+        "TIER",
+        "COMPARTMENT"
+      ]
+    },
+    {
+      "term": "UMBRA//OSC EYES ONLY",
+      "def": "Highest marking. Applied to Council documents, including the Facility Inventory, distributed in eleven numbered physical copies with no electronic copies permitted. Written in source documents as UMBRA/OSC EYES ONLY.",
+      "seeAlso": [
+        "MARKING",
+        "COUNCIL",
+        "COPY NUMBER"
+      ]
+    },
+    {
+      "term": "UMBRA//OSC RESTRICTED",
+      "def": "Marking applied to the Council Charter and to material restricted by Council instruction. Written in source documents as UMBRA/OSC RESTRICTED.",
+      "seeAlso": [
+        "MARKING",
+        "COUNCIL"
+      ]
+    },
+    {
+      "term": "UMBRA//OSC UNRESTRICTED",
+      "def": "Clearance held by Tier 1, conferring full network awareness. Written in source documents as UMBRA/OSC UNRESTRICTED.",
+      "seeAlso": [
+        "MARKING",
+        "TIER",
+        "COUNCIL"
+      ]
+    },
+    {
+      "term": "UTILIZATION",
+      "def": "Current staffing as a percentage of sustained capacity (23,400): 3,847 persons, 16.4 per cent, as at May 2008.",
+      "seeAlso": [
+        "SUSTAINED CAPACITY",
+        "FULL OPERATIONAL CAPABILITY"
+      ]
+    },
+    {
+      "term": "VETTING SUPPLEMENT",
+      "def": "The OSC supplement to the SSBI. See SSBI.",
+      "seeAlso": [
+        "SSBI"
+      ]
+    },
+    {
+      "term": "VISITOR LOG",
+      "def": "The bound register at each entry control point in which visitors, their escorts and times of entry and exit are recorded.",
+      "seeAlso": [
+        "ESCORT",
+        "ACCESS ROSTER"
+      ]
+    },
+    {
+      "term": "WITHHOLDING AUTHORITY",
+      "def": "The office under whose authority a redaction is applied, shown with its reference when a redaction is examined. Only the withholding authority, or the Council, may release withheld text.",
+      "seeAlso": [
+        "REDACTION",
+        "TIER"
+      ]
+    },
+    {
+      "term": "ZULU TIME",
+      "def": "Coordinated Universal Time, written with the suffix Z. All MERIDIAN times are given in Zulu with site-local time in brackets.",
+      "seeAlso": [
+        "SITE-LOCAL TIME"
+      ]
+    }
+  ],
+  "budget": {
+    "fiscalYears": [
+      {
+        "fy": "FY2001",
+        "totalM": 9800
+      },
+      {
+        "fy": "FY2002",
+        "totalM": 21500
+      },
+      {
+        "fy": "FY2003",
+        "totalM": 31700
+      },
+      {
+        "fy": "FY2004",
+        "totalM": 41200
+      },
+      {
+        "fy": "FY2005",
+        "totalM": 50600
+      },
+      {
+        "fy": "FY2006",
+        "totalM": 52300
+      },
+      {
+        "fy": "FY2007",
+        "totalM": 46900
+      },
+      {
+        "fy": "FY2008",
+        "totalM": 33000
+      }
+    ],
+    "lineItems": [
+      {
+        "no": "LI-001",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Alternate Operating Facility Construction, Program Element 0603688D8Z",
+        "account": "97-0683-468",
+        "amountM": 4023,
+        "fy": {
+          "FY2001": 2355,
+          "FY2002": 878,
+          "FY2003": 417,
+          "FY2004": 170,
+          "FY2005": 74,
+          "FY2006": 38,
+          "FY2007": 37,
+          "FY2008": 54
+        }
+      },
+      {
+        "no": "LI-002",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "PERSONNEL",
+        "title": "Facility Operations Staffing",
+        "account": "97-0743-936",
+        "amountM": 588,
+        "fy": {
+          "FY2001": 6,
+          "FY2002": 2,
+          "FY2003": 2,
+          "FY2004": 5,
+          "FY2005": 16,
+          "FY2006": 55,
+          "FY2007": 171,
+          "FY2008": 331
+        }
+      },
+      {
+        "no": "LI-003",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Monitoring Station Infrastructure Hardening",
+        "account": "97-0604-027",
+        "amountM": 4215,
+        "fy": {
+          "FY2001": 637,
+          "FY2002": 623,
+          "FY2003": 841,
+          "FY2004": 976,
+          "FY2005": 1138
+        }
+      },
+      {
+        "no": "LI-004",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "PERSONNEL",
+        "title": "Personnel Security Investigations, Supplemental",
+        "account": "97-0256-420",
+        "amountM": 1637,
+        "fy": {
+          "FY2001": 65,
+          "FY2002": 69,
+          "FY2003": 115,
+          "FY2004": 171,
+          "FY2005": 258,
+          "FY2006": 332,
+          "FY2007": 366,
+          "FY2008": 261
+        }
+      },
+      {
+        "no": "LI-005",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Regional Coordination Complex Construction, Program Element 0603811D8Z",
+        "account": "97-0325-391",
+        "amountM": 4040,
+        "fy": {
+          "FY2001": 954,
+          "FY2002": 781,
+          "FY2003": 839,
+          "FY2004": 765,
+          "FY2005": 701
+        }
+      },
+      {
+        "no": "LI-006",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Regional Response Center Build-Out",
+        "account": "97-0678-731",
+        "amountM": 3866,
+        "fy": {
+          "FY2001": 1815,
+          "FY2002": 926,
+          "FY2003": 604,
+          "FY2004": 333,
+          "FY2005": 188
+        }
+      },
+      {
+        "no": "LI-007",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Research Station Modernization, Western Region, Program Element 0603551D8Z",
+        "account": "97-0791-741",
+        "amountM": 4540,
+        "fy": {
+          "FY2001": 153,
+          "FY2002": 154,
+          "FY2003": 282,
+          "FY2004": 473,
+          "FY2005": 810,
+          "FY2006": 1185,
+          "FY2007": 1483
+        }
+      },
+      {
+        "no": "LI-008",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Underground Storage Characterization Studies",
+        "account": "97-0765-884",
+        "amountM": 1802,
+        "fy": {
+          "FY2001": 51,
+          "FY2002": 52,
+          "FY2003": 95,
+          "FY2004": 156,
+          "FY2005": 261,
+          "FY2006": 373,
+          "FY2007": 457,
+          "FY2008": 357
+        }
+      },
+      {
+        "no": "LI-009",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Underground Structures Survivability Research",
+        "account": "97-0113-059",
+        "amountM": 2395,
+        "fy": {
+          "FY2001": 1426,
+          "FY2002": 545,
+          "FY2003": 265,
+          "FY2004": 110,
+          "FY2005": 49
+        }
+      },
+      {
+        "no": "LI-010",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "PERSONNEL",
+        "title": "Continuity Exercise Program",
+        "account": "58-0812-562",
+        "amountM": 405,
+        "fy": {
+          "FY2001": 70,
+          "FY2002": 58,
+          "FY2003": 64,
+          "FY2004": 60,
+          "FY2005": 56,
+          "FY2006": 45,
+          "FY2007": 33,
+          "FY2008": 19
+        }
+      },
+      {
+        "no": "LI-011",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Gas Reserve Facility Vault Modernization",
+        "account": "58-0657-763",
+        "amountM": 4341,
+        "fy": {
+          "FY2001": 569,
+          "FY2002": 579,
+          "FY2003": 836,
+          "FY2004": 1044,
+          "FY2005": 1313
+        }
+      },
+      {
+        "no": "LI-012",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Restricted Area Perimeter Works",
+        "account": "58-0553-901",
+        "amountM": 2454,
+        "fy": {
+          "FY2001": 970,
+          "FY2002": 559,
+          "FY2003": 412,
+          "FY2004": 257,
+          "FY2005": 163,
+          "FY2006": 93
+        }
+      },
+      {
+        "no": "LI-013",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Shelter Survivability Engineering",
+        "account": "58-0929-512",
+        "amountM": 1696,
+        "fy": {
+          "FY2001": 729,
+          "FY2002": 393,
+          "FY2003": 271,
+          "FY2004": 158,
+          "FY2005": 94,
+          "FY2006": 51
+        }
+      },
+      {
+        "no": "LI-014",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Air Filtration and CBRN Protection",
+        "account": "97-0419-608",
+        "amountM": 2227,
+        "fy": {
+          "FY2002": 10,
+          "FY2003": 14,
+          "FY2004": 34,
+          "FY2005": 105,
+          "FY2006": 293,
+          "FY2007": 707,
+          "FY2008": 1064
+        }
+      },
+      {
+        "no": "LI-015",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "PERSONNEL",
+        "title": "Civilian Pay, Special Programs",
+        "account": "97-0264-037",
+        "amountM": 396,
+        "fy": {
+          "FY2002": 5,
+          "FY2003": 11,
+          "FY2004": 21,
+          "FY2005": 44,
+          "FY2006": 79,
+          "FY2007": 120,
+          "FY2008": 116
+        }
+      },
+      {
+        "no": "LI-016",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "PERSONNEL",
+        "title": "Contract Guard Services",
+        "account": "97-0520-645",
+        "amountM": 504,
+        "fy": {
+          "FY2002": 2,
+          "FY2003": 2,
+          "FY2004": 6,
+          "FY2005": 19,
+          "FY2006": 59,
+          "FY2007": 157,
+          "FY2008": 259
+        }
+      },
+      {
+        "no": "LI-017",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Data Archive Systems",
+        "account": "97-0317-787",
+        "amountM": 2629,
+        "fy": {
+          "FY2002": 706,
+          "FY2003": 625,
+          "FY2004": 468,
+          "FY2005": 353,
+          "FY2006": 233,
+          "FY2007": 149,
+          "FY2008": 95
+        }
+      },
+      {
+        "no": "LI-018",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Geotechnical Survey and Characterization, Program Element 0603476D8Z",
+        "account": "97-0247-133",
+        "amountM": 1982,
+        "fy": {
+          "FY2002": 359,
+          "FY2003": 396,
+          "FY2004": 369,
+          "FY2005": 357,
+          "FY2006": 290,
+          "FY2007": 211
+        }
+      },
+      {
+        "no": "LI-019",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Guided Ground Transport Research",
+        "account": "97-0623-221",
+        "amountM": 1980,
+        "fy": {
+          "FY2002": 424,
+          "FY2003": 434,
+          "FY2004": 376,
+          "FY2005": 328,
+          "FY2006": 248,
+          "FY2007": 170
+        }
+      },
+      {
+        "no": "LI-020",
+        "department": "DOD",
+        "sourceId": "MISC",
+        "categoryId": "EQUIPMENT",
+        "title": "Instrumentation and Telemetry, Program Element 0603716D8Z",
+        "account": "97-0284-488",
+        "amountM": 350,
+        "fy": {
+          "FY2002": 10,
+          "FY2003": 18,
+          "FY2004": 30,
+          "FY2005": 51,
+          "FY2006": 74,
+          "FY2007": 93,
+          "FY2008": 74
+        }
+      },
+      {
+        "no": "LI-021",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Legacy Site Stewardship, Program Element 0603659D8Z",
+        "account": "97-0174-735",
+        "amountM": 4005,
+        "fy": {
+          "FY2002": 2076,
+          "FY2003": 1139,
+          "FY2004": 531,
+          "FY2005": 259
+        }
+      },
+      {
+        "no": "LI-022",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Long-Haul Logistics Conduit Survey",
+        "account": "97-0543-073",
+        "amountM": 4345,
+        "fy": {
+          "FY2002": 58,
+          "FY2003": 114,
+          "FY2004": 229,
+          "FY2005": 479,
+          "FY2006": 863,
+          "FY2007": 1325,
+          "FY2008": 1277
+        }
+      },
+      {
+        "no": "LI-023",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Minor Construction, Unspecified, Defense-Wide, Program Element 0603591D8Z",
+        "account": "97-0412-230",
+        "amountM": 4149,
+        "fy": {
+          "FY2002": 1477,
+          "FY2003": 1105,
+          "FY2004": 699,
+          "FY2005": 448,
+          "FY2006": 259,
+          "FY2007": 161
+        }
+      },
+      {
+        "no": "LI-024",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Physical Security Equipment",
+        "account": "97-0840-351",
+        "amountM": 1632,
+        "fy": {
+          "FY2002": 6,
+          "FY2003": 6,
+          "FY2004": 11,
+          "FY2005": 40,
+          "FY2006": 146,
+          "FY2007": 471,
+          "FY2008": 952
+        }
+      },
+      {
+        "no": "LI-025",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Quarry Reclamation and Slope Stabilization",
+        "account": "97-0737-765",
+        "amountM": 3456,
+        "fy": {
+          "FY2002": 744,
+          "FY2003": 759,
+          "FY2004": 657,
+          "FY2005": 571,
+          "FY2006": 430,
+          "FY2007": 295
+        }
+      },
+      {
+        "no": "LI-026",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "PERSONNEL",
+        "title": "Recruitment and Retention, Technical Specialties",
+        "account": "97-0916-013",
+        "amountM": 790,
+        "fy": {
+          "FY2002": 37,
+          "FY2003": 62,
+          "FY2004": 89,
+          "FY2005": 132,
+          "FY2006": 166,
+          "FY2007": 179,
+          "FY2008": 125
+        }
+      },
+      {
+        "no": "LI-027",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Secure Network Infrastructure, Closed Enclave",
+        "account": "97-0805-419",
+        "amountM": 2640,
+        "fy": {
+          "FY2002": 101,
+          "FY2003": 182,
+          "FY2004": 297,
+          "FY2005": 495,
+          "FY2006": 705,
+          "FY2007": 860
+        }
+      },
+      {
+        "no": "LI-028",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Seismic Isolation Systems Qualification",
+        "account": "97-0255-003",
+        "amountM": 3119,
+        "fy": {
+          "FY2002": 33,
+          "FY2003": 59,
+          "FY2004": 139,
+          "FY2005": 367,
+          "FY2006": 848,
+          "FY2007": 1673
+        }
+      },
+      {
+        "no": "LI-029",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Site Remediation and Groundwater Monitoring, Program Element 0603648D8Z",
+        "account": "97-0842-573",
+        "amountM": 5687,
+        "fy": {
+          "FY2002": 2328,
+          "FY2003": 1547,
+          "FY2004": 871,
+          "FY2005": 500,
+          "FY2006": 267,
+          "FY2007": 174
+        }
+      },
+      {
+        "no": "LI-030",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Strategic Facilities Alteration and Repair, Program Element 0603771D8Z",
+        "account": "97-0937-803",
+        "amountM": 4323,
+        "fy": {
+          "FY2002": 266,
+          "FY2003": 412,
+          "FY2004": 555,
+          "FY2005": 755,
+          "FY2006": 878,
+          "FY2007": 879,
+          "FY2008": 578
+        }
+      },
+      {
+        "no": "LI-031",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Tunnel Lining Segment Procurement, Program Element 0603594D8Z",
+        "account": "97-0234-161",
+        "amountM": 2149,
+        "fy": {
+          "FY2002": 539,
+          "FY2003": 530,
+          "FY2004": 441,
+          "FY2005": 370,
+          "FY2006": 269
+        }
+      },
+      {
+        "no": "LI-032",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Utility Infrastructure, Interstate Corridors",
+        "account": "97-0293-278",
+        "amountM": 3651,
+        "fy": {
+          "FY2002": 258,
+          "FY2003": 436,
+          "FY2004": 656,
+          "FY2005": 999,
+          "FY2006": 1302
+        }
+      },
+      {
+        "no": "LI-033",
+        "department": "DOD",
+        "sourceId": "MISC",
+        "categoryId": "PERSONNEL",
+        "title": "Workforce Transition Support",
+        "account": "97-0942-189",
+        "amountM": 600,
+        "fy": {
+          "FY2002": 285,
+          "FY2003": 156,
+          "FY2004": 73,
+          "FY2005": 36,
+          "FY2006": 18,
+          "FY2007": 14,
+          "FY2008": 18
+        }
+      },
+      {
+        "no": "LI-034",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "TRANSIT",
+        "title": "Cable Tunnel Construction, Regional",
+        "account": "89-0579-500",
+        "amountM": 1315,
+        "fy": {
+          "FY2002": 591,
+          "FY2003": 358,
+          "FY2004": 184,
+          "FY2005": 97,
+          "FY2006": 50,
+          "FY2007": 35
+        }
+      },
+      {
+        "no": "LI-035",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Continuity Facilities Planning and Design",
+        "account": "89-0744-845",
+        "amountM": 4029,
+        "fy": {
+          "FY2002": 16,
+          "FY2003": 15,
+          "FY2004": 33,
+          "FY2005": 117,
+          "FY2006": 401,
+          "FY2007": 1197,
+          "FY2008": 2250
+        }
+      },
+      {
+        "no": "LI-036",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Deep Conduit Installation",
+        "account": "89-0936-187",
+        "amountM": 1827,
+        "fy": {
+          "FY2002": 25,
+          "FY2003": 47,
+          "FY2004": 105,
+          "FY2005": 248,
+          "FY2006": 509,
+          "FY2007": 893
+        }
+      },
+      {
+        "no": "LI-037",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Depository Annex Security Construction",
+        "account": "89-0976-064",
+        "amountM": 2111,
+        "fy": {
+          "FY2002": 273,
+          "FY2003": 430,
+          "FY2004": 590,
+          "FY2005": 818
+        }
+      },
+      {
+        "no": "LI-038",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "TRANSIT",
+        "title": "Electromagnetic Pulse Protection, Linear Infrastructure",
+        "account": "89-0473-358",
+        "amountM": 2349,
+        "fy": {
+          "FY2002": 347,
+          "FY2003": 419,
+          "FY2004": 431,
+          "FY2005": 446,
+          "FY2006": 396,
+          "FY2007": 310
+        }
+      },
+      {
+        "no": "LI-039",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Environmental Monitoring Station Upgrades",
+        "account": "89-0997-569",
+        "amountM": 3579,
+        "fy": {
+          "FY2002": 1199,
+          "FY2003": 971,
+          "FY2004": 666,
+          "FY2005": 461,
+          "FY2006": 282
+        }
+      },
+      {
+        "no": "LI-040",
+        "department": "DOE",
+        "sourceId": "MISC",
+        "categoryId": "FACILITY",
+        "title": "Explosion-Resistant Structures Program",
+        "account": "89-0134-665",
+        "amountM": 3056,
+        "fy": {
+          "FY2002": 401,
+          "FY2003": 492,
+          "FY2004": 516,
+          "FY2005": 543,
+          "FY2006": 491,
+          "FY2007": 390,
+          "FY2008": 223
+        }
+      },
+      {
+        "no": "LI-041",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Land Management Field Station Improvements",
+        "account": "89-0240-518",
+        "amountM": 3566,
+        "fy": {
+          "FY2002": 1226,
+          "FY2003": 1043,
+          "FY2004": 751,
+          "FY2005": 546
+        }
+      },
+      {
+        "no": "LI-042",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "PERSONNEL",
+        "title": "Personnel Accounting Systems",
+        "account": "89-0831-784",
+        "amountM": 592,
+        "fy": {
+          "FY2002": 208,
+          "FY2003": 154,
+          "FY2004": 96,
+          "FY2005": 60,
+          "FY2006": 34,
+          "FY2007": 22,
+          "FY2008": 18
+        }
+      },
+      {
+        "no": "LI-043",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Seismology Center Instrumentation Vaults",
+        "account": "89-0387-961",
+        "amountM": 3225,
+        "fy": {
+          "FY2002": 571,
+          "FY2003": 676,
+          "FY2004": 683,
+          "FY2005": 692,
+          "FY2006": 603
+        }
+      },
+      {
+        "no": "LI-044",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Surveying Station Facilities",
+        "account": "89-0185-913",
+        "amountM": 2085,
+        "fy": {
+          "FY2002": 598,
+          "FY2003": 588,
+          "FY2004": 489,
+          "FY2005": 410
+        }
+      },
+      {
+        "no": "LI-045",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "PERSONNEL",
+        "title": "Readiness Training, Regional",
+        "account": "58-0730-386",
+        "amountM": 418,
+        "fy": {
+          "FY2002": 25,
+          "FY2003": 39,
+          "FY2004": 53,
+          "FY2005": 73,
+          "FY2006": 85,
+          "FY2007": 86,
+          "FY2008": 57
+        }
+      },
+      {
+        "no": "LI-046",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Training Center Expansion, Central Region",
+        "account": "58-0147-733",
+        "amountM": 2563,
+        "fy": {
+          "FY2002": 677,
+          "FY2003": 706,
+          "FY2004": 625,
+          "FY2005": 555
+        }
+      },
+      {
+        "no": "LI-047",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Agricultural Research Station Storage Improvements",
+        "account": "70-0983-923",
+        "amountM": 4652,
+        "fy": {
+          "FY2003": 479,
+          "FY2004": 801,
+          "FY2005": 1370,
+          "FY2006": 2002
+        }
+      },
+      {
+        "no": "LI-048",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Commodity Rotation and Disposal",
+        "account": "70-0484-170",
+        "amountM": 225,
+        "fy": {
+          "FY2003": 2,
+          "FY2004": 5,
+          "FY2005": 13,
+          "FY2006": 34,
+          "FY2007": 73,
+          "FY2008": 98
+        }
+      },
+      {
+        "no": "LI-049",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Facility Recapitalization, Alternate Command Sites",
+        "account": "70-0942-759",
+        "amountM": 4303,
+        "fy": {
+          "FY2003": 1820,
+          "FY2004": 1399,
+          "FY2005": 1084
+        }
+      },
+      {
+        "no": "LI-050",
+        "department": "DHS",
+        "sourceId": "MISC",
+        "categoryId": "FACILITY",
+        "title": "Ground Support Systems, Continuity Sites",
+        "account": "70-0803-134",
+        "amountM": 1049,
+        "fy": {
+          "FY2003": 29,
+          "FY2004": 58,
+          "FY2005": 119,
+          "FY2006": 213,
+          "FY2007": 323,
+          "FY2008": 307
+        }
+      },
+      {
+        "no": "LI-051",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Mass Transit Security Research",
+        "account": "70-0999-598",
+        "amountM": 2165,
+        "fy": {
+          "FY2003": 57,
+          "FY2004": 114,
+          "FY2005": 241,
+          "FY2006": 435,
+          "FY2007": 670,
+          "FY2008": 648
+        }
+      },
+      {
+        "no": "LI-052",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "PERSONNEL",
+        "title": "Medical Readiness Program",
+        "account": "70-0778-313",
+        "amountM": 1058,
+        "fy": {
+          "FY2003": 25,
+          "FY2004": 52,
+          "FY2005": 112,
+          "FY2006": 209,
+          "FY2007": 331,
+          "FY2008": 329
+        }
+      },
+      {
+        "no": "LI-053",
+        "department": "DHS",
+        "sourceId": "MISC",
+        "categoryId": "PERSONNEL",
+        "title": "Polygraph Program Support",
+        "account": "70-0654-287",
+        "amountM": 400,
+        "fy": {
+          "FY2003": 101,
+          "FY2004": 90,
+          "FY2005": 80,
+          "FY2006": 61,
+          "FY2007": 43,
+          "FY2008": 25
+        }
+      },
+      {
+        "no": "LI-054",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "PERSONNEL",
+        "title": "Professional Development, Analytic Workforce",
+        "account": "70-0940-502",
+        "amountM": 1243,
+        "fy": {
+          "FY2003": 73,
+          "FY2004": 118,
+          "FY2005": 194,
+          "FY2006": 274,
+          "FY2007": 330,
+          "FY2008": 254
+        }
+      },
+      {
+        "no": "LI-055",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "TRANSIT",
+        "title": "Shaft Sinking and Portal Works",
+        "account": "70-0181-521",
+        "amountM": 2984,
+        "fy": {
+          "FY2003": 509,
+          "FY2004": 582,
+          "FY2005": 669,
+          "FY2006": 659,
+          "FY2007": 565
+        }
+      },
+      {
+        "no": "LI-056",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Traction Power Substations",
+        "account": "70-0444-472",
+        "amountM": 6719,
+        "fy": {
+          "FY2003": 2367,
+          "FY2004": 1730,
+          "FY2005": 1275,
+          "FY2006": 825,
+          "FY2007": 522
+        }
+      },
+      {
+        "no": "LI-057",
+        "department": "DHS",
+        "sourceId": "MISC",
+        "categoryId": "TRANSIT",
+        "title": "Tunnel Survey and Alignment Control",
+        "account": "70-0246-421",
+        "amountM": 1948,
+        "fy": {
+          "FY2003": 753,
+          "FY2004": 544,
+          "FY2005": 397,
+          "FY2006": 254
+        }
+      },
+      {
+        "no": "LI-058",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Biometric Access Control Systems, Program Element 0603129D8Z",
+        "account": "97-0837-790",
+        "amountM": 2158,
+        "fy": {
+          "FY2003": 545,
+          "FY2004": 503,
+          "FY2005": 467,
+          "FY2006": 374,
+          "FY2007": 269
+        }
+      },
+      {
+        "no": "LI-059",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "RESERVES",
+        "title": "Blood Products Storage",
+        "account": "97-0649-085",
+        "amountM": 346,
+        "fy": {
+          "FY2003": 1,
+          "FY2004": 2,
+          "FY2005": 8,
+          "FY2006": 31,
+          "FY2007": 100,
+          "FY2008": 204
+        }
+      },
+      {
+        "no": "LI-060",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "RESERVES",
+        "title": "Bulk Water Treatment Consumables",
+        "account": "97-0614-180",
+        "amountM": 495,
+        "fy": {
+          "FY2003": 2,
+          "FY2004": 4,
+          "FY2005": 14,
+          "FY2006": 49,
+          "FY2007": 148,
+          "FY2008": 278
+        }
+      },
+      {
+        "no": "LI-061",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "RESERVES",
+        "title": "Emergency Food and Shelter Stocks",
+        "account": "97-0271-609",
+        "amountM": 200,
+        "fy": {
+          "FY2003": 1,
+          "FY2004": 3,
+          "FY2005": 9,
+          "FY2006": 26,
+          "FY2007": 63,
+          "FY2008": 98
+        }
+      },
+      {
+        "no": "LI-062",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "PERSONNEL",
+        "title": "Emergency Management Performance Support",
+        "account": "97-0775-503",
+        "amountM": 1118,
+        "fy": {
+          "FY2003": 386,
+          "FY2004": 275,
+          "FY2005": 198,
+          "FY2006": 126,
+          "FY2007": 79,
+          "FY2008": 54
+        }
+      },
+      {
+        "no": "LI-063",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Hurricane Continuity Site Development, Program Element 0603109D8Z",
+        "account": "97-0517-493",
+        "amountM": 3566,
+        "fy": {
+          "FY2003": 15,
+          "FY2004": 33,
+          "FY2005": 116,
+          "FY2006": 379,
+          "FY2007": 1085,
+          "FY2008": 1938
+        }
+      },
+      {
+        "no": "LI-064",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "RESERVES",
+        "title": "Medical Countermeasures Stockpile",
+        "account": "97-0803-509",
+        "amountM": 593,
+        "fy": {
+          "FY2003": 207,
+          "FY2004": 147,
+          "FY2005": 104,
+          "FY2006": 66,
+          "FY2007": 41,
+          "FY2008": 28
+        }
+      },
+      {
+        "no": "LI-065",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Mined Space Utilization Assessment",
+        "account": "97-0977-986",
+        "amountM": 1896,
+        "fy": {
+          "FY2003": 669,
+          "FY2004": 488,
+          "FY2005": 360,
+          "FY2006": 232,
+          "FY2007": 147
+        }
+      },
+      {
+        "no": "LI-066",
+        "department": "DOD",
+        "sourceId": "MISC",
+        "categoryId": "FACILITY",
+        "title": "Planning and Design, Classified Projects, Program Element 0603476D8Z",
+        "account": "97-0455-361",
+        "amountM": 1557,
+        "fy": {
+          "FY2003": 133,
+          "FY2004": 242,
+          "FY2005": 454,
+          "FY2006": 728
+        }
+      },
+      {
+        "no": "LI-067",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "RESERVES",
+        "title": "Seed Collection Preservation",
+        "account": "97-0709-982",
+        "amountM": 261,
+        "fy": {
+          "FY2003": 77,
+          "FY2004": 62,
+          "FY2005": 50,
+          "FY2006": 35,
+          "FY2007": 23,
+          "FY2008": 14
+        }
+      },
+      {
+        "no": "LI-068",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Spoil Removal and Disposal",
+        "account": "97-0221-983",
+        "amountM": 5784,
+        "fy": {
+          "FY2003": 657,
+          "FY2004": 850,
+          "FY2005": 1107,
+          "FY2006": 1232,
+          "FY2007": 1184,
+          "FY2008": 754
+        }
+      },
+      {
+        "no": "LI-069",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Subsurface Facility Hardening, Eastern Region, Program Element 0603700D8Z",
+        "account": "97-0698-243",
+        "amountM": 4530,
+        "fy": {
+          "FY2003": 141,
+          "FY2004": 298,
+          "FY2005": 668,
+          "FY2006": 1291,
+          "FY2007": 2132
+        }
+      },
+      {
+        "no": "LI-070",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Track Systems Engineering, Program Element 0603375D8Z",
+        "account": "97-0760-331",
+        "amountM": 3192,
+        "fy": {
+          "FY2003": 1094,
+          "FY2004": 881,
+          "FY2005": 714,
+          "FY2006": 503
+        }
+      },
+      {
+        "no": "LI-071",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "PERSONNEL",
+        "title": "Training and Readiness, Continuity Programs",
+        "account": "97-0814-659",
+        "amountM": 644,
+        "fy": {
+          "FY2003": 10,
+          "FY2004": 22,
+          "FY2005": 55,
+          "FY2006": 115,
+          "FY2007": 208,
+          "FY2008": 234
+        }
+      },
+      {
+        "no": "LI-072",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Tunnel Boring Technology Demonstration, Program Element 0603824D8Z",
+        "account": "97-0802-709",
+        "amountM": 6598,
+        "fy": {
+          "FY2003": 38,
+          "FY2004": 92,
+          "FY2005": 291,
+          "FY2006": 840,
+          "FY2007": 2092,
+          "FY2008": 3245
+        }
+      },
+      {
+        "no": "LI-073",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Tunnel Environmental Control, Program Element 0603735D8Z",
+        "account": "97-0517-719",
+        "amountM": 5146,
+        "fy": {
+          "FY2003": 717,
+          "FY2004": 901,
+          "FY2005": 1140,
+          "FY2006": 1234,
+          "FY2007": 1154
+        }
+      },
+      {
+        "no": "LI-074",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Underground Communications Conduit",
+        "account": "97-0997-710",
+        "amountM": 2577,
+        "fy": {
+          "FY2003": 209,
+          "FY2004": 327,
+          "FY2005": 519,
+          "FY2006": 704,
+          "FY2007": 818
+        }
+      },
+      {
+        "no": "LI-075",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Federal Relocation Arrangements, Mid-Atlantic",
+        "account": "89-0382-459",
+        "amountM": 5508,
+        "fy": {
+          "FY2003": 1326,
+          "FY2004": 1777,
+          "FY2005": 2405
+        }
+      },
+      {
+        "no": "LI-076",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "PERSONNEL",
+        "title": "Food Service Operations",
+        "account": "89-0728-643",
+        "amountM": 408,
+        "fy": {
+          "FY2003": 28,
+          "FY2004": 43,
+          "FY2005": 67,
+          "FY2006": 90,
+          "FY2007": 104,
+          "FY2008": 76
+        }
+      },
+      {
+        "no": "LI-077",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "TRANSIT",
+        "title": "Inter-Site Transport Hardening",
+        "account": "89-0750-791",
+        "amountM": 2336,
+        "fy": {
+          "FY2003": 36,
+          "FY2004": 88,
+          "FY2005": 249,
+          "FY2006": 624,
+          "FY2007": 1339
+        }
+      },
+      {
+        "no": "LI-078",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "PERSONNEL",
+        "title": "Relocation Allowances, Classified Assignments",
+        "account": "89-0697-689",
+        "amountM": 1265,
+        "fy": {
+          "FY2003": 154,
+          "FY2004": 194,
+          "FY2005": 245,
+          "FY2006": 266,
+          "FY2007": 250,
+          "FY2008": 156
+        }
+      },
+      {
+        "no": "LI-079",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "PERSONNEL",
+        "title": "Dosimetry and Occupational Health",
+        "account": "58-0245-943",
+        "amountM": 587,
+        "fy": {
+          "FY2003": 44,
+          "FY2004": 66,
+          "FY2005": 100,
+          "FY2006": 130,
+          "FY2007": 144,
+          "FY2008": 103
+        }
+      },
+      {
+        "no": "LI-080",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "PERSONNEL",
+        "title": "Health and Safety Monitoring",
+        "account": "58-0911-077",
+        "amountM": 1347,
+        "fy": {
+          "FY2003": 7,
+          "FY2004": 18,
+          "FY2005": 58,
+          "FY2006": 169,
+          "FY2007": 426,
+          "FY2008": 669
+        }
+      },
+      {
+        "no": "LI-081",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Hardened Utility Corridors",
+        "account": "70-0263-834",
+        "amountM": 5118,
+        "fy": {
+          "FY2004": 1009,
+          "FY2005": 1689,
+          "FY2006": 2420
+        }
+      },
+      {
+        "no": "LI-082",
+        "department": "DHS",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Life Support Systems Procurement",
+        "account": "70-0232-449",
+        "amountM": 2996,
+        "fy": {
+          "FY2004": 345,
+          "FY2005": 536,
+          "FY2006": 712,
+          "FY2007": 811,
+          "FY2008": 592
+        }
+      },
+      {
+        "no": "LI-083",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Mass Care Supplies",
+        "account": "70-0366-383",
+        "amountM": 460,
+        "fy": {
+          "FY2004": 3,
+          "FY2005": 11,
+          "FY2006": 41,
+          "FY2007": 133,
+          "FY2008": 272
+        }
+      },
+      {
+        "no": "LI-084",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Small Arms Replacement",
+        "account": "70-0988-358",
+        "amountM": 440,
+        "fy": {
+          "FY2004": 56,
+          "FY2005": 83,
+          "FY2006": 105,
+          "FY2007": 115,
+          "FY2008": 81
+        }
+      },
+      {
+        "no": "LI-085",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Test Site Support Infrastructure",
+        "account": "70-0882-299",
+        "amountM": 2657,
+        "fy": {
+          "FY2004": 624,
+          "FY2005": 664,
+          "FY2006": 605,
+          "FY2007": 485,
+          "FY2008": 279
+        }
+      },
+      {
+        "no": "LI-086",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Continuity Communications Hardening, Program Element 0603946D8Z",
+        "account": "97-0577-557",
+        "amountM": 981,
+        "fy": {
+          "FY2004": 233,
+          "FY2005": 266,
+          "FY2006": 260,
+          "FY2007": 222
+        }
+      },
+      {
+        "no": "LI-087",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Deep Excavation Safety Engineering, Program Element 0603751D8Z",
+        "account": "97-0843-181",
+        "amountM": 2280,
+        "fy": {
+          "FY2004": 286,
+          "FY2005": 477,
+          "FY2006": 683,
+          "FY2007": 834
+        }
+      },
+      {
+        "no": "LI-088",
+        "department": "DOD",
+        "sourceId": "MISC",
+        "categoryId": "TRANSIT",
+        "title": "Depot and Maintenance Yard Works, Program Element 0603942D8Z",
+        "account": "97-0400-049",
+        "amountM": 2052,
+        "fy": {
+          "FY2004": 90,
+          "FY2005": 204,
+          "FY2006": 398,
+          "FY2007": 665,
+          "FY2008": 695
+        }
+      },
+      {
+        "no": "LI-089",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "FACILITY",
+        "title": "Emergency Operations Center Construction Grants",
+        "account": "97-0414-694",
+        "amountM": 1615,
+        "fy": {
+          "FY2004": 243,
+          "FY2005": 368,
+          "FY2006": 476,
+          "FY2007": 528
+        }
+      },
+      {
+        "no": "LI-090",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Emergency Relocation Site Sustainment",
+        "account": "97-0642-832",
+        "amountM": 2479,
+        "fy": {
+          "FY2004": 694,
+          "FY2005": 864,
+          "FY2006": 921
+        }
+      },
+      {
+        "no": "LI-091",
+        "department": "DOD",
+        "sourceId": "MISC",
+        "categoryId": "FACILITY",
+        "title": "Facility Closeout and Site Restoration",
+        "account": "97-0935-041",
+        "amountM": 3338,
+        "fy": {
+          "FY2004": 1030,
+          "FY2005": 1170,
+          "FY2006": 1138
+        }
+      },
+      {
+        "no": "LI-092",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "RESERVES",
+        "title": "Fuel Reserve Maintenance",
+        "account": "97-0333-413",
+        "amountM": 406,
+        "fy": {
+          "FY2004": 4,
+          "FY2005": 12,
+          "FY2006": 41,
+          "FY2007": 122,
+          "FY2008": 227
+        }
+      },
+      {
+        "no": "LI-093",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Geological Survey Operations, Long-Bore, Program Element 0603501D8Z",
+        "account": "97-0753-889",
+        "amountM": 6976,
+        "fy": {
+          "FY2004": 201,
+          "FY2005": 522,
+          "FY2006": 1183,
+          "FY2007": 2295,
+          "FY2008": 2775
+        }
+      },
+      {
+        "no": "LI-094",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Medical Equipment, Alternate Facilities",
+        "account": "97-0486-454",
+        "amountM": 2032,
+        "fy": {
+          "FY2004": 120,
+          "FY2005": 285,
+          "FY2006": 589,
+          "FY2007": 1038
+        }
+      },
+      {
+        "no": "LI-095",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Pipeline Survey Easements, Interstate, Program Element 0603827D8Z",
+        "account": "97-0798-554",
+        "amountM": 2036,
+        "fy": {
+          "FY2004": 529,
+          "FY2005": 566,
+          "FY2006": 521,
+          "FY2007": 420
+        }
+      },
+      {
+        "no": "LI-096",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Power Generation Equipment, Fixed Sites, Program Element 0603825D8Z",
+        "account": "97-0157-266",
+        "amountM": 1132,
+        "fy": {
+          "FY2004": 36,
+          "FY2005": 91,
+          "FY2006": 200,
+          "FY2007": 372,
+          "FY2008": 433
+        }
+      },
+      {
+        "no": "LI-097",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Seismic Joint and Isolation Bearings",
+        "account": "97-0715-642",
+        "amountM": 3269,
+        "fy": {
+          "FY2004": 140,
+          "FY2005": 320,
+          "FY2006": 631,
+          "FY2007": 1061,
+          "FY2008": 1117
+        }
+      },
+      {
+        "no": "LI-098",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "TRANSIT",
+        "title": "Special Purpose Vehicle Procurement",
+        "account": "97-0364-271",
+        "amountM": 3286,
+        "fy": {
+          "FY2004": 45,
+          "FY2005": 145,
+          "FY2006": 419,
+          "FY2007": 1047,
+          "FY2008": 1630
+        }
+      },
+      {
+        "no": "LI-099",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "RESERVES",
+        "title": "Strategic Stockpile Rotation",
+        "account": "97-0206-341",
+        "amountM": 566,
+        "fy": {
+          "FY2004": 83,
+          "FY2005": 115,
+          "FY2006": 136,
+          "FY2007": 139,
+          "FY2008": 93
+        }
+      },
+      {
+        "no": "LI-100",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Utility Tunnel Ventilation Systems, Program Element 0603323D8Z",
+        "account": "97-0734-983",
+        "amountM": 5109,
+        "fy": {
+          "FY2004": 1377,
+          "FY2005": 1775,
+          "FY2006": 1957
+        }
+      },
+      {
+        "no": "LI-101",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Water Purification Systems, Program Element 0603447D8Z",
+        "account": "97-0240-331",
+        "amountM": 2103,
+        "fy": {
+          "FY2004": 212,
+          "FY2005": 349,
+          "FY2006": 492,
+          "FY2007": 594,
+          "FY2008": 456
+        }
+      },
+      {
+        "no": "LI-102",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "FACILITY",
+        "title": "Classified Military Construction, Defense-Wide",
+        "account": "89-0173-195",
+        "amountM": 3074,
+        "fy": {
+          "FY2004": 523,
+          "FY2005": 738,
+          "FY2006": 890,
+          "FY2007": 923
+        }
+      },
+      {
+        "no": "LI-103",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Information Assurance, Alternate Sites",
+        "account": "89-0424-705",
+        "amountM": 2510,
+        "fy": {
+          "FY2004": 297,
+          "FY2005": 511,
+          "FY2006": 753,
+          "FY2007": 949
+        }
+      },
+      {
+        "no": "LI-104",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "TRANSIT",
+        "title": "Rail Systems Electrification Studies",
+        "account": "89-0132-056",
+        "amountM": 3191,
+        "fy": {
+          "FY2004": 23,
+          "FY2005": 81,
+          "FY2006": 292,
+          "FY2007": 932,
+          "FY2008": 1863
+        }
+      },
+      {
+        "no": "LI-105",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "FACILITY",
+        "title": "Secondary Research Complex Containment Works",
+        "account": "89-0268-908",
+        "amountM": 2434,
+        "fy": {
+          "FY2004": 377,
+          "FY2005": 756,
+          "FY2006": 1301
+        }
+      },
+      {
+        "no": "LI-106",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Auxiliary Facility Construction, Strategic Forces",
+        "account": "58-0453-153",
+        "amountM": 5919,
+        "fy": {
+          "FY2004": 1939,
+          "FY2005": 2075,
+          "FY2006": 1905
+        }
+      },
+      {
+        "no": "LI-107",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Cold Storage Operations",
+        "account": "58-0826-648",
+        "amountM": 438,
+        "fy": {
+          "FY2004": 30,
+          "FY2005": 58,
+          "FY2006": 95,
+          "FY2007": 135,
+          "FY2008": 120
+        }
+      },
+      {
+        "no": "LI-108",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Disaster Supply Prepositioning",
+        "account": "58-0997-611",
+        "amountM": 426,
+        "fy": {
+          "FY2004": 71,
+          "FY2005": 92,
+          "FY2006": 102,
+          "FY2007": 98,
+          "FY2008": 63
+        }
+      },
+      {
+        "no": "LI-109",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "EQUIPMENT",
+        "title": "Emergency Broadcast Interface",
+        "account": "58-0945-904",
+        "amountM": 858,
+        "fy": {
+          "FY2004": 242,
+          "FY2005": 244,
+          "FY2006": 211,
+          "FY2007": 161
+        }
+      },
+      {
+        "no": "LI-110",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "TRANSIT",
+        "title": "Groundwater Control and Dewatering",
+        "account": "58-0632-247",
+        "amountM": 3024,
+        "fy": {
+          "FY2004": 552,
+          "FY2005": 981,
+          "FY2006": 1491
+        }
+      },
+      {
+        "no": "LI-111",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Readiness Stocks, Continuity Sites",
+        "account": "58-0155-136",
+        "amountM": 294,
+        "fy": {
+          "FY2004": 49,
+          "FY2005": 63,
+          "FY2006": 71,
+          "FY2007": 68,
+          "FY2008": 43
+        }
+      },
+      {
+        "no": "LI-112",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "TRANSIT",
+        "title": "Signalling and Train Control Development",
+        "account": "58-0455-158",
+        "amountM": 2992,
+        "fy": {
+          "FY2004": 458,
+          "FY2005": 926,
+          "FY2006": 1608
+        }
+      },
+      {
+        "no": "LI-113",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "FACILITY",
+        "title": "Solar Research Facility Site Works",
+        "account": "58-0221-126",
+        "amountM": 1718,
+        "fy": {
+          "FY2004": 13,
+          "FY2005": 48,
+          "FY2006": 166,
+          "FY2007": 511,
+          "FY2008": 980
+        }
+      },
+      {
+        "no": "LI-114",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Survivable Stockpile Facilities Lease",
+        "account": "58-0271-626",
+        "amountM": 253,
+        "fy": {
+          "FY2004": 5,
+          "FY2005": 14,
+          "FY2006": 37,
+          "FY2007": 82,
+          "FY2008": 115
+        }
+      },
+      {
+        "no": "LI-115",
+        "department": "DHS",
+        "sourceId": "FEMA",
+        "categoryId": "EQUIPMENT",
+        "title": "Fire Suppression and Detection Systems",
+        "account": "70-0815-763",
+        "amountM": 773,
+        "fy": {
+          "FY2005": 155,
+          "FY2006": 207,
+          "FY2007": 237,
+          "FY2008": 174
+        }
+      },
+      {
+        "no": "LI-116",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "RESERVES",
+        "title": "Biological Specimen Repository",
+        "account": "97-0778-999",
+        "amountM": 492,
+        "fy": {
+          "FY2005": 56,
+          "FY2006": 104,
+          "FY2007": 166,
+          "FY2008": 166
+        }
+      },
+      {
+        "no": "LI-117",
+        "department": "DOD",
+        "sourceId": "DOD",
+        "categoryId": "EQUIPMENT",
+        "title": "Compact Reactor Systems Development, Program Element 0603421D8Z",
+        "account": "97-0432-822",
+        "amountM": 806,
+        "fy": {
+          "FY2005": 23,
+          "FY2006": 79,
+          "FY2007": 242,
+          "FY2008": 462
+        }
+      },
+      {
+        "no": "LI-118",
+        "department": "DOD",
+        "sourceId": "BLACK",
+        "categoryId": "EQUIPMENT",
+        "title": "Quantum Key Distribution Research, Program Element 0603424D8Z",
+        "account": "97-0426-530",
+        "amountM": 2184,
+        "fy": {
+          "FY2005": 210,
+          "FY2006": 427,
+          "FY2007": 742,
+          "FY2008": 805
+        }
+      },
+      {
+        "no": "LI-119",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "EQUIPMENT",
+        "title": "Materiel Handling Equipment",
+        "account": "89-0571-402",
+        "amountM": 612,
+        "fy": {
+          "FY2005": 90,
+          "FY2006": 188,
+          "FY2007": 334
+        }
+      },
+      {
+        "no": "LI-120",
+        "department": "DOE",
+        "sourceId": "BLACK",
+        "categoryId": "RESERVES",
+        "title": "Pharmaceutical Shelf-Life Extension",
+        "account": "89-0811-561",
+        "amountM": 641,
+        "fy": {
+          "FY2005": 101,
+          "FY2006": 157,
+          "FY2007": 208,
+          "FY2008": 175
+        }
+      },
+      {
+        "no": "LI-121",
+        "department": "DOE",
+        "sourceId": "DOE",
+        "categoryId": "EQUIPMENT",
+        "title": "Workstation Environment Development",
+        "account": "89-0864-545",
+        "amountM": 1218,
+        "fy": {
+          "FY2005": 34,
+          "FY2006": 119,
+          "FY2007": 365,
+          "FY2008": 700
+        }
+      },
+      {
+        "no": "LI-122",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Ammunition Storage Maintenance",
+        "account": "58-0928-289",
+        "amountM": 404,
+        "fy": {
+          "FY2005": 19,
+          "FY2006": 54,
+          "FY2007": 132,
+          "FY2008": 199
+        }
+      },
+      {
+        "no": "LI-123",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "EQUIPMENT",
+        "title": "Diesel Generation Plant",
+        "account": "58-0549-423",
+        "amountM": 2117,
+        "fy": {
+          "FY2005": 421,
+          "FY2006": 700,
+          "FY2007": 996
+        }
+      },
+      {
+        "no": "LI-124",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Emergency Generator Fuel Contracts",
+        "account": "58-0775-123",
+        "amountM": 201,
+        "fy": {
+          "FY2005": 8,
+          "FY2006": 25,
+          "FY2007": 64,
+          "FY2008": 104
+        }
+      },
+      {
+        "no": "LI-125",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Logistics Center Inventory",
+        "account": "58-0426-923",
+        "amountM": 522,
+        "fy": {
+          "FY2005": 41,
+          "FY2006": 92,
+          "FY2007": 177,
+          "FY2008": 212
+        }
+      },
+      {
+        "no": "LI-126",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "RESERVES",
+        "title": "Prepositioned Equipment Program",
+        "account": "58-0548-627",
+        "amountM": 337,
+        "fy": {
+          "FY2005": 37,
+          "FY2006": 71,
+          "FY2007": 114,
+          "FY2008": 115
+        }
+      },
+      {
+        "no": "LI-127",
+        "department": "FEMA",
+        "sourceId": "FEMA",
+        "categoryId": "EQUIPMENT",
+        "title": "Satellite Communications Redundancy Study",
+        "account": "58-0514-986",
+        "amountM": 2042,
+        "fy": {
+          "FY2005": 459,
+          "FY2006": 567,
+          "FY2007": 602,
+          "FY2008": 414
+        }
+      }
+    ]
+  },
+  "budgetNotes": [
+    "DHS line items carry obligations from FY2003 onward only. The Department of Homeland Security began operations on 24 JAN 2003 and its first full appropriation was FY2004; FY2003 amounts on DHS lines were obligated under transfer authority from predecessor accounts.",
+    "Expenditure of a DHS character before FY2003 is carried on FEMA lines (FEMA was an independent agency until 1 MAR 2003) and on DOD lines. FEMA lines retain the FEMA department label after transfer of the agency into DHS, consistent with the account structure of the parent appropriation.",
+    "Account codes use the published two-digit agency prefix of the parent department (97 Defense-wide, 89 Energy, 70 Homeland Security, 58 FEMA) followed by a four-digit account and three-digit sub-account. Sub-account numbers are OSC-assigned and do not appear in public budget justification material.",
+    "Line items are numbered LI-001 to LI-127 in order of first obligation year, then department, then title.",
+    "Personnel Costs ($14B) is a programme category and is not a payroll total. Payroll for personnel in categories other than POSTED is carried within it and is not separately identified."
+  ],
+  "contractors": {
+    "register": [
+      {
+        "id": "PC-01",
+        "name": "Allegheny Geotechnical Services LLC",
+        "trade": "Geotechnical drilling and site characterization",
+        "subcontractors": 2,
+        "sites": [
+          "ALPHA-03",
+          "BETA-01"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2200. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-02",
+        "name": "Tri-County Mechanical Systems Inc.",
+        "trade": "HVAC installation and air handling",
+        "subcontractors": 12,
+        "sites": [
+          "BETA-04",
+          "GAMMA-01"
+        ],
+        "compartmentNote": "Work packages issued as Project 2237 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-03",
+        "name": "Blue Ledge Excavation Company",
+        "trade": "Bulk excavation and rock removal",
+        "subcontractors": 12,
+        "sites": [
+          "ALPHA-04",
+          "GAMMA-02"
+        ],
+        "compartmentNote": "Project 2274. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-04",
+        "name": "Harrow Creek Precast Products",
+        "trade": "Precast concrete elements",
+        "subcontractors": 9,
+        "sites": [
+          "BETA-05",
+          "GAMMA-03",
+          "GAMMA-05"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2311. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-05",
+        "name": "Meridale Electrical Contractors",
+        "trade": "Electrical installation, low and medium voltage",
+        "subcontractors": 3,
+        "sites": [
+          "GAMMA-11",
+          "GAMMA-12",
+          "DELTA-01"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2348. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-06",
+        "name": "Coldwater Boring and Tunneling Corp.",
+        "trade": "TBM operation and tunnel drives",
+        "subcontractors": 12,
+        "sites": [
+          "ALPHA-05",
+          "BETA-02"
+        ],
+        "compartmentNote": "Work packages issued as Project 2385 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-07",
+        "name": "Pinecrest Survey Associates",
+        "trade": "Land and underground survey",
+        "subcontractors": 5,
+        "sites": [
+          "DELTA-02",
+          "DELTA-09"
+        ],
+        "compartmentNote": "Project 2422. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-08",
+        "name": "Northfork Structural Steel Inc.",
+        "trade": "Structural steel fabrication and erection",
+        "subcontractors": 10,
+        "sites": [
+          "GAMMA-04"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2459. Below-collar work performed by other primes. 1 site known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-09",
+        "name": "Sable Point Environmental Group",
+        "trade": "Environmental remediation and monitoring",
+        "subcontractors": 7,
+        "sites": [
+          "BETA-09",
+          "DELTA-03"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2496. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-10",
+        "name": "Greystone Fire Protection Services",
+        "trade": "Fire detection and suppression",
+        "subcontractors": 10,
+        "sites": [
+          "GAMMA-05"
+        ],
+        "compartmentNote": "Work packages issued as Project 2533 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-11",
+        "name": "Lindell & Marsh Engineering PC",
+        "trade": "Civil and structural design engineering",
+        "subcontractors": 12,
+        "sites": [
+          "ALPHA-03",
+          "BETA-01",
+          "BETA-03"
+        ],
+        "compartmentNote": "Project 2570. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-12",
+        "name": "Copper Basin Drilling Company",
+        "trade": "Shaft sinking and raise boring",
+        "subcontractors": 13,
+        "sites": [
+          "BETA-01",
+          "BETA-04"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2607. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-13",
+        "name": "Halverson Shotcrete Co.",
+        "trade": "Tunnel and cavern lining",
+        "subcontractors": 12,
+        "sites": [
+          "BETA-05"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2644. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-14",
+        "name": "Westridge Hydraulic Systems",
+        "trade": "Groundwater control and dewatering",
+        "subcontractors": 8,
+        "sites": [
+          "GAMMA-06",
+          "GAMMA-15"
+        ],
+        "compartmentNote": "Work packages issued as Project 2681 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-15",
+        "name": "Cardinal Plains Construction Group",
+        "trade": "General construction, surface structures",
+        "subcontractors": 7,
+        "sites": [
+          "DELTA-04"
+        ],
+        "compartmentNote": "Project 2718. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-16",
+        "name": "Two Rivers Water Treatment Inc.",
+        "trade": "Potable water treatment plant",
+        "subcontractors": 4,
+        "sites": [
+          "GAMMA-05",
+          "GAMMA-06",
+          "GAMMA-07"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2755. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-17",
+        "name": "Ashby Integrated Security LLC",
+        "trade": "Perimeter and access control systems",
+        "subcontractors": 13,
+        "sites": [
+          "DELTA-05"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2792. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-18",
+        "name": "Tamarack Power Systems",
+        "trade": "Diesel generation plant",
+        "subcontractors": 7,
+        "sites": [
+          "GAMMA-08"
+        ],
+        "compartmentNote": "Work packages issued as Project 2229 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-19",
+        "name": "Kessler-Vaughn Controls Corp.",
+        "trade": "Building automation and controls",
+        "subcontractors": 4,
+        "sites": [
+          "BETA-02",
+          "BETA-08",
+          "GAMMA-09"
+        ],
+        "compartmentNote": "Project 2266. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-20",
+        "name": "Prairie Signal & Communications",
+        "trade": "Communications cabling and conduit",
+        "subcontractors": 5,
+        "sites": [
+          "BETA-09",
+          "GAMMA-07",
+          "GAMMA-10"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2303. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-21",
+        "name": "Stonewell Masonry and Waterproofing",
+        "trade": "Waterproofing membranes and masonry",
+        "subcontractors": 10,
+        "sites": [
+          "GAMMA-10",
+          "GAMMA-11"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2340. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-22",
+        "name": "Juniper Flats Logistics Inc.",
+        "trade": "Materiel logistics and warehousing",
+        "subcontractors": 3,
+        "sites": [
+          "DELTA-04",
+          "DELTA-06",
+          "DELTA-07"
+        ],
+        "compartmentNote": "Work packages issued as Project 2377 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-23",
+        "name": "Ridgeback Earthmoving LLC",
+        "trade": "Spoil haulage and disposal",
+        "subcontractors": 8,
+        "sites": [
+          "DELTA-07",
+          "DELTA-09"
+        ],
+        "compartmentNote": "Project 2414. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-24",
+        "name": "Calloway Elevator and Hoist",
+        "trade": "Elevators, hoists and conveyance",
+        "subcontractors": 6,
+        "sites": [
+          "ALPHA-02",
+          "BETA-06",
+          "BETA-07"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2451. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-25",
+        "name": "Benton Hollow Interiors Inc.",
+        "trade": "Interior fit-out and finishes",
+        "subcontractors": 3,
+        "sites": [
+          "GAMMA-10",
+          "GAMMA-12"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2488. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-26",
+        "name": "Ostrander Radiological Services",
+        "trade": "Radiological shielding and survey",
+        "subcontractors": 11,
+        "sites": [
+          "BETA-07",
+          "BETA-08"
+        ],
+        "compartmentNote": "Work packages issued as Project 2525 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-27",
+        "name": "Mesquite Valley Paving Co.",
+        "trade": "Roads, hardstanding and parking",
+        "subcontractors": 7,
+        "sites": [
+          "DELTA-03",
+          "DELTA-08"
+        ],
+        "compartmentNote": "Project 2562. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-28",
+        "name": "Larchmont Filtration Products",
+        "trade": "CBRN filtration and blast valves",
+        "subcontractors": 3,
+        "sites": [
+          "GAMMA-03",
+          "GAMMA-08",
+          "GAMMA-13"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2599. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-29",
+        "name": "Eagle Gap Rail Systems Inc.",
+        "trade": "Guideway and trackwork",
+        "subcontractors": 4,
+        "sites": [
+          "ALPHA-01"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2636. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-30",
+        "name": "Thornbury Medical Fit-Out LLC",
+        "trade": "Medical and surgical suite installation",
+        "subcontractors": 13,
+        "sites": [
+          "GAMMA-14"
+        ],
+        "compartmentNote": "Work packages issued as Project 2673 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-31",
+        "name": "Silver Lake Cold Storage Engineering",
+        "trade": "Refrigerated storage",
+        "subcontractors": 14,
+        "sites": [
+          "GAMMA-09",
+          "GAMMA-14",
+          "DELTA-09"
+        ],
+        "compartmentNote": "Project 2710. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-32",
+        "name": "Doane & Pruitt Blasting Contractors",
+        "trade": "Controlled blasting",
+        "subcontractors": 11,
+        "sites": [
+          "ALPHA-01",
+          "BETA-08"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2747. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-33",
+        "name": "Fairhaven Data Systems Corp.",
+        "trade": "Data archive and storage systems",
+        "subcontractors": 10,
+        "sites": [
+          "ALPHA-02"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2784. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-34",
+        "name": "Gilchrist Pump & Valve",
+        "trade": "Pumps, valves and sump systems",
+        "subcontractors": 8,
+        "sites": [
+          "GAMMA-15"
+        ],
+        "compartmentNote": "Work packages issued as Project 2221 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-35",
+        "name": "High Desert Modular Structures",
+        "trade": "Modular surface buildings",
+        "subcontractors": 10,
+        "sites": [
+          "DELTA-10"
+        ],
+        "compartmentNote": "Project 2258. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-36",
+        "name": "Wickham Seismic Isolation Co.",
+        "trade": "Seismic isolation bearings",
+        "subcontractors": 9,
+        "sites": [
+          "BETA-09"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2295. Below-collar work performed by other primes. 1 site known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-37",
+        "name": "Brazos Bend Line Services Inc.",
+        "trade": "Power distribution and substations",
+        "subcontractors": 5,
+        "sites": [
+          "DELTA-11"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2332. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-38",
+        "name": "Pennock Acoustic Systems",
+        "trade": "Noise and vibration control",
+        "subcontractors": 11,
+        "sites": [
+          "GAMMA-16"
+        ],
+        "compartmentNote": "Work packages issued as Project 2369 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-39",
+        "name": "Ironweed Traction Power LLC",
+        "trade": "Traction power supply",
+        "subcontractors": 7,
+        "sites": [
+          "BETA-03",
+          "BETA-10",
+          "BETA-11"
+        ],
+        "compartmentNote": "Project 2406. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-40",
+        "name": "Corbin Grove Landscape and Reclamation",
+        "trade": "Surface reclamation and landscaping",
+        "subcontractors": 13,
+        "sites": [
+          "DELTA-11",
+          "DELTA-12"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2443. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-41",
+        "name": "Varnell Ventilation Engineering",
+        "trade": "Tunnel and cavern ventilation",
+        "subcontractors": 13,
+        "sites": [
+          "BETA-11",
+          "BETA-12"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2480. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-42",
+        "name": "Lakeshore Secure Facilities Inc.",
+        "trade": "Shielded enclosures and secure rooms",
+        "subcontractors": 12,
+        "sites": [
+          "BETA-09",
+          "GAMMA-17",
+          "GAMMA-18"
+        ],
+        "compartmentNote": "Work packages issued as Project 2517 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-43",
+        "name": "Hollins Ferry Fuel Services",
+        "trade": "Fuel storage and distribution",
+        "subcontractors": 3,
+        "sites": [
+          "GAMMA-09",
+          "GAMMA-18",
+          "DELTA-10"
+        ],
+        "compartmentNote": "Project 2554. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      },
+      {
+        "id": "PC-44",
+        "name": "Canby & Stroud Architects",
+        "trade": "Architecture, surface cover facilities",
+        "subcontractors": 4,
+        "sites": [
+          "BETA-02",
+          "BETA-12"
+        ],
+        "compartmentNote": "Cleared for surface and shaft-collar works under Project 2591. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
+      },
+      {
+        "id": "PC-45",
+        "name": "Redbank Telemetry Corp.",
+        "trade": "Telemetry and environmental sensors",
+        "subcontractors": 13,
+        "sites": [
+          "GAMMA-08",
+          "GAMMA-17"
+        ],
+        "compartmentNote": "Engaged under Title 50 contract as Project 2628. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
+      },
+      {
+        "id": "PC-46",
+        "name": "Oxbow Plumbing and Fixtures Co.",
+        "trade": "Plumbing and sanitation",
+        "subcontractors": 7,
+        "sites": [
+          "GAMMA-02"
+        ],
+        "compartmentNote": "Work packages issued as Project 2665 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
+      },
+      {
+        "id": "PC-47",
+        "name": "Wexford Lock and Vault Works",
+        "trade": "Vault doors and security hardware",
+        "subcontractors": 5,
+        "sites": [
+          "DELTA-02",
+          "DELTA-11"
+        ],
+        "compartmentNote": "Project 2702. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
+      }
+    ]
+  },
+  "threatDetail": [
+    {
+      "id": "EXT-NUCLEAR",
+      "group": "external",
+      "label": "Nuclear Exchange",
+      "ownerDivision": "Operations and Continuity Planning",
+      "contingency": [
+        "The network is designed for survival and for post-event governance. Facility depth and hardening are sufficient for a direct near-strike; rail and tram tunnels are EMP-rated and seismic-isolated.",
+        "On warning, ALPHA hubs assume SEALED state on Council or facility commander order. Transit Control suspends revenue service and holds consists at the nearest terminal. Essential personnel extraction to GAMMA-class shelters proceeds by the routes held at DELTA-class extraction route nodes.",
+        "Reconstitution is directed from ALPHA-01, with ALPHA-05 as the secondary reconstitution site. Facility sustainment windows and reserves are stated at sustained capacity, not surge berthing."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-01",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 318,
+        "revision": 6,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-IV"
+      }
+    },
+    {
+      "id": "EXT-NBC",
+      "group": "external",
+      "label": "Biological / Chemical",
+      "ownerDivision": "Facility Engineering",
+      "contingency": [
+        "All facilities are NBC-rated with 180-day seal capability. Seal state is held at CONDITIONED during normal operation, with air handling units on gas-phase filtration and positive pressure at the personnel doors.",
+        "On a biological or chemical indication, the affected facility goes to SEALED; adjacent facilities on the same network go to CONDITIONED pending assessment. BETA-03 holds the biomedical response function for the Southern Network."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-02",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 146,
+        "revision": 4,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-IV"
+      }
+    },
+    {
+      "id": "EXT-CONVENTIONAL",
+      "group": "external",
+      "label": "Conventional Military",
+      "ownerDivision": "Security Forces Command",
+      "contingency": [
+        "Facilities are hardened against direct strike, and depth is sufficient to survive surface detonation. The surface cover facility is not defended as such; its loss is planned for.",
+        "Security forces hold the shaft collars and portal approaches. Surface cover staff with no OSC access are evacuated under the cover agency's own procedures."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-03",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 97,
+        "revision": 3,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-IV"
+      }
+    },
+    {
+      "id": "INT-AGENCY",
+      "group": "internal",
+      "label": "Outside Agency Discovery",
+      "ownerDivision": "Office of Internal Assurance",
+      "contingency": [
+        "Compartmentation prevents comprehensive understanding from a single-point compromise. No prime contractor knows more than three sites; no line item discloses the programme; no cover agency holds the network's existence.",
+        "An inquiry by an outside agency into a single site is answered by that site's cover identity, through the cover agency's ordinary channels. Inquiries that touch two or more sites are referred to the Office of Internal Assurance for assessment."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-04",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 64,
+        "revision": 5,
+        "withholdingAuthority": "OIA",
+        "ref": "OIA-PROT-04"
+      }
+    },
+    {
+      "id": "INT-CONGRESS",
+      "group": "internal",
+      "label": "Congressional Investigation",
+      "ownerDivision": "Office of General Counsel",
+      "contingency": [
+        "Legal frameworks are established. Classification authorities prevent disclosure even under subpoena. Congressional oversight committees possess no awareness of programme existence.",
+        "Questions arising from appropriations review are answered at line-item level by the parent department, within the cover title of the line item concerned."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-05",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 121,
+        "revision": 2,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-VI"
+      }
+    },
+    {
+      "id": "INT-WHISTLEBLOWER",
+      "group": "internal",
+      "label": "Whistleblowers",
+      "ownerDivision": "Office of Internal Assurance",
+      "contingency": [
+        "Personnel vetting and monitoring protocols minimise risk. The OSC supplement to the SSBI covers multi-generational family citizenship, financial independence from foreign-connected entities, psychological assessment for ideological reliability and social network mapping.",
+        "Contingency protocols exist."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-06",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 41,
+        "revision": 3,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-IV"
+      }
+    },
+    {
+      "id": "INT-MEDIA",
+      "group": "internal",
+      "label": "Media Exposure",
+      "ownerDivision": "Cover Programs Office",
+      "contingency": [
+        "Information warfare capabilities enable narrative control. Prepared cover stories exist for all facility types and are reviewed with each cover review.",
+        "A media inquiry concerning a site is answered by the cover agency's public affairs office using the published cover story. No OSC office responds to a media inquiry directly."
+      ],
+      "protocol": {
+        "designation": "OSC-CP-07",
+        "title": null,
+        "titleWithheld": true,
+        "pageCount": 212,
+        "revision": 4,
+        "withholdingAuthority": "COUNCIL",
+        "ref": "CC-ART-IV"
+      }
+    }
+  ],
+  "coverCatalogue": [
+    {
+      "facility": "ALPHA-01",
+      "coverAgency": "Department of the Interior",
+      "coverFacilityType": "Former quarry reclamation and groundwater monitoring station",
+      "visibleSurfaceStaff": 23,
+      "publicRecordsPosture": "Site appears in state mine reclamation records as a closed quarry under federal reclamation since 2001. Federal land transfer recorded; no facility listed in agency property inventories above \"monitoring station\".",
+      "lastCoverReview": "2008-03-18"
+    },
+    {
+      "facility": "ALPHA-02",
+      "coverAgency": "Department of Defense (North American Aerospace Defense Command support)",
+      "coverFacilityType": "Expanded NORAD support infrastructure",
+      "visibleSurfaceStaff": 61,
+      "publicRecordsPosture": "Expansion works are described in public material as communications and support infrastructure. Construction traffic attributed to the parent installation. No separate public entry.",
+      "lastCoverReview": "2007-11-06"
+    },
+    {
+      "facility": "ALPHA-03",
+      "coverAgency": "Federal Reserve System",
+      "coverFacilityType": "Gold depository secondary site",
+      "visibleSurfaceStaff": 34,
+      "publicRecordsPosture": "Documented as \"Federal Reserve Gold Depository Secondary Site\". The designation does not appear in Federal Reserve public reporting; local records show federal security perimeter and restricted airspace notice only.",
+      "lastCoverReview": "2008-02-27"
+    },
+    {
+      "facility": "ALPHA-04",
+      "coverAgency": "Bureau of Land Management",
+      "coverFacilityType": "Surveying station",
+      "visibleSurfaceStaff": 18,
+      "publicRecordsPosture": "Listed in BLM field office directory as a surveying station. Surface withdrawal for administrative site recorded in public land records.",
+      "lastCoverReview": "2008-04-09"
+    },
+    {
+      "facility": "ALPHA-05",
+      "coverAgency": "Federal Emergency Management Agency",
+      "coverFacilityType": "Regional coordination complex",
+      "visibleSurfaceStaff": 72,
+      "publicRecordsPosture": "Presented as a FEMA regional coordination complex. Visible in county records as federal property; public telephone number routes to the cover agency switchboard.",
+      "lastCoverReview": "2007-12-12"
+    },
+    {
+      "facility": "BETA-01",
+      "coverAgency": "Environmental Protection Agency",
+      "coverFacilityType": "Monitoring station",
+      "visibleSurfaceStaff": 9,
+      "publicRecordsPosture": "Station appears in EPA air and water monitoring site lists. Data from the station is published.",
+      "lastCoverReview": "2007-09-25"
+    },
+    {
+      "facility": "BETA-02",
+      "coverAgency": "Department of Energy",
+      "coverFacilityType": "Natural gas reserve facility",
+      "visibleSurfaceStaff": 21,
+      "publicRecordsPosture": "Described as a natural gas reserve facility. State pipeline safety filings reference the site by facility number only.",
+      "lastCoverReview": "2008-01-15"
+    },
+    {
+      "facility": "BETA-03",
+      "coverAgency": "Centers for Disease Control and Prevention",
+      "coverFacilityType": "Secondary research complex",
+      "visibleSurfaceStaff": 46,
+      "publicRecordsPosture": "Described as a CDC secondary research complex. Biosafety posture is cited publicly as the reason for restricted access.",
+      "lastCoverReview": "2008-05-06"
+    },
+    {
+      "facility": "BETA-04",
+      "coverAgency": "Department of Agriculture (Agricultural Research Service)",
+      "coverFacilityType": "Agricultural research station",
+      "visibleSurfaceStaff": 14,
+      "publicRecordsPosture": "Listed as an ARS research location. Field trials visible from the county road are genuine and are published.",
+      "lastCoverReview": "2007-08-21"
+    },
+    {
+      "facility": "BETA-05",
+      "coverAgency": "Federal Aviation Administration",
+      "coverFacilityType": "Regional training center",
+      "visibleSurfaceStaff": 38,
+      "publicRecordsPosture": "Listed as an FAA regional training center. Courses are scheduled and attended by FAA personnel without OSC access.",
+      "lastCoverReview": "2008-04-29"
+    },
+    {
+      "facility": "BETA-06",
+      "coverAgency": "Department of Energy",
+      "coverFacilityType": "Solar research facility",
+      "visibleSurfaceStaff": 17,
+      "publicRecordsPosture": "Listed as a DOE solar research facility. Array output is reported in public research summaries.",
+      "lastCoverReview": "2007-10-30"
+    },
+    {
+      "facility": "BETA-07",
+      "coverAgency": "U.S. Geological Survey",
+      "coverFacilityType": "Seismology center",
+      "visibleSurfaceStaff": 15,
+      "publicRecordsPosture": "Station data contributes to public seismic networks. Center appears in USGS facility listings.",
+      "lastCoverReview": "2008-03-04"
+    },
+    {
+      "facility": "BETA-08",
+      "coverAgency": "Department of Energy (National Nuclear Security Administration)",
+      "coverFacilityType": "Nuclear test site support facility",
+      "visibleSurfaceStaff": 27,
+      "publicRecordsPosture": "Presented as test site support. Access restrictions are explained publicly by the test site's own security requirements.",
+      "lastCoverReview": "2007-07-17"
+    },
+    {
+      "facility": "BETA-09",
+      "coverAgency": "Department of Defense (U.S. Strategic Command)",
+      "coverFacilityType": "Auxiliary facility",
+      "visibleSurfaceStaff": 33,
+      "publicRecordsPosture": "Described as a STRATCOM auxiliary facility. No separate public entry; construction attributed to the parent command.",
+      "lastCoverReview": "2008-02-05"
+    },
+    {
+      "facility": "BETA-10",
+      "coverAgency": "Department of Homeland Security",
+      "coverFacilityType": "Regional response center",
+      "visibleSurfaceStaff": 41,
+      "publicRecordsPosture": "Described as a DHS regional response center. Opened under that name in public notices; staff on the surface are DHS employees.",
+      "lastCoverReview": "2007-02-13"
+    },
+    {
+      "facility": "BETA-11",
+      "coverAgency": "Bureau of Land Management",
+      "coverFacilityType": "Resource management field station",
+      "visibleSurfaceStaff": 12,
+      "publicRecordsPosture": "Listed as a BLM resource management station. Grazing and mineral lease files reference the station as administrative site.",
+      "lastCoverReview": "2007-06-12"
+    },
+    {
+      "facility": "BETA-12",
+      "coverAgency": "Federal Emergency Management Agency",
+      "coverFacilityType": "Hurricane continuity site",
+      "visibleSurfaceStaff": 29,
+      "publicRecordsPosture": "Described as a FEMA hurricane continuity site. Surface activity increased in public view after 2005 and is attributed to post-hurricane planning.",
+      "lastCoverReview": "2008-05-14"
+    }
+  ],
+  "realEvents": [
+    {
+      "id": "RE-01",
+      "date": "2001-02-17",
+      "dateText": "17 FEB 2001",
+      "publicEvent": "Executive Order 13201 is signed and published. Its published text concerns notification of employee rights regarding payment of union dues or fees by federal contractors.",
+      "oscExplanation": "Facility construction was initiated in January 2001 under Executive Order 13201. The order's published text is the public instrument; the operative provisions for the OSC are carried in an annex that was not published. Contractor notification language in the published order is cited in OSC prime contracts as the basis for their contractor-relations clauses.",
+      "citedIn": "Council Charter commentary; Directives library, contractor relations directive; Facility Inventory section 01"
+    },
+    {
+      "id": "RE-02",
+      "date": "2002-02-08",
+      "dateText": "08 FEB 2002 to 24 FEB 2002",
+      "publicEvent": "The XIX Olympic Winter Games are held in Salt Lake City, Utah, designated a National Special Security Event with extensive federal security infrastructure in the region.",
+      "oscExplanation": "Site survey and geotechnical characterisation for BETA-11 (31 miles E of Salt Lake City) was conducted under the cover of games security infrastructure surveys. Survey vehicles and drilling crews were indistinguishable from the federal security build-up of that winter.",
+      "citedIn": "Ledger, LI-018; BETA-11 dossier, document tab"
+    },
+    {
+      "id": "RE-03",
+      "date": "2003-01-24",
+      "dateText": "24 JAN 2003 and 01 MAR 2003",
+      "publicEvent": "The Department of Homeland Security begins operations on 24 January 2003 under the Homeland Security Act of 2002. FEMA is transferred into the new department on 1 March 2003.",
+      "oscExplanation": "DHS line items begin in FY2003, obligated under transfer authority. FEMA lines established in FY2001 and FY2002 continued under the same accounts after the transfer and retain the FEMA label in the ledger. Two BETA cover identities (BETA-10, BETA-12) changed parent department on paper with no change to the facility.",
+      "citedIn": "Ledger overview, budget notes; Ledger, DHS department view"
+    },
+    {
+      "id": "RE-04",
+      "date": "2003-05-12",
+      "dateText": "12 MAY 2003 to 16 MAY 2003",
+      "publicEvent": "TOPOFF 2, a national full-scale counter-terrorism exercise, is conducted with venues in the Seattle and Chicago areas.",
+      "oscExplanation": "BETA-07 (Seattle) and BETA-10 (Chicago) site works were at an early stage. Increased federal emergency-management traffic in both areas during the exercise week was used to move long-lead equipment to the sites. No OSC participation in the exercise itself.",
+      "citedIn": "BETA-07 and BETA-10 dossiers; Transit, tunnel engineering history"
+    },
+    {
+      "id": "RE-05",
+      "date": "2003-08-14",
+      "dateText": "14 AUG 2003",
+      "publicEvent": "A large power outage affects the northeastern and midwestern United States and Ontario, Canada, beginning in the afternoon of 14 August 2003.",
+      "oscExplanation": "Construction-phase diesel plant at the GAMMA-02 and GAMMA-07 sites ran for the duration of the outage without load-shedding. The event is cited as the first network test of the 180-day diesel generator backup requirement, as the basis for the monthly generator run test, and in the FY2005 justification for the diesel generation plant line.",
+      "citedIn": "Reserves, energy page; Ledger, LI-123"
+    },
+    {
+      "id": "RE-06",
+      "date": "2005-08-29",
+      "dateText": "29 AUG 2005",
+      "publicEvent": "Hurricane Katrina makes landfall on the Gulf Coast. Congress enacts emergency supplemental appropriations for hurricane response in September 2005.",
+      "oscExplanation": "BETA-12, presented as a FEMA hurricane continuity site 52 miles N of New Orleans, became more visible to the public during the response. The increase in surface activity was retained afterward and absorbed into the cover story. FY2006 obligations on the hurricane continuity line rose accordingly.",
+      "citedIn": "Ledger, LI-063; BETA-12 cover catalogue entry; Assurance, media exposure"
+    },
+    {
+      "id": "RE-07",
+      "date": "2005-12-30",
+      "dateText": "DEC 2005",
+      "publicEvent": "Congress provides emergency funding for pandemic influenza preparedness, following publication of the National Strategy for Pandemic Influenza in November 2005.",
+      "oscExplanation": "The pharmaceutical stockpile build to an 8-year supply at capacity, and the medical fit-out of BETA-03 under its CDC secondary research complex cover, were presented, where questioned, as part of the general growth in federal countermeasure procurement after December 2005. The stockpile line had been obligating since FY2003; the Ledger records no change to it and no question was received.",
+      "citedIn": "Reserves, medical page; Ledger, LI-064"
+    },
+    {
+      "id": "RE-08",
+      "date": "2007-05-09",
+      "dateText": "09 MAY 2007",
+      "publicEvent": "National Security Presidential Directive 51 / Homeland Security Presidential Directive 20, the National Continuity Policy, is issued.",
+      "oscExplanation": "Cited in OSC directives as the public framework for continuity of government. The policy is used as the reference for cover documents at ALPHA-05 and BETA-12. Council minutes for the quarter record it as \"noted\".",
+      "citedIn": "Directives library, references sections; Council minutes, Q2 2007"
+    },
+    {
+      "id": "RE-09",
+      "date": "2007-10-15",
+      "dateText": "15 OCT 2007 to 19 OCT 2007",
+      "publicEvent": "TOPOFF 4, a national full-scale exercise, is conducted with venues in Portland, Oregon; Phoenix, Arizona; and Guam.",
+      "oscExplanation": "BETA-06 (Phoenix) and GAMMA-13 (Portland) held seal drills during the exercise week, timed so that any surface observation would be attributed to the exercise. Both drills are recorded as SEALED (DRILL) in facility telemetry history.",
+      "citedIn": "BETA-06 and GAMMA-13 dossiers, telemetry tab; Assurance, biological/chemical contingency"
+    }
+  ],
+  "calendar": [
+    {
+      "id": "CAL-0805-01",
+      "date": "2008-05-01",
+      "dateText": "01 MAY 2008",
+      "startZ": "0900Z",
+      "endZ": "0930Z",
+      "timeText": "0900Z (0500 EDT) to 0930Z (0530 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Cafeteria menu rotation: cycle 4 of 6 begins",
+      "category": "FOOD SERVICE",
+      "originator": "LOG/ALPHA-03",
+      "tier": 4,
+      "note": "Network-wide rotation. Thursday fish replaced by baked chicken for the cycle owing to supplier substitution."
+    },
+    {
+      "id": "CAL-0805-02",
+      "date": "2008-05-01",
+      "dateText": "01 MAY 2008",
+      "startZ": "1200Z",
+      "endZ": "1300Z",
+      "timeText": "1200Z (0800 EDT) to 1300Z (0900 EDT)",
+      "facility": "ALPHA-01",
+      "title": "Monthly access roster reissue",
+      "category": "SECURITY",
+      "originator": "SEC/ALPHA-01",
+      "tier": 4,
+      "note": "Superseded rosters to burn bag by 1600Z (1200 EDT)."
+    },
+    {
+      "id": "CAL-0805-03",
+      "date": "2008-05-02",
+      "dateText": "02 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "1600Z",
+      "timeText": "1400Z (0900 CDT) to 1600Z (1100 CDT)",
+      "facility": "BETA-10",
+      "title": "Generator run test, units 1 to 3, loaded",
+      "category": "FACILITIES",
+      "originator": "ENG/BETA-10",
+      "tier": 4,
+      "note": "Expect lighting transfer flicker in the cover facility at 1405Z."
+    },
+    {
+      "id": "CAL-0805-04",
+      "date": "2008-05-05",
+      "dateText": "05 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "1700Z",
+      "timeText": "1300Z (0900 EDT) to 1700Z (1300 EDT)",
+      "facility": "ALPHA-03",
+      "title": "HVAC filter cycle: AHU-07 to AHU-12 particulate pre-filters",
+      "category": "FACILITIES",
+      "originator": "ENG/ALPHA-03",
+      "tier": 4,
+      "note": "Zones served by these units will run at reduced supply for the work period. Records stacks humidity log to be checked at completion."
+    },
+    {
+      "id": "CAL-0805-05",
+      "date": "2008-05-05",
+      "dateText": "05 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "1700Z",
+      "timeText": "1500Z (1100 EDT) to 1700Z (1300 EDT)",
+      "facility": "GAMMA-03",
+      "title": "Seal integrity inspection, personnel door 2",
+      "category": "FACILITIES",
+      "originator": "ENG/GAMMA-03",
+      "tier": 4,
+      "note": "Door 2 out of use for the inspection; use door 1."
+    },
+    {
+      "id": "CAL-0805-06",
+      "date": "2008-05-06",
+      "dateText": "06 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "1630Z",
+      "timeText": "1500Z (1000 CDT) to 1630Z (1130 CDT)",
+      "facility": "ALPHA-05",
+      "title": "Parking allocation review, surface lots A and B",
+      "category": "ADMIN",
+      "originator": "ADM/ALPHA-05",
+      "tier": 4,
+      "note": "Allocation to be brought into line with the published staffing of the regional coordination complex. Requests for reserved spaces received after 30 APR 2008 will be considered at the August review."
+    },
+    {
+      "id": "CAL-0805-07",
+      "date": "2008-05-07",
+      "dateText": "07 MAY 2008",
+      "startZ": "1100Z",
+      "endZ": "1500Z",
+      "timeText": "1100Z (0700 EDT) to 1500Z (1100 EDT)",
+      "facility": "ALPHA-01",
+      "title": "Reactor surveillance test, quarterly: protection channel functional test",
+      "category": "REACTOR",
+      "originator": "ENG/ALPHA-01",
+      "tier": 4,
+      "note": "Performed to written procedure. Reactor spaces restricted to test personnel; dosimetry badges required."
+    },
+    {
+      "id": "CAL-0805-08",
+      "date": "2008-05-07",
+      "dateText": "07 MAY 2008",
+      "startZ": "2359Z",
+      "endZ": null,
+      "timeText": "2359Z (1959 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Suspense: annual security refresher, Records Division",
+      "category": "TRAINING",
+      "originator": "RD/ALPHA-03",
+      "tier": 4,
+      "note": "Incomplete modules after this date suspend print release."
+    },
+    {
+      "id": "CAL-0805-09",
+      "date": "2008-05-08",
+      "dateText": "08 MAY 2008",
+      "startZ": "1430Z",
+      "endZ": "1500Z",
+      "timeText": "1430Z (1030 EDT) to 1500Z (1100 EDT)",
+      "facility": "BETA-03",
+      "title": "Fire drill: evacuation to refuge chambers",
+      "category": "SAFETY",
+      "originator": "SAF/BETA-03",
+      "tier": 4,
+      "note": "Surface cover staff conduct their own drill on 09 MAY 2008 under cover agency procedures."
+    },
+    {
+      "id": "CAL-0805-10",
+      "date": "2008-05-09",
+      "dateText": "09 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "2200Z",
+      "timeText": "1400Z (0800 MDT) to 2200Z (1600 MDT)",
+      "facility": "ALPHA-02",
+      "title": "Dosimetry badge exchange",
+      "category": "MEDICAL",
+      "originator": "MED/ALPHA-02",
+      "tier": 4,
+      "note": "Return May badges to the health physics window. Unreturned badges are reported to the division head."
+    },
+    {
+      "id": "CAL-0805-11",
+      "date": "2008-05-12",
+      "dateText": "12 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": null,
+      "timeText": "1300Z (0900 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Training compliance report due to division heads",
+      "category": "TRAINING",
+      "originator": "TRG/ALPHA-03",
+      "tier": 4,
+      "note": "Report by personnel number. Probationary transfers shown separately."
+    },
+    {
+      "id": "CAL-0805-12",
+      "date": "2008-05-12",
+      "dateText": "12 MAY 2008",
+      "startZ": "1600Z",
+      "endZ": "2000Z",
+      "timeText": "1600Z (0900 PDT) to 2000Z (1300 PDT)",
+      "facility": "BETA-07",
+      "title": "Seismic isolation bearing inspection, tram portal",
+      "category": "FACILITIES",
+      "originator": "ENG/BETA-07",
+      "tier": 4,
+      "note": "Visual inspection only; no possession required."
+    },
+    {
+      "id": "CAL-0805-13",
+      "date": "2008-05-13",
+      "dateText": "13 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "2300Z",
+      "timeText": "1500Z (0800 PDT) to 2300Z (1600 PDT)",
+      "facility": "ALPHA-04",
+      "title": "Water purification train 2: backwash and media change",
+      "category": "FACILITIES",
+      "originator": "ENG/ALPHA-04",
+      "tier": 4,
+      "note": "Train 1 carries full demand for the period."
+    },
+    {
+      "id": "CAL-0805-14",
+      "date": "2008-05-13",
+      "dateText": "13 MAY 2008",
+      "startZ": null,
+      "endZ": null,
+      "timeText": "No times entered",
+      "facility": "ALPHA-05",
+      "title": "Possession, segment 04",
+      "category": "TRANSIT",
+      "originator": "TC/ALPHA-05",
+      "tier": 3,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-15",
+      "date": "2008-05-14",
+      "dateText": "14 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "1600Z",
+      "timeText": "1400Z (1000 EDT) to 1600Z (1200 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Records destruction witnessing",
+      "category": "RECORDS",
+      "originator": "RD/ALPHA-03",
+      "tier": 3,
+      "note": "Two witnesses required. Destruction certificates to be signed at the time; no certificates signed after the fact."
+    },
+    {
+      "id": "CAL-0805-16",
+      "date": "2008-05-14",
+      "dateText": "14 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "1700Z",
+      "timeText": "1500Z (1000 CDT) to 1700Z (1200 CDT)",
+      "facility": "BETA-12",
+      "title": "Hurricane season posture review, cover facility",
+      "category": "COVER",
+      "originator": "CPO/BETA-12",
+      "tier": 3,
+      "note": "Season opens 01 JUN 2008. Surface staffing for the season to be confirmed with the cover agency."
+    },
+    {
+      "id": "CAL-0805-17",
+      "date": "2008-05-15",
+      "dateText": "15 MAY 2008",
+      "startZ": null,
+      "endZ": null,
+      "timeText": "No times entered",
+      "facility": "ALPHA-01",
+      "title": "Council session",
+      "category": "COUNCIL",
+      "originator": "CC/ALPHA-01",
+      "tier": 2,
+      "note": "Attendance by Council instruction."
+    },
+    {
+      "id": "CAL-0805-18",
+      "date": "2008-05-15",
+      "dateText": "15 MAY 2008",
+      "startZ": "1600Z",
+      "endZ": "1800Z",
+      "timeText": "1600Z (1100 CDT) to 1800Z (1300 CDT)",
+      "facility": "GAMMA-09",
+      "title": "Generator run test, loaded",
+      "category": "FACILITIES",
+      "originator": "ENG/GAMMA-09",
+      "tier": 4,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-19",
+      "date": "2008-05-16",
+      "dateText": "16 MAY 2008",
+      "startZ": "0600Z",
+      "endZ": "0800Z",
+      "timeText": "0600Z (0200 EDT) to 0800Z (0400 EDT)",
+      "facility": "ALPHA-03",
+      "title": "MERIDIAN print server maintenance: print release unavailable",
+      "category": "IT",
+      "originator": "IS/ALPHA-03",
+      "tier": 4,
+      "note": "Jobs submitted during the window will be held and released at 0800Z (0400 EDT)."
+    },
+    {
+      "id": "CAL-0805-20",
+      "date": "2008-05-16",
+      "dateText": "16 MAY 2008",
+      "startZ": "1200Z",
+      "endZ": "1400Z",
+      "timeText": "1200Z (site-local withheld) to 1400Z (site-local withheld)",
+      "facility": "DELTA-03",
+      "title": "Cache inventory, 72-hour stocks",
+      "category": "LOGISTICS",
+      "originator": "LOG/DELTA-03",
+      "tier": 3,
+      "note": "Rotating guard to countersign."
+    },
+    {
+      "id": "CAL-0805-21",
+      "date": "2008-05-19",
+      "dateText": "19 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "1700Z",
+      "timeText": "1500Z (0900 MDT) to 1700Z (1100 MDT)",
+      "facility": "ALPHA-02",
+      "title": "Kitchen hood suppression system inspection",
+      "category": "SAFETY",
+      "originator": "SAF/ALPHA-02",
+      "tier": 4,
+      "note": "Hot meals unavailable 1500Z to 1700Z; cold service from the servery."
+    },
+    {
+      "id": "CAL-0805-22",
+      "date": "2008-05-19",
+      "dateText": "19 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "2200Z",
+      "timeText": "1300Z (0800 CDT) to 2200Z (1700 CDT)",
+      "facility": "BETA-05",
+      "title": "Cover course in session, surface training block (to 23 MAY)",
+      "category": "COVER",
+      "originator": "CPO/BETA-05",
+      "tier": 4,
+      "note": "Increased surface visitor traffic all week. Personnel without surface duties use the service entrance."
+    },
+    {
+      "id": "CAL-0805-23",
+      "date": "2008-05-20",
+      "dateText": "20 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "1900Z",
+      "timeText": "1300Z (0900 EDT) to 1900Z (1500 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Seed vault cold room 2: compressor maintenance",
+      "category": "FACILITIES",
+      "originator": "ENG/ALPHA-03",
+      "tier": 3,
+      "note": "Cold room 1 standby compressor carries both rooms. Temperature log at 30-minute intervals."
+    },
+    {
+      "id": "CAL-0805-24",
+      "date": "2008-05-20",
+      "dateText": "20 MAY 2008",
+      "startZ": "1600Z",
+      "endZ": "1900Z",
+      "timeText": "1600Z (0900 PDT) to 1900Z (1200 PDT)",
+      "facility": "ALPHA-04",
+      "title": "Reactor surveillance test, monthly",
+      "category": "REACTOR",
+      "originator": "ENG/ALPHA-04",
+      "tier": 4,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-25",
+      "date": "2008-05-21",
+      "dateText": "21 MAY 2008",
+      "startZ": "1730Z",
+      "endZ": "1800Z",
+      "timeText": "1730Z (1030 PDT) to 1800Z (1100 PDT)",
+      "facility": "GAMMA-11",
+      "title": "Fire drill",
+      "category": "SAFETY",
+      "originator": "SAF/GAMMA-11",
+      "tier": 4,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-26",
+      "date": "2008-05-21",
+      "dateText": "21 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "2000Z",
+      "timeText": "1300Z (0900 EDT) to 2000Z (1600 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Medical readiness appointments: certifications expiring 31 MAY 2008",
+      "category": "MEDICAL",
+      "originator": "MED/ALPHA-03",
+      "tier": 4,
+      "note": "Personnel with lapsed medical readiness are removed from the seal roster on 01 JUN 2008."
+    },
+    {
+      "id": "CAL-0805-27",
+      "date": "2008-05-22",
+      "dateText": "22 MAY 2008",
+      "startZ": "0400Z",
+      "endZ": "0800Z",
+      "timeText": "0400Z (0000 EDT) to 0800Z (0400 EDT)",
+      "facility": "BETA-02",
+      "title": "Possession, tram link BETA-02 to GAMMA-03, track inspection",
+      "category": "TRANSIT",
+      "originator": "TC/BETA-02",
+      "tier": 4,
+      "note": "No movements on the link during the possession. Engineer in charge to surrender possession to Transit Control by 0800Z (0400 EDT)."
+    },
+    {
+      "id": "CAL-0805-28",
+      "date": "2008-05-22",
+      "dateText": "22 MAY 2008",
+      "startZ": "0000Z",
+      "endZ": "0030Z",
+      "timeText": "0000Z (site-local withheld) to 0030Z (site-local withheld)",
+      "facility": "DELTA-07",
+      "title": "Guard rotation changeover",
+      "category": "SECURITY",
+      "originator": "SEC/DELTA-07",
+      "tier": 3,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-29",
+      "date": "2008-05-23",
+      "dateText": "23 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "1600Z",
+      "timeText": "1300Z (0900 EDT) to 1600Z (1200 EDT)",
+      "facility": "ALPHA-01",
+      "title": "Escort training for newly designated escorts",
+      "category": "TRAINING",
+      "originator": "SEC/ALPHA-01",
+      "tier": 4,
+      "note": "Bring badge. Certificates issued on completion."
+    },
+    {
+      "id": "CAL-0805-30",
+      "date": "2008-05-26",
+      "dateText": "26 MAY 2008",
+      "startZ": "0400Z",
+      "endZ": null,
+      "timeText": "0400Z (0000 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Federal holiday (Memorial Day): minimum manning",
+      "category": "ADMIN",
+      "originator": "ADM/ALPHA-03",
+      "tier": 4,
+      "note": "Cafeteria on holiday hours. Duty officer contact posted at the operations desk."
+    },
+    {
+      "id": "CAL-0805-31",
+      "date": "2008-05-27",
+      "dateText": "27 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "2000Z",
+      "timeText": "1400Z (0900 CDT) to 2000Z (1500 CDT)",
+      "facility": "ALPHA-05",
+      "title": "HVAC filter cycle: gas-phase beds, seal-capable zones",
+      "category": "FACILITIES",
+      "originator": "ENG/ALPHA-05",
+      "tier": 4,
+      "note": "Affected zones at CONDITIONED with reduced margin for the work period."
+    },
+    {
+      "id": "CAL-0805-32",
+      "date": "2008-05-27",
+      "dateText": "27 MAY 2008",
+      "startZ": "2100Z",
+      "endZ": null,
+      "timeText": "2100Z (1700 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Unposted status declarations: collection closes",
+      "category": "PERSONNEL",
+      "originator": "PER/ALPHA-03",
+      "tier": 3,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-33",
+      "date": "2008-05-28",
+      "dateText": "28 MAY 2008",
+      "startZ": "1500Z",
+      "endZ": "1700Z",
+      "timeText": "1500Z (1000 CDT) to 1700Z (1200 CDT)",
+      "facility": "BETA-09",
+      "title": "Cover review, auxiliary facility",
+      "category": "COVER",
+      "originator": "CPO/BETA-09",
+      "tier": 3,
+      "note": "Visible surface staffing and public-records posture to be confirmed against the catalogue."
+    },
+    {
+      "id": "CAL-0805-34",
+      "date": "2008-05-28",
+      "dateText": "28 MAY 2008",
+      "startZ": "0800Z",
+      "endZ": "1200Z",
+      "timeText": "0800Z (0200 MDT) to 1200Z (0600 MDT)",
+      "facility": "ALPHA-02",
+      "title": "QKD link maintenance, ALPHA-02 to ALPHA-04",
+      "category": "IT",
+      "originator": "IS/ALPHA-02",
+      "tier": 4,
+      "note": "Link state will show DEGRADED for the work period. Controlled mail queued, not lost."
+    },
+    {
+      "id": "CAL-0805-35",
+      "date": "2008-05-29",
+      "dateText": "29 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "1530Z",
+      "timeText": "1400Z (1000 EDT) to 1530Z (1130 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Archive hold review board",
+      "category": "RECORDS",
+      "originator": "RD/ALPHA-03",
+      "tier": 3,
+      "note": "Holds older than 24 months to be confirmed or lifted."
+    },
+    {
+      "id": "CAL-0805-36",
+      "date": "2008-05-29",
+      "dateText": "29 MAY 2008",
+      "startZ": "1400Z",
+      "endZ": "2000Z",
+      "timeText": "1400Z (0800 MDT) to 2000Z (1400 MDT)",
+      "facility": "GAMMA-15",
+      "title": "Seal integrity test (drill)",
+      "category": "FACILITIES",
+      "originator": "ENG/GAMMA-15",
+      "tier": 4,
+      "note": "Facility at SEALED (DRILL) for six hours. No entry or exit."
+    },
+    {
+      "id": "CAL-0805-37",
+      "date": "2008-05-30",
+      "dateText": "30 MAY 2008",
+      "startZ": "2000Z",
+      "endZ": null,
+      "timeText": "2000Z (1600 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Suspense: month-end personnel accounting reconciliation",
+      "category": "PERSONNEL",
+      "originator": "PER/ALPHA-03",
+      "tier": 3,
+      "note": "Reconcile posted strength against tier strength by payroll category."
+    },
+    {
+      "id": "CAL-0805-38",
+      "date": "2008-05-30",
+      "dateText": "30 MAY 2008",
+      "startZ": "1430Z",
+      "endZ": "1500Z",
+      "timeText": "1430Z (1030 EDT) to 1500Z (1100 EDT)",
+      "facility": "ALPHA-01",
+      "title": "Fire drill: evacuation to refuge chambers",
+      "category": "SAFETY",
+      "originator": "SAF/ALPHA-01",
+      "tier": 4,
+      "note": ""
+    },
+    {
+      "id": "CAL-0805-39",
+      "date": "2008-05-31",
+      "dateText": "31 MAY 2008",
+      "startZ": "0000Z",
+      "endZ": null,
+      "timeText": "0000Z (2000 EDT)",
+      "facility": "ALPHA-01",
+      "title": "Payroll category change effective",
+      "category": "PERSONNEL",
+      "originator": "PER/ALPHA-01",
+      "tier": 2,
+      "note": "Count withheld."
+    },
+    {
+      "id": "CAL-0805-40",
+      "date": "2008-05-31",
+      "dateText": "31 MAY 2008",
+      "startZ": "1300Z",
+      "endZ": "1600Z",
+      "timeText": "1300Z (0900 EDT) to 1600Z (1200 EDT)",
+      "facility": "ALPHA-03",
+      "title": "Probationary transfer interim reviews, Records Division",
+      "category": "PERSONNEL",
+      "originator": "RD/ALPHA-03",
+      "tier": 4,
+      "note": "Interim review at the midpoint of the 90-day period. Supervisors to complete the review form before the meeting."
+    }
+  ]
+}

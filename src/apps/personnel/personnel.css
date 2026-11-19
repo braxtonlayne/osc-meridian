@@ -1,0 +1,227 @@
+/* Personnel System. Tokens only; selectors prefixed .per-. */
+.per-app {
+  position: relative;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-base, 12px);
+}
+.per-body {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+}
+.per-nav {
+  flex: 0 0 250px;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  box-shadow: inset 1px 1px var(--chrome-outer);
+}
+.per-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.per-main > .tabs {
+  flex: 1 1 auto;
+}
+.per-navsel {
+  padding: var(--sp-2) var(--sp-2) 0;
+}
+/* A toolbar that wraps at handheld width keeps its full height in the flex column
+   instead of being squeezed to one row and overlapping the Section selector. */
+.per-app > .menubar,
+.per-app > .toolbar,
+.per-navsel {
+  flex-shrink: 0;
+}
+.per-pad {
+  padding: var(--sp-5);
+  overflow: auto;
+}
+.per-loading {
+  padding: var(--sp-5);
+  color: var(--text-2);
+}
+.per-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  max-width: 1100px;
+}
+.per-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  scroll-margin-top: var(--sp-3);
+}
+.per-h {
+  margin: 0;
+  padding-bottom: var(--sp-1);
+  border-bottom: 1px solid var(--row-rule);
+  font-size: var(--fs-base, 12px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps, 0.04em);
+}
+.per-note {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm, 11px);
+}
+.per-sub {
+  color: var(--text-2);
+  font-size: var(--fs-sm, 11px);
+}
+.per-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.per-nowrap {
+  white-space: nowrap;
+}
+.per-link {
+  color: var(--link);
+  text-decoration: underline;
+  font-family: var(--font-mono);
+}
+.per-link:visited {
+  color: var(--link-visited);
+}
+.per-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: center;
+}
+.per-list {
+  margin: 0;
+  padding-left: var(--sp-7);
+}
+.per-list li + li {
+  margin-top: var(--sp-1);
+}
+.per-scroll-x {
+  overflow-x: auto;
+  background: var(--surface);
+}
+.per-holds {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+}
+
+/* Plain accounting tables (no sorting: the lines are fixed). */
+.per-acct {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+}
+.per-acct th {
+  height: var(--th-h);
+  padding: 0 var(--sp-3);
+  text-align: left;
+  font-weight: 600;
+  background: var(--th-bg);
+  border-bottom: 1px solid var(--chrome-shadow);
+}
+.per-acct td {
+  padding: var(--sp-1) var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+  vertical-align: top;
+}
+.per-acct tbody tr:nth-child(even) {
+  background: var(--zebra);
+}
+.per-acct .is-right {
+  text-align: right;
+}
+
+/* Directory */
+.per-filters {
+  --f-label-w: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  align-items: center;
+}
+.per-record {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* Organisation chart: the chart fills the tab panel. */
+.per-tabfill {
+  height: 100%;
+  min-height: 420px;
+}
+.per-org {
+  height: 100%;
+  max-width: none;
+}
+.per-org__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  gap: var(--sp-3);
+}
+.per-org__chart {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 380px;
+  border: 1px solid var(--chrome-shadow);
+  background: var(--surface);
+  position: relative;
+}
+.per-org__detail {
+  flex: 0 0 280px;
+  min-width: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.per-doc {
+  min-width: 0;
+}
+
+/* Field handheld mode and narrow windows */
+.per-app {
+  container-type: inline-size;
+  container-name: per;
+}
+@container per (max-width: 899px) {
+  .per-body {
+    padding: var(--sp-1);
+  }
+  .per-org__body {
+    flex-direction: column;
+  }
+  .per-org__detail {
+    flex: none;
+  }
+  .per-app .pgrid__k {
+    white-space: normal;
+    max-width: 12em;
+  }
+}
+.per-filters .f-select {
+  min-width: 9em;
+}

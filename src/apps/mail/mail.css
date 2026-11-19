@@ -1,0 +1,219 @@
+/* Message Traffic. Tokens only. */
+.mt-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: 12px/16px var(--font-ui);
+}
+.mt-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  padding: 0 var(--sp-2) var(--sp-2);
+}
+.mt-main > * {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.mt-folders,
+.mt-list,
+.mt-preview {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+.mt-folders > :last-child,
+.mt-list > :last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+}
+.mt-pane-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  height: var(--toolbar-h);
+  padding: 0 var(--sp-2);
+  border-bottom: 1px solid var(--chrome-shadow);
+}
+.mt-pane-title {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps, 0.04em);
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mt-find {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.mt-find input {
+  width: 16ch;
+  height: var(--ctl-h);
+  box-sizing: border-box;
+}
+.mt-unread td {
+  font-weight: 700;
+}
+.mt-indent {
+  padding-left: var(--sp-6);
+}
+.mt-empty-line,
+.mt-preview-empty {
+  padding: var(--sp-5);
+  color: var(--text-2);
+}
+.mt-preview {
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+}
+.mt-reader {
+  min-height: 0;
+}
+.mt-infobar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--paper);
+  border-bottom: 1px solid var(--row-rule);
+}
+.mt-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-5);
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--row-rule);
+  background: var(--zebra);
+}
+.mt-attachments__label {
+  font-weight: 600;
+}
+.mt-att {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.mt-att a {
+  color: var(--link);
+  text-decoration: underline;
+}
+.mt-att a:visited {
+  color: var(--link-visited);
+}
+.mt-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.mt-dim {
+  color: var(--text-3);
+}
+.mt-backbar,
+.mt-crumbs {
+  display: flex;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border-bottom: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+}
+.mt-handheld {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+.mt-handheld > :last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.mt-two {
+  display: flex;
+  flex-direction: column;
+}
+.mt-two > :first-child {
+  color: var(--text-2);
+}
+
+/* compose */
+.mt-compose {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mt-compose__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--chrome-face);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.mt-compose__head {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps, 0.04em);
+  border-bottom: 1px solid var(--chrome-shadow);
+  box-shadow: 0 1px 0 var(--chrome-hi);
+  padding-bottom: var(--sp-2);
+}
+.mt-compose__attach {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.mt-compose__attach-label {
+  width: 96px;
+  font-weight: 600;
+}
+.mt-compose__attach-add {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-3);
+}
+.mt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 1px var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+}
+.mt-compose textarea {
+  font-family: var(--font-typed);
+  font-size: 13px;
+  line-height: 18px;
+}
+.mt-book {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  width: min(620px, 78vw);
+}
+.mt-about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.mt-root:focus { outline: none; }
+.mt-root .dlg:has(.mt-book) {
+  max-width: min(680px, 100%);
+}

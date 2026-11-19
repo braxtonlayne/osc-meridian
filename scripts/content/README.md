@@ -1,0 +1,86 @@
+# MERIDIAN content pipeline
+
+`scripts/build-content.ts` compiles `content/<family>/<slug>.md` into the generated outputs
+listed in `docs/CONTRACTS.md` (`.generated/routes.json`, `.generated/canon-figures.json`,
+`public/data/docs/<id>.json`, `public/data/releases/<hash>.json` (encoded per key; `src/core/release-codec.ts`), `public/data/search.json`).
+`npm run content` runs it with defaults. Any problem prints as `file:line  message` and exits 1.
+
+## Validating your own pages (content agents)
+
+Many agents write content in parallel. **Always validate with `--dry-run`**. It writes nothing,
+so it cannot clobber anyone else's outputs:
+
+```
+npx tsx scripts/build-content.ts --dry-run --only content/directives
+```
+
+## Flags
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--dry-run` | off | Compile and validate everything. Writes **nothing** to `.generated/` or `public/data/`. |
+| `--only <dir>` | all | Requires `--dry-run`. Reports problems and warnings only for files under `<dir>`. All content is still loaded, so `:x[]` references into other families resolve. The summary line says how many problems in other folders were not shown. |
+| `--manifest <file>` | `content/manifest.json` if it exists | Planned document numbers. An `:x[DOCNO]` (or a frontmatter `xrefs` entry) naming a planned docNo that has no page yet is a **warning** in `--dry-run` and an **error** in a real build. A docNo that is neither on a page nor in the manifest is always an error. |
+| `--lenient` | off | **Real build** that never fails on one bad file. A file that fails validation or compile is skipped and listed as a `file:line  skipped: ...` warning; everything else is written. An `:x[]` that does not resolve renders as plain text, with a warning. An unresolved frontmatter `xrefs` entry is dropped, with a warning. Use it for app test data while content is being edited. CI and the real `npm run build` stay strict. |
+| `--content <dir>` | `content` | Directory scanned for `<family>/<slug>.md`. `content/canon/` and `README.md` files are skipped. |
+| `--canon <file>` | `content/canon/canon.json` | Canon used by `:c[]`, `::canon-table` and the drift rules. |
+| `--out <dir>` | repo root | Root that receives `.generated/` and `public/data/` (ignored with `--dry-run`). |
+| `--base </path/>` | `$MERIDIAN_BASE` or `/` | Base path baked into cross-reference hrefs. In Git Bash, prefer `MERIDIAN_BASE=/osc-meridian/`. Git Bash rewrites a bare `/osc-meridian/` argument into a Windows path, and the build refuses that. |
+
+Manifest shapes accepted: an array of docNo strings, records anywhere in the JSON carrying a
+`docNo` field (the current `content/manifest.json` has `pages: [{ docNo, aliases, ... }]`),
+`docNos: [...]` or `aliases: [...]` arrays, or an object keyed by docNo.
+
+## Frontmatter beyond the core keys
+
+- `aliases: [OSC-CB-012, ...]`: other document numbers this page answers for, such as the
+  briefing numbers carried by mail. `:x[]` and frontmatter `xrefs` resolve against aliases too.
+  A link keeps the number as written and points to the page's route. RouteEntry and DocJson keep
+  the primary `docNo`. `routes.json` entries carry `aliases`, `docs.byDocNo()` resolves them, and
+  search indexes them. A docNo or alias may belong to only one page.
+- Structured template blocks, passed through unchanged into `DocJson.frontmatter`:
+  - `form`, validated: `{ formNo, edition?, routing?[], blocks: [{ n, label, fields: [{ name, label, type, required?, options?, pattern?, help?, width? }] }], submit: { receiptPrefix, consequence? } }`
+  - `message`, validated: `{ from, to[] (at least one), cc?[], precedence?, sent?, folder?, thread?, inReplyTo?, readReceipt?, arrival? }`
+  - `minutes`, `directive`, `memo`, `cable`, `ledger`, `dossier`, `help`: any object.
+
+  Unknown extra fields inside these blocks are kept. YAML dates become `YYYY-MM-DD`, or a full
+  ISO string when a time is given.
+- Manifest planning fields `audience`, `synopsis`, `plants`, `owner`, `dateMode` and
+  `slotTemplate` are accepted and **dropped**: they never reach any output.
+- Any other unknown key is passed through to `DocJson.frontmatter`.
+
+## Directive cheat sheet
+
+| Syntax | Output |
+|---|---|
+| `:r[text]{tier=2 compartment=KESTREL auth="OIA" ref="OIA-08-114"}` | inline redaction. `auth` and `ref` are required. The key is `T2`, `KESTREL` or `KESTREL+T2`. Tier 1 never ships. |
+| `:::redact{tier=2 auth="CSO" ref="..."}` … `:::` | block redaction |
+| `:c[headline.staffTotal]` | canon value (`3,847`). Arrays are addressed by id/no/n/fy/term/pn/seat/tier, e.g. `:c[facilities.ALPHA-03.depthFt]`. Add `{raw}` to print the stored value unformatted. |
+| `:x[OSC-DIR-0412]` | cross-reference link |
+| `::canon-table{source="facilities" class="BETA" cols="id:Site,capacity" filter="network=EASTERN" caption="..." limit=10}` | static table from canon |
+| `:::margin{hand="RT" seed=3 mark=arrow}` | margin note. `mark` is arrow, underline, circle or none. |
+| `:ink[847]{mark=circle}` | hand ink on running text (circle or underline) |
+| `::stamp{kind="RECEIVED" date="2008-05-02" text="..." seed=4 of="12" ink="red"}` | rubber stamp |
+| `::routing{initials="JH 5/2,MKB 5/5"}` | routing slip |
+| `:::scan{seed=7 rotate=-0.6}` | scanned page wrapper |
+
+## Restricted canon values
+
+`:c[]` and `::canon-table` read the full canon. Any value that the client canon withholds
+(docs/CANON.md "Client canon": tier-1/2 roster names and addresses, tier-1/2 facility levels,
+DELTA locations, tier-1/2 reserves) becomes a redaction bar with the same key. A T1 value is
+never shipped; a T2 or compartment value goes to that key's release file. Table filters run on
+the client values, so a withheld value cannot select rows. Do not hand-type restricted names
+into a page; `npm run test:dist` fails if any withheld string (6 or more characters) appears
+in baseline output.
+
+`:x[]` links written inside `:r[]` or `:::redact` are withheld too. They are left out of the
+baseline `xrefs` list (a frontmatter entry linked only there is dropped, with a warning) and
+come back from the release HTML when the redaction is released.
+
+## Headline figures (drift test)
+
+`npm run test:dist` checks the phrases in `scripts/content/figures.ts`. If a page says
+"certified mileage", "sustained capacity", "total surge berthing", "total personnel",
+"total posted staff", "DETACHED / UNPOSTED" or "total programme cost", the number printed next
+to the phrase must equal canon. Print it with `:c[...]` so it cannot drift.

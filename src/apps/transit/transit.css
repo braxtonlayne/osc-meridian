@@ -1,0 +1,209 @@
+/* Transit Control. Tokens only; unlayered (beats the design layers where it must). */
+.tr-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.tr-root .tr-tbsel {
+  height: var(--ctl-h);
+  max-width: 180px;
+  margin: 0 var(--sp-2);
+}
+.tr-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 1px solid var(--chrome-shadow);
+  border-bottom: 1px solid var(--chrome-hi);
+}
+.tr-split {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+.tr-split.is-stacked {
+  flex-direction: column;
+  overflow: auto;
+}
+.tr-board {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  /* Scrolls sideways when the window is narrower than the diagram's minimum width. */
+  overflow: auto hidden;
+  background: var(--paper);
+}
+.tr-split.is-stacked .tr-board {
+  flex: 0 0 auto;
+  height: 360px;
+}
+.tr-side {
+  flex: 0 0 360px;
+  min-height: 0;
+  overflow: auto;
+  border-left: 1px solid var(--chrome-shadow);
+  background: var(--surface);
+}
+.tr-split.is-stacked .tr-side {
+  flex: 0 0 auto;
+  overflow: visible;
+  border-left: 0;
+  border-top: 1px solid var(--chrome-shadow);
+}
+.tr-docsplit .tr-side {
+  flex-basis: 380px;
+}
+.tr-doc {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  background: var(--paper);
+}
+.tr-split.is-stacked .tr-doc {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+.tr-pane {
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.tr-live > .tr-pane,
+.tr-live > .tr-scroll {
+  padding-top: 0;
+}
+.tr-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.tr-caption {
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  border-bottom: 1px solid var(--row-rule);
+  padding: var(--sp-2) var(--sp-3) var(--sp-1);
+}
+.tr-pane > .tr-caption,
+.tr-scroll > .tr-caption {
+  padding-left: 0;
+  padding-right: 0;
+}
+.tr-note {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.tr-pad {
+  padding: var(--sp-5);
+}
+.tr-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+}
+.tr-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.tr-links {
+  margin: 0;
+  padding-left: var(--sp-5);
+}
+.tr-links li {
+  margin: var(--sp-1) 0;
+}
+.tr-links a {
+  color: var(--link);
+  text-decoration: underline;
+  font-family: var(--font-mono);
+}
+.tr-root a {
+  color: var(--link);
+  text-decoration: underline;
+}
+.tr-mini {
+  height: 260px;
+  background: var(--paper);
+  border: 1px solid var(--row-rule);
+}
+.tr-geo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto hidden;
+  background: var(--surface);
+}
+/* Drawn wider than a handheld window on purpose (see DIAGRAM_MIN_W, GEO_MIN_W):
+   the view scrolls rather than the reset's max-width shrinking it back. */
+.tr-board > svg,
+.tr-geo > svg {
+  max-width: none;
+}
+.tr-geo-live {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.tr-geo-occ {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 4;
+  stroke-linecap: butt;
+}
+.tr-geo-rail {
+  fill: var(--text-1);
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+.tr-geo-tram {
+  fill: var(--text-2);
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+.tr-geo-label {
+  font: var(--fs-xs) var(--font-mono);
+  fill: var(--text-1);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+.tr-3d {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 320px;
+}
+/* Handheld: thin the 3D model's labels to the hubs and the selected link, so they
+   do not pile up at phone width. Everything hidden is still reachable by selecting. */
+.tr-3d {
+  container-type: inline-size;
+  container-name: tr3d;
+}
+@container tr3d (max-width: 600px) {
+  .tr-3d .t3d__label--tick,
+  .tr-3d .t3d__label--train,
+  .tr-3d .t3d__label--seg:not([data-sel]),
+  .tr-3d .t3d__label--site:not([data-cls='ALPHA']):not([data-sel]) {
+    display: none;
+  }
+}
+.tr-root select.tr-tbsel {
+  width: 170px;
+  flex: 0 0 auto;
+}

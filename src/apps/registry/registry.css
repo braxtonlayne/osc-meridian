@@ -1,0 +1,579 @@
+/* Facility Registry. Tokens only (src/design/tokens.css). */
+
+.reg-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base, 12px) / 16px var(--font-ui);
+  container-type: inline-size;
+  container-name: reg;
+  position: relative;
+}
+
+.reg-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2);
+}
+
+.reg-body > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Tabs fill the body; the tab panel is the scrolling region. */
+.reg-body .tabs,
+.reg-body [role='tabpanel'] {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.reg-tabbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+.reg-tabbody > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.reg-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.reg-scroll {
+  overflow: auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.reg-pad {
+  padding: var(--sp-4);
+  box-sizing: border-box;
+}
+
+.reg-note {
+  margin: var(--sp-2) 0;
+  color: var(--text-2);
+}
+
+.reg-nil {
+  color: var(--text-3);
+}
+
+.reg-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.reg-num {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ filter bar */
+
+.reg-filters {
+  --label-w: auto;
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-5);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--row-rule);
+  background: var(--chrome-face);
+}
+
+.reg-filters__classes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+.reg-filters__find .f-row,
+.reg-filters__find > * {
+  margin: 0;
+}
+
+.reg-filters__count {
+  margin-left: auto;
+  color: var(--text-2);
+}
+
+.reg-cls,
+.reg-desig {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.reg-cls svg,
+.reg-desig svg {
+  flex: 0 0 auto;
+}
+
+/* ------------------------------------------------------------- register */
+
+.reg-tablewrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.reg-tablewrap > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.reg-row-home td {
+  font-weight: 600;
+}
+
+.reg-foot {
+  color: var(--text-1);
+}
+
+.reg-sel {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-5);
+  padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--row-rule);
+  background: var(--paper);
+}
+
+.reg-sel--none {
+  color: var(--text-2);
+}
+
+.reg-sel__id {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.reg-sel__code {
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps, 0.04em);
+}
+
+.reg-linkbtn {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+
+.reg-linkbtn:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------ map */
+
+.reg-map {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  /* Wide enough for the map legend table (name and count columns) plus margins. */
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.reg-map__frame {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--row-rule);
+}
+
+.reg-map__side {
+  overflow: auto;
+  background: var(--paper);
+  padding: 0 0 var(--sp-3);
+}
+
+.reg-map__side .reg-sel {
+  border-top: 0;
+  border-bottom: 1px solid var(--row-rule);
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.reg-map__side .reg-linkbtn {
+  margin-left: 0;
+}
+
+.reg-map__side .reg-note {
+  padding: 0 var(--sp-4);
+}
+
+.reg-map__legend {
+  margin: var(--sp-3);
+  max-width: calc(100% - 2 * var(--sp-3));
+  overflow-x: auto;
+}
+
+@container reg (max-width: 700px) {
+  .reg-map {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(260px, 1fr) auto;
+  }
+  .reg-map__frame {
+    border-right: 0;
+    border-bottom: 1px solid var(--row-rule);
+  }
+}
+
+.reg-inset {
+  line-height: 0;
+  border: 1px solid var(--chrome-shadow);
+}
+
+/* --------------------------------------------------------------- dossier */
+
+.reg-doc {
+  padding: var(--sp-4);
+  box-sizing: border-box;
+}
+
+.reg-doc--loading {
+  color: var(--text-2);
+}
+
+.reg-side {
+  background: var(--chrome-face);
+}
+
+.reg-side--stacked {
+  border-top: 1px solid var(--chrome-shadow);
+}
+
+.reg-sidepanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.reg-sidepanel .pgrid__k {
+  white-space: normal;
+}
+/* A withheld value is drawn at the length of the text it replaces, which can be
+   longer than the side panel is wide. Keep each bar inside its box. */
+.reg-sidepanel > *,
+.reg-sidepanel .pgrid__v {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.reg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.reg-bars {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reg-bars th {
+  text-align: left;
+  font-weight: 400;
+  padding: 1px var(--sp-3) 1px 0;
+  white-space: nowrap;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reg-bars td {
+  padding: 1px 0;
+}
+
+.reg-bars__bar {
+  width: 100%;
+  vertical-align: middle;
+}
+
+.reg-bars__fill {
+  display: block;
+  height: 9px;
+  min-width: 1px;
+  background: var(--title-inactive-bg);
+  border: 1px solid var(--chrome-outer);
+  box-sizing: border-box;
+}
+
+.reg-bars td.reg-num {
+  padding-left: var(--sp-3);
+  width: 3em;
+}
+
+.reg-readouts {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.reg-readout-rx {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 2px 0;
+}
+
+.reg-readout-rx__label {
+  min-width: 120px;
+  color: var(--text-2);
+}
+
+.reg-rx__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  font-weight: 600;
+}
+
+.reg-gauges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+.reg-depth-preview {
+  line-height: 0;
+}
+
+.reg-depth-preview svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Telemetry tab */
+.reg-tele__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.reg-tele__trends {
+  margin-top: var(--sp-4);
+}
+
+.reg-seals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+}
+
+/* Reactor tab */
+.reg-reactor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.reg-kv {
+  border-collapse: collapse;
+  max-width: var(--doc-max);
+}
+
+.reg-kv th {
+  text-align: left;
+  font-weight: 400;
+  color: var(--text-2);
+  padding: 2px var(--sp-4) 2px 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.reg-kv td {
+  padding: 2px var(--sp-6) 2px 0;
+  vertical-align: top;
+}
+
+.reg-oneline {
+  overflow: auto;
+  border: 1px solid var(--chrome-shadow);
+  background: var(--surface);
+}
+
+/* Cross-section tab */
+.reg-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  min-height: 0;
+  height: 100%;
+}
+
+.reg-section__view {
+  position: relative;
+  min-height: 420px;
+  min-width: 0;
+  display: flex;
+}
+
+.reg-depth-host {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 420px;
+  min-width: 0;
+}
+
+.reg-section__detail {
+  overflow: auto;
+  padding: var(--sp-4);
+  background: var(--chrome-face);
+  border-left: 1px solid var(--chrome-shadow);
+}
+
+@container reg (max-width: 760px) {
+  .reg-section {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(420px, 1fr) auto;
+    height: auto;
+  }
+  .reg-section__detail {
+    border-left: 0;
+    border-top: 1px solid var(--chrome-shadow);
+  }
+  .reg-tabbody > .reg-section {
+    overflow: auto;
+  }
+}
+/* Handheld: the section viewer's level index sits above the drawing instead of
+   beside it, so the drawing gets the full width. */
+@container reg (max-width: 700px) {
+  .reg-section {
+    grid-template-rows: auto auto;
+  }
+  .reg-section__view,
+  .reg-depth-host {
+    min-height: 680px;
+  }
+  .reg-depth-host .d3v-body {
+    flex-direction: column;
+  }
+  .reg-depth-host .d3v-side {
+    width: auto;
+    flex: 0 0 auto;
+    max-height: 240px;
+    border-right: 0;
+    border-bottom: 1px solid var(--chrome-outer);
+  }
+  .reg-depth-host .d3v-view {
+    min-height: 360px;
+  }
+}
+
+.reg-dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+}
+
+.reg-dl dt {
+  color: var(--text-2);
+}
+
+.reg-dl dd {
+  margin: 0;
+}
+
+/* Organisation */
+.reg-org {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+@container reg (max-width: 640px) {
+  .reg-body {
+    padding: var(--sp-1);
+  }
+  .reg-filters__count {
+    margin-left: 0;
+  }
+}
+
+/* Long withheld values never push the panel wider than its column. */
+.reg-sidepanel .redaction,
+.reg-dl .redaction {
+  max-width: 100%;
+}
+
+.reg-foot {
+  white-space: nowrap;
+}
+
+.reg-app > .toolbar {
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+}
+
+@container reg (max-width: 640px) {
+  .reg-doc {
+    padding: var(--sp-2);
+  }
+  .reg-app > .toolbar .toolbar__label {
+    display: none;
+  }
+}
+
+/* Side-panel readouts: drop the instrument tag column to fit the panel. */
+.reg-sidepanel .rx-readout {
+  grid-template-columns: minmax(80px, 1fr) 72px 40px 84px;
+}
+
+.reg-sidepanel .rx-readout__tag {
+  display: none;
+}
+
+@container reg (max-width: 520px) {
+  .reg-tele__groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .reg-tele__groups .rx-readout {
+    grid-template-columns: minmax(80px, 1fr) 72px 40px 84px;
+  }
+  .reg-tele__groups .rx-readout__tag {
+    display: none;
+  }
+}
+

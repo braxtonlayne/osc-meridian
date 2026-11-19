@@ -1,0 +1,4 @@
+Barcode read-back, 3 symbols on http://127.0.0.1/src/graphics/forms/preview.html
+PASS  bars=70  decoded="F114-0307-P1"  encoded="F114-0307-P1"  printed="F114-0307-P1"
+PASS  bars=70  decoded="FR-08-004417"  encoded="FR-08-004417"  printed="FR-08-004417"
+PASS  bars=50  decoded="OSC-114K"  encoded="OSC-114K"  printed="OSC-114"

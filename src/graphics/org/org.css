@@ -1,0 +1,399 @@
+/*
+ * @graphics/org: organisation chart (.org-*) and tier pyramid (.tp-*).
+ * Colours and faces come only from design tokens. Flat fills, 1px lines, no gradients.
+ */
+
+/* ---------- organisation chart ---------- */
+
+.org {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--text-1);
+  font: 11px/14px var(--font-ui);
+  cursor: default;
+  touch-action: none;
+  user-select: none;
+}
+.org *,
+.org *::before,
+.org *::after {
+  box-sizing: border-box;
+}
+.org:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: -3px;
+}
+.org-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.org-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+.org-links {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.org-links path {
+  fill: none;
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+/* boxes */
+.org-box {
+  position: absolute;
+  background: var(--surface);
+  border: 1px solid var(--chrome-outer);
+}
+.org-box__main {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.org-box__main:focus-visible,
+.org-box__tg:focus-visible,
+.org-box__head:focus-visible,
+.org-btn:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: -2px;
+}
+.org-box__main:hover {
+  background: var(--row-hover);
+}
+.org-box__title,
+.org-box__name,
+.org-box__pn {
+  display: block;
+  height: 16px;
+  padding: 1px 6px 0;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+}
+.org-box__title {
+  font-weight: var(--fw-semibold);
+}
+.org-box.is-unit .org-box__title {
+  background: var(--th-bg);
+  border-bottom: 1px solid var(--row-rule);
+  font-size: 10px;
+  letter-spacing: var(--tracking-caps);
+}
+.org-box.is-unit .org-box__main:hover .org-box__title {
+  background: var(--row-rule);
+}
+.org-box__rank {
+  color: var(--text-2);
+}
+.org-box__pn {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-2);
+}
+.org-box__meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.org-box--council,
+.org-box--group {
+  border-width: 1px;
+  outline: 1px solid var(--chrome-outer);
+  outline-offset: 1px;
+}
+.org-box--count,
+.org-box--unposted,
+.org-box--accounting {
+  background: var(--paper);
+}
+.org-box--count .org-box__pn,
+.org-box--unposted .org-box__pn,
+.org-box--accounting .org-box__pn {
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  color: var(--text-1);
+}
+.org-box--unposted {
+  border-style: dashed;
+}
+
+/* withheld name: a bar the length of the name */
+.org-rx {
+  display: inline-block;
+  height: 10px;
+  max-width: 100%;
+  vertical-align: -1px;
+  background: var(--redact);
+}
+
+/* invisible hit area over a unit's head line */
+.org-box__head {
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  top: 17px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* expand / collapse */
+.org-box__tg {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--chrome-outer);
+  border-radius: 0;
+  background: var(--surface);
+  cursor: pointer;
+}
+.org-box.is-unit .org-box__title {
+  padding-right: 18px;
+}
+.org-tg-plus,
+.org-tg-minus {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.org-tg-plus::before,
+.org-tg-minus::before,
+.org-tg-plus::after {
+  content: '';
+  position: absolute;
+  background: var(--text-1);
+}
+.org-tg-plus::before,
+.org-tg-minus::before {
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+}
+.org-tg-plus::after {
+  top: 2px;
+  bottom: 2px;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+}
+
+/* council seats */
+.org-seat {
+  position: absolute;
+  padding: 2px 5px 0;
+  background: var(--paper);
+  border: 1px solid var(--chrome-outer);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.org-seat__no,
+.org-seat__cat {
+  display: block;
+  height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.org-seat__no {
+  font-size: 10px;
+  color: var(--text-2);
+}
+
+/* refusal note under DETACHED / UNPOSTED */
+.org-refusal {
+  position: absolute;
+  z-index: 2;
+  padding: 3px 6px;
+  background: var(--tooltip-bg);
+  border: 1px solid var(--tooltip-border);
+  color: var(--tooltip-fg);
+  white-space: nowrap;
+}
+
+/* view controls */
+.org-bar {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+  box-shadow: inset 1px 1px 0 var(--chrome-hi), inset -1px -1px 0 var(--chrome-shadow);
+}
+.org-btn {
+  position: relative;
+  height: 20px;
+  min-width: 38px;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid var(--chrome-outer);
+  border-radius: 0;
+  background: var(--chrome-face);
+  box-shadow: inset 1px 1px 0 var(--chrome-hi), inset -1px -1px 0 var(--chrome-shadow);
+  color: var(--text-1);
+  font: 11px/18px var(--font-ui);
+  cursor: pointer;
+}
+.org-btn:active {
+  box-shadow: inset 1px 1px 0 var(--chrome-shadow), inset -1px -1px 0 var(--chrome-hi);
+}
+.org-btn--sq {
+  width: 20px;
+  min-width: 20px;
+  padding: 0;
+}
+.org-btn--sq .org-tg-plus,
+.org-btn--sq .org-tg-minus {
+  inset: 3px;
+}
+.org-bar__zoom {
+  min-width: 40px;
+  padding: 0 4px;
+  text-align: right;
+  font-size: 10px;
+  color: var(--text-2);
+}
+
+/* ---------- tier pyramid ---------- */
+
+.tp {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--text-1);
+  font: 11px/14px var(--font-ui);
+}
+.tp *,
+.tp *::before,
+.tp *::after {
+  box-sizing: border-box;
+}
+.tp-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.tp-rule {
+  fill: none;
+  stroke: var(--row-rule);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.tp-band {
+  fill: var(--th-bg);
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.tp-band.is-hl {
+  fill: var(--chrome-shadow);
+  stroke: var(--text-1);
+}
+.tp-count {
+  font: 600 12px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-1);
+}
+.tp-bracket {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.tp-head {
+  position: absolute;
+  top: 5px;
+  height: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-caps);
+  color: var(--text-2);
+}
+.tp-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2px 8px 2px 6px;
+  overflow: hidden;
+}
+.tp-label.is-hl {
+  background: var(--zebra);
+}
+.tp-label__tier {
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-caps);
+  color: var(--text-2);
+}
+.tp-label__name {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: var(--fw-semibold);
+}
+.tp-label__clr {
+  color: var(--text-2);
+}
+.tp-fig {
+  position: absolute;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+}
+.tp-fig__k {
+  color: var(--text-2);
+}
+.tp-fig.is-unposted .tp-fig__k {
+  color: var(--text-1);
+  font-weight: var(--fw-semibold);
+}
+.tp-fig__v {
+  font: 600 12px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.tp-foot {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--text-3);
+}

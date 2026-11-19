@@ -1,0 +1,225 @@
+/* @graphics/tunnel3d. Colours come from src/design/tokens.css only. */
+.t3d-host {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+}
+
+.t3d {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--text-1);
+  font: var(--fs-sm) / var(--lh-sm) var(--font-ui);
+  user-select: none;
+}
+
+.t3d__note {
+  margin: var(--sp-6);
+  max-width: 52ch;
+  color: var(--text-2);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+}
+
+.t3d__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: grab;
+  touch-action: none;
+}
+.t3d__canvas[data-drag] {
+  cursor: grabbing;
+}
+.t3d__canvas[data-hit] {
+  cursor: pointer;
+}
+.t3d__canvas:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: -3px;
+}
+
+/* ---- Labels projected over the canvas ---- */
+.t3d__labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.t3d__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  font: var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  will-change: transform;
+}
+.t3d__label--site {
+  padding: 0 2px;
+  background: var(--surface);
+  color: var(--text-1);
+}
+.t3d__label--site[data-cls='ALPHA'] {
+  font-weight: var(--fw-semibold);
+}
+.t3d__label--site[data-cls='GAMMA'],
+.t3d__label--site[data-cls='DELTA'] {
+  color: var(--text-2);
+}
+.t3d__label--seg {
+  padding: 0 3px;
+  border: 1px solid var(--chrome-outer);
+  background: var(--surface);
+  color: var(--text-1);
+}
+.t3d__label--seg[data-dark] {
+  border-style: dashed;
+  color: var(--text-2);
+}
+.t3d__label--train {
+  padding: 0 3px;
+  border: 1px solid var(--title-active-bg);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+}
+.t3d__label--tick {
+  padding: 0 2px;
+  background: var(--paper);
+  color: var(--text-2);
+}
+.t3d__label[data-sel] {
+  background: var(--select-bg);
+  color: var(--select-fg);
+  border-color: var(--select-bg);
+}
+
+/* ---- View controls ---- */
+.t3d__tools {
+  position: absolute;
+  left: var(--sp-4);
+  top: var(--sp-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  align-items: center;
+}
+.t3d__tools .btn {
+  min-width: 0;
+}
+.t3d__sep {
+  width: var(--sp-3);
+}
+
+/* ---- Legend ---- */
+.t3d__legend {
+  position: absolute;
+  right: var(--sp-4);
+  bottom: calc(var(--status-h) + var(--sp-4));
+  width: 236px;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--chrome-outer);
+  background: var(--surface);
+  color: var(--text-1);
+}
+.t3d__legend h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+.t3d__legend dl {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 2px var(--sp-3);
+  margin: 0;
+  align-items: center;
+}
+.t3d__legend dt,
+.t3d__legend dd {
+  margin: 0;
+}
+.t3d__legend dt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--lh-sm);
+}
+.t3d__legend p {
+  margin: var(--sp-3) 0 0;
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--row-rule);
+  color: var(--text-2);
+}
+.t3d__legend strong {
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semibold);
+}
+.t3d__sw {
+  display: block;
+  box-sizing: border-box;
+}
+.t3d__sw--rail {
+  width: 28px;
+  height: 4px;
+  background: var(--title-active-bg);
+}
+.t3d__sw--tram {
+  width: 28px;
+  height: 2px;
+  background: var(--title-inactive-bg);
+}
+.t3d__sw--dark {
+  width: 28px;
+  height: 0;
+  border-top: 4px dashed var(--chrome-shadow);
+}
+.t3d__sw--shaft {
+  width: 6px;
+  height: 13px;
+  border: 1px solid var(--text-1);
+  background: var(--chrome-shadow);
+}
+.t3d__sw--train {
+  width: 13px;
+  height: 6px;
+  border: 1px solid var(--text-1);
+  background: var(--surface);
+}
+.t3d__sw--band {
+  width: 28px;
+  height: 8px;
+  border-top: 1px solid var(--text-3);
+  border-bottom: 1px solid var(--text-3);
+}
+
+/* ---- Selection read-out ---- */
+.t3d__status {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: var(--status-h);
+  padding: 2px var(--sp-4);
+  border-top: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-sm) / var(--lh-base) var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+@media (max-width: 560px) {
+  .t3d__legend {
+    display: none;
+  }
+}

@@ -1,0 +1,406 @@
+/*
+ * @graphics/reactor: one-line diagrams, gauges, readouts, trend charts.
+ * Colours and faces come only from design tokens:
+ *   --surface --paper --th-bg --row-rule --zebra
+ *   --chrome-face --chrome-hi --chrome-shadow --chrome-outer
+ *   --text-1 --text-2 --text-3 --title-active-bg --select-bg --select-fg
+ *   --st-nominal --st-degraded --st-fault --st-offline (10px squares only)
+ *   --font-ui --font-mono
+ * All selectors are prefixed .rx- .
+ */
+
+/* ------------------------------------------------------------ shared */
+.rx-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.rx-sq {
+  display: inline-block;
+  flex: none;
+  width: var(--status-sq, 10px);
+  height: var(--status-sq, 10px);
+  fill: var(--st-offline);
+  background: var(--st-offline);
+}
+.rx-sq--nominal {
+  fill: var(--st-nominal);
+  background: var(--st-nominal);
+}
+.rx-sq--degraded {
+  fill: var(--st-degraded);
+  background: var(--st-degraded);
+}
+.rx-sq--fault {
+  fill: var(--st-fault);
+  background: var(--st-fault);
+}
+.rx-sq--offline {
+  fill: var(--st-offline);
+  background: var(--st-offline);
+}
+.rx-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 10px/12px var(--font-mono);
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.rx-field {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 58px;
+  padding: 1px 4px;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  font: 600 12px/14px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ one-line */
+.rx-oneline {
+  overflow: auto;
+  background: var(--surface);
+  color: var(--text-1);
+}
+.rx-svg {
+  display: block;
+  width: 100%;
+  min-width: 960px;
+  height: auto;
+}
+.rx-sheet {
+  fill: var(--surface);
+}
+.rx-fill {
+  fill: var(--surface);
+}
+.rx-border {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+}
+.rx-border.rx-fill {
+  fill: var(--surface);
+}
+.rx-hairbox {
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 0.75;
+}
+.rx-hair {
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 0.75;
+}
+.rx-tick {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.rx-nofill {
+  fill: none;
+}
+.rx-t {
+  font: 10px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-1);
+  stroke: none;
+}
+.rx-s {
+  font-size: 9px;
+  fill: var(--text-2);
+}
+.rx-n {
+  font-size: 9px;
+  fill: var(--text-1);
+}
+.rx-b {
+  font-weight: 600;
+  fill: var(--text-1);
+}
+.rx-big {
+  font-size: 12px;
+}
+.rx-title {
+  font-size: 11px;
+}
+.rx-tiny {
+  font-size: 7px;
+  fill: var(--text-2);
+  letter-spacing: 0.04em;
+}
+.rx-zone {
+  font-size: 8px;
+  fill: var(--text-2);
+}
+.rx-wire {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  stroke-linejoin: miter;
+}
+.rx-wire--dead {
+  stroke: var(--text-3);
+  stroke-dasharray: 4 3;
+}
+.rx-steam {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  stroke-dasharray: 8 2 2 2;
+}
+.rx-steam.rx-wire--dead {
+  stroke: var(--text-3);
+}
+.rx-bus {
+  stroke: var(--text-1);
+  stroke-width: 5;
+  stroke-linecap: butt;
+}
+.rx-bus--thin {
+  stroke-width: 3;
+}
+.rx-bus--dead {
+  stroke: var(--text-3);
+  stroke-dasharray: 10 3;
+}
+.rx-sym {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+}
+.rx-sym--open {
+  fill: none;
+}
+.rx-sym--dead {
+  stroke: var(--text-3);
+}
+.rx-dot {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1.25;
+}
+.rx-brk {
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+}
+.rx-brk--closed {
+  fill: var(--text-1);
+}
+.rx-brk--open {
+  fill: var(--surface);
+}
+.rx-arrow {
+  fill: var(--text-1);
+  stroke: none;
+}
+.rx-arrow--dead {
+  fill: var(--text-3);
+}
+.rx-panel {
+  fill: var(--zebra);
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}
+.rx-panelhead {
+  fill: var(--th-bg);
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}
+
+/* ------------------------------------------------------------ gauge */
+.rx-gauge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  box-sizing: border-box;
+  width: 116px;
+  padding: 4px 5px 5px;
+  background: var(--chrome-face);
+  border: 1px solid;
+  border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+  color: var(--text-1);
+  font: 11px/13px var(--font-ui);
+}
+.rx-gauge__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 26px;
+  text-align: center;
+}
+.rx-gauge__tag {
+  font: 9px/11px var(--font-mono);
+  color: var(--text-2);
+}
+.rx-gauge__label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.rx-gauge__face {
+  display: block;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+}
+.rx-gauge__track {
+  fill: var(--th-bg);
+  stroke: none;
+}
+.rx-gauge__fill {
+  fill: var(--title-active-bg);
+}
+.rx-gauge__rim {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.rx-gauge__read {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.rx-gauge__unit {
+  font: 10px/12px var(--font-mono);
+  color: var(--text-2);
+  min-width: 26px;
+}
+.rx-needle {
+  stroke: var(--text-1);
+  stroke-width: 2;
+  stroke-linecap: butt;
+}
+.rx-flag {
+  stroke: var(--text-1);
+  stroke-width: 2.5;
+}
+
+/* ------------------------------------------------------------ readout row */
+.rx-readout {
+  display: grid;
+  grid-template-columns: 58px minmax(120px, 1fr) 72px 44px 96px;
+  align-items: center;
+  column-gap: 6px;
+  min-height: var(--row-h, 20px);
+  padding: 0 6px;
+  border-bottom: 1px solid var(--row-rule);
+  font: 12px/16px var(--font-ui);
+  color: var(--text-1);
+}
+.rx-readout:nth-child(even) {
+  background: var(--zebra);
+}
+.rx-readout__tag,
+.rx-readout__unit {
+  font: 10px/12px var(--font-mono);
+  color: var(--text-2);
+}
+.rx-readout__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rx-readout__value {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 13px;
+}
+
+/* ------------------------------------------------------------ seal state */
+.rx-seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: var(--chrome-face);
+  border: 1px solid;
+  border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+  font: 11px/13px var(--font-ui);
+  color: var(--text-1);
+}
+.rx-seal__label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.rx-seal__glyph {
+  display: block;
+  background: var(--surface);
+}
+.rx-seal__lamps {
+  display: inline-flex;
+}
+.rx-seal__lamp {
+  padding: 2px 7px;
+  font: 10px/12px var(--font-mono);
+  color: var(--text-3);
+  background: var(--chrome-face);
+  border: 1px solid;
+  border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+}
+.rx-seal__lamp--on {
+  color: var(--select-fg);
+  background: var(--select-bg);
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ trend chart */
+.rx-chart {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: var(--surface);
+  color: var(--text-1);
+  min-width: 0;
+}
+.rx-chart__plot {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.rx-chart .u-cursor-x {
+  border-right: 1px solid var(--text-2);
+}
+.rx-chart__legend {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+  height: 22px;
+  box-sizing: border-box;
+  padding: 0 6px;
+  overflow: hidden;
+  border-top: 1px solid var(--row-rule);
+  background: var(--zebra);
+  font: 10px/12px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rx-chart__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.rx-chart__val {
+  font-weight: 600;
+  min-width: 40px;
+  text-align: right;
+}
+.rx-chart__unit,
+.rx-chart__mode {
+  color: var(--text-2);
+}
+.rx-chart__mode {
+  margin-left: auto;
+}

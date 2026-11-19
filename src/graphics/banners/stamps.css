@@ -1,0 +1,92 @@
+/*
+ * Rubber stamps. Applies to <Stamp/> output and to `.stamp[data-kind]` elements
+ * emitted by the content pipeline (upgraded to SVG by enhanceStamps()).
+ * The two ink colours are local to this file by design: they are pad inks,
+ * not interface colours, and appear nowhere else.
+ */
+.stamp {
+  --stamp-red: #7a2a2c; /* muted oxblood */
+  --stamp-blue: #232b45; /* blue-black */
+  --stamp-color: var(--stamp-blue);
+  --stamp-rot: -1.4deg;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 0;
+  color: var(--stamp-color);
+  transform: rotate(var(--stamp-rot));
+  transform-origin: 50% 50%;
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  user-select: none;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.stamp[data-ink='red'] {
+  --stamp-color: var(--stamp-red);
+}
+.stamp[data-ink='blue'] {
+  --stamp-color: var(--stamp-blue);
+}
+
+.stamp__svg {
+  display: block;
+  overflow: visible;
+}
+.stamp__svg text {
+  font-family: var(--font-ui, 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif);
+  font-weight: 700;
+}
+.stamp__svg .stamp__light {
+  font-weight: 600;
+}
+.stamp__svg .stamp__mono {
+  font-family: var(--font-typed, 'Courier Prime', 'Courier New', monospace);
+  font-weight: 700;
+}
+
+/*
+ * Before enhancement (prerendered HTML, or scripting unavailable) the pipeline
+ * element still reads as a stamp: double rule, capitals, ink colour. The kind
+ * is printed from the attribute when the element has no text of its own.
+ */
+.stamp[data-kind]:not([data-enhanced]) {
+  padding: 4px 10px;
+  border: 3px double currentColor;
+  font: 700 12px/14px var(--font-ui, 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.stamp[data-kind]:not([data-enhanced]):empty::before {
+  content: attr(data-kind);
+}
+.stamp[data-kind][data-date]:not([data-enhanced]):empty::after {
+  content: ' ' attr(data-date);
+  font-family: var(--font-typed, 'Courier Prime', 'Courier New', monospace);
+}
+
+/* Default inks before enhancement, matching the component defaults. */
+.stamp[data-kind='SUPERSEDED'],
+.stamp[data-kind='CANCELLED'],
+.stamp[data-kind='ACTION'],
+.stamp[data-kind='DISTRIBUTION-LIMITED'],
+.stamp[data-kind='REPRODUCTION-PROHIBITED'],
+.stamp[data-kind='NO-ELECTRONIC-COPY'],
+.stamp[data-kind='DESTROY-BY'],
+.stamp[data-kind='VOID'],
+.stamp[data-kind='TSSCI-OSC'],
+.stamp[data-kind^='UMBRA-'] {
+  --stamp-color: var(--stamp-red);
+}
+.stamp[data-kind][data-ink='blue'] {
+  --stamp-color: var(--stamp-blue);
+}
+.stamp[data-kind][data-ink='red'] {
+  --stamp-color: var(--stamp-red);
+}
+
+@media (prefers-contrast: more) {
+  .stamp {
+    opacity: 1;
+  }
+}

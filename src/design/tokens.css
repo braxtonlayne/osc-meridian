@@ -1,0 +1,155 @@
+/*
+ * MERIDIAN design tokens. The only file in the project allowed to contain colour literals
+ * (marking colours excepted: they come from canon at runtime as --mark-bg / --mark-fg).
+ * Layer order is declared in base.css: tokens, reset, base, primitives, documents, utilities.
+ */
+@layer tokens {
+  :root {
+    /* ---- Workspace and window chrome ---- */
+    --ws-bg: #3A4652;
+    --chrome-face: #D6D3CB;
+    --chrome-hi: #F4F2EC;
+    --chrome-shadow: #8C8A84;
+    --chrome-outer: #5B5A56;
+    --chrome-dark: #3F3E3B; /* inner-most bevel line on pressed controls */
+    --window-drop: #22262B; /* the one hard 1px drop under a window */
+    --title-active-bg: #1F3552;
+    --title-active-fg: #FFFFFF;
+    --title-inactive-bg: #7C8591;
+    --title-inactive-fg: #E6E8EB;
+
+    /* ---- Content surfaces ---- */
+    --surface: #FFFFFF;
+    --paper: #F3F1EA;
+    --paper-edge: #D9D5C9;
+    --th-bg: #E4E1D8;
+    --row-rule: #C9C6BC;
+    --zebra: #FAF9F5;
+    --row-hover: #EEF0F3;
+
+    /* ---- Text ---- */
+    --text-1: #15181C;
+    --text-2: #4B5158;
+    --text-3: #646A72; /* 4.8:1 on --paper, 5.5:1 on --surface (WCAG AA body text) */
+    --text-disabled: #8C8A84;
+    --text-emboss: #F4F2EC;
+    --link: #1B3F7A;
+    --link-visited: #4A2F6B;
+
+    /* ---- Status (only ever a 10px square beside a word) ---- */
+    --st-nominal: #2E6B3F;
+    --st-degraded: #A86A00;
+    --st-fault: #9B1C1C;
+
+    /* ---- Chart palette (data graphics only; never a status colour) ---- */
+    --chart-ochre: #B78A3C; /* ledger category slot 3; the flat mix of --st-degraded 70% / --paper-edge it replaced */
+    --st-offline: #5B5A56;
+
+    /* ---- Interaction ---- */
+    --focus-ring: #15181C;
+    --focus-ring-input: #1F3552;
+    --select-bg: #1F3552;
+    --select-fg: #FFFFFF;
+    --select-inactive-bg: #C9C6BC;
+    --select-inactive-fg: #15181C;
+    --tooltip-bg: #F7F5DC;
+    --tooltip-fg: #15181C;
+    --tooltip-border: #5B5A56;
+
+    /* ---- Documents ---- */
+    --redact: #111111;
+    --print-ink: #000000;
+    --toner: #1E2125;
+    --stamp-ink: #34477A;
+    --hole: #3A4652;
+    --rx-ch: 1ch; /* width of one withheld character; tuned per document font below */
+
+    /* ---- Markings: neutral defaults only; real values set inline from canon ---- */
+    --mark-bg: var(--text-1);
+    --mark-fg: var(--surface);
+
+    /* ---- Type ---- */
+    --font-ui: 'IBM Plex Sans', 'Segoe UI', Tahoma, sans-serif;
+    --font-doc: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-typed: 'Courier Prime', 'Courier New', Courier, monospace;
+    --font-mono: 'IBM Plex Mono', Consolas, 'Courier New', monospace;
+    --fs-xs: 10px;
+    --fs-sm: 11px;
+    --fs-base: 12px;
+    --fs-md: 13px;
+    --fs-lg: 14px;
+    --fs-xl: 16px;
+    --fs-doc: 14px;
+    --fs-typed: 13px;
+    --lh-xs: 13px;
+    --lh-sm: 14px;
+    --lh-base: 16px;
+    --lh-md: 17px;
+    --lh-lg: 18px;
+    --lh-xl: 20px;
+    --lh-doc: 21px;
+    --lh-typed: 18px;
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+    --tracking-caps: 0.04em;
+
+    /* ---- Spacing scale (px, 2-based) ---- */
+    --sp-0: 0;
+    --sp-1: 2px;
+    --sp-2: 4px;
+    --sp-3: 6px;
+    --sp-4: 8px;
+    --sp-5: 12px;
+    --sp-6: 16px;
+    --sp-7: 24px;
+    --sp-8: 32px;
+    --sp-9: 48px;
+
+    /* ---- Sizes ---- */
+    --bevel: 1px;
+    --radius: 0;
+    --radius-max: 2px;
+    --ctl-h: 22px; /* buttons, inputs, selects */
+    --ctl-pad-x: 8px;
+    --btn-min-w: 72px;
+    --row-h: 20px; /* table / list / tree row */
+    --th-h: 20px;
+    --title-h: 20px;
+    --menu-h: 20px;
+    --menu-item-h: 20px;
+    --toolbar-h: 28px;
+    --status-h: 20px;
+    --tab-h: 21px;
+    --check: 13px;
+    --status-sq: 10px;
+    --splitter: 5px;
+    --scrollbar: 16px;
+    --label-w: 140px;
+    --doc-max: 760px;
+    --doc-pad: 40px;
+    --motion-open: 90ms;
+    --tooltip-delay: 500ms;
+  }
+
+  /* Compact density: set data-density="compact" on <html> or any container. */
+  [data-density='compact'] {
+    --ctl-h: 19px;
+    --ctl-pad-x: 6px;
+    --btn-min-w: 64px;
+    --row-h: 17px;
+    --th-h: 18px;
+    --menu-h: 18px;
+    --menu-item-h: 18px;
+    --toolbar-h: 24px;
+    --status-h: 18px;
+    --tab-h: 19px;
+    --lh-base: 14px;
+    --sp-3: 4px;
+    --sp-4: 6px;
+    --sp-5: 8px;
+    --sp-6: 12px;
+    --doc-pad: 24px;
+  }
+}

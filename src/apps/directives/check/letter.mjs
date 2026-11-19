@@ -1,0 +1,21 @@
+// Checks a lettered subparagraph deep link (#para-4c) on DIR-0412.
+import { chromium } from 'playwright';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+const here = dirname(fileURLToPath(import.meta.url));
+const BASE = process.env.BASE ?? ['http:', '', 'localhost:5208'].join('/');
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1200, height: 800 } });
+await page.goto(BASE + '/directives/dir-0412#para-4c');
+await wait(400);
+await page.keyboard.press('Escape');
+await page.waitForSelector('.lock-signin input', { timeout: 15000 });
+const inputs = page.locator('.lock-signin input');
+await inputs.nth(0).fill('OPR-A03-1147');
+await inputs.nth(1).fill('ballast pewter orchard ninety');
+await page.locator('.lock-signin button[type=submit]').click();
+await wait(4000);
+console.log('target:', await page.evaluate(() => document.querySelector('.dv-target')?.textContent?.slice(0, 60)));
+await page.screenshot({ path: join(here, '19-deeplink-para-4c.png') });
+await browser.close();

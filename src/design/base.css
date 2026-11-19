@@ -1,0 +1,284 @@
+/*
+ * MERIDIAN base. Declares the cascade-layer order for the whole project.
+ * Shell and app CSS may stay unlayered (it then wins over every layer) or use
+ * @layer utilities for one-off overrides.
+ */
+@layer tokens, reset, base, primitives, documents, utilities;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul, pre {
+    margin: 0;
+  }
+  ol, ul {
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  button, input, select, textarea {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+  }
+  img, svg, canvas {
+    display: block;
+    max-width: 100%;
+  }
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  legend {
+    padding: 0;
+  }
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-ui);
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    color: var(--text-1);
+    background: var(--ws-bg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    font-kerning: normal;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: var(--fw-semibold);
+  }
+  strong, b {
+    font-weight: var(--fw-semibold);
+  }
+  a,
+  a:link {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 1px;
+    text-decoration-thickness: 1px;
+  }
+  a:visited {
+    color: var(--link-visited);
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+  code, kbd, samp, pre, .mono, .num, time {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+  code, kbd, samp {
+    font-size: 0.95em;
+  }
+  kbd {
+    display: inline-block;
+    padding: 0 3px;
+    border: 1px solid var(--chrome-shadow);
+    border-bottom-color: var(--chrome-outer);
+    background: var(--chrome-face);
+    line-height: 1.2;
+  }
+  table, td, th {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: var(--select-bg);
+    color: var(--select-fg);
+  }
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 1px dotted var(--focus-ring);
+    outline-offset: 1px;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--chrome-shadow);
+    border-bottom: 1px solid var(--chrome-hi);
+    margin: var(--sp-4) 0;
+  }
+  abbr[title] {
+    text-decoration: underline dotted;
+    cursor: help;
+  }
+  /* Operation in progress: the shell sets data-busy on a window or the root. */
+  [data-busy='true'],
+  [data-busy='true'] * {
+    cursor: progress !important;
+  }
+  .sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  /* Scrollbars stay square and grey; no overlay styling. */
+  * {
+    scrollbar-color: var(--chrome-shadow) var(--chrome-face);
+  }
+}
+
+/* ---- Motion: functional and slightly cheap; off entirely when asked. ---- */
+@media (prefers-reduced-motion: reduce) {
+  @layer base {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+/* Same switch, driven by the in-world Settings > Motion option. */
+@layer base {
+  [data-motion='reduced'] *,
+  [data-motion='reduced'] *::before,
+  [data-motion='reduced'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+  .u-caps {
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+  }
+  .u-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+  .u-right {
+    text-align: right;
+  }
+  .u-center {
+    text-align: center;
+  }
+  .u-muted {
+    color: var(--text-2);
+  }
+  .u-nowrap {
+    white-space: nowrap;
+  }
+  .u-fill {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+  }
+  .u-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .u-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .print-only {
+    display: none;
+  }
+}
+
+/* ---- Print base ----
+ * The shell prints one document at a time: it mounts <DocumentView> inside an
+ * element with class "print-root" directly under <body>, sets
+ * body[data-print-doc], calls window.print(), then removes both.
+ */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.75in 0.75in 0.85in;
+    @bottom-center {
+      content: 'Page ' counter(page) ' of ' counter(pages);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 8pt;
+    }
+  }
+  @page cover {
+    margin: 0.5in;
+    @bottom-center {
+      content: none;
+    }
+  }
+  @layer base {
+    html,
+    body {
+      background: none !important;
+      color: var(--print-ink);
+      font-size: 10pt;
+      line-height: 1.35;
+    }
+    /* The shell pins html/body (and its windows) to the viewport with overflow hidden; in
+       print that clips the document to one page. Let everything grow and paginate. */
+    html,
+    body,
+    #app,
+    .print-root,
+    .win,
+    .win-body {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    a,
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+    body[data-print-doc] > *:not(.print-root) {
+      display: none !important;
+    }
+    body[data-print-doc] > .print-root {
+      display: block !important;
+      position: static !important;
+    }
+    * {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+  @layer utilities {
+    .no-print {
+      display: none !important;
+    }
+    .print-only {
+      display: block !important;
+    }
+    .page-break {
+      break-after: page;
+    }
+  }
+}

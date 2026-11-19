@@ -1,0 +1,2398 @@
+{
+  "meta": {
+    "environment": "MERIDIAN Workstation Environment",
+    "release": "4.1.7",
+    "agency": "Office of Strategic Continuity",
+    "inWorldDate": "2008-05-19",
+    "sourceDocNo": "OSC-2008-Q2",
+    "sourceRevision": "2008-Q2"
+  },
+  "headline": {
+    "facilities": 47,
+    "hubs": 12,
+    "capacitySustained": 23400,
+    "capacitySurge": 0,
+    "staffTotal": 3847,
+    "staffPosted": 0,
+    "staffUnposted": 0,
+    "utilizationPct": 16.4,
+    "programCostB": 287,
+    "tunnelCertifiedMi": 847,
+    "railEngineeringMi": 0,
+    "tramEngineeringMi": 0,
+    "tramLinkSumMi": 0
+  },
+  "markings": [
+    {
+      "id": "TSSCI-OSC",
+      "label": "TOP SECRET//SCI//OSC",
+      "sourceLabel": "TOP SECRET/SCI with OSC compartment access",
+      "rank": 0,
+      "bannerBg": "#4A5560",
+      "bannerFg": "#FFFFFF",
+      "usage": "TS/SCI with OSC compartment. Baseline marking for Tier 3 working material: functional records, site procedures, unit rosters, anything that names no other facility."
+    },
+    {
+      "id": "UMBRA-R",
+      "label": "UMBRA//OSC RESTRICTED",
+      "sourceLabel": "UMBRA/OSC RESTRICTED",
+      "rank": 1,
+      "bannerBg": "#7A5A1E",
+      "bannerFg": "#FFFFFF",
+      "usage": "Council-originated text released for reading below Council level (Charter extracts, Council notices). The lowest UMBRA marking."
+    },
+    {
+      "id": "UMBRA-C",
+      "label": "UMBRA//OSC COMPARTMENTED",
+      "sourceLabel": "UMBRA/OSC COMPARTMENTED",
+      "rank": 2,
+      "bannerBg": "#5E1F24",
+      "bannerFg": "#FFFFFF",
+      "usage": "Tier 2 clearance marking. Facility command material: a site and its immediate connections, compartment briefings."
+    },
+    {
+      "id": "UMBRA-U",
+      "label": "UMBRA//OSC UNRESTRICTED",
+      "sourceLabel": "UMBRA/OSC UNRESTRICTED",
+      "rank": 3,
+      "bannerBg": "#3B2A5C",
+      "bannerFg": "#FFFFFF",
+      "usage": "Tier 1 clearance marking. Network-wide material. \"Unrestricted\" describes the reader's access, not the document's handling."
+    },
+    {
+      "id": "UMBRA-EO",
+      "label": "UMBRA//OSC EYES ONLY",
+      "sourceLabel": "UMBRA/OSC EYES ONLY",
+      "rank": 4,
+      "bannerBg": "#111111",
+      "bannerFg": "#FFFFFF",
+      "usage": "Numbered-copy Council documents (the Facility Inventory, 11 copies). Physical only; no electronic copies permitted."
+    }
+  ],
+  "classes": [
+    {
+      "id": "ALPHA",
+      "name": "Command & Control Hubs",
+      "depthText": "800 to 2,400 ft",
+      "depthMinFt": 800,
+      "depthMaxFt": 2400,
+      "sustainabilityText": "Full life support and independent power generation",
+      "sustainDaysMin": null,
+      "sustainDaysMax": null,
+      "transitEntitlement": "Rail network terminals & inter-hub connections",
+      "bullets": [
+        "Deep underground installations — 800 to 2,400 ft depth",
+        "Full life support and independent power generation",
+        "Rail network terminals & inter-hub connections",
+        "Government reconstitution capability"
+      ],
+      "count": 5,
+      "statedCapacity": 16000,
+      "statedStaff": 1417
+    },
+    {
+      "id": "BETA",
+      "name": "Regional Operations Centers",
+      "depthText": "400 to 800 ft",
+      "depthMinFt": 400,
+      "depthMaxFt": 800,
+      "sustainabilityText": "Limited long-term sustainability",
+      "sustainDaysMin": null,
+      "sustainDaysMax": null,
+      "transitEntitlement": "Tram connections to local Alpha facility",
+      "bullets": [
+        "Medium-depth installations — 400 to 800 ft depth",
+        "Regional coordination and intelligence fusion",
+        "Tram connections to local Alpha facility",
+        "Limited long-term sustainability"
+      ],
+      "count": 12,
+      "statedCapacity": 10780,
+      "statedStaff": 1206
+    },
+    {
+      "id": "GAMMA",
+      "name": "Personnel Shelters",
+      "depthText": "150 to 500 ft",
+      "depthMinFt": 150,
+      "depthMaxFt": 500,
+      "sustainabilityText": "Basic life support: 90 to 180 day operational window",
+      "sustainDaysMin": 90,
+      "sustainDaysMax": 180,
+      "transitEntitlement": "No rail connections",
+      "bullets": [
+        "Shallow to medium depth — 150 to 500 ft",
+        "Personnel preservation focus — essential staff only",
+        "Basic life support: 90 to 180 day operational window",
+        "No rail connections"
+      ],
+      "count": 18,
+      "statedCapacity": 6940,
+      "statedStaff": 413
+    },
+    {
+      "id": "DELTA",
+      "name": "Safe Houses & Caches",
+      "depthText": "Surface or minimal depth",
+      "depthMinFt": 0,
+      "depthMaxFt": null,
+      "sustainabilityText": "72-hour sustainability maximum",
+      "sustainDaysMin": null,
+      "sustainDaysMax": 3,
+      "transitEntitlement": "No integrated transit connections",
+      "bullets": [
+        "Surface or minimal depth installations",
+        "Emergency staging and equipment storage",
+        "72-hour sustainability maximum",
+        "No integrated transit connections"
+      ],
+      "count": 12,
+      "statedCapacity": 980,
+      "statedStaff": 21
+    }
+  ],
+  "facilities": [
+    {
+      "id": "ALPHA-01",
+      "class": "ALPHA",
+      "codename": "RAVEN MOUNTAIN",
+      "locationText": "18 miles SE of Mount Weather, Virginia. Blue Ridge Mountains. Hidden beneath defunct quarry site.",
+      "anchor": {
+        "miles": 18,
+        "bearing": "SE",
+        "city": "Mount Weather",
+        "state": "VA",
+        "cityLat": 39.0623,
+        "cityLon": -77.8889
+      },
+      "terrain": "Blue Ridge Mountains. Hidden beneath defunct quarry site.",
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": 2100,
+      "completed": "2003-11",
+      "capacity": 4500,
+      "sustainedMonths": 18,
+      "staff": 287,
+      "staffBreakdown": [
+        {
+          "role": "Command Staff",
+          "count": 42
+        },
+        {
+          "role": "Intelligence/Analysis",
+          "count": 68
+        },
+        {
+          "role": "Security Forces",
+          "count": 89
+        },
+        {
+          "role": "Technical/Engineering",
+          "count": 51
+        },
+        {
+          "role": "Medical",
+          "count": 19
+        },
+        {
+          "role": "Logistics/Support",
+          "count": 18
+        }
+      ],
+      "function": "Primary OSC command facility. Houses central council chambers. Full government-in-exile capability. Presidential continuity suite. Strategic planning and intelligence fusion center.",
+      "connectionsText": "Direct lines to ALPHA-02, ALPHA-03, ALPHA-05. Primary hub for Eastern Network.",
+      "network": "EASTERN",
+      "reactor": true,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "ALPHA-02",
+      "class": "ALPHA",
+      "codename": "OLYMPUS STATION",
+      "locationText": "31 miles NW of Denver, Colorado. Rocky Mountain Front Range. Concealed within \"expanded\" NORAD infrastructure.",
+      "anchor": {
+        "miles": 31,
+        "bearing": "NW",
+        "city": "Denver",
+        "state": "CO",
+        "cityLat": 39.7392,
+        "cityLon": -104.9903
+      },
+      "terrain": "Rocky Mountain Front Range.",
+      "coverIdentity": "Concealed within \"expanded\" NORAD infrastructure",
+      "coverStory": null,
+      "depthFt": 1850,
+      "completed": "2005-03",
+      "capacity": 3200,
+      "sustainedMonths": 15,
+      "staff": 412,
+      "staffBreakdown": [
+        {
+          "role": "Command Staff",
+          "count": 38
+        },
+        {
+          "role": "Military Operations",
+          "count": 124
+        },
+        {
+          "role": "Intelligence/Analysis",
+          "count": 71
+        },
+        {
+          "role": "Security Forces",
+          "count": 98
+        },
+        {
+          "role": "Technical/Engineering",
+          "count": 49
+        },
+        {
+          "role": "Medical",
+          "count": 16
+        },
+        {
+          "role": "Logistics/Support",
+          "count": 16
+        }
+      ],
+      "function": "Western Command Hub. Military operations coordination. Deep continuity for DoD/Joint Chiefs. Hardened communications array. Weapons research oversight.",
+      "connectionsText": "Direct lines to ALPHA-01, ALPHA-04. Hub for Mountain/Western Network.",
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": true,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "ALPHA-03",
+      "class": "ALPHA",
+      "codename": "ARCHIVE SITE TANGO",
+      "locationText": "24 miles S of Lexington, Kentucky. Appalachian foothills. Falsely documented as \"Federal Reserve Gold Depository Secondary Site.\"",
+      "anchor": {
+        "miles": 24,
+        "bearing": "S",
+        "city": "Lexington",
+        "state": "KY",
+        "cityLat": 38.0406,
+        "cityLon": -84.5037
+      },
+      "terrain": "Appalachian foothills.",
+      "coverIdentity": "Federal Reserve Gold Depository Secondary Site",
+      "coverStory": null,
+      "depthFt": 1200,
+      "completed": "2004-08",
+      "capacity": 2800,
+      "sustainedMonths": 12,
+      "staff": 198,
+      "staffBreakdown": [
+        {
+          "role": "Command Staff",
+          "count": 22
+        },
+        {
+          "role": "Intelligence/Analysis",
+          "count": 54
+        },
+        {
+          "role": "Data/Records Mgmt.",
+          "count": 47
+        },
+        {
+          "role": "Security Forces",
+          "count": 41
+        },
+        {
+          "role": "Technical/Engineering",
+          "count": 22
+        },
+        {
+          "role": "Medical",
+          "count": 7
+        },
+        {
+          "role": "Logistics/Support",
+          "count": 5
+        }
+      ],
+      "function": "Strategic data archive and intelligence repository. Genetic/biometric database for \"essential personnel.\" Cultural/historical preservation (selective). Continuity of knowledge infrastructure.",
+      "connectionsText": "Direct lines to ALPHA-01, ALPHA-05. Secondary hub for Central Network.",
+      "network": "CENTRAL",
+      "reactor": true,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "ALPHA-04",
+      "class": "ALPHA",
+      "codename": "WESTERN CONTINUITY STATION",
+      "locationText": "44 miles E of Reno, Nevada. High desert, Carson Range foothills. Cover identity: \"Bureau of Land Management Surveying Station.\"",
+      "anchor": {
+        "miles": 44,
+        "bearing": "E",
+        "city": "Reno",
+        "state": "NV",
+        "cityLat": 39.5296,
+        "cityLon": -119.8138
+      },
+      "terrain": "High desert, Carson Range foothills.",
+      "coverIdentity": "Bureau of Land Management Surveying Station",
+      "coverStory": null,
+      "depthFt": 1650,
+      "completed": "2006-01",
+      "capacity": 2400,
+      "sustainedMonths": 14,
+      "staff": 176,
+      "staffBreakdown": [
+        {
+          "role": "Command Staff",
+          "count": 19
+        },
+        {
+          "role": "Intelligence/Analysis",
+          "count": 38
+        },
+        {
+          "role": "Security Forces",
+          "count": 61
+        },
+        {
+          "role": "Technical/Engineering",
+          "count": 34
+        },
+        {
+          "role": "Medical",
+          "count": 11
+        },
+        {
+          "role": "Logistics/Support",
+          "count": 13
+        }
+      ],
+      "function": "West Coast regional command. Pacific theater monitoring. Port security continuity. Resource extraction oversight post-event.",
+      "connectionsText": "Direct line to ALPHA-02. Terminal hub for Western Network.",
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": true,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "ALPHA-05",
+      "class": "ALPHA",
+      "codename": "SENTINEL DEEP",
+      "locationText": "38 miles NE of San Antonio, Texas. Texas Hill Country. Concealed as \"FEMA Regional Coordination Complex.\"",
+      "anchor": {
+        "miles": 38,
+        "bearing": "NE",
+        "city": "San Antonio",
+        "state": "TX",
+        "cityLat": 29.4241,
+        "cityLon": -98.4936
+      },
+      "terrain": "Texas Hill Country.",
+      "coverIdentity": "FEMA Regional Coordination Complex",
+      "coverStory": null,
+      "depthFt": 1400,
+      "completed": "2005-07",
+      "capacity": 3100,
+      "sustainedMonths": 16,
+      "staff": 344,
+      "staffBreakdown": [
+        {
+          "role": "Command Staff",
+          "count": 41
+        },
+        {
+          "role": "Intelligence/Analysis",
+          "count": 76
+        },
+        {
+          "role": "Military Operations",
+          "count": 89
+        },
+        {
+          "role": "Security Forces",
+          "count": 71
+        },
+        {
+          "role": "Technical/Engineering",
+          "count": 38
+        },
+        {
+          "role": "Medical",
+          "count": 15
+        },
+        {
+          "role": "Logistics/Support",
+          "count": 14
+        }
+      ],
+      "function": "Southern command facility. Border continuity operations. Energy infrastructure oversight (oil/gas preservation). Secondary government reconstitution site.",
+      "connectionsText": "Direct lines to ALPHA-01, ALPHA-03. Hub for Southern Network.",
+      "network": "SOUTHERN",
+      "reactor": true,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-01",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "15mi W of Bangor, ME",
+      "anchor": {
+        "miles": 15,
+        "bearing": "W",
+        "city": "Bangor",
+        "state": "ME",
+        "cityLat": 44.8016,
+        "cityLon": -68.7712
+      },
+      "terrain": null,
+      "coverIdentity": "EPA Monitoring Station",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 850,
+      "sustainedMonths": null,
+      "staff": 64,
+      "staffBreakdown": [],
+      "function": "Northeast regional ops",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-02",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "27mi N of Pittsburgh, PA",
+      "anchor": {
+        "miles": 27,
+        "bearing": "N",
+        "city": "Pittsburgh",
+        "state": "PA",
+        "cityLat": 40.4406,
+        "cityLon": -79.9959
+      },
+      "terrain": null,
+      "coverIdentity": "Natural Gas Reserve Facility",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 920,
+      "sustainedMonths": null,
+      "staff": 118,
+      "staffBreakdown": [],
+      "function": "Mid-Atlantic industrial continuity",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-03",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "19mi S of Atlanta, GA",
+      "anchor": {
+        "miles": 19,
+        "bearing": "S",
+        "city": "Atlanta",
+        "state": "GA",
+        "cityLat": 33.749,
+        "cityLon": -84.388
+      },
+      "terrain": null,
+      "coverIdentity": "CDC Secondary Research Complex",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 1100,
+      "sustainedMonths": null,
+      "staff": 147,
+      "staffBreakdown": [],
+      "function": "Southeast regional ops / biomedical",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-04",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "33mi E of Minneapolis, MN",
+      "anchor": {
+        "miles": 33,
+        "bearing": "E",
+        "city": "Minneapolis",
+        "state": "MN",
+        "cityLat": 44.9778,
+        "cityLon": -93.265
+      },
+      "terrain": null,
+      "coverIdentity": "Agricultural Research Station",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 780,
+      "sustainedMonths": null,
+      "staff": 52,
+      "staffBreakdown": [],
+      "function": "Northern Plains monitoring",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-05",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "41mi W of Kansas City, MO",
+      "anchor": {
+        "miles": 41,
+        "bearing": "W",
+        "city": "Kansas City",
+        "state": "MO",
+        "cityLat": 39.0997,
+        "cityLon": -94.5786
+      },
+      "terrain": null,
+      "coverIdentity": "FAA Regional Training Center",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 890,
+      "sustainedMonths": null,
+      "staff": 93,
+      "staffBreakdown": [],
+      "function": "Central logistics hub",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-06",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "22mi N of Phoenix, AZ",
+      "anchor": {
+        "miles": 22,
+        "bearing": "N",
+        "city": "Phoenix",
+        "state": "AZ",
+        "cityLat": 33.4484,
+        "cityLon": -112.074
+      },
+      "terrain": null,
+      "coverIdentity": "DOE Solar Research Facility",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 740,
+      "sustainedMonths": null,
+      "staff": 81,
+      "staffBreakdown": [],
+      "function": "Southwest regional ops",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-07",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "36mi SE of Seattle, WA",
+      "anchor": {
+        "miles": 36,
+        "bearing": "SE",
+        "city": "Seattle",
+        "state": "WA",
+        "cityLat": 47.6062,
+        "cityLon": -122.3321
+      },
+      "terrain": null,
+      "coverIdentity": "USGS Seismology Center",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 810,
+      "sustainedMonths": null,
+      "staff": 67,
+      "staffBreakdown": [],
+      "function": "Pacific Northwest ops / tech sector continuity",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-08",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "28mi NE of Las Vegas, NV",
+      "anchor": {
+        "miles": 28,
+        "bearing": "NE",
+        "city": "Las Vegas",
+        "state": "NV",
+        "cityLat": 36.1699,
+        "cityLon": -115.1398
+      },
+      "terrain": null,
+      "coverIdentity": "Nuclear Test Site Support",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 950,
+      "sustainedMonths": null,
+      "staff": 103,
+      "staffBreakdown": [],
+      "function": "Nevada operations / weapons oversight",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-09",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "17mi S of Omaha, NE",
+      "anchor": {
+        "miles": 17,
+        "bearing": "S",
+        "city": "Omaha",
+        "state": "NE",
+        "cityLat": 41.2565,
+        "cityLon": -95.9345
+      },
+      "terrain": null,
+      "coverIdentity": "STRATCOM Auxiliary Facility",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 1020,
+      "sustainedMonths": null,
+      "staff": 129,
+      "staffBreakdown": [],
+      "function": "Central military coordination",
+      "connectionsText": null,
+      "network": "CENTRAL",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-10",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "44mi W of Chicago, IL",
+      "anchor": {
+        "miles": 44,
+        "bearing": "W",
+        "city": "Chicago",
+        "state": "IL",
+        "cityLat": 41.8781,
+        "cityLon": -87.6298
+      },
+      "terrain": null,
+      "coverIdentity": "DHS Regional Response Center",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 1150,
+      "sustainedMonths": null,
+      "staff": 167,
+      "staffBreakdown": [],
+      "function": "Great Lakes regional command",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-11",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "31mi E of Salt Lake City, UT",
+      "anchor": {
+        "miles": 31,
+        "bearing": "E",
+        "city": "Salt Lake City",
+        "state": "UT",
+        "cityLat": 40.7608,
+        "cityLon": -111.891
+      },
+      "terrain": null,
+      "coverIdentity": "BLM Resource Management",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 680,
+      "sustainedMonths": null,
+      "staff": 71,
+      "staffBreakdown": [],
+      "function": "Mountain West ops",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "BETA-12",
+      "class": "BETA",
+      "codename": null,
+      "locationText": "52mi N of New Orleans, LA",
+      "anchor": {
+        "miles": 52,
+        "bearing": "N",
+        "city": "New Orleans",
+        "state": "LA",
+        "cityLat": 29.9511,
+        "cityLon": -90.0715
+      },
+      "terrain": null,
+      "coverIdentity": "FEMA Hurricane Continuity Site",
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 890,
+      "sustainedMonths": null,
+      "staff": 114,
+      "staffBreakdown": [],
+      "function": "Gulf Coast operations",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-01",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Greater Boston Metro",
+      "anchor": {
+        "city": "Boston",
+        "state": "MA",
+        "cityLat": 42.3601,
+        "cityLon": -71.0589,
+        "areaLabel": "Greater Boston Metro"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 420,
+      "sustainedMonths": null,
+      "staff": 18,
+      "staffBreakdown": [],
+      "function": "Academic/scientific personnel focus",
+      "connectionsText": null,
+      "network": null,
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-02",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "New York City Perimeter",
+      "anchor": {
+        "city": "New York",
+        "state": "NY",
+        "cityLat": 40.7128,
+        "cityLon": -74.006,
+        "areaLabel": "New York City Perimeter"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 580,
+      "sustainedMonths": null,
+      "staff": 31,
+      "staffBreakdown": [],
+      "function": "Financial sector continuity",
+      "connectionsText": null,
+      "network": null,
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-03",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "DC Metro Belt",
+      "anchor": {
+        "city": "Washington",
+        "state": "DC",
+        "cityLat": 38.9072,
+        "cityLon": -77.0369,
+        "areaLabel": "DC Metro Belt"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 650,
+      "sustainedMonths": null,
+      "staff": 47,
+      "staffBreakdown": [],
+      "function": "Political/bureaucratic personnel",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-04",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Philadelphia Suburbs",
+      "anchor": {
+        "city": "Philadelphia",
+        "state": "PA",
+        "cityLat": 39.9526,
+        "cityLon": -75.1652,
+        "areaLabel": "Philadelphia Suburbs"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 380,
+      "sustainedMonths": null,
+      "staff": 14,
+      "staffBreakdown": [],
+      "function": "Northeast industrial base",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-05",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Charlotte Region",
+      "anchor": {
+        "city": "Charlotte",
+        "state": "NC",
+        "cityLat": 35.2271,
+        "cityLon": -80.8431,
+        "areaLabel": "Charlotte Region"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 340,
+      "sustainedMonths": null,
+      "staff": 19,
+      "staffBreakdown": [],
+      "function": "Banking infrastructure",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-06",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Miami Outskirts",
+      "anchor": {
+        "city": "Miami",
+        "state": "FL",
+        "cityLat": 25.7617,
+        "cityLon": -80.1918,
+        "areaLabel": "Miami Outskirts"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 290,
+      "sustainedMonths": null,
+      "staff": 11,
+      "staffBreakdown": [],
+      "function": "Latin America operations personnel",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-07",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Detroit Area",
+      "anchor": {
+        "city": "Detroit",
+        "state": "MI",
+        "cityLat": 42.3314,
+        "cityLon": -83.0458,
+        "areaLabel": "Detroit Area"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 310,
+      "sustainedMonths": null,
+      "staff": 23,
+      "staffBreakdown": [],
+      "function": "Manufacturing continuity",
+      "connectionsText": null,
+      "network": "EASTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-08",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Dallas-Fort Worth",
+      "anchor": {
+        "city": "Dallas",
+        "state": "TX",
+        "cityLat": 32.7767,
+        "cityLon": -96.797,
+        "areaLabel": "Dallas-Fort Worth"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 490,
+      "sustainedMonths": null,
+      "staff": 38,
+      "staffBreakdown": [],
+      "function": "Energy sector personnel",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-09",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Houston Corridor",
+      "anchor": {
+        "city": "Houston",
+        "state": "TX",
+        "cityLat": 29.7604,
+        "cityLon": -95.3698,
+        "areaLabel": "Houston Corridor"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 520,
+      "sustainedMonths": null,
+      "staff": 42,
+      "staffBreakdown": [],
+      "function": "Oil/gas expertise preservation",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-10",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "St. Louis Region",
+      "anchor": {
+        "city": "St. Louis",
+        "state": "MO",
+        "cityLat": 38.627,
+        "cityLon": -90.1994,
+        "areaLabel": "St. Louis Region"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 270,
+      "sustainedMonths": null,
+      "staff": 9,
+      "staffBreakdown": [],
+      "function": "Mississippi logistics",
+      "connectionsText": null,
+      "network": "CENTRAL",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-11",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Los Angeles Basin",
+      "anchor": {
+        "city": "Los Angeles",
+        "state": "CA",
+        "cityLat": 34.0522,
+        "cityLon": -118.2437,
+        "areaLabel": "Los Angeles Basin"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 610,
+      "sustainedMonths": null,
+      "staff": 49,
+      "staffBreakdown": [],
+      "function": "West Coast tech/media",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-12",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "San Francisco Bay",
+      "anchor": {
+        "city": "San Francisco",
+        "state": "CA",
+        "cityLat": 37.7749,
+        "cityLon": -122.4194,
+        "areaLabel": "San Francisco Bay"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 580,
+      "sustainedMonths": null,
+      "staff": 44,
+      "staffBreakdown": [],
+      "function": "Silicon Valley preservation",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-13",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Portland Metro",
+      "anchor": {
+        "city": "Portland",
+        "state": "OR",
+        "cityLat": 45.5152,
+        "cityLon": -122.6784,
+        "areaLabel": "Portland Metro"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 240,
+      "sustainedMonths": null,
+      "staff": 8,
+      "staffBreakdown": [],
+      "function": "Pacific resource corridor",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-14",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Boise Area",
+      "anchor": {
+        "city": "Boise",
+        "state": "ID",
+        "cityLat": 43.615,
+        "cityLon": -116.2023,
+        "areaLabel": "Boise Area"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 190,
+      "sustainedMonths": null,
+      "staff": 7,
+      "staffBreakdown": [],
+      "function": "Northwest agricultural",
+      "connectionsText": null,
+      "network": "MOUNTAIN_WESTERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-15",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Albuquerque Region",
+      "anchor": {
+        "city": "Albuquerque",
+        "state": "NM",
+        "cityLat": 35.0844,
+        "cityLon": -106.6504,
+        "areaLabel": "Albuquerque Region"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 220,
+      "sustainedMonths": null,
+      "staff": 12,
+      "staffBreakdown": [],
+      "function": "Nuclear weapons personnel",
+      "connectionsText": null,
+      "network": null,
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-16",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Nashville Area",
+      "anchor": {
+        "city": "Nashville",
+        "state": "TN",
+        "cityLat": 36.1627,
+        "cityLon": -86.7816,
+        "areaLabel": "Nashville Area"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 280,
+      "sustainedMonths": null,
+      "staff": 13,
+      "staffBreakdown": [],
+      "function": "Mid-South logistics",
+      "connectionsText": null,
+      "network": "SOUTHERN",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-17",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Indianapolis Perimeter",
+      "anchor": {
+        "city": "Indianapolis",
+        "state": "IN",
+        "cityLat": 39.7684,
+        "cityLon": -86.1581,
+        "areaLabel": "Indianapolis Perimeter"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 260,
+      "sustainedMonths": null,
+      "staff": 11,
+      "staffBreakdown": [],
+      "function": "Heartland manufacturing",
+      "connectionsText": null,
+      "network": "CENTRAL",
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    },
+    {
+      "id": "GAMMA-18",
+      "class": "GAMMA",
+      "codename": null,
+      "locationText": "Tampa Bay",
+      "anchor": {
+        "city": "Tampa",
+        "state": "FL",
+        "cityLat": 27.9506,
+        "cityLon": -82.4572,
+        "areaLabel": "Tampa Bay"
+      },
+      "terrain": null,
+      "coverIdentity": null,
+      "coverStory": null,
+      "depthFt": null,
+      "completed": null,
+      "capacity": 310,
+      "sustainedMonths": null,
+      "staff": 17,
+      "staffBreakdown": [],
+      "function": "Military retiree concentration",
+      "connectionsText": null,
+      "network": null,
+      "reactor": false,
+      "commanderId": null,
+      "origin": "source"
+    }
+  ],
+  "transitTech": {
+    "railSystem": "Modified maglev (ALPHA-to-ALPHA)",
+    "tramSystem": "High-speed electric (ALPHA-to-BETA)",
+    "averageDepth": "600–1,200 feet below surface",
+    "railSpeed": "180 mph average",
+    "tramSpeed": "90 mph average",
+    "hardening": "EMP-rated, seismic-isolated",
+    "construction": "2002–2007, deep tunnel boring machines (TBMs)",
+    "constructionCover": "Classified as \"utility infrastructure\" and \"geological survey operations\"",
+    "certifiedLength": "847 miles of underground rail and tram tunnels connecting primary facilities",
+    "topologyChartUpdated": "2007-Q4"
+  },
+  "railSegments": [
+    {
+      "no": "01",
+      "a": "ALPHA-01",
+      "b": "ALPHA-03",
+      "routeNote": "Virginia — Kentucky",
+      "miles": 387,
+      "hours": 2.1,
+      "completed": "2004-12",
+      "status": "IN REVENUE SERVICE"
+    },
+    {
+      "no": "02",
+      "a": "ALPHA-01",
+      "b": "ALPHA-02",
+      "routeNote": "Virginia — Colorado",
+      "miles": 1544,
+      "hours": 8.6,
+      "completed": "2006-11",
+      "status": "IN REVENUE SERVICE"
+    },
+    {
+      "no": "03",
+      "a": "ALPHA-02",
+      "b": "ALPHA-04",
+      "routeNote": "Colorado — Nevada",
+      "miles": 748,
+      "hours": 4.2,
+      "completed": "2006-08",
+      "status": "IN REVENUE SERVICE"
+    },
+    {
+      "no": "04",
+      "a": "ALPHA-02",
+      "b": "ALPHA-05",
+      "routeNote": "Colorado — Texas",
+      "miles": 891,
+      "hours": 5,
+      "completed": "2007-03",
+      "status": "NOT IN REVENUE SERVICE"
+    },
+    {
+      "no": "05",
+      "a": "ALPHA-03",
+      "b": "ALPHA-05",
+      "routeNote": "Kentucky — Texas",
+      "miles": 1106,
+      "hours": 6.1,
+      "completed": "2006-09",
+      "status": "IN REVENUE SERVICE"
+    },
+    {
+      "no": "06",
+      "a": "ALPHA-01",
+      "b": "ALPHA-05",
+      "routeNote": "Virginia — Texas (redundancy)",
+      "miles": 1398,
+      "hours": 7.8,
+      "completed": "2007-02",
+      "status": "IN REVENUE SERVICE"
+    }
+  ],
+  "tramNetworks": [
+    {
+      "id": "EASTERN",
+      "name": "Eastern Network",
+      "hubs": [
+        "ALPHA-01"
+      ],
+      "statedTotalMi": 1858,
+      "links": [
+        {
+          "from": "ALPHA-01",
+          "to": "BETA-01",
+          "label": "(Maine)",
+          "miles": 527,
+          "hours": 5.9,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-01",
+          "to": "BETA-02",
+          "label": "(Pittsburgh)",
+          "miles": 218,
+          "hours": 2.4,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-01",
+          "to": "BETA-10",
+          "label": "(Chicago)",
+          "miles": 671,
+          "hours": 7.5,
+          "kind": "BETA"
+        },
+        {
+          "from": "BETA-02",
+          "to": "GAMMA-03",
+          "label": "(DC Metro)",
+          "miles": 97,
+          "hours": 1.1,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-02",
+          "to": "GAMMA-04",
+          "label": "(Philadelphia)",
+          "miles": 156,
+          "hours": 1.7,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-10",
+          "to": "GAMMA-07",
+          "label": "(Detroit)",
+          "miles": 189,
+          "hours": 2.1,
+          "kind": "GAMMA"
+        }
+      ]
+    },
+    {
+      "id": "SOUTHERN",
+      "name": "Southern Network",
+      "hubs": [
+        "ALPHA-05"
+      ],
+      "statedTotalMi": 3507,
+      "links": [
+        {
+          "from": "ALPHA-05",
+          "to": "BETA-03",
+          "label": "(Atlanta)",
+          "miles": 792,
+          "hours": 8.8,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-05",
+          "to": "BETA-12",
+          "label": "(New Orleans)",
+          "miles": 438,
+          "hours": 4.9,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-05",
+          "to": "BETA-05",
+          "label": "(Kansas City)",
+          "miles": 647,
+          "hours": 7.2,
+          "kind": "BETA"
+        },
+        {
+          "from": "BETA-03",
+          "to": "GAMMA-05",
+          "label": "(Charlotte)",
+          "miles": 241,
+          "hours": 2.7,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-03",
+          "to": "GAMMA-06",
+          "label": "(Miami)",
+          "miles": 523,
+          "hours": 5.8,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-12",
+          "to": "GAMMA-16",
+          "label": "(Nashville)",
+          "miles": 412,
+          "hours": 4.6,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "ALPHA-05",
+          "to": "GAMMA-08",
+          "label": "(Dallas)",
+          "miles": 267,
+          "hours": 3,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "ALPHA-05",
+          "to": "GAMMA-09",
+          "label": "(Houston)",
+          "miles": 187,
+          "hours": 2.1,
+          "kind": "GAMMA"
+        }
+      ]
+    },
+    {
+      "id": "MOUNTAIN_WESTERN",
+      "name": "Mountain/Western Network",
+      "hubs": [
+        "ALPHA-02",
+        "ALPHA-04"
+      ],
+      "statedTotalMi": 3691,
+      "links": [
+        {
+          "from": "ALPHA-02",
+          "to": "BETA-04",
+          "label": "(Minneapolis)",
+          "miles": 713,
+          "hours": 7.9,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-02",
+          "to": "BETA-11",
+          "label": "(Salt Lake City)",
+          "miles": 389,
+          "hours": 4.3,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-02",
+          "to": "BETA-06",
+          "label": "(Phoenix)",
+          "miles": 587,
+          "hours": 6.5,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-04",
+          "to": "BETA-07",
+          "label": "(Seattle)",
+          "miles": 819,
+          "hours": 9.1,
+          "kind": "BETA"
+        },
+        {
+          "from": "ALPHA-04",
+          "to": "BETA-08",
+          "label": "(Las Vegas)",
+          "miles": 341,
+          "hours": 3.8,
+          "kind": "BETA"
+        },
+        {
+          "from": "BETA-07",
+          "to": "GAMMA-13",
+          "label": "(Portland)",
+          "miles": 134,
+          "hours": 1.5,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-08",
+          "to": "GAMMA-11",
+          "label": "(Los Angeles)",
+          "miles": 223,
+          "hours": 2.5,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-11",
+          "to": "GAMMA-14",
+          "label": "(Boise)",
+          "miles": 287,
+          "hours": 3.2,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "ALPHA-04",
+          "to": "GAMMA-12",
+          "label": "(San Francisco)",
+          "miles": 198,
+          "hours": 2.2,
+          "kind": "GAMMA"
+        }
+      ]
+    },
+    {
+      "id": "CENTRAL",
+      "name": "Central Network",
+      "hubs": [
+        "ALPHA-03"
+      ],
+      "statedTotalMi": 1482,
+      "links": [
+        {
+          "from": "ALPHA-03",
+          "to": "BETA-09",
+          "label": "(Omaha)",
+          "miles": 614,
+          "hours": 6.8,
+          "kind": "BETA"
+        },
+        {
+          "from": "BETA-09",
+          "to": "GAMMA-10",
+          "label": "(St. Louis)",
+          "miles": 267,
+          "hours": 3,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-09",
+          "to": "GAMMA-17",
+          "label": "(Indianapolis)",
+          "miles": 412,
+          "hours": 4.6,
+          "kind": "GAMMA"
+        },
+        {
+          "from": "BETA-05",
+          "to": "GAMMA-10",
+          "label": "(St. Louis)",
+          "miles": 189,
+          "hours": 2.1,
+          "kind": "GAMMA"
+        }
+      ]
+    }
+  ],
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Core Council",
+      "count": 11,
+      "composition": [
+        {
+          "role": "Cabinet-level officials",
+          "count": 4
+        },
+        {
+          "role": "Agency directors (CIA/FBI/NSA)",
+          "count": 3
+        },
+        {
+          "role": "Senior military (Joint Chiefs)",
+          "count": 2
+        },
+        {
+          "role": "Defense industry executives",
+          "count": 2
+        }
+      ],
+      "clearance": "UMBRA/OSC UNRESTRICTED",
+      "clearanceMarking": "UMBRA-U",
+      "knowledgeScope": "Full network awareness"
+    },
+    {
+      "tier": 2,
+      "name": "Facility Command Staff",
+      "count": 247,
+      "composition": [
+        "Facility commanders",
+        "Deputy commanders",
+        "Senior intelligence officers"
+      ],
+      "clearance": "UMBRA/OSC COMPARTMENTED",
+      "clearanceMarking": "UMBRA-C",
+      "knowledgeScope": "Full awareness of assigned facility + immediate connections. Limited awareness of broader network."
+    },
+    {
+      "tier": 3,
+      "name": "Specialized Personnel",
+      "count": 1891,
+      "composition": [
+        {
+          "role": "Intelligence analysts",
+          "count": 478
+        },
+        {
+          "role": "Security forces",
+          "count": 712
+        },
+        {
+          "role": "Technical/engineering",
+          "count": 389
+        },
+        {
+          "role": "Medical",
+          "count": 127
+        },
+        {
+          "role": "Communications specialists",
+          "count": 185
+        }
+      ],
+      "clearance": "TOP SECRET/SCI with OSC compartment access",
+      "clearanceMarking": "TSSCI-OSC",
+      "knowledgeScope": "Functional awareness only. No network-wide information."
+    },
+    {
+      "tier": 4,
+      "name": "Essential Support",
+      "count": 1698,
+      "composition": [
+        {
+          "role": "Logistics coordinators",
+          "count": 423
+        },
+        {
+          "role": "Life support technicians",
+          "count": 387
+        },
+        {
+          "role": "Administrative staff",
+          "count": 291
+        },
+        {
+          "role": "Food service/maintenance",
+          "count": 597
+        }
+      ],
+      "clearance": "TOP SECRET/SCI (limited compartments)",
+      "clearanceMarking": null,
+      "knowledgeScope": "Facility-specific only."
+    }
+  ],
+  "ratioModel": {
+    "basis": "Fully-staffed ALPHA-class facility (ALPHA-01 model — 4,500 capacity)",
+    "capacity": 4500,
+    "rows": [
+      {
+        "function": "Command & Administration",
+        "pct": 8,
+        "count": 360
+      },
+      {
+        "function": "Intelligence/Analysis",
+        "pct": 15,
+        "count": 675
+      },
+      {
+        "function": "Security Forces",
+        "pct": 22,
+        "count": 990
+      },
+      {
+        "function": "Military Operations",
+        "pct": 12,
+        "count": 540
+      },
+      {
+        "function": "Technical/Engineering",
+        "pct": 14,
+        "count": 630
+      },
+      {
+        "function": "Medical",
+        "pct": 6,
+        "count": 270
+      },
+      {
+        "function": "Communications",
+        "pct": 5,
+        "count": 225
+      },
+      {
+        "function": "Logistics & Supply",
+        "pct": 9,
+        "count": 405
+      },
+      {
+        "function": "Food Service",
+        "pct": 4,
+        "count": 180
+      },
+      {
+        "function": "Maintenance",
+        "pct": 5,
+        "count": 225
+      }
+    ],
+    "note": "Current skeleton crews maintain approximately 7:1 ratio of support-to-command staff to preserve institutional knowledge and operational continuity during low-manning periods."
+  },
+  "phases": [
+    {
+      "n": 1,
+      "years": "2001–2003",
+      "startYear": 2001,
+      "endYear": 2003,
+      "title": "Foundation",
+      "status": "COMPLETE",
+      "recruited": 347,
+      "cumulative": 347,
+      "targetPct": null,
+      "targetCount": null,
+      "items": [
+        "Core Council formation",
+        "Initial facility identification & construction commences",
+        "Personnel recruitment: 347 individuals",
+        "Focus: Command structure and critical facility staff"
+      ]
+    },
+    {
+      "n": 2,
+      "years": "2004–2006",
+      "startYear": 2004,
+      "endYear": 2006,
+      "title": "Infrastructure Build",
+      "status": "COMPLETE",
+      "recruited": 1823,
+      "cumulative": 2170,
+      "targetPct": null,
+      "targetCount": null,
+      "items": [
+        "Primary rail network construction",
+        "ALPHA facilities brought to completion",
+        "Personnel recruitment: 1,823 individuals (cumulative: 2,170)",
+        "Focus: Facility completion and security force establishment"
+      ]
+    },
+    {
+      "n": 3,
+      "years": "2007–2008",
+      "startYear": 2007,
+      "endYear": 2008,
+      "title": "Network Integration",
+      "status": "ACTIVE",
+      "recruited": 1677,
+      "cumulative": 3847,
+      "targetPct": null,
+      "targetCount": null,
+      "items": [
+        "Tram network completion",
+        "BETA/GAMMA facilities operational",
+        "Personnel recruitment: 1,677 individuals (cumulative: 3,847)",
+        "Focus: Intelligence apparatus and specialized technical staff"
+      ]
+    },
+    {
+      "n": 4,
+      "years": "2009–2012",
+      "startYear": 2009,
+      "endYear": 2012,
+      "title": "Full Operational Capability",
+      "status": "PROJECTED",
+      "recruited": null,
+      "cumulative": null,
+      "targetPct": 40,
+      "targetCount": 9360,
+      "items": [
+        "Target staffing: 40% of maximum capacity — 9,360 personnel",
+        "Focus: Full operational capability and recruitment acceleration"
+      ]
+    },
+    {
+      "n": 5,
+      "years": "2013–2020",
+      "startYear": 2013,
+      "endYear": 2020,
+      "title": "Strategic Depth",
+      "status": "PROJECTED",
+      "recruited": null,
+      "cumulative": null,
+      "targetPct": 75,
+      "targetCount": 17550,
+      "items": [
+        "Target staffing: 75% of maximum capacity — 17,550 personnel",
+        "Focus: Strategic depth and full redundancy across all facilities"
+      ]
+    }
+  ],
+  "security": {
+    "construction": [
+      {
+        "label": "Contractor Compartmentalization",
+        "text": "47 separate primary contractors, average 8.3 subcontractors each. No contractor aware of more than 3 facility sites. All bound by Title 50 wartime secrecy provisions."
+      },
+      {
+        "label": "Cover Infrastructure",
+        "text": "All ALPHA/BETA sites possess authentic surface-level government facilities requiring regular cleared personnel access. Provides cover for underground activity."
+      },
+      {
+        "label": "Audit Camouflage",
+        "text": "Facility construction costs distributed across 127 separate budget line items spanning DOD, DOE, DHS, and FEMA appropriations."
+      }
+    ],
+    "personnel": {
+      "investigation": "Enhanced SSBI with specialized OSC supplement.",
+      "focusAreas": [
+        "Multi-generational family citizenship verification",
+        "Financial independence from foreign-connected entities",
+        "Psychological assessment for ideological reliability",
+        "Social network mapping"
+      ],
+      "compartmentation": "Personnel awareness strictly limited by tier structure. Facility transfers require new compartment briefing and 90-day probationary period.",
+      "communications": "All OSC communications utilize encrypted quantum-key distribution network, independent of standard government communications infrastructure. No external internet connectivity."
+    }
+  },
+  "reserves": {
+    "basisNote": "Strategic reserves as of May 2008. Quantities expressed at full 23,400-capacity scale unless otherwise noted.",
+    "items": [
+      {
+        "id": "FOOD-MRE",
+        "category": "FOOD",
+        "label": "MRE/Long-term storage",
+        "value": 47000000,
+        "unit": "meals",
+        "text": "47 million meals — sufficient for 23,400 personnel for 5.5 years",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "FOOD-SEED",
+        "category": "FOOD",
+        "label": "Agricultural seed vault",
+        "value": 1200000,
+        "unit": "samples",
+        "text": "1.2 million samples (ALPHA-03)",
+        "site": "ALPHA-03",
+        "tier": 3
+      },
+      {
+        "id": "WATER-PURIFICATION",
+        "category": "WATER",
+        "label": "Water purification",
+        "value": 2400000,
+        "unit": "gallons/day",
+        "text": "2.4 million gallons/day network-wide",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "MED-PHARMA",
+        "category": "MEDICAL",
+        "label": "Pharmaceutical stockpiles",
+        "value": 8,
+        "unit": "years",
+        "text": "8-year supply at capacity",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "MED-SURGICAL",
+        "category": "MEDICAL",
+        "label": "Surgical facilities",
+        "value": 47,
+        "unit": "operating rooms",
+        "text": "47 operating rooms network-wide",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "MED-BLOOD",
+        "category": "MEDICAL",
+        "label": "Blood/plasma storage",
+        "value": 180000,
+        "unit": "units",
+        "text": "180,000 units",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "MED-GENETIC",
+        "category": "MEDICAL",
+        "label": "Genetic material vault",
+        "value": 125000,
+        "unit": "samples",
+        "text": "125,000 samples (ALPHA-03)",
+        "site": "ALPHA-03",
+        "tier": 2
+      },
+      {
+        "id": "ENERGY-NUCLEAR",
+        "category": "ENERGY",
+        "label": "Nuclear reactors",
+        "value": 8,
+        "unit": "installations",
+        "text": "8 installations — 5 ALPHA sites, 3 BETA sites",
+        "site": null,
+        "tier": 2
+      },
+      {
+        "id": "ENERGY-DIESEL",
+        "category": "ENERGY",
+        "label": "Diesel generator backup",
+        "value": 180,
+        "unit": "days runtime",
+        "text": "180-day runtime all facilities",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "ENERGY-RENEWABLE",
+        "category": "ENERGY",
+        "label": "Renewable integration",
+        "value": null,
+        "unit": "",
+        "text": "Solar/geothermal at surface facilities",
+        "site": null,
+        "tier": 3
+      },
+      {
+        "id": "ARMS-SMALL",
+        "category": "ARMAMENTS",
+        "label": "Small arms",
+        "value": 68000,
+        "unit": "weapons",
+        "text": "68,000 weapons — full capacity + 400% reserve",
+        "site": null,
+        "tier": 2
+      },
+      {
+        "id": "ARMS-AMMUNITION",
+        "category": "ARMAMENTS",
+        "label": "Ammunition",
+        "value": 127000000,
+        "unit": "rounds",
+        "text": "127 million rounds",
+        "site": null,
+        "tier": 2
+      },
+      {
+        "id": "ARMS-HEAVY",
+        "category": "ARMAMENTS",
+        "label": "Heavy weapon systems",
+        "value": null,
+        "unit": "",
+        "text": "[REDACTED — TIER 1 ONLY]",
+        "site": null,
+        "tier": 1
+      }
+    ]
+  },
+  "budget": {
+    "totalB": 287,
+    "categories": [
+      {
+        "id": "FACILITY",
+        "name": "Facility Construction",
+        "amountB": 142,
+        "pct": 49.5
+      },
+      {
+        "id": "TRANSIT",
+        "name": "Transit Network",
+        "amountB": 89,
+        "pct": 31
+      },
+      {
+        "id": "EQUIPMENT",
+        "name": "Equipment & Systems",
+        "amountB": 34,
+        "pct": 11.8
+      },
+      {
+        "id": "PERSONNEL",
+        "name": "Personnel Costs",
+        "amountB": 14,
+        "pct": 4.9
+      },
+      {
+        "id": "RESERVES",
+        "name": "Strategic Reserves",
+        "amountB": 8,
+        "pct": 2.8
+      }
+    ],
+    "sources": [
+      {
+        "id": "BLACK",
+        "name": "\"Black budget\" intelligence programs",
+        "pct": 41,
+        "amountB": 117.67
+      },
+      {
+        "id": "DOD",
+        "name": "DOD infrastructure appropriations",
+        "pct": 28,
+        "amountB": 80.36
+      },
+      {
+        "id": "FEMA",
+        "name": "FEMA emergency preparedness",
+        "pct": 17,
+        "amountB": 48.79
+      },
+      {
+        "id": "DOE",
+        "name": "DOE site management",
+        "pct": 9,
+        "amountB": 25.83
+      },
+      {
+        "id": "MISC",
+        "name": "Miscellaneous / reclassified",
+        "pct": 5,
+        "amountB": 14.35
+      }
+    ],
+    "lineItemCount": 127,
+    "departments": [
+      "DOD",
+      "DOE",
+      "DHS",
+      "FEMA"
+    ],
+    "auditNote": "Audit Exposure Risk: MINIMAL. Network cost distribution and classification protocols prevent single-point discovery. Congressional oversight committees possess no awareness of program existence.",
+    "fiscalYears": [],
+    "lineItems": []
+  },
+  "contractors": {
+    "primeCount": 47,
+    "avgSubs": 8.3,
+    "maxSitesKnown": 3,
+    "register": []
+  },
+  "expansion": {
+    "phase4": [
+      "Complete 6 additional GAMMA-class facilities — focus: West Coast density",
+      "Establish ALPHA-06 — Alaska strategic reserve facility",
+      "Expand BETA-03 biomedical research capacity",
+      "Integrate satellite communication redundancy",
+      "Accelerate Tier 3 personnel recruitment — target: 800 per year"
+    ],
+    "phase5": [
+      "Full network staffing to 75% capacity",
+      "Establish continuity protocols for Supreme Court and Congressional leadership",
+      "Complete cultural/technological archive expansion — ALPHA-03",
+      "Integrate advanced AI-driven threat analysis systems",
+      "Prepare primary governance transition protocols"
+    ]
+  },
+  "threats": {
+    "external": [
+      {
+        "id": "EXT-NUCLEAR",
+        "label": "Nuclear Exchange",
+        "response": "Network designed for survival and post-event governance. Depth and hardening sufficient for direct near-strike."
+      },
+      {
+        "id": "EXT-NBC",
+        "label": "Biological / Chemical",
+        "response": "All facilities NBC-rated with 180-day seal capability."
+      },
+      {
+        "id": "EXT-CONVENTIONAL",
+        "label": "Conventional Military",
+        "response": "Hardened against direct strike. Depth sufficient to survive surface detonation."
+      }
+    ],
+    "internal": [
+      {
+        "id": "INT-AGENCY",
+        "label": "Outside Agency Discovery",
+        "response": "Compartmentation prevents comprehensive understanding from single-point compromise."
+      },
+      {
+        "id": "INT-CONGRESS",
+        "label": "Congressional Investigation",
+        "response": "Legal frameworks established. Classification authorities prevent disclosure even under subpoena."
+      },
+      {
+        "id": "INT-WHISTLEBLOWER",
+        "label": "Whistleblowers",
+        "response": "Personnel vetting and monitoring protocols minimize risk. Contingency protocols exist. [REDACTED]"
+      },
+      {
+        "id": "INT-MEDIA",
+        "label": "Media Exposure",
+        "response": "Information warfare capabilities enable narrative control. Prepared cover stories exist for all facility types."
+      }
+    ]
+  },
+  "classificationControl": [
+    {
+      "label": "Document Distribution",
+      "text": "11 copies — physical only, no electronic copies permitted"
+    },
+    {
+      "label": "Destruction Protocol",
+      "text": "Immediate upon succession of Council membership"
+    },
+    {
+      "label": "Revision Authority",
+      "text": "Council majority vote only"
+    },
+    {
+      "label": "Access Control",
+      "text": "Biometric authentication + passphrase"
+    }
+  ],
+  "legalNotice": "HANDLING NOTICE. This is a numbered Council copy, the property of the Office of Strategic Continuity, held under the authority of the Council Charter. It is issued to one named reader and may be read only by that reader, in a controlled space, in physical form. It may not be reproduced, transcribed, summarised, photographed, scanned or entered into any information system. Loss of positive control of this copy, however brief, is to be reported in person to the Office of Internal Assurance before the end of the duty period. Unauthorised disclosure breaches the undertaking signed on admission to the OSC and will be dealt with under the internal discipline provisions of the Charter, in addition to any other proceedings that may apply.",
+  "charter": [
+    {
+      "n": 1,
+      "title": "",
+      "text": "Continuity is not survival. Continuity is purpose sustained beyond crisis. This infrastructure exists not to shelter us from the end, but to ensure the Republic emerges whole from whatever that end may be."
+    }
+  ],
+  "council": {
+    "composition": [
+      {
+        "role": "Cabinet-level officials",
+        "count": 4
+      },
+      {
+        "role": "Agency directors (CIA/FBI/NSA)",
+        "count": 3
+      },
+      {
+        "role": "Senior military (Joint Chiefs)",
+        "count": 2
+      },
+      {
+        "role": "Defense industry executives",
+        "count": 2
+      }
+    ],
+    "seats": []
+  },
+  "reactors": [],
+  "divisions": [],
+  "compartments": [],
+  "roster": [],
+  "glossary": [],
+  "docNumbering": [],
+  "threatDetail": [],
+  "coverCatalogue": [],
+  "realEvents": [],
+  "calendar": [],
+  "budgetNotes": [],
+  "anomalyNotes": {},
+  "personnelNumberFormat": {
+    "pattern": "P-<T>-<YY>-<NNNN>",
+    "example": "P-3-06-1147",
+    "notes": "Regex ^P-[1-4]-(0[1-8])-\\d{4}$. T = tier at the time of issue (1-4); YY = two-digit year of OSC intake (01-08); NNNN = serial within that intake year, issued in sequence from 0001 and never reused. The number is issued once and is not reissued on promotion, transfer or detachment, so T records tier at intake, not current tier. Personnel carried as DETACHED / UNPOSTED keep their number. P-3-06-1147 is reserved for the operator (the visitor) and is not listed in the roster."
+  },
+  "anomalies": [
+    {
+      "id": "UNPOSTED_790",
+      "title": "The missing 790",
+      "origin": "brief",
+      "figures": {
+        "tierTotal": 3847,
+        "facilityStaffSum": 3057,
+        "alpha": 1417,
+        "beta": 1206,
+        "gamma": 413,
+        "delta": 21,
+        "unposted": 790
+      },
+      "canonAnswer": "Tier totals (3,847) count every person on the OSC payroll; facility staff (3,057) count only those posted to a site. The 790 difference is carried as \"DETACHED / UNPOSTED\", a payroll category no directive defines. It appears in personnel totals with no drill-down."
+    },
+    {
+      "id": "TUNNEL_847",
+      "title": "847 miles versus engineering length",
+      "origin": "brief",
+      "figures": {
+        "certifiedMi": 847,
+        "railEngineeringMi": 6074,
+        "tramEngineeringMi": 10538,
+        "tramLinkSumMi": 10538,
+        "engineeringTotalMi": 16612
+      },
+      "canonAnswer": "847 miles is the certified figure reported to the Council. Engineering tables give rail 6,074 miles (sum of six segments) and tram 10,538 miles (sum of four network totals, equal to the sum of the 27 listed links). The Transit app shows engineering figures; the Tier 1 summary shows 847. Neither is corrected."
+    },
+    {
+      "id": "CAPACITY_23400",
+      "title": "Sustained versus surge capacity",
+      "origin": "brief",
+      "figures": {
+        "sustained": 23400,
+        "surge": 34700,
+        "alpha": 16000,
+        "beta": 10780,
+        "gamma": 6940,
+        "delta": 980
+      },
+      "canonAnswer": "23,400 is SUSTAINED CAPACITY: persons the network can keep alive at full reserves. 34,700 is SURGE BERTHING: the sum of every class's stated capacity. Utilization (16.4%) and phase targets use 23,400; facility pages use their own berthing figures."
+    },
+    {
+      "id": "SEGMENT_04",
+      "title": "Segment 04 not in revenue service",
+      "origin": "brief",
+      "figures": {
+        "segment": "04",
+        "a": "ALPHA-02",
+        "b": "ALPHA-05",
+        "miles": 891,
+        "hours": 5,
+        "completed": "2007-03",
+        "status": "NOT IN REVENUE SERVICE"
+      },
+      "canonAnswer": "Segment 04 (ALPHA-02 to ALPHA-05, 891 mi) appears in the segment table but in neither facility's connection list. It was completed March 2007 and is NOT IN REVENUE SERVICE. No reason is recorded."
+    },
+    {
+      "id": "ELECTRONIC_COPY",
+      "title": "No electronic copies permitted",
+      "origin": "brief",
+      "figures": {
+        "copies": 11,
+        "electronicCopiesPermitted": 0,
+        "sourceCopyNo": "01",
+        "sourceRevision": "2008-Q2"
+      },
+      "canonAnswer": "The Facility Inventory is distributed in 11 physical copies with no electronic copies permitted, yet a partially redacted scan of it is held in the Records Library. Records Division has an open security incident on it."
+    },
+    {
+      "id": "MEALS_RATION",
+      "title": "Meal stocks imply one meal per person per day",
+      "origin": "extractor",
+      "figures": {
+        "meals": 47000000,
+        "persons": 23400,
+        "statedYears": 5.5,
+        "mealsPerPersonPerDay": 1,
+        "yearsAtThreeMealsPerDay": 1.83,
+        "daysAtThreeMealsPerDay": 670
+      },
+      "canonAnswer": "47 million meals for 23,400 persons for 5.5 years works out to 1.0 meal per person per day. At three meals a day the same stock lasts 670 days (1.83 years). The 5.5-year figure stands as the Council figure; the ration basis is not stated anywhere."
+    },
+    {
+      "id": "ARMS_RESERVE",
+      "title": "Small-arms reserve arithmetic",
+      "origin": "extractor",
+      "figures": {
+        "weapons": 68000,
+        "impliedEquippedStrength": 13600,
+        "atSustained": 117000,
+        "atSurge": 173500
+      },
+      "canonAnswer": "\"Full capacity + 400% reserve\" means five weapons per armed position. 68,000 / 5 = 13,600, which matches neither 23,400 (117,000 needed) nor 34,700 (173,500). The figure stands; the basis for 13,600 is not given."
+    },
+    {
+      "id": "HUBS_12",
+      "title": "Twelve primary hubs",
+      "origin": "extractor",
+      "figures": {
+        "statedHubs": 12,
+        "alphaHubs": 5,
+        "tunnelConnectedAlphaBeta": 17,
+        "tramNetworkHubs": 5
+      },
+      "canonAnswer": "The executive summary says the network connects 12 primary hub installations. Only the five ALPHA sites are called hubs anywhere in the source; twelve is the BETA count. Canon keeps 12 as the certified headline figure without a list behind it."
+    },
+    {
+      "id": "UTILIZATION_BASIS",
+      "title": "Two utilization bases",
+      "origin": "extractor",
+      "figures": {
+        "headlinePct": 16.4,
+        "tierTotal": 3847,
+        "sustained": 23400,
+        "postedOverSurgePct": 8.8,
+        "postedOverSustainedPct": 13.1,
+        "tierOverSurgePct": 11.1
+      },
+      "canonAnswer": "The 16.4% headline divides tier totals (including the 790 unposted) by sustained capacity. Every facility and class percentage divides posted staff by that site's berthing (surge) figure. On one basis throughout, the network is 8.8% (posted / surge) or 13.1% (posted / sustained)."
+    },
+    {
+      "id": "TRAM_GEOMETRY",
+      "title": "Tram links shorter than the straight-line distance",
+      "origin": "extractor",
+      "figures": {
+        "links": 27,
+        "shorterThanStraightLine": 17,
+        "worstLink": "BETA-02 to GAMMA-03",
+        "worstStatedMi": 97,
+        "worstStraightMi": 201
+      },
+      "canonAnswer": "Placed by their stated anchors, 17 of the 27 tram links are shorter than the great-circle distance between their end points (BETA-02 to GAMMA-03 is listed at 97 mi against about 201 mi). Rail segments are all longer than the straight line, as they should be. The listed mileages stand as engineering figures; the geographic view draws links between computed positions and does not label them with length."
+    },
+    {
+      "id": "SUPPORT_RATIO",
+      "title": "The 7:1 support-to-command ratio",
+      "origin": "extractor",
+      "figures": {
+        "claimed": "7:1",
+        "alphaCommand": 162,
+        "alphaOther": 1255,
+        "alphaRatio": 7.7,
+        "networkTier12": 258,
+        "networkTier34": 3589,
+        "networkRatio": 13.9,
+        "ratioModel": 11.5
+      },
+      "canonAnswer": "Across the five ALPHA sites, 1,255 non-command staff to 162 command staff is 7.7:1 (sites range 5.8:1 to 9.8:1). Network-wide Tier 3 and 4 to Tier 1 and 2 is 13.9:1, and the full-staffing model (8% command) is 11.5:1. \"Approximately 7:1\" holds only for ALPHA command lines."
+    }
+  ],
+  "operator": {
+    "operatorId": "OPR-A03-1147",
+    "passphrase": "ballast pewter orchard ninety",
+    "pn": "P-3-06-1147",
+    "displayName": "ANALYST (PROBATIONARY) 3-1147",
+    "tier": 3,
+    "site": "ALPHA-03",
+    "divisionId": "RD",
+    "compartments": [
+      "LANTERN"
+    ],
+    "probationStart": "2008-04-14",
+    "supervisorPn": "P-2-04-0218",
+    "email": "analyst.1147@a03.rd.mer"
+  }
+}

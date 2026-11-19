@@ -1,0 +1,21 @@
+/* Check page scaffolding only. Colours here stand in for design tokens. */
+body { margin: 0; background: #3a4652; font: 12px/16px 'IBM Plex Sans', sans-serif; color: #15181c; }
+.ck-block { width: 980px; padding: 12px; background: #d6d3cb; margin: 0 0 24px; }
+.ck-paper { background: #f3f1ea; }
+.ck-note { font-size: 11px; color: #4b5158; margin-bottom: 8px; }
+.ck-pair { margin-bottom: 8px; border: 1px solid #5b5a56; }
+.ck-desk { height: 30px; background: #3a4652; color: #c9c6bc; display: flex; align-items: center; padding: 0 8px; font: 11px 'IBM Plex Mono', monospace; }
+.ck-windows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ck-window { border: 1px solid #5b5a56; background: #fff; }
+.ck-title { height: 20px; background: #1f3552; color: #fff; font-weight: 600; padding: 0 6px; line-height: 20px; }
+.ck-body { height: 34px; padding: 6px; color: #4b5158; }
+.ck-cover { width: 816px; margin: 0 0 24px; }
+.ck-stamps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px 12px; align-items: center; }
+.ck-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ck-cap { font: 10px 'IBM Plex Mono', monospace; color: #7a8088; }
+.ck-pipe { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ck-pipecol { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 8px; }
+.ck-scan { position: relative; width: 560px; padding: 34px 44px 150px; background: #fbfaf6; border: 1px solid #c9c6bc; font: 13px/19px 'Courier Prime', 'Courier New', monospace; }
+.ck-s1 { position: absolute; right: 34px; top: 16px; }
+.ck-s2 { position: absolute; left: 60px; bottom: 30px; }
+.ck-s3 { position: absolute; right: 60px; bottom: 44px; }

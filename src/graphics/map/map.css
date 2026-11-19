@@ -1,0 +1,295 @@
+/*
+ * @graphics/map. Colours come from design tokens only (src/design/tokens.css).
+ * Flat fills, 1px lines, no shadow, no gradient, no animation beyond the
+ * standard tooltip delay.
+ */
+.um {
+  position: relative;
+  overflow: hidden;
+  background: var(--row-hover);
+  font-family: var(--font-ui);
+  color: var(--text-1);
+  line-height: var(--lh-sm);
+}
+.um-svg {
+  display: block;
+  user-select: none;
+}
+
+/* ---- base map ---- */
+.um-water {
+  fill: var(--row-hover);
+}
+.um-land {
+  fill: var(--paper);
+  stroke: none;
+}
+.um-grid {
+  fill: none;
+  stroke: var(--row-rule);
+  stroke-width: 0.5;
+}
+.um-borders {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+}
+.um-coast {
+  fill: none;
+  stroke: var(--chrome-outer);
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+}
+.um-neatline {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}
+.um-grid-label {
+  fill: var(--text-3);
+  font-family: var(--font-mono);
+}
+.um-state-label {
+  fill: var(--text-3);
+  font-family: var(--font-ui);
+  letter-spacing: var(--tracking-caps);
+}
+
+/* ---- furniture ---- */
+.um-furn-line {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.um-furn-text {
+  fill: var(--text-1);
+  font-family: var(--font-ui);
+}
+.um-furn-text--n {
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- marker glyphs ---- */
+.um-glyph-svg {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: visible;
+}
+.um-shape {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.um-glyph--alpha .um-shape {
+  fill: var(--title-active-bg);
+}
+.um-glyph--beta .um-shape {
+  fill: var(--title-inactive-bg);
+}
+.um-glyph--gamma .um-shape {
+  fill: var(--surface);
+  stroke-width: 1.5;
+}
+.um-glyph--delta .um-shape {
+  fill: var(--surface);
+  stroke: var(--text-3);
+}
+.um-glyph--dim .um-shape {
+  stroke: var(--text-3);
+}
+.um-glyph--dim.um-glyph--alpha .um-shape,
+.um-glyph--dim.um-glyph--beta .um-shape {
+  fill: var(--row-rule);
+}
+.um-selbox {
+  fill: none;
+  stroke: var(--print-ink);
+  stroke-width: 1;
+}
+.um-hoverbox {
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 1;
+}
+
+/* ---- markers on the map ---- */
+.um-marker {
+  cursor: pointer;
+  outline: none;
+}
+.um-hit {
+  fill: transparent;
+  stroke: none;
+}
+.um-focusbox {
+  fill: none;
+  stroke: var(--focus-ring);
+  stroke-width: 1;
+  stroke-dasharray: 1 1;
+  visibility: hidden;
+}
+.um-marker:focus-visible .um-focusbox {
+  visibility: visible;
+}
+
+/* ---- designation labels ---- */
+.um-label text {
+  font-family: var(--font-mono);
+  fill: var(--text-1);
+  stroke: var(--paper);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+.um-label--alpha text {
+  font-weight: var(--fw-semibold);
+}
+.um-label--beta text,
+.um-label--gamma text {
+  fill: var(--text-2);
+}
+.um-label--delta text {
+  fill: var(--text-3);
+}
+.um-leader {
+  stroke: var(--text-2);
+  stroke-width: 0.75;
+}
+
+/* ---- selected label plate ---- */
+.um-plate__box {
+  fill: var(--surface);
+  stroke: var(--print-ink);
+  stroke-width: 1;
+}
+.um-plate__leader {
+  stroke: var(--print-ink);
+  stroke-width: 1;
+}
+.um-plate text {
+  font-family: var(--font-mono);
+  fill: var(--text-1);
+  white-space: pre;
+}
+.um-plate__id {
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- tooltip plate ---- */
+.um-tip {
+  position: absolute;
+  z-index: 2;
+  min-width: 150px;
+  max-width: 236px;
+  padding: 3px 6px 4px;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  border: 1px solid var(--tooltip-border);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+  pointer-events: none;
+  animation: um-tip-in 0s linear var(--tooltip-delay) both;
+}
+.um-tip--instant {
+  animation: none;
+}
+@keyframes um-tip-in {
+  from {
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
+  }
+}
+.um-tip__head {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--tooltip-border);
+  white-space: nowrap;
+}
+.um-tip__id {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semibold);
+}
+.um-tip__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.um-tip__rows {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 8px;
+  margin: 0;
+}
+.um-tip__rows dt {
+  color: var(--text-2);
+}
+.um-tip__rows dd {
+  margin: 0;
+}
+.um-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- HTML overlay slot ---- */
+.um-html {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.um-html > * {
+  pointer-events: auto;
+}
+
+/* ---- legend ---- */
+.um-legend {
+  display: inline-block;
+  padding: 3px 6px 4px;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.um-legend__title {
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--row-rule);
+  font-weight: var(--fw-semibold);
+}
+.um-legend__table {
+  border-collapse: collapse;
+}
+.um-legend__table td {
+  padding: 1px 8px 1px 0;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.um-legend__table td:last-child {
+  padding-right: 0;
+}
+.um-legend__glyph {
+  width: 17px;
+  line-height: 0;
+}
+.um-legend__id {
+  font-family: var(--font-mono);
+}
+.um-legend__name {
+  color: var(--text-2);
+}
+.um-legend__n {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.um-legend__row--off td {
+  color: var(--text-3);
+}
+.um-legend__row--off .um-legend__n {
+  font-family: var(--font-ui);
+}

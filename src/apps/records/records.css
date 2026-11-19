@@ -1,0 +1,324 @@
+/* Records Library. Tokens only. */
+.rec {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  container-type: inline-size;
+  container-name: rec;
+}
+.rec:focus {
+  outline: none;
+}
+.rec__main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.rec__pane {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.rec__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.rec__well {
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  box-shadow: inset 1px 1px var(--chrome-outer);
+}
+.rec__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding: var(--sp-2) var(--sp-3);
+  min-height: var(--ctl-h);
+}
+.rec__head-title {
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--fs-sm);
+}
+.rec__head-meta {
+  color: var(--text-2);
+}
+.rec__grow {
+  flex: 1;
+}
+.rec__label {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-weight: var(--fw-semibold);
+  padding: var(--sp-2) var(--sp-3) var(--sp-1);
+}
+.rec__mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.rec__muted {
+  color: var(--text-2);
+}
+
+/* Library */
+.rec-lib__detail {
+  flex: none;
+  max-height: 40%;
+  overflow: auto;
+  border-top: 1px solid var(--chrome-shadow);
+  padding: var(--sp-3);
+  background: var(--chrome-face);
+}
+.rec-lib__summary {
+  margin: var(--sp-2) 0 0;
+  max-width: 90ch;
+}
+.rec-lib__actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  flex-wrap: wrap;
+}
+.rec-tree {
+  height: 100%;
+  overflow: auto;
+}
+
+/* Search */
+.rec-search__form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3);
+  border-bottom: 1px solid var(--chrome-shadow);
+}
+.rec-search__form .f-row {
+  margin: 0;
+}
+.rec-search__q {
+  flex: 1;
+  min-width: 220px;
+}
+.rec-search__side {
+  height: 100%;
+  overflow: auto;
+  padding: var(--sp-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.rec-facet {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rec-facet li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--row-h);
+}
+.rec-facet li > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.rec-facet__n {
+  font-family: var(--font-mono);
+  color: var(--text-2);
+}
+.rec-saved {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rec-saved li {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: baseline;
+  min-height: var(--row-h);
+}
+.rec-saved__q {
+  font-family: var(--font-mono);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rec-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rec-hit {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--row-rule);
+}
+.rec-hit:nth-child(even) {
+  background: var(--zebra);
+}
+.rec-hit:focus-within {
+  background: var(--row-hover);
+}
+.rec-hit__top {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.rec-hit__no {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semibold);
+  min-width: 18ch;
+}
+.rec-hit__title {
+  font-weight: var(--fw-semibold);
+}
+.rec-hit__meta {
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  display: flex;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-top: var(--sp-1);
+}
+.rec-hit__snip {
+  margin-top: var(--sp-2);
+  max-width: 110ch;
+  font-family: var(--font-doc);
+  font-size: var(--fs-md);
+  line-height: var(--lh-md);
+  color: var(--text-1);
+}
+.rec-hit__snip b {
+  font-weight: var(--fw-bold);
+  text-decoration: underline;
+}
+.rec-hit__snip .redaction {
+  vertical-align: -1px;
+}
+.rec-mk {
+  display: inline-block;
+  padding: 0 var(--sp-2);
+  background: var(--mark-bg);
+  color: var(--mark-fg);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-caps);
+  white-space: nowrap;
+}
+.rec-search__pager {
+  flex: none;
+  padding: var(--sp-2) var(--sp-3);
+  border-top: 1px solid var(--chrome-shadow);
+}
+.rec-note {
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--text-2);
+}
+
+/* Document */
+.rec-doc__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--ws-bg);
+  padding: var(--sp-5);
+}
+.rec-props {
+  height: 100%;
+  overflow: auto;
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.rec-props ol,
+.rec-props ul {
+  margin: 0;
+  padding-left: var(--sp-6);
+}
+.rec-props table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.rec-props th,
+.rec-props td {
+  text-align: left;
+  border-bottom: 1px solid var(--row-rule);
+  padding: 1px var(--sp-2);
+  vertical-align: top;
+}
+.rec-props th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+}
+.rec-link {
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.rec-link:visited {
+  color: var(--link-visited);
+}
+.rec-fill {
+  height: 100%;
+}
+.rec-dlg-list {
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow: auto;
+}
+.rec-dlg-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-1) 0;
+  border-bottom: 1px solid var(--row-rule);
+}
+.rec-dlg-list li > span {
+  flex: 1;
+}
+
+/* Handheld / narrow windows */
+@container rec (max-width: 860px) {
+  .rec-doc__scroll {
+    padding: var(--sp-2);
+  }
+  .rec-hit__no {
+    min-width: 0;
+  }
+  .rec-lib__detail {
+    max-height: 45%;
+  }
+}
+.rec-props .rec-mk,
+.rec-lib__detail .rec-mk {
+  white-space: normal;
+}
+
+.rec-props td.rec__mono {
+  white-space: nowrap;
+}
+.rec .rec-mk {
+  white-space: normal;
+}
