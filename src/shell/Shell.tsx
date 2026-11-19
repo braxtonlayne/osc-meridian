@@ -30,6 +30,7 @@ import {
   toggleMax,
 } from './wm';
 import { doLock, doLogin, doTimeout, runOpen, searchOpen } from './state';
+import { f10ToMenuBar } from './focus';
 
 let ready: Promise<void> = Promise.resolve();
 export function setReady(p: Promise<void>): void {
@@ -93,6 +94,10 @@ function onGlobalKey(e: KeyboardEvent): void {
     minimize(w.id);
   } else if (e.altKey && key === 'F10' && w) {
     toggleMax(w.id);
+  } else if (key === 'F10' && !e.shiftKey && !e.ctrlKey && !e.metaKey && w && !(e.target as HTMLElement | null)?.closest?.('.xterm')) {
+    // F10 reaches the active window's menu bar from anywhere (the MenuBar itself only
+    // listens inside its own host element).
+    handled = f10ToMenuBar(w.id);
   } else if (e.altKey && !e.shiftKey && code === 'KeyW' && w) {
     w.handle.close();
   } else if (e.altKey && (code === 'Minus' || code === 'NumpadSubtract') && w) {

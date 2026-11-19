@@ -21,7 +21,10 @@
   }
   .doc-strip {
     display: grid;
-    grid-template-columns: minmax(16ch, 1.3fr) minmax(18ch, 1.6fr) minmax(12ch, 1.2fr) 6ch minmax(12ch, 1fr) minmax(10ch, 1fr);
+    /* Each cell grows to its full value before any is cut short; Type takes what is left.
+       Space is shared out evenly, so short values finish first and long ones (doc number,
+       marking) only ellipsise when the strip truly cannot hold them. */
+    grid-template-columns: repeat(5, minmax(0, max-content)) minmax(8ch, 1fr);
     background: var(--surface);
     border: 1px solid var(--chrome-shadow);
     border-bottom: 0;
@@ -48,7 +51,7 @@
   }
   @container doc (max-width: 620px) {
     .doc-strip {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, max-content)) minmax(8ch, 1fr);
     }
     .doc-strip__cell:nth-child(3) {
       border-right: 0;
@@ -317,7 +320,8 @@
   /* ================= Signature ================= */
   .doc-sig {
     width: max-content;
-    max-width: 100%;
+    /* Starts at mid-sheet, so it may use only the right half; a long title wraps. */
+    max-width: 50%;
     margin: var(--sp-8) 0 var(--sp-5) 50%;
   }
   .doc-sig__label {
@@ -340,6 +344,7 @@
   @container doc (max-width: 560px) {
     .doc-sig {
       margin-left: 0;
+      max-width: 100%;
     }
   }
 
@@ -361,10 +366,19 @@
     font-size: var(--fs-sm);
     color: var(--text-2);
   }
-  .doc .pgrid {
-    margin-bottom: var(--sp-5);
+  .doc .pgrid,
+  .doc .pgrid__caption {
     border-left: 1px solid var(--row-rule);
     border-right: 1px solid var(--row-rule);
+  }
+  .doc .pgrid {
+    margin-bottom: var(--sp-5);
+  }
+  .doc .pgrid-fig {
+    margin: 0 0 var(--sp-5);
+  }
+  .doc .pgrid-fig .pgrid {
+    margin-bottom: 0;
   }
 
   /* ================= memo ================= */
@@ -411,6 +425,11 @@
   }
   .memo-refs {
     list-style: lower-alpha;
+    padding-left: 1.6em;
+  }
+  /* Items that carry their own marker ("A. ...") get no second one from the list. */
+  .doc ol.is-marked {
+    list-style: none;
     padding-left: 1.6em;
   }
   .doc-body--numbered {

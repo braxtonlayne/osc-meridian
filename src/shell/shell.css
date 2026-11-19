@@ -157,13 +157,17 @@
     grid-template-rows: auto 1fr auto;
     background: var(--ws-bg);
   }
+  /* min-height:0 lets the body row scroll instead of growing under the bottom banner on a
+     short screen (1024x768); auto margins centre the panel only while it fits. */
   .lock-body {
+    min-height: 0;
     overflow: auto;
     display: grid;
-    place-items: center;
+    justify-items: center;
     padding: 16px;
   }
   .lock-panel {
+    margin-block: auto;
     width: min(940px, 100%);
     background: var(--chrome-face);
     border: 1px solid var(--chrome-outer);
@@ -211,6 +215,7 @@
     margin: 0 0 6px;
   }
   .lock-notice {
+    align-self: start;
     background: var(--surface);
     border: 1px solid;
     border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
@@ -374,6 +379,12 @@
     box-shadow: none;
     background: transparent;
   }
+  /* The default dark dotted ring vanishes on the navy bar: draw it in the title text colour
+     (white on #1F3552 is 12.4:1; on the inactive grey bar 3.7:1), inset so it isn't clipped. */
+  .win-title .win-ctl:focus-visible {
+    outline: 1px dotted var(--title-active-fg);
+    outline-offset: -2px;
+  }
   .win-ctl-plain {
     width: 10px;
     height: 10px;
@@ -485,6 +496,10 @@
   }
   .win-pad {
     padding: 12px;
+  }
+  /* Refusal and not-found notices sit on the chrome face, like a message box. */
+  .win.is-refusal .win-body {
+    background: var(--chrome-face);
   }
   .win-loading {
     padding: 12px;

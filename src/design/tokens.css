@@ -30,7 +30,7 @@
     /* ---- Text ---- */
     --text-1: #15181C;
     --text-2: #4B5158;
-    --text-3: #7A8088;
+    --text-3: #646A72; /* 4.8:1 on --paper, 5.5:1 on --surface (WCAG AA body text) */
     --text-disabled: #8C8A84;
     --text-emboss: #F4F2EC;
     --link: #1B3F7A;

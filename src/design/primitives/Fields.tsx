@@ -31,13 +31,19 @@ function widthVar(w: number | string | undefined) {
 export interface FieldMessageProps {
   kind?: 'error' | 'notice';
   id?: string;
+  /**
+   * Errors are announced (role=alert) by default. Pass false when the message sits inside
+   * another live region (an error summary) or is reached through aria-describedby, so a
+   * screen reader hears it once.
+   */
+  live?: boolean;
   children: ComponentChildren;
 }
 
 /** In-world validation line: a status word ("REJECTED" / "NOTE") followed by the reason. */
-export function FieldMessage({ kind = 'error', id, children }: FieldMessageProps) {
+export function FieldMessage({ kind = 'error', id, live = true, children }: FieldMessageProps) {
   return (
-    <div id={id} class={cx('f-msg', kind === 'notice' && 'f-msg--notice')} role={kind === 'error' ? 'alert' : undefined}>
+    <div id={id} class={cx('f-msg', kind === 'notice' && 'f-msg--notice')} role={kind === 'error' && live ? 'alert' : undefined}>
       <span class="f-msg__word">{kind === 'error' ? 'REJECTED' : 'NOTE'}</span>
       <span>{children}</span>
     </div>

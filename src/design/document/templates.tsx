@@ -49,6 +49,12 @@ function Lines({ items }: { items: string[] }) {
   );
 }
 
+/** An authored list marker at the start of an item ("A. ", "1. ", "b) "). */
+const MARKER = /^\s*(?:[A-Za-z]|\d{1,2})[.)]\s+/;
+const dropMarker = (s: string) => s.replace(MARKER, '');
+/** True when every item carries its own marker, so the list must not add a second one. */
+const ownMarkers = (items: string[]) => items.length > 0 && items.every((s) => MARKER.test(s));
+
 function XrefLink({ ctx, route, children }: { ctx: TemplateCtx; route?: string; children: ComponentChildren }) {
   if (!route) return <>{children}</>;
   return (
@@ -122,7 +128,7 @@ function memo(ctx: TemplateCtx): TemplateParts {
               <tr>
                 <th scope="row">REFERENCES</th>
                 <td>
-                  <ol class="memo-refs">
+                  <ol class={ownMarkers(refs) ? 'memo-refs is-marked' : 'memo-refs'}>
                     {refs.map((r, i) => (
                       <li key={i}>{resolveRef(ctx, r)}</li>
                     ))}
@@ -140,7 +146,7 @@ function memo(ctx: TemplateCtx): TemplateParts {
         {atts.length ? (
           <div class="doc-annex">
             <div class="doc-annex__h">Attachments:</div>
-            <ol>
+            <ol class={ownMarkers(atts) ? 'is-marked' : undefined}>
               {atts.map((a, i) => (
                 <li key={i}>{a}</li>
               ))}
@@ -266,7 +272,7 @@ function cable(ctx: TemplateCtx): TemplateParts {
               <>
                 {refs.map((r, i) => (
                   <div key={i}>
-                    {String.fromCharCode(65 + i)}. {resolveRef(ctx, r.toUpperCase())}
+                    {String.fromCharCode(65 + i)}. {resolveRef(ctx, dropMarker(r).toUpperCase())}
                   </div>
                 ))}
               </>,

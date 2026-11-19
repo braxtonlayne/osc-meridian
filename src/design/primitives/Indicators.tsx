@@ -105,7 +105,6 @@ export interface PropertyGridProps {
 export function PropertyGrid({ rows, columns = 1, caption }: PropertyGridProps) {
   const grid = (
     <dl class={cx('pgrid', columns === 2 && 'pgrid--cols-2')}>
-      {caption ? <div class="pgrid__caption">{caption}</div> : null}
       {rows.map((r, i) => (
         <div key={`${i}-${r.label}`} style={{ display: 'contents' }}>
           <dt class="pgrid__k">{r.label}</dt>
@@ -115,7 +114,16 @@ export function PropertyGrid({ rows, columns = 1, caption }: PropertyGridProps) 
     </dl>
   );
   // Two pairs per row reflow to one below ~560px of available width (container query on the host).
-  return columns === 2 ? <div class="pgrid-host">{grid}</div> : grid;
+  const body = columns === 2 ? <div class="pgrid-host">{grid}</div> : grid;
+  // A <dl> may only hold dt/dd groups, so the caption labels it from a figure around it.
+  return caption ? (
+    <figure class="pgrid-fig">
+      <figcaption class="pgrid__caption">{caption}</figcaption>
+      {body}
+    </figure>
+  ) : (
+    body
+  );
 }
 
 /* ---------------- GroupBox ---------------- */

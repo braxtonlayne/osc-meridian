@@ -148,7 +148,9 @@ export function DirectoryMenu() {
   }, []);
 
   const appItems: MenuItem[] = APPS.map((a) => ({ label: a.title, action: () => services.openApp(a.id as AppId) }));
-  const recents = recent.value.slice(0, 6);
+  // App home routes are already listed (Applications, and the shortcuts above), so recent
+  // documents show documents only.
+  const recents = recent.value.filter((p) => !APPS.some((a) => a.homeRoute === p)).slice(0, 6);
   const docItems: MenuItem[] = [
     { label: 'Records Library', action: () => services.openApp('records') },
     { label: 'Directives', action: () => services.openApp('directives') },

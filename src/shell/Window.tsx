@@ -403,7 +403,13 @@ export function WindowFrame({ win }: { win: Win }) {
             win.handle.close();
           }}
         >
-          {win.def ? <Icon id={win.def.icon} size={16} /> : <span class="win-ctl-plain" />}
+          {win.def ? (
+            <Icon id={win.def.icon} size={16} />
+          ) : win.kind === 'refusal' ? (
+            <Icon id={win.refusal?.notFound ? 'question' : 'folder-locked'} size={16} />
+          ) : (
+            <span class="win-ctl-plain" />
+          )}
         </button>
         <div class="win-title-text">
           {docNo && <span class="win-docno">{docNo}</span>}

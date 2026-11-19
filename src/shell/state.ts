@@ -4,7 +4,8 @@ import * as audit from '@core/audit';
 import * as session from '@core/session';
 import { replacePath } from '@core/router';
 import { openRoute } from '@core/services';
-import { removeWindow, windows } from './wm';
+import { activeWin, removeWindow, windows } from './wm';
+import { focusInto, focusTaskbar } from './focus';
 import { menu } from './Menu';
 
 function toLock(): void {
@@ -30,6 +31,12 @@ export function doLogin(): void {
   const p = pendingPath.peek();
   pendingPath.value = null;
   if (p && p !== '/') openRoute(p, { push: false });
+  else {
+    // Back from the lock screen: focus returns to the active window, or the taskbar.
+    const w = activeWin.peek();
+    if (w) focusInto(w.id);
+    else focusTaskbar();
+  }
 }
 
 export function doLock(): void {

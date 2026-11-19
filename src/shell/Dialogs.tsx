@@ -8,7 +8,8 @@ import * as session from '@core/session';
 import { isRx } from '@core/rx';
 import { canonNow, markingById } from './adapters';
 import type { SearchHit } from './adapters';
-import { cascade, tile, minimizeAll } from './wm';
+import { activeWin, cascade, tile, minimizeAll } from './wm';
+import { focusInto, focusTaskbar } from './focus';
 import { runOpen, searchOpen, doLock, doLogoff } from './state';
 import { APPS } from '@apps/index';
 
@@ -26,6 +27,31 @@ function useModalKeys(onClose: () => void) {
   }, []);
 }
 
+
+/**
+ * Remember what had focus when a shell dialog opened and give it back on close (Esc, Enter,
+ * Cancel). If that element has gone (the dialog opened a window, or closed the one it came
+ * from), focus goes to the active window, else to the taskbar.
+ */
+function useReturnFocus(): void {
+  const trigger = useRef<Element | null>(typeof document !== 'undefined' ? document.activeElement : null);
+  useEffect(
+    () => () => {
+      const t = trigger.current;
+      const w = activeWin.peek();
+      requestAnimationFrame(() => {
+        if (document.activeElement && document.activeElement !== document.body && !document.activeElement.closest('.dialog')) return;
+        if (w && document.querySelector(`[data-win-id="${w.id}"]`)) {
+          if (t instanceof HTMLElement && t.isConnected && t.closest(`[data-win-id="${w.id}"]`)) t.focus();
+          else focusInto(w.id);
+        } else if (t instanceof HTMLElement && t.isConnected && t !== document.body) t.focus();
+        else focusTaskbar();
+      });
+    },
+    [],
+  );
+}
+
 /* ------------------------------------------------------------------ run */
 
 const HELP =
@@ -38,6 +64,7 @@ export function RunDialog() {
   const close = () => {
     runOpen.value = false;
   };
+  useReturnFocus();
   useModalKeys(close);
   useEffect(() => ref.current?.focus(), []);
 
@@ -163,6 +190,7 @@ export function SearchPalette() {
   const close = () => {
     searchOpen.value = false;
   };
+  useReturnFocus();
   useModalKeys(close);
   useEffect(() => ref.current?.focus(), []);
 

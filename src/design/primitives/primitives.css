@@ -1102,11 +1102,13 @@
       border-left: 0;
     }
   }
+  .pgrid-fig {
+    margin: 0;
+  }
   .pgrid__caption {
-    grid-column: 1 / -1;
     padding: var(--sp-1) var(--sp-3);
     background: var(--chrome-face);
-    border-bottom: 1px solid var(--row-rule);
+    border-top: 1px solid var(--row-rule);
     font-weight: var(--fw-semibold);
   }
 
@@ -1212,6 +1214,7 @@
   .tip-host {
     position: relative;
     display: inline-flex;
+    max-width: 100%;
   }
   .tip {
     position: absolute;
@@ -1289,6 +1292,9 @@
   }
 
   /* ================= Redaction ================= */
+  /* Width follows the stated length but never leaves its container: inside a table cell or
+     a narrow panel the bar stops at the cell edge (a percentage inside min() also keeps a
+     long bar from widening an auto-sized table column). */
   .rx,
   .redaction {
     display: inline-block;
@@ -1301,6 +1307,14 @@
     cursor: help;
     user-select: none;
     overflow: hidden;
+  }
+  .rx:not(.rx-block) {
+    width: min(calc(var(--rx-len, 8) * var(--rx-ch)), 100%);
+  }
+  /* Inside the shrink-to-fit tooltip host the bar shrinks with it (the host stops at 100%). */
+  .tip-host > .redaction {
+    flex: 0 1 auto;
+    min-width: 0;
   }
   .rx:focus-visible,
   .redaction:focus-visible {

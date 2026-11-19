@@ -10,6 +10,7 @@ import type { AppDefinition, AppId, RouteEntry, WindowHandle } from '@core/contr
 import type { MarkingId } from '@core/canon-types';
 import { load, save } from '@core/persist';
 import { canonNow } from './adapters';
+import { focusInto, focusTaskbar } from './focus';
 
 export interface Rect {
   x: number;
@@ -147,9 +148,10 @@ export function displayRect(w: Win): Rect {
   return w.rect.value;
 }
 
-function initialRect(def: AppDefinition | null, appId: AppId | null): Rect {
+function initialRect(def: AppDefinition | null, appId: AppId | null, kind: 'app' | 'refusal' = 'app'): Rect {
   const area = workArea.peek();
-  const size = def?.defaultSize ?? { w: 520, h: 320 };
+  // A refusal notice is a compact message window, not an app frame.
+  const size = kind === 'refusal' ? { w: 600, h: 340 } : (def?.defaultSize ?? { w: 520, h: 320 });
   const mem = appId ? remembered.get(appId) : undefined;
   const sameApp = windows.peek().filter((w) => w.appId === appId && w.mode.peek() !== 'min').length;
   if (mem && !sameApp) return clampRect(mem, def?.minSize ?? { w: 380, h: 240 });
@@ -193,7 +195,7 @@ export function openWindow(o: OpenOptions): Win {
     marking: signal<MarkingId>(o.marking ?? o.route?.marking ?? lowestMarking()),
     status: signal(''),
     busy: signal(false),
-    rect: signal(initialRect(o.def, appId)),
+    rect: signal(initialRect(o.def, appId, o.kind)),
     mode: signal<Mode>('normal'),
     snap: signal<SnapZone | null>(null),
     z: signal(++zCounter),
@@ -222,6 +224,7 @@ export function openWindow(o: OpenOptions): Win {
     windows.value = [...windows.peek(), win];
     activeId.value = id;
   });
+  focusInto(id);
   return win;
 }
 
@@ -241,6 +244,7 @@ export function focusWindow(id: string): void {
     activeId.value = id;
   });
   focusHooks.get(id)?.(w);
+  focusInto(id);
 }
 
 const wasMax = new Set<string>();
@@ -258,7 +262,10 @@ export function removeWindow(id: string): void {
     }
   });
   const next = getWin(activeId.peek());
-  if (next) focusHooks.get(next.id)?.(next);
+  if (next) {
+    focusHooks.get(next.id)?.(next);
+    focusInto(next.id);
+  } else focusTaskbar();
 }
 
 export function topmostVisible(): Win | undefined {
@@ -268,6 +275,7 @@ export function topmostVisible(): Win | undefined {
 export function minimize(id: string): void {
   const w = getWin(id);
   if (!w) return;
+  const wasActive = activeId.peek() === id;
   batch(() => {
     if (w.mode.peek() === 'max') wasMax.add(id);
     w.mode.value = 'min';
@@ -275,6 +283,10 @@ export function minimize(id: string): void {
   });
   const next = getWin(activeId.peek());
   if (next) focusHooks.get(next.id)?.(next);
+  if (wasActive) {
+    if (next) focusInto(next.id);
+    else focusTaskbar();
+  }
 }
 
 export function toggleMax(id: string): void {
@@ -402,6 +414,7 @@ export function minimizeAll(): void {
     }
     activeId.value = null;
   });
+  focusTaskbar();
 }
 
 /** Cycle focus through windows in z-order (Alt+` / Alt+F6). */

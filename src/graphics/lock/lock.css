@@ -68,10 +68,12 @@
 
 .lk-card__form {
   align-self: start;
-  font: 8px/10px var(--font-mono);
-  color: var(--text-3);
+  /* 11px and --text-2 (about 7:1 on --paper), stacked on two lines so the organisation
+     name keeps its room on a phone-width card. */
+  font: 11px/13px var(--font-mono);
+  color: var(--text-2);
   text-align: right;
-  white-space: nowrap;
+  max-width: 12ch;
 }
 
 .lk-card__title {
@@ -161,7 +163,7 @@
 
 .lk-card__cred {
   display: grid;
-  grid-template-columns: 92px 1fr;
+  grid-template-columns: 84px 1fr;
   align-items: baseline;
   padding: 5px 8px;
 }
@@ -171,11 +173,12 @@
 }
 
 .lk-card__cred-val {
-  font-size: 15px;
+  /* 14px keeps a four-word passphrase on one line on the full-width card. */
+  font-size: 14px;
   line-height: 18px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  overflow-wrap: anywhere;
+  letter-spacing: 0.02em;
+  overflow-wrap: break-word;
   user-select: all;
 }
 

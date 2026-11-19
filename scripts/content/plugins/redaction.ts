@@ -70,6 +70,20 @@ function innerIds(node: MdNode, out: string[] = []): string[] {
   return out;
 }
 
+/**
+ * Characters withheld by nested redactions (a withheld canon value inside :r[...]): their
+ * bars render empty, so the outer bar must count their stated length, not their text.
+ */
+function innerLen(node: MdNode): number {
+  let n = 0;
+  for (const c of node.children ?? []) {
+    const props = (c.data?.hProperties ?? {}) as Record<string, unknown>;
+    if (typeof props.dataRx === 'string' || typeof props.dataKey === 'string') n += Number(props.dataLen) || 0;
+    else n += innerLen(c);
+  }
+  return n;
+}
+
 export function remarkRedaction(ctx: CompileContext) {
   return (tree: MdNode) => {
     // 1. ids in document order
@@ -114,7 +128,7 @@ export function remarkRedaction(ctx: CompileContext) {
       const key = releaseKey(tier, compartment);
       const inner = innerIds(node);
       const frag = renderFragment(node.children ?? []);
-      const len = Math.max(1, frag.text.length);
+      const len = Math.max(1, frag.text.length + innerLen(node));
 
       if (isTier1Key(key)) {
         // Nothing nested inside a tier-1 block can ever be displayed: do not ship it either.
