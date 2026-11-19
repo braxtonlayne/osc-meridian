@@ -1,0 +1,1506 @@
+{
+  "version": 1,
+  "note": "SPOILER MATERIAL. Narrative/unlock plan for the integration phase (src/narrative). Never import into content/ or show in-site. Human version: docs/NARRATIVE.md.",
+  "baseline": {
+    "tier": 3,
+    "compartments": [
+      "LANTERN"
+    ],
+    "flags": [],
+    "actingTier2": false,
+    "workstation": "A03-5-114"
+  },
+  "keys": {
+    "rule": "Release key = T<tier> | <COMPARTMENT> | <COMPARTMENT>+T<tier>. T1 keys never ship. T2 is satisfied only by ACTING-T2. <COMP>+T2 needs both.",
+    "compartments": [
+      "KESTREL",
+      "HOLLOW",
+      "SEXTANT",
+      "TALLOW",
+      "BRIAR",
+      "QUARRY",
+      "LANTERN"
+    ]
+  },
+  "steps": [
+    {
+      "id": "S01",
+      "title": "Orientation: read the briefing directive",
+      "trigger": {
+        "type": "doc.read",
+        "docNos": [
+          "OSC-DIR-0412"
+        ],
+        "mode": "any"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "oriented"
+      },
+      "mail": "msg-08-04470",
+      "releases": [],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04102",
+          "hint": "Okafor asks the probationer to read DIR-0412 first."
+        },
+        {
+          "page": "kb-0001",
+          "hint": "Refusals cite DIR-0412."
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "Find the held accession",
+      "trigger": {
+        "type": "anyOf",
+        "of": [
+          {
+            "type": "doc.read",
+            "docNos": [
+              "OIA-08-031"
+            ]
+          },
+          {
+            "type": "search",
+            "pattern": "RD-ACC-08-00412|\\b00412\\b|OIA-08-031"
+          }
+        ]
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "accessionHeld"
+      },
+      "mail": null,
+      "releases": [
+        {
+          "key": "flag:accessionHeld",
+          "pages": [
+            "assurance-oia-08-031"
+          ],
+          "what": "Access log section begins listing the visitor's own accesses (filled from audit)."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04470",
+          "hint": "Tasking lists RD-ACC-08-00412 as HELD (OIA-08-031)."
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "Open the scanned Facility Inventory",
+      "trigger": {
+        "type": "doc.read",
+        "docNos": [
+          "OSC-2008-Q2"
+        ],
+        "mode": "any"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "scanRead"
+      },
+      "mail": "msg-08-04490",
+      "releases": [],
+      "breadcrumbs": [
+        {
+          "page": "assurance-oia-08-031",
+          "hint": "Ticket cross-references OSC-2008-Q2 and says it stays on the index so access can be recorded."
+        },
+        {
+          "page": "council-composition",
+          "hint": "Copy register cites the inventory."
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "Self-report the access (BRIAR)",
+      "trigger": {
+        "type": "form.submit",
+        "form": "OSC-F-160",
+        "match": {
+          "documentInvolved": "OSC-2008-Q2|RD-ACC-08-00412"
+        }
+      },
+      "requires": [
+        "S03"
+      ],
+      "grant": {
+        "kind": "compartment",
+        "value": "BRIAR"
+      },
+      "mail": "msg-08-04480",
+      "releases": [
+        {
+          "key": "BRIAR",
+          "pages": [
+            "assurance-oia-08-031"
+          ],
+          "what": "Inquiry log: custody chain from a Secretariat registry at ALPHA-01; \"first opened from workstation A03-5-114, 27 MAR 2008\"; \"title sheet copy number partially legible: 07\"."
+        },
+        {
+          "key": "BRIAR",
+          "pages": [
+            "council-inventory-scan"
+          ],
+          "what": "Second digit of \"COPY 0_ OF 11\" (7)."
+        },
+        {
+          "key": "BRIAR",
+          "pages": [
+            "assurance-threat-04",
+            "assurance-threat-06"
+          ],
+          "what": "Later contingency paragraphs; THR-06 disposition line (\"recorded in personnel accounting as a change of category\")."
+        },
+        {
+          "key": "BRIAR",
+          "pages": [
+            "assurance-psec",
+            "personnel-vetting",
+            "dir-0378"
+          ],
+          "what": "Monitoring methods, re-investigation triggers, inquiry dispositions."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04490",
+          "hint": "OIA access message: self-reports under DIR-0378 are considered in mitigation."
+        },
+        {
+          "page": "dir-0378",
+          "hint": "OSC-F-160 named as the self-report form."
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Read the 790 query and its closure",
+      "trigger": {
+        "type": "doc.read",
+        "docNos": [
+          "OSC-MEM-08-0187",
+          "OSC-MEM-08-0203"
+        ],
+        "mode": "all"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "queryRead"
+      },
+      "mail": null,
+      "releases": [
+        {
+          "key": "flag:queryRead",
+          "pages": [
+            "f-131"
+          ],
+          "what": "Form shows the receipt history line \"Declarations this period: N\" (still no instructions)."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "personnel-overview",
+          "hint": "DETACHED / UNPOSTED 790 row, no drill-down, footnote to DIR-0233."
+        },
+        {
+          "page": "dir-0233",
+          "hint": "Para 6 \"[Reserved.]\"; para 9 on PV-Q queries."
+        },
+        {
+          "page": "system-glossary",
+          "hint": "DETACHED / UNPOSTED -> PERSONNEL ACCOUNTING loop."
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "File an unposted status declaration (HOLLOW)",
+      "trigger": {
+        "type": "form.submit",
+        "form": "OSC-F-131",
+        "match": {
+          "anyField": "^\\s*790\\s*$|P-3-06-0977|P-4-07-0219|P-3-05-0142"
+        }
+      },
+      "requires": [],
+      "grant": {
+        "kind": "compartment",
+        "value": "HOLLOW"
+      },
+      "mail": "msg-08-04481",
+      "releases": [
+        {
+          "key": "HOLLOW",
+          "pages": [
+            "personnel-directory"
+          ],
+          "what": "Fields of Ackroyd, Dimmick, Tobin; Dimmick \"Workstation A03-5-114 reassigned 14 APR 2008\"."
+        },
+        {
+          "key": "HOLLOW",
+          "pages": [
+            "personnel-mem-08-0187"
+          ],
+          "what": "Attachment A: three PN lines (the other 787 are Tier 1)."
+        },
+        {
+          "key": "HOLLOW",
+          "pages": [
+            "personnel-mem-08-0203"
+          ],
+          "what": "cc line to the Resident Assurance Officer."
+        },
+        {
+          "key": "HOLLOW",
+          "pages": [
+            "personnel-overview",
+            "fac-beta-08"
+          ],
+          "what": "Declarations count footnote; BETA-08 vacated analyst post."
+        },
+        {
+          "key": "HOLLOW+KESTREL",
+          "pages": [
+            "transit-seg-04"
+          ],
+          "what": "Beside R. Tobin on the crew list: \"status changed 19 APR 2007\"."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "personnel-mem-08-0187",
+          "hint": "Kessler notes F-131 declarations arriving without instructions."
+        },
+        {
+          "page": "system-calendar",
+          "hint": "27 MAY: Unposted status declarations, collection closes."
+        },
+        {
+          "page": "f-131",
+          "hint": "The form itself, empty instructions block."
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "Read the annotated mileage memo",
+      "trigger": {
+        "type": "doc.read",
+        "docNos": [
+          "OSC-MEM-07-0944"
+        ],
+        "mode": "any"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "mileageQuery"
+      },
+      "mail": null,
+      "releases": [],
+      "breadcrumbs": [
+        {
+          "page": "ledger-cat-transit",
+          "hint": "Cost-per-mile table, footnote to OSC-MEM-07-0944."
+        },
+        {
+          "page": "transit-engineering",
+          "hint": "Certified mileage not derived from this table."
+        },
+        {
+          "page": "system-glossary",
+          "hint": "CERTIFIED MILEAGE vs ENGINEERING MILEAGE."
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Request KESTREL with a sponsor",
+      "trigger": {
+        "type": "form.submit",
+        "form": "OSC-F-126",
+        "match": {
+          "compartment": "^KESTREL$",
+          "sponsorPn": "^(P-2-02-0091|P-3-05-0288|P-3-06-0866|P-3-07-0901)$",
+          "justification": "OSC-MEM-07-0944|OSC-TRN-ENG|OSC-TRN-SEG-0[1-6]|OSC-TRN-INC-08-017|OSC-TRN-POS-08-044|OSC-TRN-RS"
+        }
+      },
+      "requires": [
+        "S07"
+      ],
+      "grant": {
+        "kind": "compartment",
+        "value": "KESTREL"
+      },
+      "mail": "msg-08-04482",
+      "releases": [
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-seg-04"
+          ],
+          "what": "Commissioning crew list (R. Tobin) and walk-down schedule."
+        },
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-engineering"
+          ],
+          "what": "Environmental table: segment 04 portal readings consistent with occupancy 13 MAY 2100Z-2300Z, annotated \"possession\"."
+        },
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-incident-08-017"
+          ],
+          "what": "Albright remarks: first occasion 08 APR not logged; possession masks detection."
+        },
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-possession-08-044"
+          ],
+          "what": "Party FE 2, SFC escort 4."
+        },
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-rolling-stock"
+          ],
+          "what": "Whole page opens (was a refusal); R04-001/002 stabled, not in service."
+        },
+        {
+          "key": "KESTREL",
+          "pages": [
+            "transit-overview",
+            "msg-08-04473",
+            "ledger-mem-07-0944"
+          ],
+          "what": "R04-900..999 reserved to Transit Control; cable party details; portal notes."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "f-126",
+          "hint": "Sponsor must hold the compartment; justification must cite a document in its scope."
+        },
+        {
+          "page": "personnel-directory",
+          "hint": "Holds column shows KESTREL holders."
+        },
+        {
+          "page": "ledger-mem-07-0944",
+          "hint": "Distribution lists KESTREL holders."
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "Witness the segment 04 movement",
+      "trigger": {
+        "type": "transit.watch",
+        "event": "SEG04"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "seg04Witnessed"
+      },
+      "mail": "msg-08-04493",
+      "releases": [],
+      "breadcrumbs": [
+        {
+          "page": "transit-overview",
+          "hint": "Segment 04 row with no paths."
+        },
+        {
+          "page": "kb-0042",
+          "hint": "Suppressed consist IDs explained."
+        },
+        {
+          "page": "system-calendar",
+          "hint": "13 MAY possession with no times."
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "Report the occupancy (SEXTANT)",
+      "trigger": {
+        "type": "form.submit",
+        "form": "OSC-F-114",
+        "match": {
+          "location": "(seg(ment)?\\s*0?4\\b|\\b04-\\d{2}\\b|R04)"
+        }
+      },
+      "requires": [],
+      "requiresAny": [
+        "S09",
+        "S08"
+      ],
+      "grant": {
+        "kind": "compartment",
+        "value": "SEXTANT"
+      },
+      "mail": "msg-08-04483",
+      "releases": [
+        {
+          "key": "SEXTANT",
+          "pages": [
+            "registry-index",
+            "assurance-cov",
+            "assurance-ctr"
+          ],
+          "what": "Anchor, cover, connections and site columns for every non-adjacent ALPHA/BETA/GAMMA row (DELTA stays T1)."
+        },
+        {
+          "key": "SEXTANT",
+          "pages": [
+            "transit-net-eas",
+            "transit-net-sou",
+            "transit-net-mtw",
+            "transit-seg-02"
+          ],
+          "what": "Link endpoints and labels."
+        },
+        {
+          "key": "SEXTANT",
+          "pages": [
+            "fac-alpha-01",
+            "fac-alpha-02",
+            "fac-alpha-04",
+            "fac-beta-03",
+            "fac-beta-08"
+          ],
+          "what": "Dossier location and connection blocks (and the other BETA/GAMMA dossiers alike)."
+        },
+        {
+          "key": "SEXTANT",
+          "pages": [
+            "reserves-rx-b03",
+            "reserves-rx-b08",
+            "reserves-rx-b09",
+            "msg-08-04474"
+          ],
+          "what": "BETA reactor site identities."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04493",
+          "hint": "OIA: irregular indications are to be reported on OSC-F-114."
+        },
+        {
+          "page": "dir-0378",
+          "hint": "\"including an indication observed on a MERIDIAN display\"."
+        },
+        {
+          "page": "dir-0412",
+          "hint": "Para 4(c): reporting officer read into the report's compartment."
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "Look up the reactor work order (TALLOW)",
+      "trigger": {
+        "type": "terminal.cmd",
+        "pattern": "^wo\\s+FE-08-0417\\s*$"
+      },
+      "requires": [
+        "S01"
+      ],
+      "grant": {
+        "kind": "compartment",
+        "value": "TALLOW"
+      },
+      "mail": "msg-08-04484",
+      "releases": [
+        {
+          "key": "TALLOW",
+          "pages": [
+            "reserves-rx-a01",
+            "reserves-rx-a02",
+            "reserves-rx-a03",
+            "reserves-rx-a04",
+            "reserves-rx-a05",
+            "reserves-rx-b03",
+            "reserves-rx-b08",
+            "reserves-rx-b09"
+          ],
+          "what": "Fuel inventory, refuelling schedule, burn-down."
+        },
+        {
+          "key": "TALLOW",
+          "pages": [
+            "reserves-energy",
+            "reserves-overview",
+            "reserves-food"
+          ],
+          "what": "BETA reactor sites named; site stocks."
+        },
+        {
+          "key": "TALLOW",
+          "pages": [
+            "reserves-mem-07-0612"
+          ],
+          "what": "\"Reserve sufficiency is stated for designated persons only; berths above the sustained figure are not provisioned.\""
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "reserves-rx-a03",
+          "hint": "\"(lookup: wo FE-08-0417)\"."
+        },
+        {
+          "page": "reserves-seed",
+          "hint": "Cold room 2 constraint, same work order."
+        },
+        {
+          "page": "kb-0031",
+          "hint": "wo <number>; viewing may add you to its distribution."
+        },
+        {
+          "page": "dir-0301",
+          "hint": "Para 7: division lookup utilities not listed in help."
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "Report the copy number (QUARRY)",
+      "trigger": {
+        "type": "form.submit",
+        "form": "OSC-F-114",
+        "match": {
+          "documents": "OSC-2008-Q2",
+          "anyField": "copy\\s*(no\\.?|number)?\\s*0?7\\b"
+        }
+      },
+      "requires": [
+        "S04"
+      ],
+      "grant": {
+        "kind": "compartment",
+        "value": "QUARRY"
+      },
+      "mail": "msg-08-04485",
+      "releases": [
+        {
+          "key": "QUARRY",
+          "pages": [
+            "council-charter-iii",
+            "council-charter-iv",
+            "council-charter-vi"
+          ],
+          "what": "Gated articles open in full."
+        },
+        {
+          "key": "QUARRY",
+          "pages": [
+            "council-composition",
+            "council-seat-07"
+          ],
+          "what": "Copy register columns; seat 07 \"certificate of destruction: to follow (Secretariat)\"."
+        },
+        {
+          "key": "QUARRY",
+          "pages": [
+            "council-minutes-06-04",
+            "council-minutes-07-03",
+            "council-minutes-07-06",
+            "council-minutes-08-01",
+            "council-minutes-08-02"
+          ],
+          "what": "Minute items, including MIN-08-02 payroll category change (count line T2)."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04480",
+          "hint": "BRIAR briefing: further provenance information goes on OSC-F-114."
+        },
+        {
+          "page": "council-seat-07",
+          "hint": "Empty certificate field where every other succession has a number."
+        },
+        {
+          "page": "council-charter-ii",
+          "hint": "Predecessor copy destroyed before successor copy issued."
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "Run the strength utility",
+      "trigger": {
+        "type": "terminal.cmd",
+        "pattern": "^strength\\s+unposted\\s*$"
+      },
+      "requires": [
+        "S06"
+      ],
+      "grant": {
+        "kind": "flag",
+        "value": "strengthRun"
+      },
+      "mail": "msg-08-04495",
+      "releases": [
+        {
+          "key": "flag:strengthRun",
+          "pages": [
+            "system-calendar"
+          ],
+          "what": "Terminal prints category total 790, three released lines, 787 \"[NOT RELEASED]\", and \"Category change effective 31 MAY 2008: count withheld\"."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "personnel-mem-08-0187",
+          "hint": "STRENGTH utility returns the category total without breakdown."
+        },
+        {
+          "page": "dir-0301",
+          "hint": "Para 7."
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "Interim review offer",
+      "trigger": {
+        "type": "state",
+        "condition": "count(compartments in [KESTREL,HOLLOW,SEXTANT,TALLOW,BRIAR,QUARRY]) >= 4"
+      },
+      "requires": [],
+      "grant": {
+        "kind": "flag",
+        "value": "interimReview"
+      },
+      "mail": "msg-08-04486",
+      "releases": [],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04417",
+          "hint": "Day-30 report mentions the interim review."
+        },
+        {
+          "page": "personnel-transfer",
+          "hint": "DIR-0395 para 3(b) exception."
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "Acting Tier 2",
+      "trigger": {
+        "type": "anyOf",
+        "of": [
+          {
+            "type": "form.submit",
+            "form": "OSC-F-126",
+            "match": {
+              "compartment": "^ACTING-T2$",
+              "sponsorPn": "^P-2-04-0218$"
+            }
+          },
+          {
+            "type": "terminal.cmd",
+            "pattern": "^clearance\\s+request\\s+acting\\s*$"
+          }
+        ]
+      },
+      "requires": [
+        "S14"
+      ],
+      "grant": {
+        "kind": "acting",
+        "value": "ACTING-T2"
+      },
+      "mail": "msg-08-04487",
+      "releases": [
+        {
+          "key": "T2",
+          "pages": [
+            "*"
+          ],
+          "what": "Every T2 block network-wide (e.g. genetic vault donor categories, ALPHA function lines, ledger programme category column, minutes count line text \"count withheld\")."
+        },
+        {
+          "key": "T2",
+          "pages": [
+            "reserves-arms"
+          ],
+          "what": "Whole-page refusal lifts."
+        },
+        {
+          "key": "<COMP>+T2",
+          "pages": [
+            "*"
+          ],
+          "what": "Combined keys for compartments already held (e.g. QUARRY+T2 in MIN-08-02, KESTREL+T2 R04-9xx movement authority)."
+        }
+      ],
+      "breadcrumbs": [
+        {
+          "page": "msg-08-04486",
+          "hint": "Okafor: apply on OSC-F-126 under DIR-0395 para 7, sponsor P-2-04-0218."
+        },
+        {
+          "page": "dir-0395",
+          "hint": "Para 7: OSC-F-126 or \"clearance request acting\"."
+        }
+      ]
+    }
+  ],
+  "mailQueue": [
+    {
+      "id": "msg-08-04102",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04106",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04131",
+      "rule": {
+        "type": "login"
+      },
+      "read": true
+    },
+    {
+      "id": "msg-08-04298",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04305",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04362",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04417",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04433",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04459",
+      "rule": {
+        "type": "login"
+      },
+      "read": false
+    },
+    {
+      "id": "msg-08-04470",
+      "rule": {
+        "type": "firstOf",
+        "of": [
+          {
+            "type": "step",
+            "step": "S01"
+          },
+          {
+            "type": "after",
+            "minutes": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "msg-08-04471",
+      "rule": {
+        "type": "after",
+        "minutes": 12
+      }
+    },
+    {
+      "id": "msg-08-04472",
+      "rule": {
+        "type": "after",
+        "minutes": 20
+      }
+    },
+    {
+      "id": "msg-08-04473",
+      "rule": {
+        "type": "after",
+        "minutes": 30
+      }
+    },
+    {
+      "id": "msg-08-04474",
+      "rule": {
+        "type": "after",
+        "minutes": 45
+      }
+    },
+    {
+      "id": "msg-08-04480",
+      "rule": {
+        "type": "step",
+        "step": "S04"
+      }
+    },
+    {
+      "id": "msg-08-04481",
+      "rule": {
+        "type": "step",
+        "step": "S06"
+      }
+    },
+    {
+      "id": "msg-08-04482",
+      "rule": {
+        "type": "step",
+        "step": "S08"
+      }
+    },
+    {
+      "id": "msg-08-04483",
+      "rule": {
+        "type": "step",
+        "step": "S10"
+      }
+    },
+    {
+      "id": "msg-08-04484",
+      "rule": {
+        "type": "step",
+        "step": "S11"
+      }
+    },
+    {
+      "id": "msg-08-04485",
+      "rule": {
+        "type": "step",
+        "step": "S12"
+      }
+    },
+    {
+      "id": "msg-08-04486",
+      "rule": {
+        "type": "step",
+        "step": "S14"
+      }
+    },
+    {
+      "id": "msg-08-04487",
+      "rule": {
+        "type": "step",
+        "step": "S15"
+      }
+    },
+    {
+      "id": "msg-08-04490",
+      "rule": {
+        "type": "audit",
+        "audit": "A1",
+        "delayMinutes": [
+          2,
+          4
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "workstation",
+        "docNo",
+        "time",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04491",
+      "rule": {
+        "type": "audit",
+        "audit": "A2",
+        "delayMinutes": [
+          1,
+          3
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "date",
+        "time",
+        "query",
+        "count",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04492",
+      "rule": {
+        "type": "audit",
+        "audit": "A3",
+        "delayMinutes": [
+          1,
+          2
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "firstTime",
+        "time",
+        "count",
+        "docNo",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04493",
+      "rule": {
+        "type": "audit",
+        "audit": "A4",
+        "delayMinutes": [
+          8,
+          12
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "time",
+        "view",
+        "duration",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04494",
+      "rule": {
+        "type": "audit",
+        "audit": "A5",
+        "delayMinutes": [
+          2,
+          5
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "pq",
+        "docNo",
+        "time",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04495",
+      "rule": {
+        "type": "audit",
+        "audit": "A6",
+        "delayMinutes": [
+          1,
+          3
+        ]
+      },
+      "oia": true,
+      "slots": [
+        "time",
+        "command",
+        "auditRef"
+      ]
+    },
+    {
+      "id": "msg-08-04496",
+      "rule": {
+        "type": "audit",
+        "audit": "A8",
+        "delayMinutes": [
+          3,
+          6
+        ]
+      }
+    },
+    {
+      "id": "msg-08-04497",
+      "rule": {
+        "type": "audit",
+        "audit": "A7",
+        "delayMinutes": [
+          0,
+          0
+        ]
+      },
+      "slots": [
+        "recipient"
+      ]
+    }
+  ],
+  "auditRules": [
+    {
+      "id": "A1",
+      "kind": "doc.read",
+      "condition": "docNo == OSC-2008-Q2 (first time per profile)",
+      "effect": "Deliver msg-08-04490; append access line to OIA-08-031 access log; step S03."
+    },
+    {
+      "id": "A2",
+      "kind": "search",
+      "condition": "second query this session matching /unposted|\\b790\\b|detached|seg(ment)?\\s*0?4|electronic cop|inventory scan|ackroyd|dimmick|tobin|copy\\s*0?7/i",
+      "effect": "Deliver msg-08-04491 once per profile, quoting the second query."
+    },
+    {
+      "id": "A3",
+      "kind": "redaction.hover",
+      "condition": ">= 25 hovers in one session",
+      "effect": "Deliver msg-08-04492 once per profile with count and the most-hovered docNo."
+    },
+    {
+      "id": "A4",
+      "kind": "transit.watch",
+      "condition": "board window visible (not minimized) at any moment of the SEG04 event",
+      "effect": "Write the two segment 04 audit lines; step S09; deliver msg-08-04493."
+    },
+    {
+      "id": "A5",
+      "kind": "print",
+      "condition": "print of any page marked UMBRA-C or higher, or form.submit OSC-F-142 naming a UMBRA-EO document",
+      "effect": "Deliver msg-08-04494 once per profile; later cover sheets carry stamp REVIEWED-OIA."
+    },
+    {
+      "id": "A6",
+      "kind": "terminal.cmd",
+      "condition": "command matches /^trace\\s+RD-ACC-08-00412/ or /^strength\\s+unposted/",
+      "effect": "Deliver msg-08-04495 once per profile quoting the command."
+    },
+    {
+      "id": "A7",
+      "kind": "mail.send",
+      "condition": "recipient in {l.ackroyd@b08.iad.mer, c.dimmick@a03.rd.mer, r.tobin@a02.fe.mer}",
+      "effect": "Deliver msg-08-04497 (non-delivery) every time, recipient slot filled."
+    },
+    {
+      "id": "A8",
+      "kind": "mail.send",
+      "condition": "recipient domain a01.pv.mer and body matches /790|unposted|PV-Q-08-0031/i",
+      "effect": "Deliver msg-08-04496 once per profile (cc RAO)."
+    },
+    {
+      "id": "A9",
+      "kind": "window.open",
+      "condition": "5th refusal (access-gated page) in one session",
+      "effect": "notify(\"Repeated refusals are recorded (DIR-0412 para 8).\"); audit line only."
+    },
+    {
+      "id": "A10",
+      "kind": "form.submit",
+      "condition": "OSC-F-122 by a probationer",
+      "effect": "In-world refusal citing DIR-0247; audit line; no mail."
+    },
+    {
+      "id": "A11",
+      "kind": "timeout",
+      "condition": "inactivity timeout",
+      "effect": "Lock screen; audit line \"Session locked for inactivity\"; state preserved; the SEG04 event does not fire while locked."
+    }
+  ],
+  "auditPhrasing": {
+    "format": "AUD-{yymmdd}-{serial6} {hhmm}Z ({local}) {KIND} {operatorId} WS {workstation} {detail}",
+    "examples": [
+      "AUD-080520-004417 1432Z (1032 EDT) DOC.READ OPR-A03-1147 WS A03-5-114 Opened OSC-2008-Q2 (UMBRA//OSC EYES ONLY) in Records Library. Access recorded under OIA-08-031.",
+      "AUD-080520-004418 1433Z (1033 EDT) REDACTION.HOVER OPR-A03-1147 WS A03-5-114 Examined withholding mark rx-14 in OSC-DIR-0233 (authority PV, ref PV-R-06)."
+    ]
+  },
+  "segment04": {
+    "timing": "Once per session (per login, not per profile): at login draw a uniform random delay of 6 to 25 minutes; the event fires then if the session is unlocked, else at unlock. It fires whether or not the board is open.",
+    "duration": "Visible occupancy 150 s: blocks 04-01 to 04-12 occupied in sequence from the ALPHA-05 end (platform 7) toward ALPHA-02, about 12.5 s per block, two adjacent blocks lit at once.",
+    "board": "Schematic and geographic views draw segment 04 dashed as always; the occupied blocks render solid for the duration. Consist label \"R04-***\" (format R04-NNN, true series R04-900..999 never displayed); headway and speed fields show \"--\". Timetable column: \"UNBOOKED\". Notification area link state for ALPHA-05 shows BUSY.",
+    "incidentLog": "While occupied, the live incident log shows \"{hhmm}Z ({local}) SEG 04 BLK 04-{nn} OCCUPIED CONSIST R04-*** NO BOOKING\". 60 s after the last block clears, the entry is removed; the next log entry skips one serial, leaving a gap like INC-08-016 in the 08-017 extract.",
+    "audit": [
+      "AUD-{yymmdd}-{serial} {hhmm}Z ({local}) TRANSIT.WATCH OPR-A03-1147 WS A03-5-114 Network Control board displayed ({view}) {start}Z to {end}Z. Indications displayed: SEG 04 BLK 04-01 to 04-12.",
+      "AUD-{yymmdd}-{serial+1} {hhmm}Z ({local}) SYSTEM Board indication record for interval {start}Z to {end}Z withdrawn by Transit Control on instruction."
+    ],
+    "unwatched": "If no transit window was visible, only the SYSTEM withdrawal line is written (the visitor can find it in audit tail), and no mail.",
+    "followUp": "If watched: step S09 and msg-08-04493 after 8 to 12 minutes. The OIA message never mentions segment 04 by name; it says \"the Network Control board\".",
+    "terminal": "During the event \"rail status\" prints \"SEG 04 NOT IN REVENUE SERVICE\" unchanged; \"consist R04-***\" or the true ID returns \"NO RECORD\"."
+  },
+  "terminalCommands": [
+    {
+      "command": "wo <workorder>",
+      "example": "wo FE-08-0417",
+      "output": "Work order status, location, distribution; for FE-08-0417 adds the workstation to the distribution and fires S11 (TALLOW). Other numbers (FE-07-0233, LR-08-0102) return dull closed jobs.",
+      "mentionedIn": [
+        "KB-0031",
+        "OSC-RSV-RX-A03",
+        "OSC-RSV-SEED",
+        "OSC-DIR-0301"
+      ]
+    },
+    {
+      "command": "trace <accession>",
+      "example": "trace RD-ACC-08-00412",
+      "output": "Chain of custody: received Stacks C 24 MAR 2008 from a consignment of superseded registry media; origin hop SEXTANT/BRIAR; \"item HELD (OIA-08-031)\". Fires audit rule A6. Other accessions 00398-00415 trace to mundane origins.",
+      "mentionedIn": [
+        "OSC-DIR-0336",
+        "MSG-08-04470"
+      ]
+    },
+    {
+      "command": "strength <site|unposted>",
+      "example": "strength unposted",
+      "output": "Site strength from returns; \"unposted\" prints the category total 790 (from canon) with no breakdown, then (HOLLOW) three lines and 787 \"[NOT RELEASED]\". Fires S13 and A6.",
+      "mentionedIn": [
+        "OSC-MEM-08-0187",
+        "OSC-DIR-0301"
+      ]
+    },
+    {
+      "command": "consist <id>",
+      "example": "consist R01-214",
+      "output": "Consist record from the rolling stock register (KESTREL fields redacted without it). R04-*** or any R04-9xx returns \"NO RECORD\".",
+      "mentionedIn": [
+        "KB-0042",
+        "OSC-TRN-RS"
+      ]
+    },
+    {
+      "command": "copies <docNo>",
+      "example": "copies OSC-2008-Q2",
+      "output": "Without QUARRY: refusal citing DIR-0412. With QUARRY: copy register 01-11 with seat 07 predecessor destruction \"TO FOLLOW\".",
+      "mentionedIn": [
+        "OSC-CNL-SEAT-00",
+        "OSC-DIR-0354"
+      ]
+    },
+    {
+      "command": "clearance request acting",
+      "example": "clearance request acting",
+      "output": "Undocumented subcommand of the documented \"clearance\". Before S14: \"Not eligible: probationary (DIR-0247)\". After: fires S15.",
+      "mentionedIn": [
+        "OSC-DIR-0395"
+      ]
+    }
+  ],
+  "anomalyTrails": {
+    "UNPOSTED_790": [
+      "personnel-overview",
+      "system-glossary",
+      "dir-0233",
+      "personnel-mem-08-0187",
+      "personnel-mem-08-0203",
+      "f-131",
+      "personnel-directory",
+      "system-calendar",
+      "council-minutes-08-02",
+      "assurance-threat-06",
+      "msg-08-04481",
+      "msg-08-04497",
+      "msg-08-04496",
+      "msg-08-04106",
+      "msg-08-04433",
+      "assurance-oia-08-031",
+      "council-charter-v"
+    ],
+    "TUNNEL_847": [
+      "ledger-mem-07-0944",
+      "transit-engineering",
+      "ledger-cat-transit",
+      "system-glossary",
+      "council-minutes-07-06",
+      "council-inventory-scan",
+      "transit-seg-02"
+    ],
+    "CAPACITY_23400": [
+      "reserves-mem-07-0612",
+      "system-glossary",
+      "reserves-overview",
+      "registry-index",
+      "personnel-phase-4",
+      "personnel-phase-5"
+    ],
+    "SEGMENT_04": [
+      "transit-seg-04",
+      "fac-alpha-02",
+      "fac-alpha-05",
+      "transit-overview",
+      "transit-possession-08-044",
+      "transit-incident-08-017",
+      "transit-rolling-stock",
+      "msg-08-04473",
+      "system-calendar",
+      "kb-0042",
+      "council-minutes-07-03",
+      "transit-engineering"
+    ],
+    "ELECTRONIC_COPY": [
+      "council-inventory-scan",
+      "assurance-oia-08-031",
+      "assurance-comm",
+      "council-charter-vii",
+      "dir-0319",
+      "msg-08-04470",
+      "msg-08-04490",
+      "assurance-cg",
+      "council-seat-07",
+      "council-minutes-06-04"
+    ]
+  },
+  "people": [
+    {
+      "pn": "P-2-04-0218",
+      "name": "Miriam Okafor",
+      "role": "Supervisor of record",
+      "pages": [
+        "msg-08-04102",
+        "msg-08-04417",
+        "msg-08-04470",
+        "msg-08-04486"
+      ]
+    },
+    {
+      "pn": "P-2-04-0061",
+      "name": "Raymond Teague",
+      "role": "Deputy Commander ALPHA-03; signs in own hand until 05 MAY 2008",
+      "pages": [
+        "msg-08-04298",
+        "fac-alpha-03"
+      ]
+    },
+    {
+      "pn": "P-2-04-0133",
+      "name": "Gerald Imrie",
+      "role": "Chief of Staff; signs \"for R. Teague\" from 06 MAY 2008, never explained",
+      "pages": [
+        "msg-08-04362",
+        "msg-08-04487"
+      ]
+    },
+    {
+      "pn": "P-2-05-0148",
+      "name": "Daniel Prewitt",
+      "role": "Resident Assurance Officer; all OIA consequence mail",
+      "pages": [
+        "msg-08-04490",
+        "msg-08-04491",
+        "msg-08-04492",
+        "msg-08-04493",
+        "msg-08-04494",
+        "msg-08-04495",
+        "assurance-oia-08-031"
+      ]
+    },
+    {
+      "pn": "P-2-01-0047",
+      "name": "Celia Brandauer",
+      "role": "Director OIA; BRIAR briefing",
+      "pages": [
+        "msg-08-04480"
+      ]
+    },
+    {
+      "pn": "P-3-07-1021",
+      "name": "Theo Barraclough",
+      "role": "Found the scan",
+      "pages": [
+        "assurance-oia-08-031"
+      ]
+    },
+    {
+      "pn": "P-4-07-0532",
+      "name": "Ruth Ann Kessler",
+      "role": "Raised PV-Q-08-0031",
+      "pages": [
+        "personnel-mem-08-0187"
+      ]
+    },
+    {
+      "pn": "P-2-03-0119",
+      "name": "Howard Lindqvist",
+      "role": "Closed the query; HOLLOW briefing; enquiry reply",
+      "pages": [
+        "personnel-mem-08-0203",
+        "msg-08-04481",
+        "msg-08-04496"
+      ]
+    },
+    {
+      "pn": "P-3-06-0712",
+      "name": "Priya Ramanathan",
+      "role": "\"which is it?\"",
+      "pages": [
+        "ledger-mem-07-0944",
+        "ledger-cat-transit"
+      ]
+    },
+    {
+      "pn": "P-2-02-0091",
+      "name": "Irene Lockhart",
+      "role": "Chief Engineer; signs segment sheets; KESTREL briefing",
+      "pages": [
+        "transit-engineering",
+        "ledger-mem-07-0944",
+        "msg-08-04482"
+      ]
+    },
+    {
+      "pn": "P-3-05-0288",
+      "name": "Owen Garrity",
+      "role": "Signed segment 04 commissioning; requests walk-downs",
+      "pages": [
+        "transit-seg-04",
+        "transit-possession-08-044"
+      ]
+    },
+    {
+      "pn": "P-3-06-0866",
+      "name": "Curtis Albright",
+      "role": "Watch 2 dispatcher; logged INC-08-017",
+      "pages": [
+        "transit-incident-08-017",
+        "transit-overview"
+      ]
+    },
+    {
+      "pn": "P-2-02-0102",
+      "name": "Dennis Harker",
+      "role": "Director TO; closes INC-08-017; SEXTANT briefing",
+      "pages": [
+        "transit-incident-08-017",
+        "msg-08-04483"
+      ]
+    },
+    {
+      "pn": "P-2-03-0105",
+      "name": "Glenda Pratt",
+      "role": "Reserves basis memo; TALLOW briefing",
+      "pages": [
+        "reserves-mem-07-0612",
+        "msg-08-04484"
+      ]
+    },
+    {
+      "pn": "P-2-01-0012",
+      "name": "Arthur Penhallow",
+      "role": "Secretary; minutes; QUARRY briefing",
+      "pages": [
+        "council-minutes-08-02",
+        "msg-08-04485"
+      ]
+    },
+    {
+      "pn": "P-4-07-0688",
+      "name": "Kevin Dwyer",
+      "role": "Service desk; KB author",
+      "pages": [
+        "msg-08-04106",
+        "kb-0001"
+      ]
+    },
+    {
+      "pn": "P-4-07-0219",
+      "name": "Carol Ann Dimmick",
+      "role": "Previous holder of workstation A03-5-114; unposted 28 MAR 2008",
+      "pages": [
+        "personnel-directory",
+        "assurance-oia-08-031",
+        "msg-08-04433"
+      ]
+    },
+    {
+      "pn": "P-3-05-0142",
+      "name": "Reginald Tobin",
+      "role": "Segment 04 crew; unposted 19 APR 2007",
+      "pages": [
+        "transit-seg-04",
+        "personnel-directory"
+      ]
+    },
+    {
+      "pn": "P-3-06-0977",
+      "name": "Lewis Ackroyd",
+      "role": "Last posted BETA-08; unposted 03 MAR 2008",
+      "pages": [
+        "personnel-directory",
+        "fac-beta-08"
+      ]
+    }
+  ],
+  "signatureRule": "R. Teague signs ALPHA-03 routine notices up to and including 05 MAY 2008. From 06 MAY 2008 every ALPHA-03 routine notice is signed \"G. IMRIE / for R. TEAGUE, Deputy Commander\". No document explains. Content agents: any ALPHA-03 command notice dated on or after 2008-05-06 must use the \"for\" block.",
+  "suspenses": [
+    {
+      "date": "2008-05-07",
+      "item": "Annual security refresher, Records Division (visitor overdue)",
+      "pages": [
+        "msg-08-04417",
+        "msg-08-04471",
+        "dir-0288"
+      ]
+    },
+    {
+      "date": "2008-05-12",
+      "item": "Training compliance report to division heads",
+      "pages": [
+        "dir-0288"
+      ]
+    },
+    {
+      "date": "2008-05-14",
+      "item": "Day-30 probation report (signed); records destruction witnessing",
+      "pages": [
+        "msg-08-04417",
+        "dir-0354"
+      ]
+    },
+    {
+      "date": "2008-05-27",
+      "item": "Unposted status declarations: collection closes",
+      "pages": [
+        "system-calendar",
+        "f-131"
+      ]
+    },
+    {
+      "date": "2008-05-30",
+      "item": "OIA-08-031 suspense; month-end personnel accounting reconciliation",
+      "pages": [
+        "assurance-oia-08-031",
+        "system-calendar"
+      ]
+    },
+    {
+      "date": "2008-05-31",
+      "item": "Medical readiness certification expires; payroll category change effective; probation interim reviews",
+      "pages": [
+        "f-152",
+        "system-calendar",
+        "council-minutes-08-02"
+      ]
+    }
+  ]
+}
