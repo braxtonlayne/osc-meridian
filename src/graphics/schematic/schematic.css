@@ -1,0 +1,262 @@
+/* @graphics/schematic. Tokens only; no gradients, no glow, no animation. Class prefix sc-. */
+
+.sc-root {
+  --sc-bg: var(--paper);
+  display: block;
+  background: var(--sc-bg);
+  font-family: var(--font-ui);
+  shape-rendering: crispEdges;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sc-bg {
+  fill: var(--sc-bg);
+}
+
+/* ---- header strip ---- */
+.sc-head {
+  fill: var(--th-bg);
+}
+.sc-head-rule {
+  stroke: var(--chrome-shadow);
+  stroke-width: 1px;
+}
+.sc-head-t {
+  font: 600 10px var(--font-ui);
+  letter-spacing: 0.04em;
+  fill: var(--text-1);
+}
+.sc-head-t2 {
+  font: 400 10px var(--font-ui);
+  letter-spacing: 0.04em;
+  fill: var(--text-2);
+}
+
+/* ---- track ---- */
+.sc-ro,
+.sc-ri,
+.sc-tr,
+.sc-tro,
+.sc-dark,
+.sc-tick,
+.sc-hit,
+.sc-sel {
+  fill: none;
+  stroke-linejoin: miter;
+  stroke-linecap: butt;
+}
+.sc-ro {
+  stroke: var(--text-1);
+  stroke-width: var(--sc-ro);
+}
+.sc-ri {
+  stroke: var(--sc-bg);
+  stroke-width: var(--sc-ri);
+}
+.sc-hatch {
+  stroke-width: var(--sc-ri);
+}
+.sc-nirs {
+  stroke-dasharray: var(--sc-dash);
+}
+.sc-tr {
+  stroke: var(--text-1);
+  stroke-width: var(--sc-tr);
+}
+.sc-tro {
+  stroke: var(--text-1);
+  stroke-width: var(--sc-tro);
+}
+.sc-tpo {
+  stroke-width: calc(var(--sc-tro) + 2px);
+}
+.sc-tpi {
+  stroke-width: var(--sc-tro);
+}
+.sc-dark {
+  stroke: var(--chrome-shadow);
+  stroke-width: var(--sc-dk);
+  stroke-dasharray: 4 4;
+}
+.sc-tick {
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-hit {
+  stroke: transparent;
+  stroke-width: 14px;
+  pointer-events: stroke;
+}
+.sc-sel {
+  stroke: var(--select-inactive-bg);
+  stroke-width: calc(var(--sc-ro) + 8px);
+}
+.sc-pat-bg {
+  fill: var(--sc-bg);
+}
+.sc-pat-ln {
+  stroke: var(--text-1);
+  stroke-width: 1px;
+  shape-rendering: geometricPrecision;
+}
+
+/* ---- text ---- */
+.sc-mono {
+  font: 400 9px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-1);
+}
+.sc-mono-b {
+  font: 600 9px var(--font-mono);
+  fill: var(--text-1);
+}
+.sc-mono-s {
+  font: 400 8px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-2);
+}
+.sc-blockno {
+  font: 400 8px var(--font-mono);
+  fill: var(--text-3);
+}
+.sc-ui {
+  font: 400 9px var(--font-ui);
+  letter-spacing: 0.03em;
+  fill: var(--text-2);
+}
+.sc-caps {
+  font: 600 8px var(--font-ui);
+  letter-spacing: 0.08em;
+  fill: var(--text-1);
+}
+.sc-halo {
+  paint-order: stroke;
+  stroke: var(--sc-bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* ---- tags, status squares, P box ---- */
+.sc-tagbg {
+  fill: var(--sc-bg);
+}
+.sc-box {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-sq {
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-sq-CLEAR {
+  fill: var(--st-nominal);
+}
+.sc-sq-OCCUPIED {
+  fill: var(--text-1);
+}
+.sc-sq-POSSESSION {
+  fill: var(--st-degraded);
+}
+.sc-sq-DARK {
+  fill: var(--st-offline);
+}
+
+/* ---- nodes ---- */
+.sc-alpha {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-alpha-in {
+  fill: none;
+  stroke: var(--chrome-shadow);
+  stroke-width: 1px;
+}
+.sc-beta {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-gamma {
+  fill: var(--text-1);
+}
+.sc-nodehit {
+  fill: transparent;
+  pointer-events: all;
+}
+.sc-node-sel .sc-alpha {
+  fill: var(--select-bg);
+}
+.sc-node-sel .sc-alpha-in {
+  stroke: var(--select-fg);
+}
+.sc-node-sel .sc-on-alpha {
+  fill: var(--select-fg);
+}
+.sc-selring {
+  fill: none;
+  stroke: var(--select-bg);
+  stroke-width: 2px;
+}
+.sc-tag-sel .sc-tagbg {
+  fill: var(--select-bg);
+}
+.sc-tag-sel .sc-tagtext {
+  fill: var(--select-fg);
+}
+
+/* ---- focus: a dotted 1px rectangle, as the rest of the shell draws it ---- */
+.sc-link,
+.sc-node {
+  cursor: default;
+  outline: none;
+}
+.sc-focus {
+  fill: none;
+  stroke: var(--focus-ring);
+  stroke-width: 1px;
+  stroke-dasharray: 1 1;
+  visibility: hidden;
+}
+.sc-link:focus-visible .sc-focus,
+.sc-node:focus-visible .sc-focus {
+  visibility: visible;
+}
+
+/* ---- trains ---- */
+.sc-trains {
+  pointer-events: none;
+}
+.sc-consist {
+  fill: var(--text-1);
+  stroke: var(--sc-bg);
+  stroke-width: 1px;
+  shape-rendering: geometricPrecision;
+}
+.sc-leader {
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-berth {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1px;
+}
+.sc-berth-t {
+  font: 600 9px var(--font-mono);
+  fill: var(--text-1);
+}
+.sc-compact .sc-berth-t,
+.sc-compact .sc-mono,
+.sc-compact .sc-mono-b {
+  font-size: 8px;
+}
+
+/* ---- legend ---- */
+.sc-legend {
+  fill: var(--sc-bg);
+  stroke: var(--chrome-shadow);
+  stroke-width: 1px;
+}
