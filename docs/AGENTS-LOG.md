@@ -64,7 +64,7 @@ Orchestrator: Claude (Opus 5.5 / Fable 5.2 session). Graphics agents run with mo
 | P6 | App: ledger | inherit | src/apps/ledger/** | docs/BRIEF-APPS.md, SPEC §8, port 5205 | running |
 | P7 | App: reserves | inherit | src/apps/reserves/** | docs/BRIEF-APPS.md, SPEC §8, port 5206 | running |
 | P8 | App: assurance | inherit | src/apps/assurance/** | docs/BRIEF-APPS.md, SPEC §8, port 5207 | Done; 14 tests, eslint clean. Incident queue, OIA-08-031 ticket (document/worklog/access-record tabs, visitor rows appended to #access-log), threat register, classification guide swatches, 47×47 contractor matrix, cover catalogue, PSEC, COMM, session-activity view. 17 screenshots incl. handheld. Needs: client canon to mark cover-catalogue rows and contractor sites restricted; record template wide-table overflow. Unverified: T2/compartment releases in views, print. |
-| P9 | App: directives | inherit | src/apps/directives/** | docs/BRIEF-APPS.md, SPEC §8, port 5208 | running |
+| P9 | App: directives | inherit | src/apps/directives/** | docs/BRIEF-APPS.md, SPEC §8, port 5208 | Done; 19 tests, tsc/eslint clean. Index (sort/filter), supersession register with chains, acknowledgements (form.submit, receipts, state from audit entries), reader with #para deep links, Ctrl+G, print. 19 screenshots, no console errors. Needs: router keeps #hash on openRoute; RefusalState ref→reference rename; print path should use normalised frontmatter. |
 | P10 | App: forms | inherit | src/apps/forms/** | docs/BRIEF-APPS.md, SPEC §8, port 5209 | running |
 | P11 | App: terminal | inherit | src/apps/terminal/** | docs/BRIEF-APPS.md, SPEC §8, port 5210 | running |
 | P12 | App: system | inherit | src/apps/system/** | docs/BRIEF-APPS.md, SPEC §8, port 5211 | running |

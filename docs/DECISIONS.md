@@ -5,6 +5,7 @@ Choices made where the spec was silent. Newest at the bottom of each section.
 ## Content
 - **Programme years are calendar years.** The Comptroller ledger reports by programme year (JAN–DEC), not federal fiscal year, so segment commissioning dates fall in the years the record cites; "to date" for 2008 means to 31 MAR 2008. Every ledger page states this.
 - **DELTA detail is Tier 1 only.** Nothing about a DELTA site beyond designation, class, the 72-hour basis and (at Tier 2) guard count can ever be released.
+- **Tier-2 names in documents.** A document may show the name of a Tier 2 official who signed, sent or is addressed in it, as a released paper would. What is withheld is the directory and role assignment (and every Tier 2 email and non-name value). Tier 1 names never appear anywhere. verify-dist enforces this.
 - **Workstation ID** is A03-5-114 everywhere (shell, audit, mail, engine).
 
 ## Build and architecture
