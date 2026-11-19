@@ -18,6 +18,9 @@
  *     search index), or a tier-1 withheld string appears in a release file. Exception: tier-2
  *     roster names and emails may appear in baseline document files (signatures, From/To
  *     lines); see isAuthoredName.
+ *  8. any prerendered page prints a raw `{identifier}` message-slot token in its static text or
+ *     <title> (prerender replaces declared slots with an in-world blank).
+ * dist directory: $MERIDIAN_DIST or --dist <dir> (default dist/).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep, posix } from 'node:path';
@@ -28,7 +31,23 @@ import { escapeHtml, isTier1Key, normalizeBase } from './content/util.ts';
 import { deriveRestrictions, type Withheld } from './content/client-canon.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const dist = join(root, 'dist');
+/** $MERIDIAN_DIST or --dist <dir> (default dist/), so a scratch build can be checked. */
+const distArg = process.argv.indexOf('--dist');
+const dist = resolve(root, (distArg >= 0 ? process.argv[distArg + 1] : process.env.MERIDIAN_DIST) ?? 'dist');
+
+/** `{identifier}` message-slot tokens that must never reach static text. */
+export const SLOT_TOKEN_RE = /\{[A-Za-z_][A-Za-z0-9_]*\}/g;
+
+/** Slot tokens in the visible text of every static article on a prerendered page. */
+export function findSlotTokens(html: string): string[] {
+  const out: string[] = [];
+  for (const m of html.matchAll(/<article class="static-doc[\s\S]*?<\/article>/g)) {
+    for (const t of htmlToText(m[0]).matchAll(SLOT_TOKEN_RE)) out.push(t[0]);
+  }
+  const title = /<title>([\s\S]*?)<\/title>/.exec(html)?.[1] ?? '';
+  for (const t of title.matchAll(SLOT_TOKEN_RE)) out.push(t[0]);
+  return out;
+}
 
 export const MANIFEST: { family: string; aliases: string[]; target: number }[] = [
   { family: 'Facility Registry', aliases: ['registry', 'facilities'], target: 52 },
@@ -223,9 +242,10 @@ export function isAuthoredName(n: { path: string; key: string }): boolean {
 }
 
 /** Baseline document files: docs JSON, prerendered pages, the search index (not JS/CSS bundles). */
-export function isDocFile(f: string): boolean {
-  const p = f.split(sep).join('/');
-  return /\/dist\/data\/docs\/[^/]+\.json$/.test(p) || /\/dist\/data\/search\.json$/.test(p) || /\/dist\/.*\.html$/.test(p);
+export function isDocFile(f: string, distRoot: string = dist): boolean {
+  const p = relative(distRoot, f).split(sep).join('/');
+  if (p.startsWith('..')) return false;
+  return /^data\/docs\/[^/]+\.json$/.test(p) || p === 'data/search.json' || /\.html$/.test(p);
 }
 
 export function findWithheld(text: string, needles: Needle[]): { index: number; path: string; key: string }[] {
@@ -336,6 +356,12 @@ function main(): number {
       }
       if (!resolves(distPath)) fail('links', `${rel(f)}:${lineAt(html, m.index ?? 0)} ${raw} does not resolve in dist/`);
     }
+  }
+
+  // 8. unfilled message slots in static text
+  for (const f of distFiles.filter((x) => x.endsWith('.html'))) {
+    const tokens = findSlotTokens(readFileSync(f, 'utf8'));
+    if (tokens.length) fail('slot-token', `${rel(f)} prints raw slot token(s) ${[...new Set(tokens)].join(' ')}`);
   }
 
   // 5. headline-figure drift

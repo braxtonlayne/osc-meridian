@@ -8,8 +8,8 @@ import { buildContent, loadManifestDocNos, type BuildResult } from '../../script
 import { FrontmatterSchema } from '../../scripts/content/schema.ts';
 import { ContentBuildError } from '../../scripts/content/util.ts';
 import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
-import { clearStrings, findBannedWords, findExternalUrls, findWithheld, isAgencyName, isAuthoredName, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
-import { renderPage, STATIC_MARKER } from '../../scripts/prerender.ts';
+import { clearStrings, findBannedWords, findExternalUrls, findWithheld, isAgencyName, isAuthoredName, findSlotTokens, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
+import { appHomeHtml, blankSlots, readAppHomes, renderPage, SLOT_BLANK, STATIC_MARKER } from '../../scripts/prerender.ts';
 import { applyReleases, createDocs } from '../../src/core/docs';
 import { createSearch } from '../../src/core/search';
 import type { RouteEntry } from '../../src/core/contracts';
@@ -498,10 +498,10 @@ describe('restricted material never reaches the baseline', () => {
     ]);
     expect(needles.filter(isAuthoredName).map((n) => n.path)).toEqual(['roster.2-0102.name', 'roster.2-0102.email']);
     const docFile = join('x', 'dist', 'data', 'docs', 'dir-0001.json');
-    expect(isDocFile(docFile)).toBe(true);
-    expect(isDocFile(join('x', 'dist', 'directives', 'dir-0001', 'index.html'))).toBe(true);
-    expect(isDocFile(join('x', 'dist', 'data', 'search.json'))).toBe(true);
-    expect(isDocFile(join('x', 'dist', 'assets', 'index-abc.js'))).toBe(false);
+    expect(isDocFile(docFile, join('x', 'dist'))).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'directives', 'dir-0001', 'index.html'), join('x', 'dist'))).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'data', 'search.json'), join('x', 'dist'))).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'assets', 'index-abc.js'), join('x', 'dist'))).toBe(false);
     const docNeedles = needles.filter((n) => !isAuthoredName(n));
     const text = 'Signed: Fixture Deputy Bravo; copy f.bravo@a03.rd.mer; for Fixture Director Alpha';
     expect(findWithheld(text, docNeedles).map((h) => h.path)).toEqual(['roster.1-0001.name']);
@@ -667,5 +667,32 @@ describe('verify-dist rules', () => {
     expect(html).toContain('<meta name="description" content="Rules for keeping compartmented records out of shared workstation folders.">');
     expect(html).toContain('22 APR 2008');
     expect(html).not.toContain(STATIC_MARKER);
+  });
+});
+
+describe('static message slots and app homes', () => {
+  it('blanks declared slot tokens only, and verify-dist flags any left over', () => {
+    const body = '<p>Audit reference {auditRef}; keep {other} as authored.</p>';
+    const out = blankSlots(body, ['auditRef'], SLOT_BLANK);
+    expect(out).toContain(`Audit reference ${SLOT_BLANK};`);
+    expect(out).toContain('{other}');
+    const page = `<title>MSG · {auditRef}</title><article class="static-doc">${out}</article>`;
+    expect(findSlotTokens(page)).toEqual(['{other}', '{auditRef}']);
+    expect(findSlotTokens(`<title>ok</title><article class="static-doc">${blankSlots(body, ['auditRef', 'other'], SLOT_BLANK)}</article>`)).toEqual([]);
+  });
+
+  it('reads the app registry and renders a linked register for an app home', () => {
+    const apps = readAppHomes();
+    expect(apps.map((a) => a.id)).toEqual(expect.arrayContaining(['records', 'mail', 'terminal', 'system']));
+    const routes = [
+      { id: 'b', route: '/mail/msg-2', app: 'mail', docNo: 'MSG-2', title: 'Second', date: '2008-04-22' },
+      { id: 'a', route: '/mail/msg-1', app: 'mail', docNo: 'MSG-1', title: 'First', date: '2003-11' },
+    ] as unknown as RouteEntry[];
+    const html = appHomeHtml({ id: 'mail', title: 'Message Traffic', homeRoute: '/mail' }, routes, '/osc-meridian/');
+    expect(html).toContain('<h1 class="static-doc-title">Message Traffic</h1>');
+    expect(html.indexOf('MSG-1')).toBeLessThan(html.indexOf('MSG-2'));
+    expect(html).toContain('href="/osc-meridian/mail/msg-1"');
+    const empty = appHomeHtml({ id: 'terminal', title: 'Terminal', homeRoute: '/terminal' }, routes, '/');
+    expect(empty).toContain('holds no filed documents');
   });
 });

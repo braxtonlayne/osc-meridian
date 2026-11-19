@@ -8,7 +8,7 @@
     "canon": "tsx scripts/canon-merge.ts",
     "content": "tsx scripts/build-content.ts",
     "dev": "npm run canon && npm run content && vite",
-    "build": "npm run canon && npm run content && tsc --noEmit && vite build && tsx scripts/prerender.ts",
+    "build": "npm run canon && npm run content && tsc --noEmit && vite build && tsx scripts/prerender.ts && tsx scripts/verify-dist.ts",
     "build:pages": "cross-env MERIDIAN_BASE=/osc-meridian/ npm run build",
     "preview": "vite preview",
     "lint": "eslint .",
