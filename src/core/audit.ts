@@ -10,7 +10,7 @@ import { load, save } from './persist';
 import { inWorldIso, operatorId } from './session';
 
 /** Workstation identifier printed in audit entries for this terminal. */
-export const WORKSTATION_ID = 'A03-RD-WS0114';
+export const WORKSTATION_ID = 'A03-5-114';
 export const MAX_ENTRIES = 2000;
 
 const _entries = signal<AuditEntry[]>([]);
@@ -53,12 +53,14 @@ function phrase(kind: AuditKind, subject: string): string {
       return `${op} logged off workstation ${WORKSTATION_ID}.`;
     case 'timeout':
       return `Session for ${op.toLowerCase()} locked by the workstation after ten minutes without input. Open work was retained.`;
+    case 'system':
+      return `${subject}.`;
     default:
       return `${op}: ${subject}.`;
   }
 }
 
-export function log(kind: AuditKind, subject: string, detail?: string): AuditEntry {
+export function log(kind: AuditKind, subject: string, detail?: string, data?: Record<string, string>): AuditEntry {
   const e: AuditEntry = {
     seq: ++seq,
     at: inWorldIso(),
@@ -66,6 +68,7 @@ export function log(kind: AuditKind, subject: string, detail?: string): AuditEnt
     subject,
     detail: detail ?? phrase(kind, subject),
   };
+  if (data) e.data = data;
   if (!ready) {
     pending.push(e);
   } else {

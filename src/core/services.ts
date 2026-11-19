@@ -4,7 +4,7 @@
  * or the `useServices()` hook.
  */
 import { computed, signal } from '@preact/signals';
-import type { AppId, DocJson, RouteEntry, Services, SoundCue } from './contracts';
+import type { AppId, DocJson, MailDeliverOptions, MailMeta, RouteEntry, Services, SoundCue } from './contracts';
 import type { CompartmentId, TierNo } from './canon-types';
 import * as audit from './audit';
 import * as session from './session';
@@ -83,6 +83,8 @@ export const runHistory = signal<string[]>([]);
 export const mailState = {
   delivered: signal<string[]>([]),
   read: signal<string[]>([]),
+  /** Delivery time and slot values per message (narrative engine). */
+  meta: signal<Record<string, MailMeta>>({}),
 };
 const unread = computed(() => {
   const r = new Set(mailState.read.value);
@@ -90,13 +92,28 @@ const unread = computed(() => {
 });
 
 function persistMail(): void {
-  save('mail', { delivered: mailState.delivered.peek(), read: mailState.read.peek() });
+  save('mail', { delivered: mailState.delivered.peek(), read: mailState.read.peek(), meta: mailState.meta.peek() });
+}
+
+function deliverMail(msgId: string, opts: MailDeliverOptions = {}): void {
+  const already = mailState.delivered.peek().includes(msgId);
+  if (already && !opts.repeat) return;
+  mailState.delivered.value = [...mailState.delivered.peek().filter((id) => id !== msgId), msgId];
+  const read = mailState.read.peek().filter((id) => id !== msgId);
+  mailState.read.value = opts.read ? [...read, msgId] : read;
+  mailState.meta.value = { ...mailState.meta.peek(), [msgId]: { at: session.inWorldIso(), ...(opts.slots ? { slots: opts.slots } : {}) } };
+  persistMail();
+  if (opts.silent) return;
+  cue('mail');
+  const entry = byIdMap.get(msgId);
+  notify(entry ? `New message: ${entry.title}` : 'New message received.', { from: 'Message Traffic' });
 }
 
 export async function initStores(): Promise<void> {
-  const m = await load<{ delivered: string[]; read: string[] }>('mail', { delivered: [], read: [] });
+  const m = await load<{ delivered: string[]; read: string[]; meta?: Record<string, MailMeta> }>('mail', { delivered: [], read: [] });
   mailState.delivered.value = m.delivered;
   mailState.read.value = m.read;
+  mailState.meta.value = m.meta ?? {};
   recent.value = await load<string[]>('recent', []);
   runHistory.value = await load<string[]>('runHistory', []);
   audit.subscribe((e) => {
@@ -368,7 +385,7 @@ export const services: Services = {
   openRoute: (p) => openRoute(p),
   openApp,
   audit: {
-    log: (kind, subject, detail) => void audit.log(kind, subject, detail),
+    log: (kind, subject, detail, data) => void audit.log(kind, subject, detail, data),
     entries: audit.entries,
     subscribe: audit.subscribe,
   },
@@ -393,15 +410,9 @@ export const services: Services = {
   },
   search: async (q) => (await searchAll(q)).hits,
   mail: {
-    deliver(msgId: string) {
-      if (mailState.delivered.peek().includes(msgId)) return;
-      mailState.delivered.value = [...mailState.delivered.peek(), msgId];
-      persistMail();
-      cue('mail');
-      const entry = byIdMap.get(msgId);
-      notify(entry ? `New message: ${entry.title}` : 'New message received.', { from: 'Message Traffic' });
-    },
+    deliver: deliverMail,
     unread,
+    meta: mailState.meta,
   },
   sound: {
     play(cue: SoundCue) {

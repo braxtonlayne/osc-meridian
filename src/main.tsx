@@ -17,6 +17,7 @@ import { initStores, setRoutes } from '@core/services';
 import { initWm } from '@shell/wm';
 import { pendingPath } from '@shell/state';
 import { Shell, setReady } from '@shell/Shell';
+import { startNarrative } from '@narrative/engine';
 
 document.getElementById('static-doc')?.remove();
 document.documentElement.classList.add('js');
@@ -41,6 +42,7 @@ setReady(
       compartments: op.compartments,
     });
     await Promise.all([initAudit(), initWm(), initStores()]);
+    await startNarrative();
   })().catch((err: unknown) => {
     console.error('MERIDIAN initialisation', err);
   }),

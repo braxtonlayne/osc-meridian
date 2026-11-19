@@ -109,3 +109,29 @@ Audit `kind` values: `window.open window.close doc.read search redaction.hover p
 | `@graphics/org` | org chart + tier pyramid |
 | `@graphics/reactor` | reactor one-line diagrams + telemetry gauges |
 Each module has an `index.ts(x)` and a `README.md` with a rendered check (an SVG/PNG snapshot or a test page under `src/graphics/<family>/preview.html`).
+
+## Narrative engine
+Owner: integration (`src/narrative/**`). Started once from `src/main.tsx` after session, audit and mail stores are initialised (`startNarrative()` from `@narrative/engine`). Rules are a pure reducer (`src/narrative/rules.ts`) over audit entries and 5 s clock ticks; state persists under persist key `narrative`. `plan.json` is spoiler material and is never imported by shipped code; the runtime uses the projection in `src/narrative/spec.ts` (a test fails if it drifts).
+
+**Contract additions (src/core):**
+- `AuditEntry.data?: Record<string, string>` and `services.audit.log(kind, subject, detail?, data?)`: structured payload for the engine, never displayed.
+- `AuditKind` gains `'system'`: lines the system writes itself (segment 04 record withdrawal, repeated-refusal note, F-122 return). Audit viewers need a label for it.
+- `services.mail.deliver(msgId, opts?)` with `MailDeliverOptions { slots?, read?, silent?, repeat? }`; `repeat` re-delivers an already delivered message as unread with new slots (non-delivery notice, every time).
+- `services.mail.meta`: `Record<msgId, { at, slots? }>`; `at` is the in-world ISO delivery time (use it for `dateMode: delivery`); the mail app replaces `{token}` in the body/slotTemplate with `slots[token]`.
+
+**What apps must log for the engine to see:**
+| Kind | subject | data |
+|---|---|---|
+| `doc.read` | docNo, when a document body is displayed (a non-refused `window.open` of a docNo also counts) | none |
+| `search` | the query (shell already does this) | none |
+| `form.submit` | the form docNo, e.g. `OSC-F-160` | `{ form: 'OSC-F-160', <fieldName>: value, ... }` using the field `name`s in `content/forms/*.md` |
+| `terminal.cmd` | the command line as typed | none |
+| `transit.watch` | `SEG04` | `seg04WatchData(view, fromMs, toMs)`; detail `seg04WatchDetail(...)`. Log once per movement, if the board (any view) was visible, not minimised, at any moment of it |
+| `mail.send` | message subject | `{ to, cc?, subject, body }` (comma-separated addresses) |
+| `print`, `redaction.hover` | docNo (shell already does this) | optional `pq` on print |
+
+**What the engine exposes:**
+- Flags via `services.session.flags` (set with `setFlag`): `oriented`, `accessionHeld`, `scanRead`, `queryRead` (F-131 receipt history), `mileageQuery`, `seg04Witnessed`, `strengthRun`, `interimReview`, `oiaReviewedPrints` (stamp later print cover sheets REVIEWED-OIA). A page/form gated on `flag:<name>` checks `services.session.flags.value[name]`.
+- Compartments and ACTING-T2 via `services.clearance.grant` (so `session.compartments` / `actingTier2` / `satisfies` update as usual).
+- `@narrative/engine`: `seg04` signal (`{ start, end } | null`, wall-clock ms, held 60 s after `end` for the incident log), `seg04Blocks(now, w)` (lit blocks 1..12 from the ALPHA-05 end), `seg04LogLine(now, block)`, `seg04LogVisible(now, w)`, `SEG04_CONSIST_LABEL`; `formRefusal(formNo, fields)` returns the in-world refusal text for F-122 (probationer) and F-126 non-approvable compartments, or null.
+- Terminal: `clearance request acting` before the interim review should print "Not eligible: probationary (DIR-0247)"; check `services.session.flags.value.interimReview`.

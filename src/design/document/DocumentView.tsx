@@ -6,7 +6,7 @@ import '../primitives/primitives.css';
 import './document.css';
 import { cx, formatOscDate } from '../util';
 import { redactionNotice } from '../primitives/Records';
-import { fmOf, num, recs, str } from './frontmatter';
+import { fmOf, num, recs, routingRecs, str } from './frontmatter';
 import { TEMPLATES, type TemplateCtx, type TemplateParts } from './templates';
 
 /** Graphics supplied by the shell from @graphics/* once those modules exist. All optional. */
@@ -242,7 +242,7 @@ export function DocumentView({ doc, markings, onNavigate, onRedactionHover, slot
     </div>
   );
 
-  const routing = recs(fm, 'routing');
+  const routing = routingRecs(fm, 'routing');
   const revisions = recs(fm, 'revisions');
 
   return (

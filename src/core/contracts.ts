@@ -81,7 +81,9 @@ export interface AppDefinition {
 export type AuditKind =
   | 'window.open' | 'window.close' | 'doc.read' | 'search' | 'redaction.hover' | 'print'
   | 'form.submit' | 'mail.read' | 'mail.send' | 'terminal.cmd' | 'transit.watch'
-  | 'clearance.grant' | 'login' | 'logout' | 'timeout';
+  | 'clearance.grant' | 'login' | 'logout' | 'timeout'
+  /** Lines written by the system itself (narrative engine): withdrawals, refusal notes. */
+  | 'system';
 
 export interface AuditEntry {
   seq: number;
@@ -89,6 +91,30 @@ export interface AuditEntry {
   kind: AuditKind;
   subject: string; // docNo / route / query / command
   detail: string; // security-office phrasing
+  /**
+   * Structured payload for the narrative engine (never displayed). See
+   * docs/CONTRACTS.md "Narrative engine" for the keys each kind carries
+   * (form.submit field values, mail.send recipients/body, transit.watch view).
+   */
+  data?: Record<string, string>;
+}
+
+/** Options for Services.mail.deliver (narrative engine). */
+export interface MailDeliverOptions {
+  /** Values for `{token}` slots in the message body (slotTemplate). */
+  slots?: Record<string, string>;
+  /** Deliver already marked as read. */
+  read?: boolean;
+  /** No toast or sound (login batch). */
+  silent?: boolean;
+  /** Deliver again even if already delivered: marks it unread and replaces its slots. */
+  repeat?: boolean;
+}
+
+/** Per-message delivery record kept by the shell. `at` = in-world ISO delivery time. */
+export interface MailMeta {
+  at: string;
+  slots?: Record<string, string>;
 }
 
 export type SoundCue = 'window' | 'error' | 'mail' | 'relay';
@@ -97,7 +123,7 @@ export interface Services {
   openRoute(path: string): void;
   openApp(id: AppId): void;
   audit: {
-    log(kind: AuditKind, subject: string, detail?: string): void;
+    log(kind: AuditKind, subject: string, detail?: string, data?: Record<string, string>): void;
     entries: ReadonlySignal<AuditEntry[]>;
     /** Subscribe for narrative consequences. Returns unsubscribe. */
     subscribe(fn: (e: AuditEntry) => void): () => void;
@@ -123,8 +149,10 @@ export interface Services {
   };
   search(q: string): Promise<{ route: RouteEntry; score: number; snippet: string }[]>;
   mail: {
-    deliver(msgId: string): void;
+    deliver(msgId: string, opts?: MailDeliverOptions): void;
     unread: ReadonlySignal<number>;
+    /** Delivery time and slot values per delivered message id. */
+    meta: ReadonlySignal<Record<string, MailMeta>>;
   };
   sound: { play(cue: SoundCue): void };
   settings: {

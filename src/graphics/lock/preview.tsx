@@ -35,7 +35,7 @@ function LockMock() {
         <div class="pv-win" role="dialog" aria-label="MERIDIAN logon">
           <div class="pv-win__title">
             <span>MERIDIAN Workstation Environment 4.1.7 - Workstation Locked</span>
-            <span class="pv-win__term">RD-A03-WS0417</span>
+            <span class="pv-win__term">A03-5-114</span>
           </div>
 
           <div class="pv-win__body">

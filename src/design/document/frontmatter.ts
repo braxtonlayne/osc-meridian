@@ -51,6 +51,13 @@ export function recs(fm: FM, key: string): Record<string, string>[] {
   });
 }
 
+/** Routing slip entries: [{office,action,initials,date}] or plain office names (form routing). */
+export function routingRecs(fm: FM, key: string): Record<string, string>[] {
+  const v = fm[key];
+  if (!Array.isArray(v)) return [];
+  return v.flatMap((x) => (typeof x === 'string' ? (x.trim() ? [{ office: x }] : []) : recs({ k: [x] }, 'k')));
+}
+
 export interface Sig {
   name: string;
   title?: string;
@@ -93,6 +100,30 @@ export function fields(fm: FM, key: string): FieldLine[] {
   return [];
 }
 
+/**
+ * Content pages may nest a template's header fields under an object named after the template
+ * (`message: { from, to, ... }`, `form: { formNo, blocks, ... }`; docs/BRIEF-CONTENT.md). The
+ * templates read flat keys, so lift those objects onto the top level. The doc's own template
+ * key is applied last so it wins over any other nested block. A nested value replaces the
+ * top-level one unless it is undefined; the nested object itself stays under its key for
+ * apps that read it there.
+ */
+export const TEMPLATE_FM_KEYS = ['memo', 'directive', 'cable', 'minutes', 'dossier', 'ledger', 'record', 'form', 'message', 'help', 'charter', 'scan', 'index'] as const;
+
+export function normaliseFrontmatter(raw: FM | undefined | null, template?: string): FM {
+  const fm: FM = { ...(raw ?? {}) };
+  const order = TEMPLATE_FM_KEYS.filter((k) => k !== template && isObj(fm[k])) as string[];
+  if (template && isObj(fm[template])) order.push(template);
+  // Snapshot the nested blocks first, so a lifted field named like a template key cannot feed a later pass.
+  const blocks = order.map((k) => fm[k] as Record<string, unknown>);
+  for (const block of blocks) {
+    for (const [k, v] of Object.entries(block)) {
+      if (v !== undefined) fm[k] = v;
+    }
+  }
+  return fm;
+}
+
 export function fmOf(doc: DocJson): FM {
-  return (doc.frontmatter ?? {}) as FM;
+  return normaliseFrontmatter(doc.frontmatter as FM | undefined, doc.template);
 }

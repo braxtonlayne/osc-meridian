@@ -167,7 +167,9 @@ function directive(ctx: TemplateCtx): TemplateParts {
   const category = str(fm, 'category');
   const certified = str(fm, 'certifiedCurrent');
   const approved = sig(fm, 'approvedBy');
+  // Content may give supersession as prose in frontmatter (`supersedes: "OSC-DIR-0301 Revision 5, ..."`).
   const sup = doc.supersedes;
+  const supText = sup ? undefined : str(fm, 'supersedes');
   const supHit = sup ? doc.xrefs.find((x) => x.docNo === sup) : undefined;
   const sections = doc.headings.filter((h) => h.depth === 2);
   return {
@@ -201,6 +203,8 @@ function directive(ctx: TemplateCtx): TemplateParts {
                   <XrefLink ctx={ctx} route={supHit?.route}>
                     {sup}
                   </XrefLink>
+                ) : supText ? (
+                  resolveRef(ctx, supText)
                 ) : (
                   'None'
                 )}
@@ -436,12 +440,13 @@ function record(ctx: TemplateCtx): TemplateParts {
 function dossier(ctx: TemplateCtx): TemplateParts {
   const { doc, fm } = ctx;
   const f = fields(fm, 'identity');
+  const facility = doc.facility ?? str(fm, 'facility');
   return {
     head: (
       <>
         <div class="rec-kind">{str(fm, 'dossierType') ?? 'FACILITY DOSSIER'}</div>
         <h1 class="rec-title">
-          {doc.facility ? <span class="u-mono">{doc.facility} </span> : null}
+          {facility ? <span class="u-mono">{facility} </span> : null}
           {doc.title}
         </h1>
         {f.length ? (
@@ -459,9 +464,19 @@ const DEFAULT_FORM_AUTHORITY =
 
 function form(ctx: TemplateCtx): TemplateParts {
   const { doc, fm } = ctx;
-  const formNo = str(fm, 'formNo') ?? doc.docNo;
+  // The header prints "OSC FORM 126"; content may give the full docNo ("OSC-F-126").
+  const formNo = (str(fm, 'formNo') ?? doc.docNo).replace(/^OSC-F(?:ORM)?[-\s]+/i, '');
   const edition = str(fm, 'edition');
-  const blocks = recs(fm, 'blocks');
+  const footer = str(fm, 'footer');
+  // Blocks: {no,label,value,wide} or the Forms app shape {n,label,fields:[{label}]}.
+  const rawBlocks = (Array.isArray(fm.blocks) ? fm.blocks : []).filter((x) => !!x && typeof x === 'object' && !Array.isArray(x));
+  const blocks = recs({ blocks: rawBlocks }, 'blocks').map((rec, i) => {
+    const raw = rawBlocks[i] as { fields?: unknown } | undefined;
+    const fieldLabels = Array.isArray(raw?.fields)
+      ? raw.fields.flatMap((x) => (x && typeof x === 'object' && typeof (x as { label?: unknown }).label === 'string' ? [(x as { label: string }).label] : []))
+      : [];
+    return { rec, no: rec.no ?? rec.n, fieldLabels };
+  });
   return {
     bodyClass: 'doc-body--form',
     head: (
@@ -488,11 +503,13 @@ function form(ctx: TemplateCtx): TemplateParts {
         {blocks.length ? (
           <div class="frm-grid">
             {blocks.map((b, i) => (
-              <div key={i} class="frm-cell" style={b.wide === 'true' ? { gridColumn: '1 / -1' } : undefined}>
+              <div key={i} class="frm-cell" style={b.rec.wide === 'true' ? { gridColumn: '1 / -1' } : undefined}>
                 <div class="frm-cell__l">
-                  <span class="frm-cell__no">{b.no ?? String(i + 1)}.</span> {b.label ?? ''}
+                  <span class="frm-cell__no">{b.no ?? String(i + 1)}.</span> {b.rec.label ?? ''}
                 </div>
-                <div class="frm-cell__v">{b.value ?? ''}</div>
+                <div class="frm-cell__v">
+                  {b.rec.value ?? (b.fieldLabels.length ? <Lines items={b.fieldLabels} /> : '')}
+                </div>
               </div>
             ))}
           </div>
@@ -501,8 +518,13 @@ function form(ctx: TemplateCtx): TemplateParts {
     ),
     tail: (
       <div class="frm-foot">
-        OSC FORM {formNo}
-        {edition ? `, EDITION ${edition}` : ''}. PREVIOUS EDITIONS ARE NOT TO BE USED.
+        {footer ?? (
+          <>
+            OSC FORM {formNo}
+            {edition ? `, EDITION ${edition}` : ''}
+          </>
+        )}
+        . PREVIOUS EDITIONS ARE NOT TO BE USED.
       </div>
     ),
   };

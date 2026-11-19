@@ -63,7 +63,7 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
                 {c.meta.environment}, release {c.meta.release}
               </div>
               <div class="lock-ws">
-                Workstation A03-RD-WS0114 &middot; {op.site} &middot; {formatInWorldDate()}
+                Workstation A03-5-114 &middot; {op.site} &middot; {formatInWorldDate()}
               </div>
             </div>
           </div>
