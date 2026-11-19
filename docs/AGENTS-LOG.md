@@ -59,7 +59,7 @@ Orchestrator: Claude (Opus 5.5 / Fable 5.2 session). Graphics agents run with mo
 | P1 | App: registry | inherit | src/apps/registry/** + src/sim/telemetry.worker.ts | docs/BRIEF-APPS.md, SPEC §8, port 5200 | running |
 | P2 | App: transit | inherit | src/apps/transit/** + src/sim/transit.worker.ts | docs/BRIEF-APPS.md, SPEC §8, port 5201 | running |
 | P3 | App: personnel | inherit | src/apps/personnel/** | docs/BRIEF-APPS.md, SPEC §8, port 5202 | running |
-| P4 | App: records | inherit | src/apps/records/** | docs/BRIEF-APPS.md, SPEC §8, port 5203 | running |
+| P4 | App: records | inherit | src/apps/records/** | docs/BRIEF-APPS.md, SPEC §8, port 5203 | Done; 13 tests, repo tsc 0 errors, eslint clean. Library (folder tree by division/series/marking/year, recent), search with facets, snippets with redaction bars, saved queries, 30 document routes with properties panel, Open by Number. 17 screenshots. Integration: RefusalState prop name; services.search lacks withheld count; scan-page width inside DocumentView (fixed locally; print path); search audit debounced 1.2 s; home marked UMBRA because the Inventory scan is listed. |
 | P5 | App: mail | inherit | src/apps/mail/** | docs/BRIEF-APPS.md, SPEC §8, port 5204 | running |
 | P6 | App: ledger | inherit | src/apps/ledger/** | docs/BRIEF-APPS.md, SPEC §8, port 5205 | running |
 | P7 | App: reserves | inherit | src/apps/reserves/** | docs/BRIEF-APPS.md, SPEC §8, port 5206 | running |
