@@ -13,13 +13,19 @@
  *  4. any internal href/src in prerendered HTML does not resolve to a file or route in dist/;
  *  5. headline-figure drift (rules in .generated/canon-figures.json, see scripts/content/figures.ts);
  *  6. any release file is keyed to tier 1, or contains an rx id whose redaction key is tier 1.
+ *  7. any string withheld by buildClientCanon (length >= 6; see withheldNeedles for the one
+ *     exemption) appears in any dist file outside data/releases/ (baseline HTML, JS, docs JSON,
+ *     search index), or a tier-1 withheld string appears in a release file. Exception: tier-2
+ *     roster names and emails may appear in baseline document files (signatures, From/To
+ *     lines); see isAuthoredName.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { DocJson, RouteEntry } from '../src/core/contracts';
 import { checkDrift, type FigureRule } from './content/figures.ts';
-import { isTier1Key, normalizeBase } from './content/util.ts';
+import { escapeHtml, isTier1Key, normalizeBase } from './content/util.ts';
+import { deriveRestrictions, type Withheld } from './content/client-canon.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
@@ -126,6 +132,59 @@ export function htmlToText(html: string): string {
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+export interface Needle {
+  path: string;
+  key: string;
+  forms: string[];
+}
+
+/**
+ * Withheld client-canon strings to search for: length >= 6, as written, HTML-escaped and
+ * JSON-escaped. Exempt: generic reserve category labels that canon-merge itself does not scrub
+ * ("Small arms", "Ammunition", "Nuclear reactors": path *.label with scrub=false), which are
+ * ordinary words on unrestricted pages. Their values and texts are still checked.
+ */
+export function withheldNeedles(withheld: Withheld[]): Needle[] {
+  const out: Needle[] = [];
+  for (const w of withheld) {
+    if (w.text.length < 6) continue;
+    if (!w.scrub && w.path.startsWith('reserves.') && w.path.endsWith('.label')) continue;
+    const forms = new Set([w.text, escapeHtml(w.text), escapeHtml(w.text).replace(/'/g, '&#x27;'), JSON.stringify(w.text).slice(1, -1)]);
+    out.push({ path: w.path, key: w.key, forms: [...forms] });
+  }
+  return out;
+}
+
+/**
+ * Orchestrator decision: documents show who signed and sent them, so a tier-2 roster NAME or
+ * EMAIL may appear in authored document text (signatures, From/To lines). Only the
+ * directory/role assignment is withheld. Every other tier-2 value and every tier-1 value
+ * (names and emails included) stay strict everywhere; JS/CSS bundles stay strict for all.
+ */
+export function isAuthoredName(n: { path: string; key: string }): boolean {
+  return n.key === 'T2' && /^roster\.[^.]+\.(?:name|email)$/.test(n.path);
+}
+
+/** Baseline document files: docs JSON, prerendered pages, the search index (not JS/CSS bundles). */
+export function isDocFile(f: string): boolean {
+  const p = f.split(sep).join('/');
+  return /\/dist\/data\/docs\/[^/]+\.json$/.test(p) || /\/dist\/data\/search\.json$/.test(p) || /\/dist\/.*\.html$/.test(p);
+}
+
+export function findWithheld(text: string, needles: Needle[]): { index: number; path: string; key: string }[] {
+  const out: { index: number; path: string; key: string }[] = [];
+  for (const n of needles) {
+    for (const f of n.forms) {
+      const i = text.indexOf(f);
+      if (i >= 0) {
+        out.push({ index: i, path: n.path, key: n.key });
+        break;
+      }
+    }
+  }
+  return out;
 }
 
 function inferBase(): string {
@@ -248,6 +307,23 @@ function main(): number {
       if (isTier1Key(key)) fail('tier1', `${rel(f)} is a tier-1 release file`);
       const body = JSON.parse(readFileSync(f, 'utf8')) as Record<string, string>;
       for (const id of Object.keys(body)) if (t1Ids.has(id)) fail('tier1', `${rel(f)} contains tier-1 redaction ${id}`);
+    }
+  }
+
+  // 7. values withheld from the client canon never reach baseline output
+  const canonPath = join(root, 'content', 'canon', 'canon.json');
+  if (existsSync(canonPath)) {
+    const r = deriveRestrictions(JSON.parse(readFileSync(canonPath, 'utf8')));
+    const needles = withheldNeedles(r?.withheld ?? []);
+    const releasesDir = join(dist, 'data', 'releases');
+    for (const f of distFiles) {
+      if (!TEXT_EXT.has(extname(f).toLowerCase())) continue;
+      const isRelease = f.startsWith(releasesDir + sep);
+      const text = readFileSync(f, 'utf8');
+      const list = isRelease ? needles.filter((n) => isTier1Key(n.key)) : isDocFile(f) ? needles.filter((n) => !isAuthoredName(n)) : needles;
+      for (const hit of findWithheld(text, list)) {
+        fail('withheld', `${rel(f)}:${lineAt(text, hit.index)} contains ${hit.key} value ${hit.path}${isRelease ? ' (tier 1 in a release file)' : ''}`);
+      }
     }
   }
 

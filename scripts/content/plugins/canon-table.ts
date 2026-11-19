@@ -12,15 +12,27 @@
  * - filter: "field=value,field2!=value". Any other unreserved attribute is also a filter
  *   (so `class="BETA"` works as in docs/CONTRACTS.md).
  * - caption: optional table caption. limit: optional max rows.
- * - roster: names and e-mail addresses of tier-1/2 personnel are emitted as redactions
- *   (key T1 / T2; tier 1 never ships). auth/ref attributes override the withholding authority.
+ * - Restricted values: every cell the client canon withholds (docs/CANON.md "Client canon":
+ *   tier-1/2 roster names and addresses, tier-1/2 facility levels, DELTA locations, tier-1/2
+ *   reserves) is emitted as a redaction with the same key (T1 never ships; T2 / compartment go
+ *   to their release file). auth overrides the withholding authority (OSC/PSD for roster,
+ *   OSC/CSO otherwise); ref is the row's pn / id.
  */
 import { resolvePath, formatScalar, type CanonData } from '../canon.ts';
 import { formatDate } from '../util.ts';
+import { nullKey, restrictedKey, rxAttributes, sentinelKey } from '../client-canon.ts';
 import { el, fail, text, type CompileContext, type MdNode } from './context.ts';
 
 const RESERVED = new Set(['source', 'cols', 'filter', 'caption', 'limit', 'auth', 'id']);
-const ROSTER_REDACT_FIELDS = new Set(['name', 'email']);
+
+/** Release key when a cell's client-canon copy differs from the full value (sentinel or null). */
+function cellRestriction(full: unknown, client: unknown, ancestors: unknown[]): string | null {
+  if (client !== null && typeof client === 'object') {
+    const js = JSON.stringify(client);
+    return sentinelKey(js) ?? (js !== JSON.stringify(full) ? nullKey(ancestors) : null);
+  }
+  return restrictedKey(full, client, ancestors);
+}
 
 type Row = Record<string, unknown>;
 
@@ -93,11 +105,25 @@ export function canonTable(node: MdNode, ctx: CompileContext): void {
     fail(ctx, node, `::canon-table source="${source}" used but no canon file was loaded`);
     return done([]);
   }
-  let rows = sourceRows(ctx.canon, source);
-  if (!rows) {
+  const fullRows = sourceRows(ctx.canon, source);
+  if (!fullRows) {
     fail(ctx, node, `::canon-table source="${source}" is not an array of records in canon`);
     return done([]);
   }
+  // Pair each row with its client-canon copy (same order). Filters run on the client copy so a
+  // withheld value can never select rows; cells differing from the client copy are redacted.
+  const clientRows = ctx.restrictions ? sourceRows(ctx.restrictions.client, source) : null;
+  const pairs = fullRows.map((full, i) => ({ full, client: clientRows?.[i] ?? full }));
+  const ancestorsOf = (full: Row): unknown[] => {
+    const out: unknown[] = [full];
+    const segs = source.split('.');
+    for (let i = segs.length - 1; i > 0; i--) {
+      const r = resolvePath(ctx.canon!, segs.slice(0, i).join('.'));
+      if (r.found) out.push(r.value);
+    }
+    return out;
+  };
+  let rows = pairs.map((p) => p.client);
 
   // filters
   const filters: { key: string; want: string; neg: boolean }[] = [];
@@ -118,13 +144,15 @@ export function canonTable(node: MdNode, ctx: CompileContext): void {
       fail(ctx, node, `::canon-table filter field "${f.key}" does not exist in ${source}`);
     }
   }
-  rows = rows.filter((r) => filters.every((f) => matches(field(r, f.key).value, f.want) !== f.neg));
+  let kept = pairs.filter((p) => filters.every((f) => matches(field(p.client, f.key).value, f.want) !== f.neg));
+  rows = kept.map((p) => p.client);
   if (!rows.length) {
     fail(ctx, node, `::canon-table source="${source}" with those filters has no rows`);
     return done([]);
   }
   const limit = a.limit ? Number(a.limit) : 0;
-  if (limit > 0) rows = rows.slice(0, limit);
+  if (limit > 0) kept = kept.slice(0, limit);
+  rows = kept.map((p) => p.client);
 
   // columns
   let cols: { key: string; label: string }[];
@@ -147,26 +175,26 @@ export function canonTable(node: MdNode, ctx: CompileContext): void {
     if (!rows.some((r) => field(r, c.key).found)) fail(ctx, node, `::canon-table column "${c.key}" does not exist in ${source}`);
   }
 
-  const isRoster = source === 'roster';
-  const auth = (a.auth ?? '').trim() || 'OSC/PSD';
-  const body: MdNode[] = rows.map((row) =>
+  const auth = (a.auth ?? '').trim() || (source === 'roster' ? 'OSC/PSD' : 'OSC/CSO');
+  const body: MdNode[] = kept.map(({ full: row, client }) =>
     el(
       'tr',
       {},
       cols.map((c) => {
         const { value } = field(row, c.key);
+        const cv = field(client, c.key).value;
         const s = cellText(value, c.key.split('.').pop() ?? c.key);
         if (s === null) {
           fail(ctx, node, `::canon-table column "${c.key}" holds a structured value; pick a scalar field`);
         }
         const numeric = typeof value === 'number';
         const props = numeric ? { className: ['num'] } : {};
-        const tier = typeof row.tier === 'number' ? row.tier : 4;
-        if (isRoster && ROSTER_REDACT_FIELDS.has(c.key) && tier <= 2 && s !== null && s !== '—') {
+        const key = cellRestriction(value, cv, ancestorsOf(row));
+        if (key && s !== null && s !== '—') {
           const rx: MdNode = {
             type: 'textDirective',
             name: 'r',
-            attributes: { tier: String(tier), auth, ref: String(row.pn ?? source) },
+            attributes: rxAttributes(key, auth, String(row.pn ?? row.id ?? ctx.docNo)),
             children: [text(s)],
             position: node.position,
           };

@@ -64,6 +64,20 @@ Manifest shapes accepted: an array of docNo strings, records anywhere in the JSO
 | `::routing{initials="JH 5/2,MKB 5/5"}` | routing slip |
 | `:::scan{seed=7 rotate=-0.6}` | scanned page wrapper |
 
+## Restricted canon values
+
+`:c[]` and `::canon-table` read the full canon. Any value that the client canon withholds
+(docs/CANON.md "Client canon": tier-1/2 roster names and addresses, tier-1/2 facility levels,
+DELTA locations, tier-1/2 reserves) becomes a redaction bar with the same key. A T1 value is
+never shipped; a T2 or compartment value goes to that key's release file. Table filters run on
+the client values, so a withheld value cannot select rows. Do not hand-type restricted names
+into a page; `npm run test:dist` fails if any withheld string (6 or more characters) appears
+in baseline output.
+
+`:x[]` links written inside `:r[]` or `:::redact` are withheld too. They are left out of the
+baseline `xrefs` list (a frontmatter entry linked only there is dropped, with a warning) and
+come back from the release HTML when the redaction is released.
+
 ## Headline figures (drift test)
 
 `npm run test:dist` checks the phrases in `scripts/content/figures.ts`. If a page says

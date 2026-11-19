@@ -1,5 +1,6 @@
 /** Per-document compile context shared by the remark/rehype plugins. */
 import type { CanonData } from '../canon.ts';
+import type { Restrictions } from '../client-canon.ts';
 import type { Problem } from '../util.ts';
 
 export interface RedactionRecord {
@@ -19,6 +20,12 @@ export interface CompileContext {
   docNo: string;
   base: string; // normalised "/" or "/osc-meridian/"
   canon: CanonData | null;
+  /** Client-canon view of `canon`: values withheld from the browser are withheld from baseline too. */
+  restrictions: Restrictions | null;
+  /** >0 while walking inside :r[] / :::redact (directives.ts). */
+  rxDepth: number;
+  /** docNos linked only from inside redactions (never put in the baseline xref list). */
+  xrefsHidden: string[];
   docsByNo: Map<string, { route: string; title: string }>;
   /** Compartment ids accepted in redaction requirements. */
   compartments: Set<string>;

@@ -8,7 +8,7 @@ import { buildContent, loadManifestDocNos, type BuildResult } from '../../script
 import { FrontmatterSchema } from '../../scripts/content/schema.ts';
 import { ContentBuildError } from '../../scripts/content/util.ts';
 import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
-import { findBannedWords, findExternalUrls } from '../../scripts/verify-dist.ts';
+import { findBannedWords, findExternalUrls, findWithheld, isAuthoredName, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
 import { renderPage, STATIC_MARKER } from '../../scripts/prerender.ts';
 import { applyReleases, createDocs } from '../../src/core/docs';
 import { createSearch } from '../../src/core/search';
@@ -335,6 +335,135 @@ describe('aliases, lenient builds and structured frontmatter', () => {
 function expectBuildErrorNoCleanup(dir: string): void {
   expect(() => buildContent({ contentDir: dir, canonPath: CANON })).toThrow(ContentBuildError);
 }
+
+describe('restricted material never reaches the baseline', () => {
+  const MEM = { ...FM, id: 'mem-0400', route: '/records/mem-0400', family: 'records', app: 'records', docNo: 'OSC-MEM-08-0400', title: 'Gallery Survey Return' };
+
+  it('xrefs inside redactions ship only in the release and merge back on release', async () => {
+    const dir = tempContent({
+      'directives/a.md': md(
+        { ...FM, xrefs: ['OSC-MEM-08-0400'] },
+        'Routine text.\n\n:::redact{tier=2 auth="CSO" ref="CSO-08-090"}\nSee :x[OSC-MEM-08-0400] for the survey.\n:::\n\nInline :r[per :x[OSC-MEM-08-0400]]{tier=1 auth="CSO" ref="CSO-08-091"} too.',
+      ),
+      'records/b.md': md(MEM, 'Survey body.'),
+    });
+    try {
+      const r = buildContent({ contentDir: dir, canonPath: CANON, displayRoot: dir });
+      const a = r.docs.find((d) => d.id === 'dir-0099')!;
+      expect(a.xrefs).toEqual([]);
+      expect(JSON.stringify(a)).not.toContain('OSC-MEM-08-0400');
+      expect(JSON.stringify(a)).not.toContain('/records/mem-0400');
+      const sdoc = r.search.find((s) => s.id === 'dir-0099')!;
+      expect(JSON.stringify(sdoc)).not.toContain('OSC-MEM-08-0400');
+      expect(r.warnings.some((w) => /linked only inside a redaction/.test(w.message))).toBe(true);
+      const t2 = Object.values(r.releases.T2!)[0]!;
+      expect(t2).toContain('data-xref="/records/mem-0400"');
+
+      const fetchJson = async (url: string) => {
+        const d = /data\/docs\/(.+)\.json$/.exec(url);
+        if (d) return r.docs.find((x) => x.id === d[1]);
+        const k = /data\/releases\/(.+)\.json$/.exec(url);
+        return r.releases[k![1]!] ?? {};
+      };
+      const closed = await createDocs({ satisfies: (k) => k === 'T3', routes: r.routes, fetchJson }).load('dir-0099');
+      expect(closed.xrefs).toEqual([]);
+      const open = await createDocs({ satisfies: (k) => k === 'T2', routes: r.routes, fetchJson }).load('dir-0099');
+      expect(open.xrefs).toEqual([{ docNo: 'OSC-MEM-08-0400', route: '/records/mem-0400', title: 'Gallery Survey Return' }]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('canon-table and :c redact values the client canon withholds', () => {
+    const body = [
+      '::canon-table{source="facilities.ALPHA-03.levels" cols="n,name,notes"}',
+      '',
+      '::canon-table{source="facilities" class="DELTA" cols="id,anchor.city,anchor.miles,depthFt"}',
+      '',
+      'Anchor :c[facilities.DELTA-01.anchor.city], :c[facilities.DELTA-01.anchor.miles] miles out; level :c[facilities.ALPHA-03.levels.7.name]; analyst :c[roster.3-1147.name].',
+    ].join('\n');
+    const dir = tempContent({ 'directives/a.md': md(FM, body) });
+    try {
+      const r = buildContent({ contentDir: dir, canonPath: CANON, displayRoot: dir });
+      const html = r.docs[0]!.html;
+      const baseline = JSON.stringify(r.docs) + r.searchJson + JSON.stringify(r.routes);
+      for (const s of ['Cistern Gallery Kappa', 'Tier two gallery notes', 'Sealed Annex Omicron', 'Tier one annex notes', 'Marbleford']) {
+        expect(baseline, s).not.toContain(s);
+      }
+      expect(html).toContain('Level 0: Surface Depot'); // tier-4 level stays
+      expect(html).toContain('Fixture Analyst Charlie'); // tier-3 name stays
+      expect(html).toContain('<td class="num">300</td>'); // DELTA depth is not restricted
+      const rel = JSON.stringify(r.releases);
+      expect(rel).toContain('Cistern Gallery Kappa');
+      expect(rel).not.toContain('Sealed Annex Omicron');
+      expect(rel).not.toContain('Tier one annex notes');
+      expect(Object.keys(r.releases).sort()).toEqual(['SEXTANT', 'T2']);
+      expect(Object.values(r.releases.SEXTANT!).join(' ')).toMatch(/Marbleford[\s\S]*30/);
+      expect(r.docs[0]!.redactions.filter((x) => x.key === 'T1').length).toBe(3);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('keeps canon-table filter semantics for missing values (fy.FYxxxx!=undefined)', () => {
+    const body = [
+      '::canon-table{source="budget.lineItems" filter="fy.FY2003!=undefined" cols="no,fy.FY2003:FY2003"}',
+      '',
+      '::canon-table{source="budget.lineItems" filter="fy.FY2003=undefined" cols="no,fy.FY2001:FY2001"}',
+      '',
+      '::canon-table{source="budget.lineItems" filter="fy.FY2001!=undefined" cols="no,amountM"}',
+    ].join('\n');
+    const dir = tempContent({ 'ledger/a.md': md({ ...FM, family: 'ledger', app: 'ledger', route: '/ledger/a' }, body) });
+    try {
+      const html = buildContent({ contentDir: dir, canonPath: CANON, displayRoot: dir }).docs[0]!.html;
+      const tables = html.split('<table').slice(1);
+      expect(tables).toHaveLength(3);
+      const rowsOf = (t: string) => [...t.matchAll(/<tr><td>(LI-\d+)<\/td>/g)].map((m) => m[1]);
+      expect(rowsOf(tables[0]!)).toEqual(['LI-001']); // present only where FY2003 exists
+      expect(tables[0]).toContain('<td class="num">800</td>');
+      expect(rowsOf(tables[1]!)).toEqual(['LI-002']); // "=undefined" selects the missing ones
+      expect(rowsOf(tables[2]!)).toEqual(['LI-001', 'LI-002']);
+      expect(tables[2]).toContain('<td class="num">1,200</td>');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('verify-dist finds withheld canon strings in all their escaped forms', () => {
+    const needles = withheldNeedles([
+      { path: 'roster.1-0001.name', key: 'T1', text: "Dana O'Brien", scrub: true },
+      { path: 'facilities.DELTA-01.anchor.city', key: 'SEXTANT', text: 'Pueblo', scrub: false },
+      { path: 'reserves.ARMS-SMALL.label', key: 'T2', text: 'Small arms', scrub: false },
+      { path: 'facilities.DELTA-01.anchor.state', key: 'SEXTANT', text: 'CO', scrub: false },
+    ]);
+    expect(needles.map((n) => n.path)).toEqual(['roster.1-0001.name', 'facilities.DELTA-01.anchor.city']);
+    expect(findWithheld('<td>Dana O&#x27;Brien</td>', needles).map((h) => h.key)).toEqual(['T1']);
+    expect(findWithheld('{"t":"near Pueblo"}', needles).map((h) => h.key)).toEqual(['SEXTANT']);
+    expect(findWithheld('Small arms issue; CO2 scrubbers', needles)).toEqual([]);
+  });
+
+  it('verify-dist lets tier-2 names stand in authored documents only', () => {
+    const needles = withheldNeedles([
+      { path: 'roster.2-0102.name', key: 'T2', text: 'Fixture Deputy Bravo', scrub: true },
+      { path: 'roster.2-0102.email', key: 'T2', text: 'f.bravo@a03.rd.mer', scrub: true },
+      { path: 'roster.1-0001.name', key: 'T1', text: 'Fixture Director Alpha', scrub: true },
+    ]);
+    expect(needles.filter(isAuthoredName).map((n) => n.path)).toEqual(['roster.2-0102.name', 'roster.2-0102.email']);
+    const docFile = join('x', 'dist', 'data', 'docs', 'dir-0001.json');
+    expect(isDocFile(docFile)).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'directives', 'dir-0001', 'index.html'))).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'data', 'search.json'))).toBe(true);
+    expect(isDocFile(join('x', 'dist', 'assets', 'index-abc.js'))).toBe(false);
+    const docNeedles = needles.filter((n) => !isAuthoredName(n));
+    const text = 'Signed: Fixture Deputy Bravo; copy f.bravo@a03.rd.mer; for Fixture Director Alpha';
+    expect(findWithheld(text, docNeedles).map((h) => h.path)).toEqual(['roster.1-0001.name']);
+    // strict in bundles
+    expect(findWithheld(text, needles).map((h) => h.path)).toEqual(['roster.2-0102.name', 'roster.2-0102.email', 'roster.1-0001.name']);
+    // tier-1 emails are never exempt
+    const t1mail = withheldNeedles([{ path: 'roster.1-0001.email', key: 'T1', text: 'f.alpha@a03.rd.mer', scrub: true }]);
+    expect(t1mail.filter(isAuthoredName)).toEqual([]);
+  });
+});
 
 describe('fixtures against the real canon', () => {
   const REAL = resolve(__dirname, '../../content/canon/canon.json');

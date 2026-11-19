@@ -22,6 +22,7 @@ import type { DocJson, RedactionInfo, RouteEntry } from '../../src/core/contract
 import { SEARCH_OPTIONS, type SearchDoc } from '../../src/core/search';
 import { CORE_KEYS, PLANNING_KEYS, FrontmatterSchema, type Frontmatter } from './schema.ts';
 import { loadCanon, type CanonData } from './canon.ts';
+import { deriveRestrictions, type Restrictions } from './client-canon.ts';
 import { figureRules, type FigureRule } from './figures.ts';
 import { COMPARTMENT_IDS, ContentBuildError, isTier1Key, normalizeBase, type Problem } from './util.ts';
 import type { CompileContext } from './plugins/context.ts';
@@ -224,6 +225,7 @@ interface Shared {
   manifest: Set<string>;
   pendingXrefsAreWarnings: boolean;
   lenient: boolean;
+  restrictions: Restrictions | null;
 }
 
 interface Compiled {
@@ -260,6 +262,9 @@ function compileOne(p: Parsed, sh: Shared): Compiled {
     docNo: p.fm.docNo,
     base: sh.base,
     canon: sh.canon,
+    restrictions: sh.restrictions,
+    rxDepth: 0,
+    xrefsHidden: [],
     docsByNo: sh.docsByNo,
     compartments: sh.compartments,
     manifest: sh.manifest,
@@ -300,6 +305,17 @@ function compileOne(p: Parsed, sh: Shared): Compiled {
         line,
         message: planned ? `xrefs: "${no}" is planned in the manifest but its page does not exist` : `xrefs: unknown document number "${no}"`,
       });
+    }
+  }
+  // A docNo linked only from inside redactions is withheld: it must not appear in the baseline
+  // list even if the author also listed it in frontmatter `xrefs`. The client re-adds it from
+  // the release HTML once the redaction is released (src/core/docs.ts).
+  const hiddenOnly = ctx.xrefsHidden.filter((no) => !ctx.xrefsUsed.includes(no));
+  for (const no of hiddenOnly) {
+    const i = xrefNos.indexOf(no);
+    if (i >= 0) {
+      xrefNos.splice(i, 1);
+      out.warnings.push({ file: p.file, line: lineOfKey(p.raw, 'xrefs'), message: `xrefs: "${no}" is linked only inside a redaction; withheld from the baseline xref list` });
     }
   }
   for (const no of ctx.xrefsUsed) if (!xrefNos.includes(no)) xrefNos.push(no);
@@ -377,6 +393,12 @@ export function buildContent(opts: BuildOptions): BuildResult {
   let candidates = checkUnique(parseFiles(listMarkdown(contentDir), contentDir, displayRoot, problems), problems);
   check();
 
+  let restrictions: Restrictions | null;
+  try {
+    restrictions = deriveRestrictions(canon);
+  } catch (e) {
+    throw new ContentBuildError([{ file: relative(displayRoot, resolve(opts.canonPath)).split(sep).join("/"), message: `cannot derive client canon restrictions: ${(e as Error).message}` }]);
+  }
   const compartments = new Set<string>(
     canon && Array.isArray(canon.compartments)
       ? (canon.compartments as { id: string }[]).map((c) => c.id)
@@ -390,7 +412,7 @@ export function buildContent(opts: BuildOptions): BuildResult {
     for (const p of candidates) {
       for (const no of [p.fm.docNo, ...(p.fm.aliases ?? [])]) docsByNo.set(no, { route: p.fm.route, title: p.fm.title });
     }
-    const sh: Shared = { base, canon, docsByNo, compartments, manifest, pendingXrefsAreWarnings: !!opts.pendingXrefsAreWarnings, lenient };
+    const sh: Shared = { base, canon, restrictions, docsByNo, compartments, manifest, pendingXrefsAreWarnings: !!opts.pendingXrefsAreWarnings, lenient };
     results = candidates.map((p) => compileOne(p, sh));
     const failed = results.filter((r) => r.problems.length);
     if (!lenient || !failed.length) break;

@@ -36,7 +36,9 @@ export function xref(node: MdNode, ctx: CompileContext): void {
     node.children = [{ type: 'text', value: docNo }];
     return;
   }
-  if (!ctx.xrefsUsed.includes(docNo)) ctx.xrefsUsed.push(docNo);
+  // A link inside a redaction is part of the withheld text: it ships only in the release file.
+  const list = ctx.rxDepth > 0 ? ctx.xrefsHidden : ctx.xrefsUsed;
+  if (!list.includes(docNo)) list.push(docNo);
   node.data = {
     hName: 'a',
     hProperties: { href: joinBase(ctx.base, target.route), dataXref: target.route, className: ['xref'] },

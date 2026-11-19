@@ -39,7 +39,7 @@ const BASELINE_RE = /<(span|div) class="rx( rx-block)?" data-rx="([^"]+)"([^>]*)
 const KEEP_ATTR_RE = /\s(data-(?:key|auth|ref))="([^"]*)"/g;
 
 /** Swap baseline redaction bars for released HTML. Repeats so nested releases open too. */
-export function applyReleases(html: string, released: Record<string, string>): string {
+export function applyReleases(html: string, released: Record<string, string>, applied?: string[]): string {
   let out = html;
   for (let pass = 0; pass < 8; pass++) {
     let changed = false;
@@ -47,11 +47,35 @@ export function applyReleases(html: string, released: Record<string, string>): s
       const body = released[id];
       if (body === undefined) return whole;
       changed = true;
+      applied?.push(id);
       const kept = [...attrs.matchAll(KEEP_ATTR_RE)].map((m) => ` ${m[1]}="${m[2]}"`).join('');
       const cls = block ? 'rx-released rx-block' : 'rx-released';
       return `<${tag} class="${cls}" data-rx="${id}"${kept}>${body}</${tag}>`;
     });
     if (!changed) break;
+  }
+  return out;
+}
+
+const XREF_RE = /<a href="[^"]*" data-xref="([^"]+)"[^>]*>([^<]+)<\/a>/g;
+
+/**
+ * Cross-references written inside a redaction are withheld from the baseline DocJson.xrefs list;
+ * they travel only as links inside the release HTML. Once a release is applied, add them back.
+ */
+export function mergeReleasedXrefs(
+  base: DocJson['xrefs'],
+  fragments: string[],
+  byRoute: Map<string, RouteEntry>,
+): DocJson['xrefs'] {
+  const out = base.slice();
+  for (const html of fragments) {
+    for (const m of html.matchAll(XREF_RE)) {
+      const route = m[1]!;
+      const docNo = m[2]!.trim();
+      if (out.some((x) => x.docNo === docNo)) continue;
+      out.push({ docNo, route, title: byRoute.get(route)?.title ?? docNo });
+    }
   }
   return out;
 }
@@ -105,7 +129,9 @@ export function createDocs(deps: DocsDeps): DocsService {
       const mine = new Set(doc.redactions.map((r) => r.id));
       const released: Record<string, string> = {};
       for (const f of files) for (const [rid, h] of Object.entries(f)) if (mine.has(rid)) released[rid] = h;
-      return { ...doc, html: applyReleases(doc.html, released) };
+      const applied: string[] = [];
+      const html = applyReleases(doc.html, released, applied);
+      return { ...doc, html, xrefs: mergeReleasedXrefs(doc.xrefs, applied.map((id) => released[id]!), byRouteMap) };
     },
     byRoute: (route: string) => byRouteMap.get(route),
     byDocNo: (docNo: string) => byDocNoMap.get(docNo),

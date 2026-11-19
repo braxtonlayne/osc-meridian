@@ -75,13 +75,17 @@ function handle(node: MdNode, ctx: CompileContext): void {
 }
 
 function walk(node: MdNode, ctx: CompileContext): void {
+  let rx = false;
   if (DIRECTIVE_TYPES.has(node.type)) {
     const name = node.name;
+    rx = name === 'r' || name === 'redact';
     handle(node, ctx);
     // canon-table / stamp / routing produce final children; c and x consume their label.
     if (name === 'canon-table' || name === 'c' || name === 'x' || name === 'stamp' || name === 'routing') return;
   }
+  if (rx) ctx.rxDepth++;
   for (const child of node.children ?? []) walk(child, ctx);
+  if (rx) ctx.rxDepth--;
 }
 
 export function remarkMeridianDirectives(ctx: CompileContext) {
