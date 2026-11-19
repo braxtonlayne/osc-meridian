@@ -125,7 +125,7 @@ The Ledger application draws this table as a flow chart from source appropriatio
 
 7. **Facility attribution.** Programme cost is not stated by facility in any table issued by the Comptroller. Requests for cost by site are referred to the Council Secretariat.
 
-8. **Transit mileage.** Transit cost per mile is stated in :x[OSC-LDG-CAT-TRANSIT] on the certified mileage and on the engineering lengths supplied for the FY2008 tables (:x[OSC-MEM-07-0944]).
+8. **Transit mileage.** Transit cost per mile is stated in :x[OSC-LDG-CAT-TRANSIT] on the certified mileage (:c[headline.tunnelCertifiedMi] miles) and on the engineering lengths supplied for the FY2008 tables (:x[OSC-MEM-07-0944]).
 
 ## Audit exposure
 

@@ -40,7 +40,7 @@ Every setting is bounded by a condition in the workstation's accreditation, show
 
 | Setting | Value | Accreditation note |
 |---|---|---|
-| Session timeout | 10 minutes without input | AC-03. Interval set by accreditation and not adjustable by the operator. Windows and their contents are kept while locked. |
+| Session timeout | 15 minutes without input | AC-03. Interval set by accreditation and not adjustable by the operator. Windows and their contents are kept while locked. |
 | Session timer | Shown in the notification area | AC-03. Counts down from the last input. |
 | Classification banner | Top and bottom, always shown | AC-01. Shows the highest marking among open windows. Cannot be hidden in any mode. |
 | Audit trail | Always on | AC-02. Records windows opened, searches, prints, withheld items examined and Terminal commands. |

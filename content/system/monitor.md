@@ -63,7 +63,7 @@ The communications network, its independence from other government circuits and 
 | Search index | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span><span>UP</span></span> | Index reissued nightly at 0700Z (0300 EDT). |
 | Audit forwarding | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span><span>UP</span></span> | Entries forwarded to the Resident Assurance Officer, ALPHA-03, every 15 minutes. |
 | Time source | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span><span>UP</span></span> | Network time. Zulu, with site-local (EDT) in brackets. |
-| Session | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span><span>ACTIVE</span></span> | Locks after 10 minutes without input. Time remaining is shown in the notification area. |
+| Session | <span class="status-light status-light--NOMINAL"><span class="status-light__sq" aria-hidden="true"></span><span>ACTIVE</span></span> | Locks after 15 minutes without input. Time remaining is shown in the notification area. |
 
 ## Planned work, MAY 2008
 
