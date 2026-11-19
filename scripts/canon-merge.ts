@@ -1,0 +1,365 @@
+/**
+ * canon-merge: builds content/canon/canon.json from
+ *   content/canon/source.json      (canon extractor; facts from the lore source)
+ *   content/canon/extended-a.json  (canon extender A; optional)
+ *   content/canon/extended-b.json  (canon extender B; optional)
+ *
+ * Run: npx tsx scripts/canon-merge.ts   (also `npm run canon`)
+ *
+ * Merge rules (documented in docs/CANON.md, "Merge and derivation"):
+ *  - extended-a may carry `facilityPatches: Record<FacilityId, Partial<Facility>>` and
+ *    `deltaFacilities: Facility[]`; both extended files may carry any top-level Canon key.
+ *  - Arrays: an empty source array is replaced by the extended array. A non-empty source
+ *    array is merged by key (id / n / no / pn / term / seat / tier / fy): matching items
+ *    deep-merge, new items are appended. Arrays without a key field keep the source array.
+ *  - Objects deep-merge. A non-null source scalar is a source fact and is kept if an
+ *    extended file tries to change it (a warning is printed), except fields listed in
+ *    EXTENDER_OWNED, which the extractor only seeds with defaults.
+ *  - `headline` and `meta` are always computed/kept by this script; extended values ignored.
+ *  - lat/lon are computed for every facility from its anchor (great-circle destination).
+ *  - The result is validated (Zod structure + cross-checks) and written with schema key order.
+ */
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import type { Bearing, Canon, Facility } from '../src/core/canon-types';
+import { canonCrossChecks, canonSchema } from '../src/core/canon-schema';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+export const CANON_DIR = resolve(ROOT, 'content/canon');
+
+/** Mean Earth radius in statute miles. */
+export const EARTH_RADIUS_MI = 3958.8;
+
+export const BEARING_DEG: Record<Bearing, number> = { N: 0, NE: 45, E: 90, SE: 135, S: 180, SW: 225, W: 270, NW: 315 };
+
+const CLASS_ORDER = ['ALPHA', 'BETA', 'GAMMA', 'DELTA'] as const;
+
+/** Facility fields the extractor seeds with defaults that extenders are expected to set. */
+const EXTENDER_OWNED = new Set(['reactor', 'commanderId', 'origin', 'network']);
+
+/** Extender B division names -> extender A division ids, where the names differ. */
+const DIVISION_ALIASES: Record<string, string> = {
+  'Facility Engineering': 'FE',
+  'Facilities Engineering': 'FE',
+  'Security Forces Command': 'SFC',
+  'Office of Internal Assurance': 'OIA',
+  'Cover Programs Office': 'CVO',
+  'Cover Operations': 'CVO',
+};
+
+const KEY_FIELDS =['id', 'n', 'no', 'pn', 'term', 'seat', 'tier', 'fy'] as const;
+
+type Json = null | boolean | number | string | Json[] | { [k: string]: Json };
+type JsonObj = { [k: string]: Json };
+
+const isObj = (v: unknown): v is JsonObj => !!v && typeof v === 'object' && !Array.isArray(v);
+
+const toRad = (d: number) => (d * Math.PI) / 180;
+const toDeg = (r: number) => (r * 180) / Math.PI;
+const round4 = (x: number) => Math.round(x * 1e4) / 1e4;
+
+/** Great-circle destination from (lat, lon) travelling `miles` on initial bearing `bearingDeg`. */
+export function destination(lat: number, lon: number, bearingDeg: number, miles: number): { lat: number; lon: number } {
+  const d = miles / EARTH_RADIUS_MI;
+  const th = toRad(bearingDeg);
+  const p1 = toRad(lat);
+  const l1 = toRad(lon);
+  const p2 = Math.asin(Math.sin(p1) * Math.cos(d) + Math.cos(p1) * Math.sin(d) * Math.cos(th));
+  const l2 = l1 + Math.atan2(Math.sin(th) * Math.sin(d) * Math.cos(p1), Math.cos(d) - Math.sin(p1) * Math.sin(p2));
+  return { lat: round4(toDeg(p2)), lon: round4(((toDeg(l2) + 540) % 360) - 180) };
+}
+
+/** Haversine great-circle distance in miles. */
+export function greatCircleMi(aLat: number, aLon: number, bLat: number, bLon: number): number {
+  const dp = toRad(bLat - aLat);
+  const dl = toRad(bLon - aLon);
+  const h = Math.sin(dp / 2) ** 2 + Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dl / 2) ** 2;
+  return 2 * EARTH_RADIUS_MI * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+/** FNV-1a 32-bit hash; deterministic across runs and platforms. */
+export function fnv1a(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h >>> 0;
+}
+
+/**
+ * Offset for facilities anchored to an area with no stated distance (GAMMA, some DELTA):
+ * 4 to 9 miles from the city centre on a bearing derived from the facility id, so two
+ * markers never sit on the same point and the placement never changes between builds.
+ */
+export function areaOffset(id: string): { miles: number; bearingDeg: number } {
+  const h = fnv1a(id);
+  return { miles: 4 + (h % 6), bearingDeg: (h >>> 8) % 360 };
+}
+
+export function positionFacility(f: Pick<Facility, 'id' | 'anchor'>): { lat: number; lon: number } {
+  const a = f.anchor;
+  if (typeof a.miles === 'number' && a.bearing) return destination(a.cityLat, a.cityLon, BEARING_DEG[a.bearing], a.miles);
+  const o = areaOffset(f.id);
+  return destination(a.cityLat, a.cityLon, o.bearingDeg, o.miles);
+}
+
+function keyOf(items: Json[]): string | null {
+  const first = items.find(isObj);
+  if (!first) return null;
+  for (const k of KEY_FIELDS) if (k in first && items.every((x) => isObj(x) && k in x)) return k;
+  return null;
+}
+
+/** Deep merge `ext` onto `src` following the rules in the header. */
+function deepMerge(src: Json, ext: Json, path: string, warnings: string[]): Json {
+  if (ext === undefined) return src;
+  if (Array.isArray(src) && Array.isArray(ext)) {
+    if (src.length === 0) return ext;
+    if (ext.length === 0) return src;
+    const k = keyOf(src) && keyOf(ext) === keyOf(src) ? keyOf(src) : null;
+    if (!k) {
+      if (JSON.stringify(src) === JSON.stringify(ext)) return src;
+      warnings.push(`${path}: source array is non-empty and has no key field; extended array ignored`);
+      return src;
+    }
+    const out: Json[] = src.map((x) => x);
+    for (const item of ext) {
+      const kv = (item as JsonObj)[k];
+      const i = out.findIndex((x) => (x as JsonObj)[k] === kv);
+      if (i === -1) out.push(item);
+      else out[i] = deepMerge(out[i] as Json, item, `${path}[${k}=${String(kv)}]`, warnings);
+    }
+    if (k === 'n' || k === 'seat' || k === 'tier') out.sort((a, b) => Number((a as JsonObj)[k]) - Number((b as JsonObj)[k]));
+    return out;
+  }
+  if (isObj(src) && isObj(ext)) {
+    const out: JsonObj = { ...src };
+    for (const [k, v] of Object.entries(ext)) {
+      out[k] = k in src ? deepMerge(src[k] as Json, v, path ? `${path}.${k}` : k, warnings) : v;
+    }
+    return out;
+  }
+  // Scalars (or type change).
+  if (src === null || src === undefined || src === '') return ext;
+  if (src === ext) return src;
+  const leaf = path.split('.').pop() ?? '';
+  if (EXTENDER_OWNED.has(leaf)) return ext;
+  warnings.push(`${path}: extended value ${JSON.stringify(ext)} conflicts with source ${JSON.stringify(src)}; source kept`);
+  return src;
+}
+
+export interface MergeInputs {
+  source: JsonObj;
+  extendedA: JsonObj | null;
+  extendedB: JsonObj | null;
+}
+
+export interface MergeResult {
+  canon: Canon;
+  warnings: string[];
+  errors: string[];
+}
+
+function readJson(p: string): JsonObj | null {
+  if (!existsSync(p)) return null;
+  return JSON.parse(readFileSync(p, 'utf8')) as JsonObj;
+}
+
+export function loadInputs(dir = CANON_DIR): MergeInputs {
+  const source = readJson(resolve(dir, 'source.json'));
+  if (!source) throw new Error(`missing ${resolve(dir, 'source.json')}`);
+  return { source, extendedA: readJson(resolve(dir, 'extended-a.json')), extendedB: readJson(resolve(dir, 'extended-b.json')) };
+}
+
+const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+export function buildCanon(inputs: MergeInputs): MergeResult {
+  const warnings: string[] = [];
+  const errors: string[] = [];
+  const canonKeys = new Set(Object.keys(inputs.source));
+  let merged: JsonObj = structuredClone(inputs.source);
+
+  if (!inputs.extendedA) warnings.push('extended-a.json not found: DELTA sites, reactors, divisions, roster, compartments, council seats and numbering are empty');
+  if (!inputs.extendedB) warnings.push('extended-b.json not found: glossary, ledger line items, fiscal years and contractor register are empty');
+
+  // extended-a facility handling.
+  if (inputs.extendedA) {
+    const { facilityPatches, deltaFacilities, ...rest } = inputs.extendedA;
+    let facilities = merged.facilities as JsonObj[];
+    if (isObj(facilityPatches)) {
+      facilities = facilities.map((f) => {
+        const patch = facilityPatches[f.id as string];
+        if (!isObj(patch)) return f;
+        const out = deepMerge(f, patch, `facilities[${String(f.id)}]`, warnings) as JsonObj;
+        out.origin = f.origin === 'source' ? 'mixed' : (out.origin ?? f.origin ?? 'extended');
+        return out;
+      });
+      for (const id of Object.keys(facilityPatches)) {
+        if (!facilities.some((f) => f.id === id) && !(Array.isArray(deltaFacilities) && deltaFacilities.some((d) => isObj(d) && d.id === id)))
+          warnings.push(`facilityPatches.${id}: no such facility`);
+      }
+    }
+    if (Array.isArray(deltaFacilities)) {
+      for (const d of deltaFacilities) {
+        if (!isObj(d)) continue;
+        if (facilities.some((f) => f.id === d.id)) {
+          errors.push(`deltaFacilities: ${String(d.id)} already exists`);
+          continue;
+        }
+        const patch = isObj(facilityPatches) ? facilityPatches[d.id as string] : undefined;
+        const base: JsonObj = { origin: 'extended', ...d };
+        facilities.push(isObj(patch) ? (deepMerge(base, patch, `facilities[${String(d.id)}]`, warnings) as JsonObj) : base);
+      }
+    } else {
+      warnings.push('extended-a.json has no deltaFacilities');
+    }
+    merged.facilities = facilities;
+    merged = mergeTopLevel(merged, rest, 'extended-a', canonKeys, warnings);
+  }
+  if (inputs.extendedB) {
+    const { facilityPatches, deltaFacilities, ...rest } = inputs.extendedB;
+    if (facilityPatches !== undefined || deltaFacilities !== undefined)
+      warnings.push('extended-b.json: facilityPatches/deltaFacilities belong to extended-a and were ignored');
+    merged = mergeTopLevel(merged, rest, 'extended-b', canonKeys, warnings);
+  }
+
+  // Facility order and positions.
+  const facs = merged.facilities as unknown as Facility[];
+  facs.sort((a, b) => CLASS_ORDER.indexOf(a.class) - CLASS_ORDER.indexOf(b.class) || a.id.localeCompare(b.id));
+  for (const f of facs) {
+    if (!f.anchor || typeof f.anchor.cityLat !== 'number' || typeof f.anchor.cityLon !== 'number') {
+      errors.push(`${f.id}: anchor missing city coordinates`);
+      continue;
+    }
+    const p = positionFacility(f);
+    f.lat = p.lat;
+    f.lon = p.lon;
+  }
+
+  // Headline derivations.
+  const c = merged as unknown as Canon;
+
+  // threatDetail.ownerDivision is a division name written before extended-a's ids existed:
+  // resolve it to a Division.id by exact name, then by the alias table; null when unmatched.
+  for (const t of c.threatDetail ?? []) {
+    const byName = c.divisions.find((d) => d.name.toLowerCase() === t.ownerDivision.toLowerCase());
+    const alias = DIVISION_ALIASES[t.ownerDivision];
+    const id = byName?.id ?? (alias && c.divisions.some((d) => d.id === alias) ? alias : null);
+    t.ownerDivisionId = id;
+    if (!id && c.divisions.length > 0) warnings.push(`threatDetail ${t.id}: owner division "${t.ownerDivision}" has no Division record`);
+  }
+  const classes = c.classes;
+  let staffPosted = 0;
+  for (const k of classes) {
+    const inClass = facs.filter((f) => f.class === k.id);
+    if (inClass.length === 0) {
+      staffPosted += k.statedStaff;
+      warnings.push(`class ${k.id}: no facility records; staffPosted uses stated class staff (${k.statedStaff})`);
+    } else {
+      staffPosted += sum(inClass.map((f) => f.staff));
+    }
+  }
+  const railEngineeringMi = sum(c.railSegments.map((s) => s.miles));
+  const tramEngineeringMi = sum(c.tramNetworks.map((n) => n.statedTotalMi));
+  const tramLinkSumMi = sum(c.tramNetworks.flatMap((n) => n.links.map((l) => l.miles)));
+  c.headline = {
+    ...c.headline,
+    facilities: sum(classes.map((k) => k.count)),
+    capacitySurge: sum(classes.map((k) => k.statedCapacity)),
+    staffTotal: sum(c.tiers.map((t) => t.count)),
+    staffPosted,
+    staffUnposted: sum(c.tiers.map((t) => t.count)) - staffPosted,
+    railEngineeringMi,
+    tramEngineeringMi,
+    tramLinkSumMi,
+  };
+  const util = Math.round((c.headline.staffTotal / c.headline.capacitySustained) * 1000) / 10;
+  if (util !== c.headline.utilizationPct) errors.push(`utilizationPct ${c.headline.utilizationPct} != computed ${util}`);
+
+  // Class aggregates against facility rows (where the class is fully enumerated).
+  for (const k of classes) {
+    const inClass = facs.filter((f) => f.class === k.id);
+    if (inClass.length === k.count) {
+      const s = sum(inClass.map((f) => f.staff));
+      const cap = sum(inClass.map((f) => f.capacity));
+      if (s !== k.statedStaff) errors.push(`class ${k.id}: facility staff sum ${s} != stated ${k.statedStaff}`);
+      if (cap !== k.statedCapacity) errors.push(`class ${k.id}: facility capacity sum ${cap} != stated ${k.statedCapacity}`);
+    }
+  }
+
+  // Structural validation.
+  const parsed = canonSchema.safeParse(c);
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) errors.push(`schema: ${issue.path.join('.')}: ${issue.message}`);
+    return { canon: c, warnings, errors };
+  }
+  const canon = parsed.data as Canon;
+  errors.push(...canonCrossChecks(canon, { extendedA: !!inputs.extendedA }));
+
+  // Geographic sanity (informational; documented in docs/canon/inconsistencies.md).
+  const short = tunnelShorterThanCrowFlies(canon);
+  if (short.length) warnings.push(`${short.length} tunnel lengths are shorter than the straight-line distance between computed positions (see docs/canon/inconsistencies.md)`);
+
+  return { canon, warnings, errors };
+}
+
+function mergeTopLevel(merged: JsonObj, ext: JsonObj, label: string, canonKeys: Set<string>, warnings: string[]): JsonObj {
+  const out = { ...merged };
+  for (const [k, v] of Object.entries(ext)) {
+    if (k === 'headline' || k === 'meta' || k === 'facilities') {
+      warnings.push(`${label}.${k}: ignored (computed or source-owned)`);
+      continue;
+    }
+    if (k.startsWith('$') || k.startsWith('_')) continue; // comments / schema hints
+    if (!canonKeys.has(k)) {
+      warnings.push(`${label}.${k}: not a Canon key; ignored`);
+      continue;
+    }
+    out[k] = deepMerge(out[k] as Json, v, k, warnings);
+  }
+  return out;
+}
+
+/** Tunnel links whose stated length is shorter than the great-circle distance between endpoints. */
+export function tunnelShorterThanCrowFlies(c: Canon): { kind: string; label: string; statedMi: number; straightMi: number }[] {
+  const pos = new Map(c.facilities.map((f) => [f.id, f]));
+  const out: { kind: string; label: string; statedMi: number; straightMi: number }[] = [];
+  const check = (kind: string, label: string, a: string, b: string, miles: number) => {
+    const fa = pos.get(a as Facility['id']);
+    const fb = pos.get(b as Facility['id']);
+    if (!fa || !fb || fa.lat === undefined || fb.lat === undefined || fa.lon === undefined || fb.lon === undefined) return;
+    const d = greatCircleMi(fa.lat, fa.lon, fb.lat, fb.lon);
+    if (miles < d) out.push({ kind, label, statedMi: miles, straightMi: Math.round(d) });
+  };
+  for (const s of c.railSegments) check('rail', `segment ${s.no} ${s.a}-${s.b}`, s.a, s.b, s.miles);
+  for (const n of c.tramNetworks) for (const l of n.links) check('tram', `${l.from}-${l.to}`, l.from, l.to, l.miles);
+  return out;
+}
+
+/** JSON with stable formatting (schema key order is already applied by Zod parse). */
+export function serialize(c: Canon): string {
+  return JSON.stringify(c, null, 2) + '\n';
+}
+
+function main(): void {
+  const inputs = loadInputs();
+  const { canon, warnings, errors } = buildCanon(inputs);
+  for (const w of warnings) console.warn(`canon-merge: warning: ${w}`);
+  if (errors.length) {
+    for (const e of errors) console.error(`canon-merge: error: ${e}`);
+    console.error(`canon-merge: ${errors.length} error(s); canon.json not written`);
+    process.exit(1);
+  }
+  const out = resolve(CANON_DIR, 'canon.json');
+  writeFileSync(out, serialize(canon));
+  const h = canon.headline;
+  console.log(
+    `canon-merge: wrote ${out} (${canon.facilities.length} facilities; staff ${h.staffTotal} = posted ${h.staffPosted} + unposted ${h.staffUnposted}; ` +
+      `surge ${h.capacitySurge}; rail ${h.railEngineeringMi} mi; tram ${h.tramEngineeringMi} mi)`,
+  );
+}
+
+const invoked = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : '';
+if (invoked === import.meta.url) main();

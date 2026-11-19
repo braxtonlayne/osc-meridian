@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@graphics/lock rendered check</title>
+    <!--
+      Preview-only mirror of the SPEC section 4 tokens, so this page renders
+      before src/design/tokens.css exists. check/render.mjs appends the real
+      tokens file after this block when it is present, so the real values win.
+    -->
+    <style id="preview-tokens">
+      :root {
+        --ws-bg: #3a4652;
+        --chrome-face: #d6d3cb;
+        --chrome-hi: #f4f2ec;
+        --chrome-shadow: #8c8a84;
+        --chrome-outer: #5b5a56;
+        --title-active-bg: #1f3552;
+        --title-active-fg: #ffffff;
+        --surface: #ffffff;
+        --paper: #f3f1ea;
+        --text-1: #15181c;
+        --text-2: #4b5158;
+        --text-3: #7a8088;
+        --st-nominal: #2e6b3f;
+        --st-degraded: #a86a00;
+        --st-fault: #9b1c1c;
+        --st-offline: #5b5a56;
+        --font-ui: 'IBM Plex Sans', sans-serif;
+        --font-mono: 'IBM Plex Mono', monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./preview.tsx"></script>
+  </body>
+</html>

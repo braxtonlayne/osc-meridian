@@ -248,7 +248,78 @@ export interface Anomaly {
   origin: 'brief' | 'extractor';
 }
 
+// ---- Additions for extended-b (threat detail, cover catalogue, real events, calendar, budget notes) ----
+
+export interface ThreatProtocol {
+  designation: string; // "OSC-CP-01"
+  title: string | null; // null when withheld
+  titleWithheld: boolean;
+  pageCount: number; // the page count is never withheld
+  revision: number;
+  withholdingAuthority: string;
+  ref: string;
+}
+
+export interface ThreatDetail {
+  id: string; // matches threats.external[].id / threats.internal[].id
+  group: 'external' | 'internal';
+  label: string;
+  ownerDivision: string; // division name as written by extender B
+  ownerDivisionId: string | null; // computed by canon-merge from divisions (null when no match)
+  contingency: string[];
+  protocol: ThreatProtocol;
+}
+
+export interface CoverCatalogueEntry {
+  facility: FacilityId;
+  coverAgency: string;
+  coverFacilityType: string;
+  visibleSurfaceStaff: number;
+  publicRecordsPosture: string;
+  lastCoverReview: string; // ISO date <= 2008-05-31
+}
+
+export interface RealEvent {
+  id: string; // "RE-01"
+  date: string; // ISO
+  dateText: string; // "17 FEB 2001"
+  publicEvent: string;
+  oscExplanation: string;
+  citedIn: string;
+}
+
+export interface CalendarEvent {
+  id: string; // "CAL-0805-01"
+  date: string; // ISO, May 2008
+  dateText: string;
+  startZ: string | null; // "0900Z"
+  endZ: string | null;
+  timeText: string;
+  facility: FacilityId;
+  title: string;
+  category: string;
+  originator: string; // "CODE/SITE"
+  tier: TierNo;
+  note: string;
+}
+
+/** Extender A: paper trail behind each anomaly (keyed by Anomaly.id). */
+export interface AnomalyNote {
+  noticedBy: string; // personnel number
+  closedBy?: string;
+  actionOfficer?: string;
+  documents: string[]; // docNos
+  compartment: CompartmentId | null;
+  notes: string;
+}
+
 export interface Canon {
+  anomalyNotes: Record<string, AnomalyNote>;
+  threatDetail: ThreatDetail[];
+  coverCatalogue: CoverCatalogueEntry[];
+  realEvents: RealEvent[];
+  calendar: CalendarEvent[];
+  budgetNotes: string[];
   meta: {
     environment: string; // "MERIDIAN Workstation Environment"
     release: string; // "4.1.7"

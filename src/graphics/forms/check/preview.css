@@ -1,0 +1,50 @@
+/* Layout for the rendered check only. Not shipped. */
+body {
+  margin: 0;
+  background: var(--chrome-face);
+}
+.pv-page {
+  width: 808px;
+  padding: 24px;
+  background: var(--surface);
+}
+.pv-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.pv-cert {
+  margin: 0;
+  padding: 1px 4px 2px;
+  border-bottom: 1px solid var(--text-1);
+  font: 10px/13px var(--font-ui);
+}
+.pv-specimens {
+  margin-top: 20px;
+  padding-top: 8px;
+  border-top: 1px solid var(--row-rule);
+}
+.pv-spec-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.pv-cap {
+  font: 10px/13px var(--font-ui);
+  color: var(--text-2);
+}
+.pv-marks {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.pv-sigs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+.pv-sigbox {
+  border: 1px solid var(--text-1);
+  background: var(--paper);
+}

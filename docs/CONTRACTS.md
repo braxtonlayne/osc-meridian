@@ -64,6 +64,15 @@ Body Markdown (GFM) plus directives (remark-directive):
 - `:::margin{hand="RT" seed=3}` handwritten marginal note (rendered by scan kit); `::stamp{kind="RECEIVED" date="2008-05-02"}`; `::routing{initials="JH,MKB"}`.
 - `:::scan{seed=7 rotate=-0.6}` wrap content as a scanned page.
 
+**Additions (as implemented by the pipeline, Wave A):**
+- `:ink[847]{mark=circle|underline}` → `<span data-ink="circle">` (scan kit draws the pen mark).
+- `:::margin{hand seed mark}` (mark = arrow|underline|circle|none); `::routing{initials="JH 5/2,MKB 5/5"}`; `::stamp{kind date text seed of ink}` (kinds: RECEIVED, COPY-NO, FILE-COPY, SUPERSEDED, CANCELLED, ACTION, INFO, DISTRIBUTION-LIMITED, REPRODUCTION-PROHIBITED, NO-ELECTRONIC-COPY, REVIEWED-OIA, DESTROY-BY, VOID, and the five marking ids).
+- `:c[path]{raw}` prints unformatted. `::canon-table{source cols="key:Label,…" filter="a=b,c!=d" caption limit}`; any extra attribute also filters.
+- **Tier 1 rule:** any key ending in `T1` never ships, compartment or not; anything nested in a T1 block is dropped.
+- Released block content arrives as `<div class="rx-released rx-block">`.
+- **Drift trigger phrases** (exact wording; see `scripts/content/figures.ts`): "certified mileage", "sustained capacity", "total surge berthing", "total personnel", "total posted staff", "DETACHED / UNPOSTED", "total programme cost". Any page using a phrase must show the canon figure next to it (use `:c[...]`).
+- Unknown bare `:word` stays plain text; any other unknown directive fails the build.
+
 Redaction is resolved **at build time**: baseline HTML contains only `<span class="rx" data-rx="<id>" data-len="<chars>" data-auth=".." data-ref="..">` with no hidden text; hidden HTML goes to `public/data/releases/<KEY>.json` (never emitted for tier 1). The client fetches a release file only once the session satisfies its key.
 
 ## Generated outputs (pipeline)

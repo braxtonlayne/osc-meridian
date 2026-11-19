@@ -1,0 +1,293 @@
+/* Preview-only chrome for the lock-screen mock. The shell owns the real thing. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font: 12px/16px var(--font-ui);
+  color: var(--text-1);
+  background: var(--ws-bg);
+}
+
+.pv-screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pv-banner {
+  position: relative;
+  flex: none;
+  height: 18px;
+  font: 700 11px/18px var(--font-ui);
+  letter-spacing: 0.14em;
+  text-align: center;
+  background: var(--text-1);
+  color: var(--chrome-hi);
+}
+
+.pv-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+}
+
+.pv-win {
+  width: 100%;
+  max-width: 868px;
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+  box-shadow: inset 1px 1px 0 var(--chrome-hi), inset -1px -1px 0 var(--chrome-shadow);
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.pv-win__title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 6px;
+  font-weight: 600;
+  background: var(--title-active-bg);
+  color: var(--title-active-fg);
+}
+
+.pv-win__term {
+  font: 11px/16px var(--font-mono);
+  font-weight: 400;
+}
+
+.pv-win__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 408px);
+  gap: 16px;
+  padding: 14px 12px 12px;
+}
+
+.pv-id {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--chrome-shadow);
+  box-shadow: 0 1px 0 var(--chrome-hi);
+}
+
+.pv-id__seal {
+  color: var(--text-1);
+  flex: none;
+  height: 64px;
+}
+
+.pv-id__org {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.pv-id__sys {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.pv-id__rel {
+  color: var(--text-2);
+}
+
+.pv-group {
+  margin: 12px 0 0;
+  padding: 4px 10px 8px;
+  border: 1px solid var(--chrome-shadow);
+  box-shadow: inset 1px 1px 0 var(--chrome-hi), 1px 1px 0 var(--chrome-hi);
+  min-width: 0;
+}
+
+.pv-group legend {
+  padding: 0 4px;
+}
+
+.pv-group p {
+  margin: 4px 0 0;
+}
+
+.pv-form {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.pv-form__lbl {
+  align-self: start;
+  padding-top: 22px;
+}
+
+.pv-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 250px;
+  height: 22px;
+  padding: 2px 4px;
+  font: 12px/16px var(--font-mono);
+  color: var(--text-1);
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  box-shadow: inset 1px 1px 0 var(--chrome-outer);
+  border-radius: 0;
+}
+
+.pv-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0 92px;
+}
+
+.pv-btn {
+  min-width: 76px;
+  height: 23px;
+  padding: 0 10px;
+  font: 12px/16px var(--font-ui);
+  color: var(--text-1);
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+  box-shadow: inset 1px 1px 0 var(--chrome-hi), inset -1px -1px 0 var(--chrome-shadow);
+  border-radius: 0;
+}
+
+.pv-btn--default {
+  outline: 1px solid var(--text-1);
+}
+
+.pv-card__cap {
+  margin-bottom: 6px;
+}
+
+.pv-win__status {
+  display: flex;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.pv-cell {
+  padding: 1px 6px;
+  white-space: nowrap;
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+}
+
+.pv-cell--grow {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pv-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  width: 100%;
+  max-width: 868px;
+  font-size: 11px;
+  color: var(--chrome-face);
+}
+
+.pv-foot a {
+  color: var(--chrome-hi);
+  text-decoration: underline;
+}
+
+@media (max-width: 899px) {
+  .pv-stage {
+    justify-content: flex-start;
+    padding: 8px;
+  }
+
+  .pv-win__body {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px 8px;
+    gap: 12px;
+  }
+
+  .pv-win__term {
+    display: none;
+  }
+
+  .pv-card {
+    order: -1;
+  }
+
+  .pv-buttons {
+    margin-left: 0;
+  }
+
+  .pv-cell:nth-child(2) {
+    display: none;
+  }
+}
+
+/* ---- component sheet ---- */
+
+.pv-sheet {
+  background: var(--chrome-face);
+  padding: 16px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.pv-sheet h3 {
+  margin: 0 0 8px;
+  font: 600 12px/16px var(--font-ui);
+}
+
+.pv-sheet section {
+  margin-bottom: 20px;
+}
+
+.pv-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.pv-row--top {
+  align-items: flex-start;
+}
+
+.pv-x2 {
+  width: 360px;
+  height: 120px;
+}
+
+.pv-x2 > svg {
+  width: 360px;
+  height: 120px;
+}
+
+.pv-post {
+  width: 520px;
+  padding: 10px 12px;
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+}
+
+.pv-tile {
+  position: relative;
+  width: 420px;
+  height: 280px;
+  border: 1px solid var(--chrome-outer);
+}

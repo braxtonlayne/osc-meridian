@@ -1,0 +1,304 @@
+// @vitest-environment node
+import { describe, expect, it, beforeAll } from 'vitest';
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { buildContent, type BuildResult } from '../../scripts/content/build.ts';
+import { FrontmatterSchema } from '../../scripts/content/schema.ts';
+import { ContentBuildError } from '../../scripts/content/util.ts';
+import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
+import { findBannedWords, findExternalUrls } from '../../scripts/verify-dist.ts';
+import { renderPage, STATIC_MARKER } from '../../scripts/prerender.ts';
+import { applyReleases, createDocs } from '../../src/core/docs';
+import { createSearch } from '../../src/core/search';
+import type { RouteEntry } from '../../src/core/contracts';
+
+const FIXTURES = resolve(__dirname, '../fixtures/content');
+const CANON = resolve(__dirname, '../fixtures/canon.json');
+
+/** Text that only exists inside redactions in the fixtures. */
+const HIDDEN_T2 = ['Lanyard Protocol', 'Fixture Deputy Bravo'];
+const HIDDEN_COMPARTMENT = ['Heron Gate', 'Inner Kestrel Note'];
+const HIDDEN_T1 = ['Quarry Annex Seven', 'Nested Lantern Line', 'Fixture Director Alpha'];
+
+function build(extra: Partial<Parameters<typeof buildContent>[0]> = {}): BuildResult {
+  return buildContent({ contentDir: FIXTURES, canonPath: CANON, ...extra });
+}
+
+function walk(dir: string): string[] {
+  return readdirSync(dir).flatMap((n) => {
+    const p = join(dir, n);
+    return statSync(p).isDirectory() ? walk(p) : [p];
+  });
+}
+
+const FM = {
+  id: 'dir-0099',
+  route: '/directives/dir-0099',
+  app: 'directives',
+  family: 'directives',
+  template: 'directive',
+  docNo: 'OSC-DIR-0099',
+  title: 'Parking Allocation, Level 2',
+  marking: 'UMBRA-U',
+  originator: 'FS/ALPHA-03',
+  revision: 1,
+  date: '2008-05-01',
+  summary: 'Parking allocation for the Level 2 vehicle bay.',
+};
+
+function tempContent(files: Record<string, string>): string {
+  const dir = mkdtempSync(join(tmpdir(), 'meridian-fx-'));
+  for (const [p, body] of Object.entries(files)) {
+    mkdirSync(join(dir, p, '..'), { recursive: true });
+    writeFileSync(join(dir, p), body);
+  }
+  return dir;
+}
+
+function md(fm: Record<string, unknown>, body: string): string {
+  const yaml = Object.entries(fm)
+    .map(([k, v]) => `${k}: ${typeof v === 'string' ? JSON.stringify(v) : JSON.stringify(v)}`)
+    .join('\n');
+  return `---\n${yaml}\n---\n\n${body}\n`;
+}
+
+function expectBuildError(dir: string, pattern: RegExp): ContentBuildError {
+  try {
+    buildContent({ contentDir: dir, canonPath: CANON });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ContentBuildError);
+    expect((e as Error).message).toMatch(pattern);
+    return e as ContentBuildError;
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+  throw new Error('expected a ContentBuildError');
+}
+
+describe('content pipeline', () => {
+  let r: BuildResult;
+  beforeAll(() => {
+    r = build();
+  });
+
+  it('builds routes sorted by route', () => {
+    expect(r.routes.map((x) => x.route)).toEqual(['/directives/dir-0001', '/records/mem-08-0002']);
+    expect(r.routes[1]!.access).toEqual({ tier: 2, compartment: 'KESTREL' });
+  });
+
+  it('never leaks hidden text into baseline html or the search index', () => {
+    const blobs = [JSON.stringify(r.docs), r.searchJson, JSON.stringify(r.routes)];
+    for (const s of [...HIDDEN_T2, ...HIDDEN_COMPARTMENT, ...HIDDEN_T1]) {
+      for (const b of blobs) expect(b).not.toContain(s);
+    }
+    const dir = r.docs.find((d) => d.id === 'dir-0001')!;
+    expect(dir.html).toContain('Fixture Analyst Charlie'); // tier-3 roster names are visible
+    expect(dir.html).toMatch(/<span class="rx" data-rx="dir-0001-1" data-len="16" data-auth="OIA" data-ref="OIA-08-114" data-key="T2"/);
+    expect(dir.html).toMatch(/<div class="rx rx-block" data-rx="dir-0001-3"[^>]*data-key="T1"[^>]*data-lines="1"/);
+  });
+
+  it('writes release files per key and never a tier-1 key or tier-1 text', () => {
+    expect(Object.keys(r.releases).sort()).toEqual(['KESTREL', 'KESTREL+T2', 'T2']);
+    expect(Object.keys(r.releases.T2!).sort()).toEqual(['dir-0001-1', 'dir-0001-5', 'dir-0001-8']);
+    expect(r.releases.KESTREL).toEqual({ 'dir-0001-2': 'Heron Gate' });
+    expect(r.releases['KESTREL+T2']).toEqual({ 'dir-0001-6': 'Inner Kestrel Note' });
+    // the outer T2 block carries the inner compartment bar, not its text
+    expect(r.releases.T2!['dir-0001-5']).toContain('data-rx="dir-0001-6"');
+    expect(r.releases.T2!['dir-0001-5']).not.toContain('Inner Kestrel Note');
+    // the T2 redaction nested in a T1 block is dropped entirely
+    const ids = r.docs.flatMap((d) => d.redactions.map((x) => x.id));
+    expect(ids).not.toContain('dir-0001-4');
+
+    const out = mkdtempSync(join(tmpdir(), 'meridian-out-'));
+    try {
+      buildContent({ contentDir: FIXTURES, canonPath: CANON, outDir: out });
+      const files = walk(out);
+      expect(files.some((f) => /releases[\\/]T2\.json$/.test(f))).toBe(true);
+      expect(files.some((f) => /T1\.json$/.test(f))).toBe(false);
+      for (const f of files) {
+        const text = readFileSync(f, 'utf8');
+        for (const s of HIDDEN_T1) expect(text, `${f} contains ${s}`).not.toContain(s);
+      }
+    } finally {
+      rmSync(out, { recursive: true, force: true });
+    }
+  });
+
+  it('resolves canon values with formatting', () => {
+    const html = r.docs.find((d) => d.id === 'dir-0001')!.html;
+    expect(html).toContain('>3,847<');
+    expect(html).toContain('>1,400<');
+    expect(html).toContain('>2001<'); // years keep no separator
+    expect(html).toContain('>NOV 2003<');
+    expect(html).toContain('ratio 3:Ab notwithstanding'); // bare unknown text directive restored
+    expect(html).toContain('<td>BETA-07</td>');
+    expect(html).not.toContain('ALPHA-03</td>'); // class filter applied
+  });
+
+  it('fails on unknown canon paths with file:line', () => {
+    const dir = tempContent({ 'directives/a.md': md(FM, 'Line one.\n\nValue :c[headline.nope].') });
+    const e = expectBuildError(dir, /directives\/a\.md:\d+.*headline\.nope/);
+    expect(e.problems[0]!.line).toBe(18);
+  });
+
+  it('resolves cross-references with the base path and fails on unknown docNos', () => {
+    const dir = r.docs.find((d) => d.id === 'dir-0001')!;
+    expect(dir.html).toContain('<a href="/records/mem-08-0002" data-xref="/records/mem-08-0002" class="xref">OSC-MEM-08-0002</a>');
+    expect(dir.xrefs).toEqual([{ docNo: 'OSC-MEM-08-0002', route: '/records/mem-08-0002', title: 'Staffing Reconciliation, Second Quarter' }]);
+    const paged = build({ base: '/osc-meridian' });
+    expect(paged.docs.find((d) => d.id === 'dir-0001')!.html).toContain('href="/osc-meridian/records/mem-08-0002"');
+    expectBuildError(tempContent({ 'directives/a.md': md(FM, 'See :x[OSC-DIR-9999].') }), /unknown document number/);
+  });
+
+  it('assigns heading ids and wrapper classes', () => {
+    const d = r.docs.find((x) => x.id === 'dir-0001')!;
+    expect(d.headings.map((h) => h.id)).toEqual(['1-purpose', '2-policy', '2-policy-2']);
+    for (const cls of ['margin-note', 'stamp', 'routing-slip', 'scan-page']) expect(d.html).toContain(`class="${cls}"`);
+    expect(d.html).toContain('02 MAY 2008');
+  });
+
+  it('emits the scan/stamp kit attributes', () => {
+    const d = r.docs.find((x) => x.id === 'dir-0001')!;
+    expect(d.html).toContain('<span data-ink="circle"><span class="cv" data-canon="headline.tunnelCertifiedMi">847</span></span>');
+    expect(d.html).toContain('<aside class="margin-note" data-hand="RT" data-seed="5" data-mark="arrow">');
+    expect(d.html).toContain('<aside class="margin-note" data-hand="RT" data-seed="3" data-mark="none">');
+    expect(d.html).toContain(
+      '<span class="stamp" data-kind="COPY-NO" data-date="2008-05-03" data-text="3" data-seed="4" data-of="12" data-ink="red"><span class="stamp-kind">COPY NO</span> <span class="stamp-text">3</span> <span class="stamp-of">OF 12</span> <span class="stamp-date">03 MAY 2008</span></span>',
+    );
+    expect(d.html).toContain('data-initials="JH 5/2,MKB 5/5"');
+    expect(d.html).toContain('<span class="routing-initial" data-seq="2">MKB 5/5</span>');
+    expectBuildError(tempContent({ 'directives/a.md': md(FM, 'x :ink[y]{mark=box}') }), /:ink mark="box"/);
+  });
+});
+
+describe('frontmatter schema', () => {
+  it('accepts a valid record and YAML Date objects', () => {
+    expect(FrontmatterSchema.safeParse(FM).success).toBe(true);
+    const r = FrontmatterSchema.safeParse({ ...FM, date: new Date('2008-04-22T00:00:00Z') });
+    expect(r.success && r.data.date).toBe('2008-04-22');
+  });
+  it('rejects dates after 31 May 2008', () => {
+    expect(FrontmatterSchema.safeParse({ ...FM, date: '2008-06-01' }).success).toBe(false);
+  });
+  it('rejects unknown markings, templates, apps and bad routes', () => {
+    expect(FrontmatterSchema.safeParse({ ...FM, marking: 'SECRET' }).success).toBe(false);
+    expect(FrontmatterSchema.safeParse({ ...FM, template: 'poster' }).success).toBe(false);
+    expect(FrontmatterSchema.safeParse({ ...FM, app: 'browser' }).success).toBe(false);
+    expect(FrontmatterSchema.safeParse({ ...FM, route: '/Directives/x/' }).success).toBe(false);
+    expect(FrontmatterSchema.safeParse({ ...FM, route: '/assets/x' }).success).toBe(false);
+  });
+  it('reports bad frontmatter and duplicates through the build with file:line', () => {
+    expectBuildError(tempContent({ 'directives/a.md': md({ ...FM, date: '2008-06-02' }, 'Body.') }), /a\.md:12\s+frontmatter date/);
+    expectBuildError(
+      tempContent({ 'directives/a.md': md(FM, 'A.'), 'directives/b.md': md({ ...FM, id: 'dir-0100', docNo: 'OSC-DIR-0100' }, 'B.') }),
+      /duplicate route/,
+    );
+    expectBuildError(tempContent({ 'records/a.md': md(FM, 'A.') }), /must match its folder/);
+  });
+  it('requires auth and ref on redactions', () => {
+    expectBuildError(tempContent({ 'directives/a.md': md(FM, 'x :r[y]{tier=2}') }), /auth=.*\n.*ref=/s);
+  });
+  it('handles an empty or missing content directory', () => {
+    const empty = buildContent({ contentDir: join(tmpdir(), 'meridian-does-not-exist'), canonPath: join(tmpdir(), 'nope.json') });
+    expect(empty.routes).toEqual([]);
+    expect(empty.figures).toEqual([]);
+  });
+});
+
+describe('docs service', () => {
+  let r: BuildResult;
+  let routes: RouteEntry[];
+  beforeAll(() => {
+    r = build();
+    routes = r.routes;
+  });
+  const fetcher = (fetched: string[]) => async (url: string) => {
+    fetched.push(url);
+    const doc = /data\/docs\/(.+)\.json$/.exec(url);
+    if (doc) return r.docs.find((d) => d.id === decodeURIComponent(doc[1]!));
+    const rel = /data\/releases\/(.+)\.json$/.exec(url);
+    if (rel && r.releases[rel[1]!]) return r.releases[rel[1]!];
+    throw new Error(`404 ${url}`);
+  };
+
+  it('applies only satisfied releases and fetches each release file once', async () => {
+    const fetched: string[] = [];
+    const docs = createDocs({ satisfies: (k) => k === 'T2' || k === 'T3', routes, fetchJson: fetcher(fetched) });
+    const d = await docs.load('dir-0001');
+    expect(d.html).toContain('<span class="rx-released" data-rx="dir-0001-1" data-auth="OIA" data-ref="OIA-08-114" data-key="T2">Lanyard Protocol</span>');
+    expect(d.html).toContain('<div class="rx-released rx-block" data-rx="dir-0001-5"');
+    expect(d.html).not.toContain('Heron Gate');
+    expect(d.html).toContain('data-rx="dir-0001-6"'); // inner compartment bar still in place
+    await docs.load('dir-0001');
+    expect(fetched.filter((u) => u.includes('releases/T2.json'))).toHaveLength(1);
+    expect(fetched.some((u) => /releases\/(KESTREL|T1)/.test(u))).toBe(false);
+    expect(docs.byDocNo('OSC-MEM-08-0002')?.route).toBe('/records/mem-08-0002');
+    expect(docs.byRoute('/directives/dir-0001')?.docNo).toBe('OSC-DIR-0001');
+    expect(docs.all()).toHaveLength(2);
+  });
+
+  it('opens nested releases when both keys are held', async () => {
+    const docs = createDocs({ satisfies: (k) => ['T2', 'KESTREL', 'KESTREL+T2'].includes(k), routes, fetchJson: fetcher([]) });
+    const d = await docs.load('dir-0001');
+    expect(d.html).toContain('Heron Gate');
+    expect(d.html).toContain('<span class="rx-released" data-rx="dir-0001-6"');
+    expect(d.html).toContain('Inner Kestrel Note');
+    expect(d.html).not.toContain('Quarry Annex Seven');
+  });
+
+  it('applyReleases leaves unknown bars alone', () => {
+    const html = '<p>a <span class="rx" data-rx="x-1" data-len="3" data-key="T2"></span> b</p>';
+    expect(applyReleases(html, {})).toBe(html);
+    expect(applyReleases(html, { 'x-1': 'abc' })).toBe('<p>a <span class="rx-released" data-rx="x-1" data-key="T2">abc</span> b</p>');
+  });
+});
+
+describe('search', () => {
+  it('searches baseline text and filters by access', async () => {
+    const r = build();
+    const byRoute = (route: string) => r.routes.find((x) => x.route === route);
+    const open = createSearch({ satisfies: () => true, byRoute, loadIndex: async () => r.searchJson });
+    const closed = createSearch({ satisfies: (k) => k === 'T3', byRoute, loadIndex: async () => r.searchJson });
+    const hits = await open('reconciliation');
+    expect(hits.map((h) => h.route.route)).toContain('/records/mem-08-0002');
+    expect(hits[0]!.snippet.length).toBeGreaterThan(0);
+    expect((await closed('reconciliation')).map((h) => h.route.route)).not.toContain('/records/mem-08-0002');
+    expect(await open('Lanyard')).toEqual([]);
+    expect((await open('OSC-DIR-0001'))[0]!.route.route).toBe('/directives/dir-0001');
+  });
+});
+
+describe('verify-dist rules', () => {
+  it('detects headline drift and missing figures', () => {
+    const rules = figureRules(JSON.parse(readFileSync(CANON, 'utf8')));
+    expect(checkDrift('The certified mileage is 847 miles.', rules)).toEqual([]);
+    expect(checkDrift('The certified mileage is 850 miles.', rules).map((p) => p.rule)).toContain('tunnelCertifiedMi');
+    expect(checkDrift('Sustained capacity at ALPHA-03 is set out in Annex B; programme figure 23,400.', rules)).toEqual([]);
+    expect(checkDrift('Total personnel are listed in the annex.', rules).map((p) => p.rule)).toEqual(['staffTotal']);
+    expect(checkDrift('DETACHED / UNPOSTED: 791', rules).map((p) => p.rule)).toEqual(['staffUnposted']);
+  });
+
+  it('finds external URLs except namespaces and license comments', () => {
+    const js = '/*! lib v1 | https://example.com/license */\nconst a="http://www.w3.org/2000/svg";\nfetch("https://cdn.example.net/x.js")';
+    expect(findExternalUrls(js, '.js').map((h) => h.url)).toEqual(['https://cdn.example.net/x.js']);
+  });
+
+  it('flags filler words but not the placeholder attribute', () => {
+    expect(findBannedWords('<input placeholder="Operator ID">').length).toBe(0);
+    expect(findBannedWords('input::placeholder{color:var(--t)} el.placeholder=1').length).toBe(0);
+    expect(findBannedWords('Section 4: TBD').map((h) => h.word)).toEqual(['TBD']);
+    expect(findBannedWords('Lorem ipsum. Coming soon.').length).toBe(2);
+    expect(findBannedWords('TODOS and todolist').length).toBe(0);
+  });
+
+  it('prerenders a static document at the marker', () => {
+    const r = build();
+    const tpl = `<html><head><title>MERIDIAN</title></head><body><div id="static-doc">${STATIC_MARKER}</div></body></html>`;
+    const html = renderPage(tpl, r.docs[0]!, 'UMBRA//OSC COMPARTMENTED');
+    expect(html).toContain('<title>OSC-DIR-0001 · Handling of Compartmented Records in Shared Workspaces · MERIDIAN</title>');
+    expect(html).toContain('<meta name="description" content="Rules for keeping compartmented records out of shared workstation folders.">');
+    expect(html).toContain('22 APR 2008');
+    expect(html).not.toContain(STATIC_MARKER);
+  });
+});
