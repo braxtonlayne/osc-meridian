@@ -221,7 +221,7 @@ export interface Person {
   rank: string | null;
   role: string;
   tier: TierNo;
-  site: FacilityId | 'DETACHED / UNPOSTED';
+  site: FacilityId | 'DETACHED / UNPOSTED' | RxString; // sentinel only in the client canon (tier 1)
   divisionId: string | null;
   email: string; // in-world .mer address
   notes: string;

@@ -408,6 +408,14 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     const key = `T${p.tier}`;
     p.name = rx(`roster.${p.pn}.name`, key, p.name);
     p.email = rx(`roster.${p.pn}.email`, key, p.email);
+    // Tier 1 rows keep pn and role only (seat roles are public on the Council composition
+    // page). Tier 2 notes stay: the personnel directory shows them at baseline.
+    if (p.tier === 1) {
+      p.notes = rx(`roster.${p.pn}.notes`, key, p.notes);
+      p.site = rx(`roster.${p.pn}.site`, key, p.site, false);
+      if (p.rank) p.rank = rx(`roster.${p.pn}.rank`, key, p.rank, false);
+      if (p.divisionId) p.divisionId = rx(`roster.${p.pn}.divisionId`, key, p.divisionId, false);
+    }
   }
 
   // SEXTANT: sites released at baseline are the operator's own and those the content

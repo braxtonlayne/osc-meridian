@@ -447,6 +447,7 @@ const clientContractor = contractor.extend({ sites: z.array(z.union([facilityId,
 export const clientCanonSchema = canonSchema.extend({
   facilities: z.array(clientFacility),
   reactors: z.array(reactor.extend({ site: z.union([facilityId, rxString]) })),
+  roster: z.array(person.extend({ site: z.union([facilityId, z.literal('DETACHED / UNPOSTED'), rxString]) })),
   coverCatalogue: z.array(clientCover),
   contractors: canonSchema.shape.contractors.extend({ register: z.array(clientContractor) }),
 });
