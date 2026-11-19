@@ -171,6 +171,9 @@ export interface SimpleColumn<T> {
   render: (row: T) => ComponentChildren;
 }
 
+/** Narrowest a SimpleTable column without a fixed width is drawn (px). */
+const FLEX_FLOOR = 110;
+
 /**
  * Static report table in the DataTable look (dense, zebra, ruled). Used for the
  * small cross-tabulations on the sheets, where rows are fixed and drilldowns are
@@ -195,9 +198,17 @@ export function SimpleTable<T>({
     [c.align === "right" ? "is-right" : "", c.mono ? "is-mono" : ""]
       .filter(Boolean)
       .join(" ") || undefined;
+  // Fixed table layout gives a column without a width 0px once the fixed columns
+  // fill the well. Floor the table at the fixed widths plus FLEX_FLOOR for each
+  // flexible column; the well (overflow: auto) scrolls sideways below that.
+  const minWidth = columns.reduce((a, c) => a + (c.width ?? FLEX_FLOOR), 0);
   return (
     <div class="well lga-table">
-      <table class="dt dt--zebra dt--dense" aria-label={label}>
+      <table
+        class="dt dt--zebra dt--dense"
+        aria-label={label}
+        style={{ minWidth: `${minWidth}px` }}
+      >
         <colgroup>
           {columns.map((c) => (
             <col
