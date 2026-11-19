@@ -1,0 +1,189 @@
+/*
+ * @graphics/ledger: budget Sankey and ledger charts.
+ * The register is a 2008 financial-management report printed to PDF: flat
+ * fills, hairline rules, small tabular figures. No gradients, no rounded
+ * corners, no transitions or animations.
+ *
+ * Colours come only from design tokens. The chart palette is five slots in
+ * canon category order, each a token or a flat mix of two tokens:
+ *   --title-active-bg --title-inactive-bg --st-degraded --paper-edge
+ *   --chrome-dark --chrome-shadow --chrome-outer --ws-bg --surface
+ *   --row-rule --row-hover --text-1 --text-2 --text-3
+ *   --tooltip-bg --tooltip-fg --tooltip-border --focus-ring
+ * All selectors are prefixed .lg-.
+ */
+
+.lg {
+  --lg-bg: var(--surface);
+  --lg-cat-0: var(--title-active-bg); /* muted navy */
+  --lg-cat-1: var(--title-inactive-bg); /* slate */
+  --lg-cat-2: color-mix(in srgb, var(--st-degraded) 70%, var(--paper-edge)); /* ochre */
+  --lg-cat-3: var(--chrome-dark); /* charcoal */
+  --lg-cat-4: color-mix(in srgb, var(--chrome-shadow) 62%, var(--surface)); /* light grey */
+  --lg-struct: var(--ws-bg);
+  --lg-grid: var(--row-rule);
+  --lg-axis: var(--chrome-outer);
+
+  position: relative;
+  box-sizing: border-box;
+  font: 11px/14px var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+  text-align: left;
+}
+.lg svg {
+  display: block;
+  max-width: none;
+  overflow: visible;
+}
+.lg text {
+  font: 11px var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-1);
+}
+
+.lg-c0 { --lg-c: var(--lg-cat-0); }
+.lg-c1 { --lg-c: var(--lg-cat-1); }
+.lg-c2 { --lg-c: var(--lg-cat-2); }
+.lg-c3 { --lg-c: var(--lg-cat-3); }
+.lg-c4 { --lg-c: var(--lg-cat-4); }
+.lg-cs { --lg-c: var(--lg-struct); }
+
+.lg-fill { fill: var(--lg-c); }
+.lg .lg-t2 { fill: var(--text-2); }
+.lg .lg-t3 { fill: var(--text-3); }
+.lg .lg-strong { font-weight: 600; }
+.lg text.lg-medium { font-weight: 500; }
+.lg text.lg-head {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  fill: var(--text-2);
+}
+.lg text.lg-tick {
+  font-size: 10px;
+  fill: var(--text-2);
+}
+.lg text.lg-halo {
+  paint-order: stroke;
+  stroke: var(--lg-bg);
+  stroke-width: 3px;
+  stroke-linejoin: miter;
+}
+.lg-grid {
+  stroke: var(--lg-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-axis {
+  stroke: var(--lg-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+  fill: none;
+}
+.lg-rule-strong {
+  stroke: var(--text-1);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-crisp { shape-rendering: crispEdges; }
+.lg-dim { fill-opacity: 0.28; }
+.lg-rowbg { fill: none; }
+.lg-rowbg.is-selected { fill: var(--row-hover); }
+.lg-hit {
+  fill: none;
+  pointer-events: all;
+}
+.lg-click { cursor: pointer; }
+.lg [tabindex]:focus { outline: none; }
+.lg [tabindex]:focus-visible .lg-focus,
+.lg [tabindex]:focus-visible > .lg-node-rect {
+  stroke: var(--focus-ring);
+  stroke-width: 1;
+  stroke-dasharray: 1 1;
+}
+.lg-focus {
+  fill: none;
+  stroke: none;
+  shape-rendering: crispEdges;
+}
+
+/* ---- Sankey ---- */
+.lg-link {
+  fill: none;
+  stroke: var(--lg-c);
+  stroke-opacity: 0.56;
+}
+.lg-link:hover { stroke-opacity: 0.8; }
+.lg-sankey.is-tracing .lg-link { stroke-opacity: 0.1; }
+.lg-sankey.is-tracing .lg-link.is-on { stroke-opacity: 0.82; }
+.lg-node-rect {
+  fill: var(--lg-c);
+  shape-rendering: crispEdges;
+}
+.lg-sankey.is-tracing .lg-node:not(.is-on) .lg-node-rect { fill-opacity: 0.35; }
+.lg-node.is-selected .lg-node-rect {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.lg-bracket {
+  fill: none;
+  stroke: var(--lg-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-expander rect {
+  fill: var(--lg-bg);
+  stroke: var(--lg-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-expander path {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-tip {
+  position: absolute;
+  z-index: 2;
+  max-width: 320px;
+  padding: 3px 6px 4px;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  border: 1px solid var(--tooltip-border);
+  font: 11px/14px var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  white-space: normal;
+}
+.lg-tip b { font-weight: 600; }
+.lg-tip-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-2);
+}
+
+/* ---- Legend ---- */
+.lg-key { shape-rendering: crispEdges; }
+
+/* ---- Sparkline ---- */
+.lg-spark {
+  display: inline-block;
+  vertical-align: middle;
+}
+.lg-spark-line {
+  fill: none;
+  stroke: var(--lg-cat-0);
+  stroke-width: 1;
+  stroke-linejoin: miter;
+}
+.lg-spark-base {
+  stroke: var(--lg-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.lg-spark-peak {
+  fill: var(--lg-cat-0);
+  shape-rendering: crispEdges;
+}

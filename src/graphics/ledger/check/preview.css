@@ -1,0 +1,40 @@
+/* Rendered-check page only. Dev-only: not shipped. Tokens only, no colour literals. */
+html,
+body {
+  background: var(--surface);
+  font: 12px/16px var(--font-ui);
+  color: var(--text-1);
+  overflow: hidden;
+}
+.pv-sankey { padding: 12px; }
+.pv-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.pv-table {
+  border-collapse: collapse;
+  font-size: 11px;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  table-layout: fixed;
+}
+.pv-table th {
+  background: var(--th-bg);
+  text-align: left;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-bottom: 1px solid var(--chrome-outer);
+}
+.pv-table th:nth-child(1) { width: 52px; }
+.pv-table th:nth-child(3) { width: 72px; }
+.pv-table th:nth-child(4) { width: 104px; }
+.pv-table td {
+  padding: 2px 6px;
+  border-bottom: 1px solid var(--row-rule);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pv-table .num { text-align: right; }
+.pv-table .mono { font-family: var(--font-mono); }
