@@ -326,20 +326,20 @@
       "id": "ALPHA-02",
       "class": "ALPHA",
       "codename": "OLYMPUS STATION",
-      "locationText": "31 miles NW of Denver, Colorado. Rocky Mountain Front Range. Concealed within \"expanded\" NORAD infrastructure.",
+      "locationText": "[[RX:SEXTANT:110]]",
       "anchor": {
-        "miles": 31,
-        "bearing": "NW",
-        "city": "Denver",
-        "state": "CO",
-        "cityLat": 39.7392,
-        "cityLon": -104.9903
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:6]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 40.0557,
-      "lon": -105.4048,
-      "terrain": "Rocky Mountain Front Range.",
+      "lat": null,
+      "lon": null,
+      "terrain": "[[RX:SEXTANT:27]]",
       "coverIdentity": "Concealed within \"expanded\" NORAD infrastructure",
-      "coverStory": "The Front Range Communications Annex provides redundant routing and backup processing for North American aerospace warning and defense communications. The annex is undergoing a multi-year hardening and modernization program, which accounts for continuing construction traffic. It is not open to visitors, and photography of the gate area is not permitted.",
+      "coverStory": "[[RX:SEXTANT:355]]",
       "depthFt": 1850,
       "completed": "2005-03",
       "capacity": 3200,
@@ -376,7 +376,7 @@
         }
       ],
       "function": "Western Command Hub. Military operations coordination. Deep continuity for DoD/Joint Chiefs. Hardened communications array. Weapons research oversight.",
-      "connectionsText": "Direct lines to ALPHA-01, ALPHA-04. Hub for Mountain/Western Network.",
+      "connectionsText": "[[RX:SEXTANT:69]]",
       "network": "MOUNTAIN_WESTERN",
       "reactor": true,
       "commanderId": "P-2-03-0039",
@@ -650,20 +650,20 @@
       "id": "ALPHA-04",
       "class": "ALPHA",
       "codename": "WESTERN CONTINUITY STATION",
-      "locationText": "44 miles E of Reno, Nevada. High desert, Carson Range foothills. Cover identity: \"Bureau of Land Management Surveying Station.\"",
+      "locationText": "[[RX:SEXTANT:127]]",
       "anchor": {
-        "miles": 44,
-        "bearing": "E",
-        "city": "Reno",
-        "state": "NV",
-        "cityLat": 39.5296,
-        "cityLon": -119.8138
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:4]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 39.5267,
-      "lon": -118.9882,
-      "terrain": "High desert, Carson Range foothills.",
+      "lat": null,
+      "lon": null,
+      "terrain": "[[RX:SEXTANT:36]]",
       "coverIdentity": "Bureau of Land Management Surveying Station",
-      "coverStory": "The Carson Range Surveying Station supports cadastral survey, geodetic control and mineral resource assessment for public lands in northern Nevada. Drilling, core sampling and seismic survey activity on and around the station are part of a long-term resource inventory. The station is closed to the public; land use questions should be directed to the district office.",
+      "coverStory": "[[RX:SEXTANT:368]]",
       "depthFt": 1650,
       "completed": "2006-01",
       "capacity": 2400,
@@ -696,7 +696,7 @@
         }
       ],
       "function": "West Coast regional command. Pacific theater monitoring. Port security continuity. Resource extraction oversight post-event.",
-      "connectionsText": "Direct line to ALPHA-02. Terminal hub for Western Network.",
+      "connectionsText": "[[RX:SEXTANT:58]]",
       "network": "MOUNTAIN_WESTERN",
       "reactor": true,
       "commanderId": "P-2-04-0052",
@@ -954,20 +954,20 @@
       "id": "BETA-01",
       "class": "BETA",
       "codename": null,
-      "locationText": "15mi W of Bangor, ME",
+      "locationText": "[[RX:SEXTANT:20]]",
       "anchor": {
-        "miles": 15,
-        "bearing": "W",
-        "city": "Bangor",
-        "state": "ME",
-        "cityLat": 44.8016,
-        "cityLon": -68.7712
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:6]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 44.8012,
-      "lon": -69.0772,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "EPA Monitoring Station",
-      "coverStory": "The station operates continuous air and surface water quality monitoring for the northern New England region in support of regional environmental programs. Sampling crews and instrument technicians are on site at all hours. The station is not open to the public.",
+      "coverStory": "[[RX:SEXTANT:262]]",
       "depthFt": 460,
       "completed": "2007-06",
       "capacity": 850,
@@ -1006,7 +1006,7 @@
       "function": "Northeast regional ops",
       "connectionsText": null,
       "network": "EASTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0203",
       "origin": "mixed"
     },
@@ -1014,20 +1014,20 @@
       "id": "BETA-02",
       "class": "BETA",
       "codename": null,
-      "locationText": "27mi N of Pittsburgh, PA",
+      "locationText": "[[RX:SEXTANT:24]]",
       "anchor": {
-        "miles": 27,
-        "bearing": "N",
-        "city": "Pittsburgh",
-        "state": "PA",
-        "cityLat": 40.4406,
-        "cityLon": -79.9959
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:10]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 40.8314,
-      "lon": -79.9959,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "Natural Gas Reserve Facility",
-      "coverStory": "This facility manages an underground natural gas storage reservoir and associated compression and monitoring equipment. Restricted access, venting noise and periodic flare testing are normal for gas storage operations. For safety reasons the property is closed to the public; odor or leak reports should be made to the emergency number posted at the gate.",
+      "coverStory": "[[RX:SEXTANT:355]]",
       "depthFt": 620,
       "completed": "2006-04",
       "capacity": 920,
@@ -1070,7 +1070,7 @@
       "function": "Mid-Atlantic industrial continuity",
       "connectionsText": null,
       "network": "EASTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-04-0211",
       "origin": "mixed"
     },
@@ -1078,20 +1078,20 @@
       "id": "BETA-03",
       "class": "BETA",
       "codename": null,
-      "locationText": "19mi S of Atlanta, GA",
+      "locationText": "[[RX:SEXTANT:21]]",
       "anchor": {
-        "miles": 19,
-        "bearing": "S",
-        "city": "Atlanta",
-        "state": "GA",
-        "cityLat": 33.749,
-        "cityLon": -84.388
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:7]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 33.474,
-      "lon": -84.388,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "CDC Secondary Research Complex",
-      "coverStory": "The secondary research complex provides contingency laboratory capacity and specimen storage in support of public health programs. High-containment laboratory standards require controlled access, continuous power and on-site security. The complex does not conduct clinical services and is not open to visitors.",
+      "coverStory": "[[RX:SEXTANT:310]]",
       "depthFt": 540,
       "completed": "2006-11",
       "capacity": 1100,
@@ -1142,7 +1142,7 @@
       "function": "Southeast regional ops / biomedical",
       "connectionsText": null,
       "network": "SOUTHERN",
-      "reactor": true,
+      "reactor": null,
       "commanderId": "P-2-04-0225",
       "origin": "mixed"
     },
@@ -1150,20 +1150,20 @@
       "id": "BETA-04",
       "class": "BETA",
       "codename": null,
-      "locationText": "33mi E of Minneapolis, MN",
+      "locationText": "[[RX:SEXTANT:25]]",
       "anchor": {
-        "miles": 33,
-        "bearing": "E",
-        "city": "Minneapolis",
-        "state": "MN",
-        "cityLat": 44.9778,
-        "cityLon": -93.265
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:11]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 44.9758,
-      "lon": -92.5898,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "Agricultural Research Station",
-      "coverStory": "The station conducts long-term crop, soil and weather research for the northern plains on its surrounding test plots. Seasonal field crews, grain trucks and equipment movements are associated with the research program. The station does not offer public tours.",
+      "coverStory": "[[RX:SEXTANT:259]]",
       "depthFt": 420,
       "completed": "2007-03",
       "capacity": 780,
@@ -1202,7 +1202,7 @@
       "function": "Northern Plains monitoring",
       "connectionsText": null,
       "network": "MOUNTAIN_WESTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0224",
       "origin": "mixed"
     },
@@ -1210,20 +1210,20 @@
       "id": "BETA-05",
       "class": "BETA",
       "codename": null,
-      "locationText": "41mi W of Kansas City, MO",
+      "locationText": "[[RX:SEXTANT:25]]",
       "anchor": {
-        "miles": 41,
-        "bearing": "W",
-        "city": "Kansas City",
-        "state": "MO",
-        "cityLat": 39.0997,
-        "cityLon": -94.5786
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:11]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 39.0972,
-      "lon": -95.3432,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "FAA Regional Training Center",
-      "coverStory": "The regional training center provides recurrent and initial training for air traffic and airway facilities personnel, including simulator instruction. Trainees and instructors are on site in shifts through the year. The center is not open to the public.",
+      "coverStory": "[[RX:SEXTANT:253]]",
       "depthFt": 510,
       "completed": "2006-08",
       "capacity": 890,
@@ -1266,7 +1266,7 @@
       "function": "Central logistics hub",
       "connectionsText": null,
       "network": "SOUTHERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0230",
       "origin": "mixed"
     },
@@ -1274,20 +1274,20 @@
       "id": "BETA-06",
       "class": "BETA",
       "codename": null,
-      "locationText": "22mi N of Phoenix, AZ",
+      "locationText": "[[RX:SEXTANT:21]]",
       "anchor": {
-        "miles": 22,
-        "bearing": "N",
-        "city": "Phoenix",
-        "state": "AZ",
-        "cityLat": 33.4484,
-        "cityLon": -112.074
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:7]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 33.7668,
-      "lon": -112.074,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "DOE Solar Research Facility",
-      "coverStory": "The solar research facility tests concentrating and photovoltaic systems under desert operating conditions. The array field, maintenance buildings and instrumentation are operated by a small resident staff and visiting researchers. Glare and access restrictions apply on the surrounding roads; the facility is not open to visitors.",
+      "coverStory": "[[RX:SEXTANT:331]]",
       "depthFt": 480,
       "completed": "2007-01",
       "capacity": 740,
@@ -1326,7 +1326,7 @@
       "function": "Southwest regional ops",
       "connectionsText": null,
       "network": "MOUNTAIN_WESTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0236",
       "origin": "mixed"
     },
@@ -1334,20 +1334,20 @@
       "id": "BETA-07",
       "class": "BETA",
       "codename": null,
-      "locationText": "36mi SE of Seattle, WA",
+      "locationText": "[[RX:SEXTANT:22]]",
       "anchor": {
-        "miles": 36,
-        "bearing": "SE",
-        "city": "Seattle",
-        "state": "WA",
-        "cityLat": 47.6062,
-        "cityLon": -122.3321
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:7]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 47.2365,
-      "lon": -121.7895,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "USGS Seismology Center",
-      "coverStory": "The seismology center operates regional seismic and volcanic monitoring networks and processes data for the Pacific Northwest. Staff maintain field instruments across the region and are on call at all hours. The center is not open to the public.",
+      "coverStory": "[[RX:SEXTANT:245]]",
       "depthFt": 590,
       "completed": "2007-09",
       "capacity": 810,
@@ -1390,7 +1390,7 @@
       "function": "Pacific Northwest ops / tech sector continuity",
       "connectionsText": null,
       "network": "MOUNTAIN_WESTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0241",
       "origin": "mixed"
     },
@@ -1398,20 +1398,20 @@
       "id": "BETA-08",
       "class": "BETA",
       "codename": null,
-      "locationText": "28mi NE of Las Vegas, NV",
+      "locationText": "[[RX:SEXTANT:24]]",
       "anchor": {
-        "miles": 28,
-        "bearing": "NE",
-        "city": "Las Vegas",
-        "state": "NV",
-        "cityLat": 36.1699,
-        "cityLon": -115.1398
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:9]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 36.4559,
-      "lon": -114.7835,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "Nuclear Test Site Support",
-      "coverStory": "This facility provides logistics, maintenance and security support to activities at the national test site. Vehicle convoys, restricted access and continuous staffing are associated with that support role. Access is restricted to badged personnel.",
+      "coverStory": "[[RX:SEXTANT:247]]",
       "depthFt": 780,
       "completed": "2006-10",
       "capacity": 950,
@@ -1458,7 +1458,7 @@
       "function": "Nevada operations / weapons oversight",
       "connectionsText": null,
       "network": "MOUNTAIN_WESTERN",
-      "reactor": true,
+      "reactor": null,
       "commanderId": "P-2-04-0247",
       "origin": "mixed"
     },
@@ -1534,20 +1534,20 @@
       "id": "BETA-10",
       "class": "BETA",
       "codename": null,
-      "locationText": "44mi W of Chicago, IL",
+      "locationText": "[[RX:SEXTANT:21]]",
       "anchor": {
-        "miles": 44,
-        "bearing": "W",
-        "city": "Chicago",
-        "state": "IL",
-        "cityLat": 41.8781,
-        "cityLon": -87.6298
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:7]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 41.8749,
-      "lon": -88.4851,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "DHS Regional Response Center",
-      "coverStory": "The regional response center coordinates federal response resources for the Great Lakes states and hosts interagency planning and exercise activity. Equipment staging, generator testing and shift staffing occur throughout the year. The center is not open to the public.",
+      "coverStory": "[[RX:SEXTANT:269]]",
       "depthFt": 650,
       "completed": "2006-02",
       "capacity": 1150,
@@ -1590,7 +1590,7 @@
       "function": "Great Lakes regional command",
       "connectionsText": null,
       "network": "EASTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-04-0258",
       "origin": "mixed"
     },
@@ -1598,20 +1598,20 @@
       "id": "BETA-11",
       "class": "BETA",
       "codename": null,
-      "locationText": "31mi E of Salt Lake City, UT",
+      "locationText": "[[RX:SEXTANT:28]]",
       "anchor": {
-        "miles": 31,
-        "bearing": "E",
-        "city": "Salt Lake City",
-        "state": "UT",
-        "cityLat": 40.7608,
-        "cityLon": -111.891
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:14]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 40.7593,
-      "lon": -111.2987,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "BLM Resource Management",
-      "coverStory": "The resource management station supports range, mineral and watershed management for public lands in the Wasatch region. Field crews and survey equipment operate from the station year-round. The station does not provide public services; permit enquiries should be directed to the field office.",
+      "coverStory": "[[RX:SEXTANT:293]]",
       "depthFt": 560,
       "completed": "2007-05",
       "capacity": 680,
@@ -1650,7 +1650,7 @@
       "function": "Mountain West ops",
       "connectionsText": null,
       "network": "MOUNTAIN_WESTERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0263",
       "origin": "mixed"
     },
@@ -1658,20 +1658,20 @@
       "id": "BETA-12",
       "class": "BETA",
       "codename": null,
-      "locationText": "52mi N of New Orleans, LA",
+      "locationText": "[[RX:SEXTANT:25]]",
       "anchor": {
-        "miles": 52,
-        "bearing": "N",
-        "city": "New Orleans",
-        "state": "LA",
-        "cityLat": 29.9511,
-        "cityLon": -90.0715
+        "miles": null,
+        "bearing": null,
+        "city": "[[RX:SEXTANT:11]]",
+        "state": "[[RX:SEXTANT:2]]",
+        "cityLat": null,
+        "cityLon": null
       },
-      "lat": 30.7037,
-      "lon": -90.0715,
+      "lat": null,
+      "lon": null,
       "terrain": null,
       "coverIdentity": "FEMA Hurricane Continuity Site",
-      "coverStory": "The hurricane continuity site provides an inland, storm-hardened location from which federal response operations for the Gulf Coast can continue during and after a major storm. Exercises, equipment staging and generator testing are routine. The site is not a shelter and is not open to the public.",
+      "coverStory": "[[RX:SEXTANT:297]]",
       "depthFt": 410,
       "completed": "2007-12",
       "capacity": 890,
@@ -1714,7 +1714,7 @@
       "function": "Gulf Coast operations",
       "connectionsText": null,
       "network": "SOUTHERN",
-      "reactor": false,
+      "reactor": null,
       "commanderId": "P-2-05-0269",
       "origin": "mixed"
     },
@@ -1734,8 +1734,8 @@
       "lon": -71.036,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "University-affiliated records retention facility (leased).",
-      "depthFt": 210,
+      "coverStory": "[[RX:T2:58]]",
+      "depthFt": null,
       "completed": "2007-04",
       "capacity": 420,
       "sustainedMonths": null,
@@ -1777,8 +1777,8 @@
       "lon": -74.006,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Commercial data center and tape vault (leased).",
-      "depthFt": 340,
+      "coverStory": "[[RX:T2:47]]",
+      "depthFt": null,
       "completed": "2006-09",
       "capacity": 580,
       "sustainedMonths": null,
@@ -1824,8 +1824,8 @@
       "lon": -77.0714,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Federal records storage annex.",
-      "depthFt": 480,
+      "coverStory": "[[RX:T2:30]]",
+      "depthFt": null,
       "completed": "2006-03",
       "capacity": 650,
       "sustainedMonths": null,
@@ -1871,8 +1871,8 @@
       "lon": -75.2411,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Telephone switching building, inactive.",
-      "depthFt": 190,
+      "coverStory": "[[RX:T2:39]]",
+      "depthFt": null,
       "completed": "2007-08",
       "capacity": 380,
       "sustainedMonths": null,
@@ -1914,8 +1914,8 @@
       "lon": -80.9564,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Bank operations backup site (leased).",
-      "depthFt": 230,
+      "coverStory": "[[RX:T2:37]]",
+      "depthFt": null,
       "completed": "2007-10",
       "capacity": 340,
       "sustainedMonths": null,
@@ -1958,7 +1958,7 @@
       "terrain": null,
       "coverIdentity": null,
       "coverStory": null,
-      "depthFt": 150,
+      "depthFt": null,
       "completed": "2008-02",
       "capacity": 290,
       "sustainedMonths": null,
@@ -2000,8 +2000,8 @@
       "lon": -83.1241,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Automotive parts distribution warehouse (leased).",
-      "depthFt": 260,
+      "coverStory": "[[RX:T2:49]]",
+      "depthFt": null,
       "completed": "2007-05",
       "capacity": 310,
       "sustainedMonths": null,
@@ -2047,8 +2047,8 @@
       "lon": -96.8797,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Pipeline company emergency operations building.",
-      "depthFt": 310,
+      "coverStory": "[[RX:T2:47]]",
+      "depthFt": null,
       "completed": "2007-02",
       "capacity": 490,
       "sustainedMonths": null,
@@ -2094,8 +2094,8 @@
       "lon": -95.4537,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Petrochemical industry records storage (leased).",
-      "depthFt": 290,
+      "coverStory": "[[RX:T2:48]]",
+      "depthFt": null,
       "completed": "2006-12",
       "capacity": 520,
       "sustainedMonths": null,
@@ -2141,8 +2141,8 @@
       "lon": -90.1278,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "River navigation equipment depot.",
-      "depthFt": 220,
+      "coverStory": "[[RX:T2:33]]",
+      "depthFt": null,
       "completed": "2007-11",
       "capacity": 270,
       "sustainedMonths": null,
@@ -2184,8 +2184,8 @@
       "lon": -118.0867,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Studio film vault and archive (leased).",
-      "depthFt": 420,
+      "coverStory": "[[RX:T2:39]]",
+      "depthFt": null,
       "completed": "2007-03",
       "capacity": 610,
       "sustainedMonths": null,
@@ -2231,8 +2231,8 @@
       "lon": -122.2818,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Commercial data center (leased).",
-      "depthFt": 380,
+      "coverStory": "[[RX:T2:32]]",
+      "depthFt": null,
       "completed": "2007-07",
       "capacity": 580,
       "sustainedMonths": null,
@@ -2279,7 +2279,7 @@
       "terrain": null,
       "coverIdentity": null,
       "coverStory": null,
-      "depthFt": 240,
+      "depthFt": null,
       "completed": "2008-01",
       "capacity": 240,
       "sustainedMonths": null,
@@ -2321,8 +2321,8 @@
       "lon": -116.1883,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Agricultural cooperative cold storage.",
-      "depthFt": 170,
+      "coverStory": "[[RX:T2:38]]",
+      "depthFt": null,
       "completed": "2008-04",
       "capacity": 190,
       "sustainedMonths": null,
@@ -2364,8 +2364,8 @@
       "lon": -106.604,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Federal laboratory records annex.",
-      "depthFt": 450,
+      "coverStory": "[[RX:T2:33]]",
+      "depthFt": null,
       "completed": "2006-07",
       "capacity": 220,
       "sustainedMonths": null,
@@ -2407,8 +2407,8 @@
       "lon": -86.7124,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Freight terminal warehouse (leased).",
-      "depthFt": 200,
+      "coverStory": "[[RX:T2:36]]",
+      "depthFt": null,
       "completed": "2007-09",
       "capacity": 280,
       "sustainedMonths": null,
@@ -2451,7 +2451,7 @@
       "terrain": null,
       "coverIdentity": null,
       "coverStory": null,
-      "depthFt": 180,
+      "depthFt": null,
       "completed": "2008-03",
       "capacity": 260,
       "sustainedMonths": null,
@@ -2493,8 +2493,8 @@
       "lon": -82.547,
       "terrain": null,
       "coverIdentity": null,
-      "coverStory": "Veterans services records annex.",
-      "depthFt": 160,
+      "coverStory": "[[RX:T2:32]]",
+      "depthFt": null,
       "completed": "2007-12",
       "capacity": 310,
       "sustainedMonths": null,
@@ -2538,21 +2538,16 @@
       "terrain": "[[RX:SEXTANT:80]]",
       "coverIdentity": "[[RX:SEXTANT:61]]",
       "coverStory": "[[RX:SEXTANT:133]]",
-      "depthFt": 18,
-      "completed": "2005-10",
-      "capacity": 110,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Extraction route node between the DC Metro Belt and ALPHA-01. Vehicle staging and fuel.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:87]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2574,21 +2569,16 @@
       "terrain": "[[RX:SEXTANT:72]]",
       "coverIdentity": "[[RX:SEXTANT:37]]",
       "coverStory": "[[RX:SEXTANT:83]]",
-      "depthFt": 12,
-      "completed": "2006-04",
-      "capacity": 90,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Interstate corridor cache. Vehicles, fuel, rations, communications equipment.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:77]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2611,27 +2601,22 @@
       "coverIdentity": "[[RX:SEXTANT:31]]",
       "coverStory": "[[RX:SEXTANT:90]]",
       "depthFt": null,
-      "completed": "2006-09",
-      "capacity": 75,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Corridor cache and vehicle staging between ALPHA-05 and ALPHA-02 surface routes.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:80]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
     {
       "id": "DELTA-04",
       "class": "DELTA",
-      "codename": "CULVERT",
+      "codename": "[[RX:SEXTANT:7]]",
       "locationText": "[[RX:SEXTANT:92]]",
       "anchor": {
         "miles": null,
@@ -2646,21 +2631,16 @@
       "terrain": "[[RX:SEXTANT:71]]",
       "coverIdentity": "[[RX:SEXTANT:37]]",
       "coverStory": "[[RX:SEXTANT:91]]",
-      "depthFt": 24,
-      "completed": "2005-06",
-      "capacity": 85,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Surface relief node for ALPHA-02. Vehicles, fuel, medical cache.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:64]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2683,20 +2663,15 @@
       "coverIdentity": "[[RX:SEXTANT:39]]",
       "coverStory": "[[RX:SEXTANT:96]]",
       "depthFt": null,
-      "completed": "2006-11",
-      "capacity": 70,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Interstate corridor cache. Rations, water, fuel.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:48]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2719,20 +2694,15 @@
       "coverIdentity": "[[RX:SEXTANT:35]]",
       "coverStory": "[[RX:SEXTANT:102]]",
       "depthFt": null,
-      "completed": "2007-05",
-      "capacity": 60,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 1,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 1
-        }
-      ],
-      "function": "Rural gray-area cache between ALPHA-04 and BETA-08 surface routes.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:66]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2754,28 +2724,23 @@
       "terrain": "[[RX:SEXTANT:55]]",
       "coverIdentity": "[[RX:SEXTANT:30]]",
       "coverStory": "[[RX:SEXTANT:88]]",
-      "depthFt": 10,
-      "completed": "2007-02",
-      "capacity": 65,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 1,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 1
-        }
-      ],
-      "function": "Interstate corridor cache. Vehicles and fuel.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:45]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
     {
       "id": "DELTA-08",
       "class": "DELTA",
-      "codename": "FENCEPOST",
+      "codename": "[[RX:SEXTANT:9]]",
       "locationText": "[[RX:SEXTANT:86]]",
       "anchor": {
         "miles": null,
@@ -2790,21 +2755,16 @@
       "terrain": "[[RX:SEXTANT:58]]",
       "coverIdentity": "[[RX:SEXTANT:23]]",
       "coverStory": "[[RX:SEXTANT:103]]",
-      "depthFt": 20,
-      "completed": "2006-06",
-      "capacity": 95,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Extraction route node for GAMMA-10. Vehicles, rations, medical cache.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:69]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2827,20 +2787,15 @@
       "coverIdentity": "[[RX:SEXTANT:36]]",
       "coverStory": "[[RX:SEXTANT:67]]",
       "depthFt": null,
-      "completed": "2006-12",
-      "capacity": 80,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Interstate corridor cache between BETA-03 and GAMMA-16 surface routes.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:70]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2862,21 +2817,16 @@
       "terrain": "[[RX:SEXTANT:64]]",
       "coverIdentity": "[[RX:SEXTANT:40]]",
       "coverStory": "[[RX:SEXTANT:56]]",
-      "depthFt": 16,
-      "completed": "2007-08",
-      "capacity": 85,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Corridor cache and vehicle staging for the northern plains.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:59]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2899,20 +2849,15 @@
       "coverIdentity": "[[RX:SEXTANT:23]]",
       "coverStory": "[[RX:SEXTANT:70]]",
       "depthFt": null,
-      "completed": "2007-10",
-      "capacity": 70,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 1,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 1
-        }
-      ],
-      "function": "Rural gray-area cache for the upper Great Lakes.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:48]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     },
@@ -2934,21 +2879,16 @@
       "terrain": "[[RX:SEXTANT:59]]",
       "coverIdentity": "[[RX:SEXTANT:47]]",
       "coverStory": "[[RX:SEXTANT:65]]",
-      "depthFt": 8,
-      "completed": "2008-01",
-      "capacity": 95,
+      "depthFt": null,
+      "completed": "[[RX:SEXTANT:7]]",
+      "capacity": null,
       "sustainedMonths": null,
-      "staff": 2,
-      "staffBreakdown": [
-        {
-          "role": "Rotating guard (Security Forces Command)",
-          "count": 2
-        }
-      ],
-      "function": "Interstate corridor cache. Vehicles, fuel, water, communications equipment.",
+      "staff": null,
+      "staffBreakdown": [],
+      "function": "[[RX:SEXTANT:75]]",
       "connectionsText": null,
       "network": null,
-      "reactor": false,
+      "reactor": null,
       "commanderId": null,
       "origin": "extended"
     }
@@ -5870,7 +5810,7 @@
         "subcontractors": 2,
         "sites": [
           "ALPHA-03",
-          "BETA-01"
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2200. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -5880,8 +5820,8 @@
         "trade": "HVAC installation and air handling",
         "subcontractors": 12,
         "sites": [
-          "BETA-04",
-          "GAMMA-01"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2237 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -5891,8 +5831,8 @@
         "trade": "Bulk excavation and rock removal",
         "subcontractors": 12,
         "sites": [
-          "ALPHA-04",
-          "GAMMA-02"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Project 2274. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -5902,9 +5842,9 @@
         "trade": "Precast concrete elements",
         "subcontractors": 9,
         "sites": [
-          "BETA-05",
-          "GAMMA-03",
-          "GAMMA-05"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2311. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
       },
@@ -5914,9 +5854,9 @@
         "trade": "Electrical installation, low and medium voltage",
         "subcontractors": 3,
         "sites": [
-          "GAMMA-11",
-          "GAMMA-12",
-          "DELTA-01"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2348. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -5926,8 +5866,8 @@
         "trade": "TBM operation and tunnel drives",
         "subcontractors": 12,
         "sites": [
-          "ALPHA-05",
-          "BETA-02"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Work packages issued as Project 2385 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -5937,8 +5877,8 @@
         "trade": "Land and underground survey",
         "subcontractors": 5,
         "sites": [
-          "DELTA-02",
-          "DELTA-09"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2422. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -5948,7 +5888,7 @@
         "trade": "Structural steel fabrication and erection",
         "subcontractors": 10,
         "sites": [
-          "GAMMA-04"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2459. Below-collar work performed by other primes. 1 site known to the firm; maximum permitted is 3."
       },
@@ -5958,8 +5898,8 @@
         "trade": "Environmental remediation and monitoring",
         "subcontractors": 7,
         "sites": [
-          "BETA-09",
-          "DELTA-03"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2496. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -5969,7 +5909,7 @@
         "trade": "Fire detection and suppression",
         "subcontractors": 10,
         "sites": [
-          "GAMMA-05"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2533 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -5980,8 +5920,8 @@
         "subcontractors": 12,
         "sites": [
           "ALPHA-03",
-          "BETA-01",
-          "BETA-03"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Project 2570. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -5991,8 +5931,8 @@
         "trade": "Shaft sinking and raise boring",
         "subcontractors": 13,
         "sites": [
-          "BETA-01",
-          "BETA-04"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2607. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
       },
@@ -6002,7 +5942,7 @@
         "trade": "Tunnel and cavern lining",
         "subcontractors": 12,
         "sites": [
-          "BETA-05"
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2644. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6012,8 +5952,8 @@
         "trade": "Groundwater control and dewatering",
         "subcontractors": 8,
         "sites": [
-          "GAMMA-06",
-          "GAMMA-15"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2681 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6023,7 +5963,7 @@
         "trade": "General construction, surface structures",
         "subcontractors": 7,
         "sites": [
-          "DELTA-04"
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2718. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6033,9 +5973,9 @@
         "trade": "Potable water treatment plant",
         "subcontractors": 4,
         "sites": [
-          "GAMMA-05",
-          "GAMMA-06",
-          "GAMMA-07"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2755. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
       },
@@ -6045,7 +5985,7 @@
         "trade": "Perimeter and access control systems",
         "subcontractors": 13,
         "sites": [
-          "DELTA-05"
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2792. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6055,7 +5995,7 @@
         "trade": "Diesel generation plant",
         "subcontractors": 7,
         "sites": [
-          "GAMMA-08"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2229 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6065,9 +6005,9 @@
         "trade": "Building automation and controls",
         "subcontractors": 4,
         "sites": [
-          "BETA-02",
-          "BETA-08",
-          "GAMMA-09"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Project 2266. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6077,9 +6017,9 @@
         "trade": "Communications cabling and conduit",
         "subcontractors": 5,
         "sites": [
-          "BETA-09",
-          "GAMMA-07",
-          "GAMMA-10"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2303. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
       },
@@ -6089,8 +6029,8 @@
         "trade": "Waterproofing membranes and masonry",
         "subcontractors": 10,
         "sites": [
-          "GAMMA-10",
-          "GAMMA-11"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2340. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6100,9 +6040,9 @@
         "trade": "Materiel logistics and warehousing",
         "subcontractors": 3,
         "sites": [
-          "DELTA-04",
-          "DELTA-06",
-          "DELTA-07"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2377 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6112,8 +6052,8 @@
         "trade": "Spoil haulage and disposal",
         "subcontractors": 8,
         "sites": [
-          "DELTA-07",
-          "DELTA-09"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2414. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6123,9 +6063,9 @@
         "trade": "Elevators, hoists and conveyance",
         "subcontractors": 6,
         "sites": [
-          "ALPHA-02",
-          "BETA-06",
-          "BETA-07"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2451. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
       },
@@ -6135,8 +6075,8 @@
         "trade": "Interior fit-out and finishes",
         "subcontractors": 3,
         "sites": [
-          "GAMMA-10",
-          "GAMMA-12"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2488. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6146,8 +6086,8 @@
         "trade": "Radiological shielding and survey",
         "subcontractors": 11,
         "sites": [
-          "BETA-07",
-          "BETA-08"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Work packages issued as Project 2525 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6157,8 +6097,8 @@
         "trade": "Roads, hardstanding and parking",
         "subcontractors": 7,
         "sites": [
-          "DELTA-03",
-          "DELTA-08"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2562. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6168,9 +6108,9 @@
         "trade": "CBRN filtration and blast valves",
         "subcontractors": 3,
         "sites": [
-          "GAMMA-03",
-          "GAMMA-08",
-          "GAMMA-13"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2599. Below-collar work performed by other primes. 3 sites known to the firm; maximum permitted is 3."
       },
@@ -6180,7 +6120,7 @@
         "trade": "Guideway and trackwork",
         "subcontractors": 4,
         "sites": [
-          "ALPHA-01"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2636. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6190,7 +6130,7 @@
         "trade": "Medical and surgical suite installation",
         "subcontractors": 13,
         "sites": [
-          "GAMMA-14"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2673 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6200,9 +6140,9 @@
         "trade": "Refrigerated storage",
         "subcontractors": 14,
         "sites": [
-          "GAMMA-09",
-          "GAMMA-14",
-          "DELTA-09"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2710. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6212,8 +6152,8 @@
         "trade": "Controlled blasting",
         "subcontractors": 11,
         "sites": [
-          "ALPHA-01",
-          "BETA-08"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2747. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
       },
@@ -6223,7 +6163,7 @@
         "trade": "Data archive and storage systems",
         "subcontractors": 10,
         "sites": [
-          "ALPHA-02"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2784. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6233,7 +6173,7 @@
         "trade": "Pumps, valves and sump systems",
         "subcontractors": 8,
         "sites": [
-          "GAMMA-15"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2221 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6243,7 +6183,7 @@
         "trade": "Modular surface buildings",
         "subcontractors": 10,
         "sites": [
-          "DELTA-10"
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2258. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6253,7 +6193,7 @@
         "trade": "Seismic isolation bearings",
         "subcontractors": 9,
         "sites": [
-          "BETA-09"
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2295. Below-collar work performed by other primes. 1 site known to the firm; maximum permitted is 3."
       },
@@ -6263,7 +6203,7 @@
         "trade": "Power distribution and substations",
         "subcontractors": 5,
         "sites": [
-          "DELTA-11"
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2332. Site identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6273,7 +6213,7 @@
         "trade": "Noise and vibration control",
         "subcontractors": 11,
         "sites": [
-          "GAMMA-16"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2369 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6283,9 +6223,9 @@
         "trade": "Traction power supply",
         "subcontractors": 7,
         "sites": [
-          "BETA-03",
-          "BETA-10",
-          "BETA-11"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Project 2406. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6295,8 +6235,8 @@
         "trade": "Surface reclamation and landscaping",
         "subcontractors": 13,
         "sites": [
-          "DELTA-11",
-          "DELTA-12"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2443. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
       },
@@ -6306,8 +6246,8 @@
         "trade": "Tunnel and cavern ventilation",
         "subcontractors": 13,
         "sites": [
-          "BETA-11",
-          "BETA-12"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2480. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6317,9 +6257,9 @@
         "trade": "Shielded enclosures and secure rooms",
         "subcontractors": 12,
         "sites": [
-          "BETA-09",
-          "GAMMA-17",
-          "GAMMA-18"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2517 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6329,9 +6269,9 @@
         "trade": "Fuel storage and distribution",
         "subcontractors": 3,
         "sites": [
-          "GAMMA-09",
-          "GAMMA-18",
-          "DELTA-10"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2554. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       },
@@ -6341,8 +6281,8 @@
         "trade": "Architecture, surface cover facilities",
         "subcontractors": 4,
         "sites": [
-          "BETA-02",
-          "BETA-12"
+          "[[RX:SEXTANT:7]]",
+          "[[RX:SEXTANT:7]]"
         ],
         "compartmentNote": "Cleared for surface and shaft-collar works under Project 2591. Below-collar work performed by other primes. 2 sites known to the firm; maximum permitted is 3."
       },
@@ -6352,8 +6292,8 @@
         "trade": "Telemetry and environmental sensors",
         "subcontractors": 13,
         "sites": [
-          "GAMMA-08",
-          "GAMMA-17"
+          "[[RX:SEXTANT:8]]",
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Engaged under Title 50 contract as Project 2628. Sites identified to the firm by project number only. Firm holds no knowledge of other OSC sites or of the network."
       },
@@ -6363,7 +6303,7 @@
         "trade": "Plumbing and sanitation",
         "subcontractors": 7,
         "sites": [
-          "GAMMA-02"
+          "[[RX:SEXTANT:8]]"
         ],
         "compartmentNote": "Work packages issued as Project 2665 through the cover agency of each site. Firm personnel badged to the cover agency; no OSC identifiers appear on contract documents."
       },
@@ -6373,8 +6313,8 @@
         "trade": "Vault doors and security hardware",
         "subcontractors": 5,
         "sites": [
-          "DELTA-02",
-          "DELTA-11"
+          "[[RX:T1:8]]",
+          "[[RX:T1:8]]"
         ],
         "compartmentNote": "Project 2702. Scope limited to the works packages stated; drawings issued sheet by sheet with title blocks removed. Subcontractors not told the identity of the end user."
       }
@@ -6650,7 +6590,7 @@
     },
     {
       "id": "RX-B03",
-      "site": "BETA-03",
+      "site": "[[RX:SEXTANT:7]]",
       "designation": "RCPU-20 Unit 1",
       "type": "Regional Continuity Power Unit, pressurized light-water, transportable core module",
       "thermalMWt": 20,
@@ -6661,7 +6601,7 @@
     },
     {
       "id": "RX-B08",
-      "site": "BETA-08",
+      "site": "[[RX:SEXTANT:7]]",
       "designation": "RCPU-16 Unit 1",
       "type": "Regional Continuity Power Unit, pressurized light-water, transportable core module",
       "thermalMWt": 16,
@@ -7592,36 +7532,36 @@
     },
     {
       "pn": "P-3-06-0977",
-      "name": "Lewis Ackroyd",
+      "name": "[[RX:HOLLOW:13]]",
       "rank": null,
-      "role": "Weapons Oversight Analyst (former post)",
+      "role": "[[RX:HOLLOW:39]]",
       "tier": 3,
       "site": "DETACHED / UNPOSTED",
       "divisionId": null,
-      "email": "l.ackroyd@b08.iad.mer",
-      "notes": "Last posted BETA-08. Status DETACHED / UNPOSTED effective 03 MAR 2008. Number not reissued. Mail account retained."
+      "email": "[[RX:HOLLOW:21]]",
+      "notes": "[[RX:HOLLOW:114]]"
     },
     {
       "pn": "P-4-07-0219",
-      "name": "Carol Ann Dimmick",
+      "name": "[[RX:HOLLOW:17]]",
       "rank": null,
-      "role": "Records Technician (former post)",
+      "role": "[[RX:HOLLOW:32]]",
       "tier": 4,
       "site": "DETACHED / UNPOSTED",
       "divisionId": null,
-      "email": "c.dimmick@a03.rd.mer",
-      "notes": "Last posted ALPHA-03, Records Division. Status DETACHED / UNPOSTED effective 28 MAR 2008. Number not reissued. Workstation A03-5-114 reassigned 14 APR 2008."
+      "email": "[[RX:HOLLOW:20]]",
+      "notes": "[[RX:HOLLOW:156]]"
     },
     {
       "pn": "P-3-05-0142",
-      "name": "Reginald Tobin",
+      "name": "[[RX:HOLLOW:14]]",
       "rank": null,
-      "role": "Tunnel Survey Technician (former post)",
+      "role": "[[RX:HOLLOW:38]]",
       "tier": 3,
       "site": "DETACHED / UNPOSTED",
       "divisionId": null,
-      "email": "r.tobin@a02.fe.mer",
-      "notes": "Last posted ALPHA-02, Facilities Engineering. Status DETACHED / UNPOSTED effective 19 APR 2007. Number not reissued."
+      "email": "[[RX:HOLLOW:18]]",
+      "notes": "[[RX:HOLLOW:116]]"
     }
   ],
   "glossary": [
@@ -8133,7 +8073,7 @@
     },
     {
       "term": "GENETIC MATERIAL VAULT",
-      "def": "The repository at ALPHA-03 holding 125,000 genetic and biometric samples associated with essential personnel records.",
+      "def": "The biological sample collection at ALPHA-03 (Level 9) holding genetic and biometric samples associated with essential personnel records. The holdings figure is controlled; see OSC-RSV-GENE.",
       "seeAlso": [
         "ESSENTIAL PERSONNEL",
         "SEED VAULT"
@@ -8864,7 +8804,7 @@
     },
     {
       "term": "UTILIZATION",
-      "def": "Current staffing as a percentage of sustained capacity: 3,847 of 23,400, 16.4 per cent, as at May 2008.",
+      "def": "Current staffing as a percentage of sustained capacity (23,400): 3,847 persons, 16.4 per cent, as at May 2008.",
       "seeAlso": [
         "SUSTAINED CAPACITY",
         "FULL OPERATIONAL CAPABILITY"
@@ -9368,19 +9308,19 @@
   "coverCatalogue": [
     {
       "facility": "ALPHA-01",
-      "coverAgency": "Department of the Interior",
-      "coverFacilityType": "Former quarry reclamation and groundwater monitoring station",
-      "visibleSurfaceStaff": 23,
-      "publicRecordsPosture": "Site appears in state mine reclamation records as a closed quarry under federal reclamation since 2001. Federal land transfer recorded; no facility listed in agency property inventories above \"monitoring station\".",
-      "lastCoverReview": "2008-03-18"
+      "coverAgency": "[[RX:SEXTANT:26]]",
+      "coverFacilityType": "[[RX:SEXTANT:60]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:213]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "ALPHA-02",
-      "coverAgency": "Department of Defense (North American Aerospace Defense Command support)",
-      "coverFacilityType": "Expanded NORAD support infrastructure",
-      "visibleSurfaceStaff": 61,
-      "publicRecordsPosture": "Expansion works are described in public material as communications and support infrastructure. Construction traffic attributed to the parent installation. No separate public entry.",
-      "lastCoverReview": "2007-11-06"
+      "coverAgency": "[[RX:SEXTANT:72]]",
+      "coverFacilityType": "[[RX:SEXTANT:37]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:180]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "ALPHA-03",
@@ -9392,83 +9332,83 @@
     },
     {
       "facility": "ALPHA-04",
-      "coverAgency": "Bureau of Land Management",
-      "coverFacilityType": "Surveying station",
-      "visibleSurfaceStaff": 18,
-      "publicRecordsPosture": "Listed in BLM field office directory as a surveying station. Surface withdrawal for administrative site recorded in public land records.",
-      "lastCoverReview": "2008-04-09"
+      "coverAgency": "[[RX:SEXTANT:25]]",
+      "coverFacilityType": "[[RX:SEXTANT:17]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:136]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "ALPHA-05",
-      "coverAgency": "Federal Emergency Management Agency",
-      "coverFacilityType": "Regional coordination complex",
-      "visibleSurfaceStaff": 72,
-      "publicRecordsPosture": "Presented as a FEMA regional coordination complex. Visible in county records as federal property; public telephone number routes to the cover agency switchboard.",
-      "lastCoverReview": "2007-12-12"
+      "coverAgency": "[[RX:SEXTANT:35]]",
+      "coverFacilityType": "[[RX:SEXTANT:29]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:161]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-01",
-      "coverAgency": "Environmental Protection Agency",
-      "coverFacilityType": "Monitoring station",
-      "visibleSurfaceStaff": 9,
-      "publicRecordsPosture": "Station appears in EPA air and water monitoring site lists. Data from the station is published.",
-      "lastCoverReview": "2007-09-25"
+      "coverAgency": "[[RX:SEXTANT:31]]",
+      "coverFacilityType": "[[RX:SEXTANT:18]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:95]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-02",
-      "coverAgency": "Department of Energy",
-      "coverFacilityType": "Natural gas reserve facility",
-      "visibleSurfaceStaff": 21,
-      "publicRecordsPosture": "Described as a natural gas reserve facility. State pipeline safety filings reference the site by facility number only.",
-      "lastCoverReview": "2008-01-15"
+      "coverAgency": "[[RX:SEXTANT:20]]",
+      "coverFacilityType": "[[RX:SEXTANT:28]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:118]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-03",
-      "coverAgency": "Centers for Disease Control and Prevention",
-      "coverFacilityType": "Secondary research complex",
-      "visibleSurfaceStaff": 46,
-      "publicRecordsPosture": "Described as a CDC secondary research complex. Biosafety posture is cited publicly as the reason for restricted access.",
-      "lastCoverReview": "2008-05-06"
+      "coverAgency": "[[RX:SEXTANT:42]]",
+      "coverFacilityType": "[[RX:SEXTANT:26]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:119]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-04",
-      "coverAgency": "Department of Agriculture (Agricultural Research Service)",
-      "coverFacilityType": "Agricultural research station",
-      "visibleSurfaceStaff": 14,
-      "publicRecordsPosture": "Listed as an ARS research location. Field trials visible from the county road are genuine and are published.",
-      "lastCoverReview": "2007-08-21"
+      "coverAgency": "[[RX:SEXTANT:57]]",
+      "coverFacilityType": "[[RX:SEXTANT:29]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:108]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-05",
-      "coverAgency": "Federal Aviation Administration",
-      "coverFacilityType": "Regional training center",
-      "visibleSurfaceStaff": 38,
-      "publicRecordsPosture": "Listed as an FAA regional training center. Courses are scheduled and attended by FAA personnel without OSC access.",
-      "lastCoverReview": "2008-04-29"
+      "coverAgency": "[[RX:SEXTANT:31]]",
+      "coverFacilityType": "[[RX:SEXTANT:24]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:114]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-06",
-      "coverAgency": "Department of Energy",
-      "coverFacilityType": "Solar research facility",
-      "visibleSurfaceStaff": 17,
-      "publicRecordsPosture": "Listed as a DOE solar research facility. Array output is reported in public research summaries.",
-      "lastCoverReview": "2007-10-30"
+      "coverAgency": "[[RX:SEXTANT:20]]",
+      "coverFacilityType": "[[RX:SEXTANT:23]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:95]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-07",
-      "coverAgency": "U.S. Geological Survey",
-      "coverFacilityType": "Seismology center",
-      "visibleSurfaceStaff": 15,
-      "publicRecordsPosture": "Station data contributes to public seismic networks. Center appears in USGS facility listings.",
-      "lastCoverReview": "2008-03-04"
+      "coverAgency": "[[RX:SEXTANT:22]]",
+      "coverFacilityType": "[[RX:SEXTANT:17]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:94]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-08",
-      "coverAgency": "Department of Energy (National Nuclear Security Administration)",
-      "coverFacilityType": "Nuclear test site support facility",
-      "visibleSurfaceStaff": 27,
-      "publicRecordsPosture": "Presented as test site support. Access restrictions are explained publicly by the test site's own security requirements.",
-      "lastCoverReview": "2007-07-17"
+      "coverAgency": "[[RX:SEXTANT:63]]",
+      "coverFacilityType": "[[RX:SEXTANT:34]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:120]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-09",
@@ -9480,27 +9420,27 @@
     },
     {
       "facility": "BETA-10",
-      "coverAgency": "Department of Homeland Security",
-      "coverFacilityType": "Regional response center",
-      "visibleSurfaceStaff": 41,
-      "publicRecordsPosture": "Described as a DHS regional response center. Opened under that name in public notices; staff on the surface are DHS employees.",
-      "lastCoverReview": "2008-05-20"
+      "coverAgency": "[[RX:SEXTANT:31]]",
+      "coverFacilityType": "[[RX:SEXTANT:24]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:126]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-11",
-      "coverAgency": "Bureau of Land Management",
-      "coverFacilityType": "Resource management field station",
-      "visibleSurfaceStaff": 12,
-      "publicRecordsPosture": "Listed as a BLM resource management station. Grazing and mineral lease files reference the station as administrative site.",
-      "lastCoverReview": "2007-06-12"
+      "coverAgency": "[[RX:SEXTANT:25]]",
+      "coverFacilityType": "[[RX:SEXTANT:33]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:122]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     },
     {
       "facility": "BETA-12",
-      "coverAgency": "Federal Emergency Management Agency",
-      "coverFacilityType": "Hurricane continuity site",
-      "visibleSurfaceStaff": 29,
-      "publicRecordsPosture": "Described as a FEMA hurricane continuity site. Surface activity increased in public view after 2005 and is attributed to post-hurricane planning.",
-      "lastCoverReview": "2008-05-14"
+      "coverAgency": "[[RX:SEXTANT:35]]",
+      "coverFacilityType": "[[RX:SEXTANT:25]]",
+      "visibleSurfaceStaff": null,
+      "publicRecordsPosture": "[[RX:SEXTANT:145]]",
+      "lastCoverReview": "[[RX:SEXTANT:10]]"
     }
   ],
   "realEvents": [

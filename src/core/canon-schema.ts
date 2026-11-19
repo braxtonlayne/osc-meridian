@@ -7,7 +7,7 @@
  * live in `canonCrossChecks` below so the merge script and tests share them.
  */
 import { z } from 'zod';
-import type { Canon, FacilityId } from './canon-types';
+import type { Canon, FacilityId, RxString } from './canon-types';
 
 export const DATE_CEILING = '2008-05-31';
 
@@ -164,6 +164,15 @@ const lineItem = z.strictObject({
   account: z.string().min(1),
   amountM: num.nonnegative(),
   fy: z.record(z.string().regex(/^FY20(0[1-8])$/), num.nonnegative()),
+});
+
+const coverEntry = z.strictObject({
+  facility: facilityId,
+  coverAgency: z.string().min(1),
+  coverFacilityType: z.string().min(1),
+  visibleSurfaceStaff: nonNegInt,
+  publicRecordsPosture: z.string(),
+  lastCoverReview: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
 const contractor = z.strictObject({
@@ -350,16 +359,7 @@ export const canonSchema = z.strictObject({
       }),
     }),
   ),
-  coverCatalogue: z.array(
-    z.strictObject({
-      facility: facilityId,
-      coverAgency: z.string().min(1),
-      coverFacilityType: z.string().min(1),
-      visibleSurfaceStaff: nonNegInt,
-      publicRecordsPosture: z.string(),
-      lastCoverReview: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    }),
-  ),
+  coverCatalogue: z.array(coverEntry),
   realEvents: z.array(
     z.strictObject({
       id: z.string().min(1),
@@ -431,8 +431,24 @@ const clientFacility = facilitySchema.extend({
   anchor: clientAnchor,
   lat: num.min(-90).max(90).nullable().optional(),
   lon: num.min(-180).max(180).nullable().optional(),
+  capacity: nonNegInt.nullable(),
+  staff: nonNegInt.nullable(),
+  reactor: z.boolean().nullable(),
 });
-export const clientCanonSchema = canonSchema.extend({ facilities: z.array(clientFacility) });
+const rxString = z.custom<RxString>((v) => typeof v === 'string' && /^\[\[RX:[A-Z0-9+]+:\d+\]\]$/.test(v), {
+  message: 'expected a redaction sentinel',
+});
+const clientCover = coverEntry.extend({
+  visibleSurfaceStaff: nonNegInt.nullable(),
+  lastCoverReview: z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), rxString]),
+});
+const clientContractor = contractor.extend({ sites: z.array(z.union([facilityId, rxString])) });
+export const clientCanonSchema = canonSchema.extend({
+  facilities: z.array(clientFacility),
+  reactors: z.array(reactor.extend({ site: z.union([facilityId, rxString]) })),
+  coverCatalogue: z.array(clientCover),
+  contractors: canonSchema.shape.contractors.extend({ register: z.array(clientContractor) }),
+});
 
 const _clientAssignable = (c: z.infer<typeof clientCanonSchema>): Canon => c;
 void _clientAssignable;

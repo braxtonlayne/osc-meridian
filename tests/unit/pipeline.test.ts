@@ -392,14 +392,16 @@ describe('restricted material never reaches the baseline', () => {
       }
       expect(html).toContain('Level 0: Surface Depot'); // tier-4 level stays
       expect(html).toContain('Fixture Analyst Charlie'); // tier-3 name stays
-      expect(html).toContain('<td class="num">300</td>'); // DELTA depth is not restricted
+      expect(html).not.toContain('<td class="num">300</td>'); // DELTA depth is SEXTANT (registry plan, docs/CANON.md)
       const rel = JSON.stringify(r.releases);
       expect(rel).toContain('Cistern Gallery Kappa');
       expect(rel).not.toContain('Sealed Annex Omicron');
       expect(rel).not.toContain('Tier one annex notes');
       expect(Object.keys(r.releases).sort()).toEqual(['SEXTANT', 'T2']);
-      expect(Object.values(r.releases.SEXTANT!).join(' ')).toMatch(/Marbleford[\s\S]*30/);
-      expect(r.docs[0]!.redactions.filter((x) => x.key === 'T1').length).toBe(3);
+      // DELTA city is SEXTANT; DELTA numbers (anchor miles, depth) are T1 and never ship.
+      expect(Object.values(r.releases.SEXTANT!).join(' ')).toContain('Marbleford');
+      expect(rel).not.toMatch(/>30</);
+      expect(r.docs[0]!.redactions.filter((x) => x.key === 'T1').length).toBeGreaterThan(3);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

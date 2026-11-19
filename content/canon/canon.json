@@ -8133,7 +8133,7 @@
     },
     {
       "term": "GENETIC MATERIAL VAULT",
-      "def": "The repository at ALPHA-03 holding 125,000 genetic and biometric samples associated with essential personnel records.",
+      "def": "The biological sample collection at ALPHA-03 (Level 9) holding genetic and biometric samples associated with essential personnel records. The holdings figure is controlled; see OSC-RSV-GENE.",
       "seeAlso": [
         "ESSENTIAL PERSONNEL",
         "SEED VAULT"
@@ -8864,7 +8864,7 @@
     },
     {
       "term": "UTILIZATION",
-      "def": "Current staffing as a percentage of sustained capacity: 3,847 of 23,400, 16.4 per cent, as at May 2008.",
+      "def": "Current staffing as a percentage of sustained capacity (23,400): 3,847 persons, 16.4 per cent, as at May 2008.",
       "seeAlso": [
         "SUSTAINED CAPACITY",
         "FULL OPERATIONAL CAPABILITY"

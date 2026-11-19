@@ -16,7 +16,9 @@ export type TierNo = 1 | 2 | 3 | 4;
 export type MarkingId = 'TSSCI-OSC' | 'UMBRA-R' | 'UMBRA-C' | 'UMBRA-U' | 'UMBRA-EO';
 export type Bearing = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW';
 export type NetworkId = 'EASTERN' | 'SOUTHERN' | 'MOUNTAIN_WESTERN' | 'CENTRAL';
-export type CompartmentId = 'KESTREL' | 'HOLLOW' | 'SEXTANT' | 'TALLOW' | 'BRIAR' | 'QUARRY' | 'LANTERN';
+/** A redaction sentinel in the client canon, `[[RX:<key>:<len>]]` (see src/core/rx.ts). */
+export type RxString = `[[RX:${string}]]`;
+export type CompartmentId ='KESTREL' | 'HOLLOW' | 'SEXTANT' | 'TALLOW' | 'BRIAR' | 'QUARRY' | 'LANTERN';
 
 export interface Marking {
   id: MarkingId;
@@ -62,14 +64,14 @@ export interface Facility {
   coverStory: string | null; // extended: 2-4 sentence public-facing cover story
   depthFt: number | null;
   completed: string | null; // "2003-11"
-  capacity: number; // surge berthing (see glossary SURGE BERTHING)
+  capacity: number | null; // null only in the client canon (DELTA, T1) // surge berthing (see glossary SURGE BERTHING)
   sustainedMonths: number | null; // ALPHA only, from source
-  staff: number; // current posted staff
+  staff: number | null; // null only in the client canon (DELTA, T1) // current posted staff
   staffBreakdown: StaffLine[]; // ALPHA from source; others extended (must sum to staff)
   function: string;
   connectionsText: string | null; // source rail-connection text, verbatim facts
   network: NetworkId | null;
-  reactor: boolean;
+  reactor: boolean | null; // null only in the client canon (withheld BETA, DELTA)
   commanderId: string | null; // roster personnel number
   levels?: FacilityLevel[]; // ALPHA only (extended): for the depth cross-section
   origin: 'source' | 'extended' | 'mixed';
@@ -180,13 +182,14 @@ export interface Contractor {
   name: string; // invented company name, never a real firm
   trade: string;
   subcontractors: number; // mean across 47 must be 8.3
-  sites: FacilityId[]; // max 3
+  /** max 3. In the client canon, sites other than the operator's are sentinels (src/core/rx.ts). */
+  sites: (FacilityId | RxString)[];
   compartmentNote: string;
 }
 
 export interface Reactor {
   id: string; // "RX-A01"
-  site: FacilityId;
+  site: FacilityId | RxString; // sentinel only in the client canon (withheld BETA site)
   designation: string;
   type: string;
   thermalMWt: number;
@@ -212,7 +215,7 @@ export interface Person {
   tier: TierNo;
   site: FacilityId | 'DETACHED / UNPOSTED';
   divisionId: string | null;
-  email: string; // in-world address, e.g. "j.harrow@a03.rd.mer"
+  email: string; // in-world .mer address
   notes: string;
 }
 
@@ -277,7 +280,7 @@ export interface CoverCatalogueEntry {
   facility: FacilityId;
   coverAgency: string;
   coverFacilityType: string;
-  visibleSurfaceStaff: number;
+  visibleSurfaceStaff: number | null; // null only in the client canon (SEXTANT rows)
   publicRecordsPosture: string;
   lastCoverReview: string; // ISO date <= 2008-05-31
 }

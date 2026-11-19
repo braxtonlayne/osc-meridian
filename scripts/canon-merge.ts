@@ -24,7 +24,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import type { Bearing, Canon, Facility } from '../src/core/canon-types';
+import type { Bearing, Canon, Facility, RxString } from '../src/core/canon-types';
 import { canonCrossChecks, canonSchema, clientCanonSchema } from '../src/core/canon-schema';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -261,7 +261,7 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
       staffPosted += k.statedStaff;
       warnings.push(`class ${k.id}: no facility records; staffPosted uses stated class staff (${k.statedStaff})`);
     } else {
-      staffPosted += sum(inClass.map((f) => f.staff));
+      staffPosted += sum(inClass.map((f) => f.staff ?? 0));
     }
   }
   const railEngineeringMi = sum(c.railSegments.map((s) => s.miles));
@@ -285,8 +285,8 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
   for (const k of classes) {
     const inClass = facs.filter((f) => f.class === k.id);
     if (inClass.length === k.count) {
-      const s = sum(inClass.map((f) => f.staff));
-      const cap = sum(inClass.map((f) => f.capacity));
+      const s = sum(inClass.map((f) => f.staff ?? 0));
+      const cap = sum(inClass.map((f) => f.capacity ?? 0));
       if (s !== k.statedStaff) errors.push(`class ${k.id}: facility staff sum ${s} != stated ${k.statedStaff}`);
       if (cap !== k.statedCapacity) errors.push(`class ${k.id}: facility capacity sum ${cap} != stated ${k.statedCapacity}`);
     }
@@ -350,6 +350,14 @@ export function tunnelShorterThanCrowFlies(c: Canon): { kind: string; label: str
 
 /** Compartment that governs DELTA location detail in the client canon. */
 export const DELTA_LOCATION_KEY = 'SEXTANT';
+/** Compartment for detached and unposted personnel records. */
+export const HOLLOW_KEY = 'HOLLOW';
+export const UNPOSTED_SITE = 'DETACHED / UNPOSTED';
+/**
+ * Sites (besides the operator's own) whose location prose and cover row are released at
+ * baseline by content (content/assurance/cover-catalogue.md, registry dossiers).
+ */
+export const RELEASED_SITES: readonly string[] = ['BETA-09'];
 
 export interface ClientCanonResult {
   client: Canon;
@@ -366,8 +374,10 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
   const c = structuredClone(canon);
   const withheld: ClientCanonResult['withheld'] = [];
   const scrubKeys = new Map<string, string>(); // original text -> sentinel
-  const rx = (path: string, key: string, text: string, scrub = true): string => {
-    const s = `[[RX:${key}:${text.length}]]`;
+  const rx = (path: string, key: string, text: string, scrub = true): RxString => {
+    // Partial canons (test fixtures) may lack a field: leave it as it is.
+    if (typeof text !== 'string') return text as unknown as RxString;
+    const s: RxString = `[[RX:${key}:${text.length}]]`;
     const doScrub = scrub && text.length >= SCRUB_MIN;
     withheld.push({ path, key, text, scrub: doScrub });
     if (doScrub && !scrubKeys.has(text)) scrubKeys.set(text, s);
@@ -376,13 +386,91 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
 
   // Roster: tier 1 and 2 names and in-world addresses.
   for (const p of c.roster) {
+    if (p.site === UNPOSTED_SITE) {
+      // HOLLOW: detached and unposted personnel. Only pn, site and tier (which the pn
+      // already encodes) stay; rank is null in canon for all three.
+      const k = HOLLOW_KEY;
+      const at = `roster.${p.pn}`;
+      p.name = rx(`${at}.name`, k, p.name);
+      p.role = rx(`${at}.role`, k, p.role);
+      p.email = rx(`${at}.email`, k, p.email);
+      p.notes = rx(`${at}.notes`, k, p.notes);
+      if (p.rank) p.rank = rx(`${at}.rank`, k, p.rank, false);
+      if (p.divisionId) p.divisionId = rx(`${at}.divisionId`, k, p.divisionId, false);
+      continue;
+    }
     if (p.tier > 2) continue;
     const key = `T${p.tier}`;
     p.name = rx(`roster.${p.pn}.name`, key, p.name);
     p.email = rx(`roster.${p.pn}.email`, key, p.email);
   }
 
+  // SEXTANT: sites released at baseline are the operator's own and those the content
+  // releases (RELEASED_SITES). Every other site's cover row and location prose is withheld.
+  const ownSite = c.operator?.site as string | undefined;
+  const released = new Set<string>([...(ownSite ? [ownSite] : []), ...RELEASED_SITES]);
+  for (const row of c.coverCatalogue ?? []) {
+    if (released.has(row.facility)) continue;
+    const k = DELTA_LOCATION_KEY;
+    const at = `coverCatalogue.${row.facility}`;
+    // Agency and facility-type phrases repeat across rows (including released ones): no scrub.
+    row.coverAgency = rx(`${at}.coverAgency`, k, row.coverAgency, false);
+    row.coverFacilityType = rx(`${at}.coverFacilityType`, k, row.coverFacilityType, false);
+    row.publicRecordsPosture = rx(`${at}.publicRecordsPosture`, k, row.publicRecordsPosture);
+    row.lastCoverReview = rx(`${at}.lastCoverReview`, k, row.lastCoverReview, false);
+    row.visibleSurfaceStaff = null;
+  }
+  // Contractor register: site assignments other than the operator's site. DELTA entries
+  // are tier 1 (as in the assurance compartment matrix), the rest SEXTANT. Facility ids are
+  // never scrubbed from other fields.
+  for (const pc of c.contractors?.register ?? []) {
+    pc.sites = (pc.sites ?? []).map((s, i) =>
+      s === ownSite ? s : rx(`contractors.${pc.id}.sites.${i}`, s.startsWith('DELTA-') ? 'T1' : DELTA_LOCATION_KEY, s, false),
+    );
+  }
+
+  // Registry plan (src/apps/registry/model.ts): the operator's site and the sites directly
+  // linked to it (rail in revenue service, tram links) are released in full. For every other
+  // ALPHA/BETA site: location, position, terrain, cover story and connections are SEXTANT, and
+  // a BETA site's reactor identity is SEXTANT. GAMMA: metro area and position open; depth T2,
+  // cover story T2 and connections SEXTANT unless linked. DELTA: designation and class only.
+  const near = ownSite ? adjacentSites(c, ownSite) : new Set<string>();
+  const withholdPosition = (f: Facility, k: string): void => {
+    const at = `facilities.${f.id}`;
+    const a = f.anchor;
+    f.locationText = rx(`${at}.locationText`, k, f.locationText);
+    if (f.terrain) f.terrain = rx(`${at}.terrain`, k, f.terrain);
+    // City and area names can be shared with released sites: never scrubbed elsewhere.
+    a.city = rx(`${at}.anchor.city`, k, a.city, false);
+    a.state = rx(`${at}.anchor.state`, k, a.state, false);
+    if (a.areaLabel) a.areaLabel = rx(`${at}.anchor.areaLabel`, k, a.areaLabel, false);
+    a.miles = null;
+    a.bearing = null;
+    a.cityLat = null;
+    a.cityLon = null;
+    f.lat = null;
+    f.lon = null;
+  };
+  const hiddenReactorSites = new Set<string>();
   for (const f of c.facilities) {
+    const at = `facilities.${f.id}`;
+    const S = DELTA_LOCATION_KEY;
+    if ((f.class === 'ALPHA' || f.class === 'BETA') && !near.has(f.id)) {
+      withholdPosition(f, S);
+      if (f.coverStory) f.coverStory = rx(`${at}.coverStory`, S, f.coverStory);
+      if (f.connectionsText) f.connectionsText = rx(`${at}.connectionsText`, S, f.connectionsText, false);
+      if (f.class === 'BETA') {
+        if (f.reactor) hiddenReactorSites.add(f.id);
+        f.reactor = null;
+      }
+    }
+    if (f.class === 'GAMMA') {
+      f.depthFt = null; // T2 (pipeline nullKey: GAMMA facility -> T2)
+      if (!near.has(f.id)) {
+        if (f.coverStory) f.coverStory = rx(`${at}.coverStory`, 'T2', f.coverStory);
+        if (f.connectionsText) f.connectionsText = rx(`${at}.connectionsText`, S, f.connectionsText, false);
+      }
+    }
     // Restricted levels: designation and notes.
     for (const l of f.levels ?? []) {
       if (l.tier > 2) continue;
@@ -392,23 +480,30 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     }
     // DELTA: every location and cover detail. Real values ship only in release files.
     if (f.class === 'DELTA') {
+      // Everything but designation and class. Strings are SEXTANT sentinels; numbers are null
+      // (tier 1 in the pipeline's nullKey), including capacity and staff, and the staff
+      // breakdown is emptied. The class aggregates stay in clear in classes[] (statedCapacity,
+      // statedStaff), which the DELTA class page shows at baseline.
       const k = DELTA_LOCATION_KEY;
-      const p = `facilities.${f.id}`;
-      f.locationText = rx(`${p}.locationText`, k, f.locationText);
-      if (f.terrain) f.terrain = rx(`${p}.terrain`, k, f.terrain);
-      if (f.coverIdentity) f.coverIdentity = rx(`${p}.coverIdentity`, k, f.coverIdentity);
-      if (f.coverStory) f.coverStory = rx(`${p}.coverStory`, k, f.coverStory);
-      const a = f.anchor;
-      a.city = rx(`${p}.anchor.city`, k, a.city);
-      a.state = rx(`${p}.anchor.state`, k, a.state, false);
-      if (a.areaLabel) a.areaLabel = rx(`${p}.anchor.areaLabel`, k, a.areaLabel);
-      a.miles = null;
-      a.bearing = null;
-      a.cityLat = null;
-      a.cityLon = null;
-      f.lat = null;
-      f.lon = null;
+      withholdPosition(f, k);
+      if (f.codename) f.codename = rx(`${at}.codename`, k, f.codename);
+      if (f.coverIdentity) f.coverIdentity = rx(`${at}.coverIdentity`, k, f.coverIdentity);
+      if (f.coverStory) f.coverStory = rx(`${at}.coverStory`, k, f.coverStory);
+      if (f.connectionsText) f.connectionsText = rx(`${at}.connectionsText`, k, f.connectionsText);
+      f.function = rx(`${at}.function`, k, f.function);
+      if (f.completed) f.completed = rx(`${at}.completed`, k, f.completed, false);
+      f.depthFt = null;
+      f.capacity = null;
+      f.staff = null;
+      f.staffBreakdown = [];
+      f.reactor = null;
+      f.commanderId = null;
+      f.network = null;
     }
+  }
+  // Reactor records at withheld BETA sites: the site link is SEXTANT.
+  for (const r of c.reactors ?? []) {
+    if (hiddenReactorSites.has(r.site)) r.site = rx(`reactors.${r.id}.site`, DELTA_LOCATION_KEY, r.site, false);
   }
 
   // Reserves: tier 1 and 2 items keep id, category, unit, site and tier only.
@@ -447,6 +542,25 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
   };
   walk(c, '');
   return { client: c, withheld, scrubbed };
+}
+
+/**
+ * The operator's site plus every site directly linked to it by rail in revenue service or by
+ * a tram link (same rule as adjacentTo in src/apps/registry/model.ts).
+ */
+export function adjacentSites(c: Pick<Canon, 'railSegments' | 'tramNetworks'>, home: string): Set<string> {
+  const out = new Set<string>([home]);
+  for (const s of c.railSegments ?? []) {
+    if (s.status !== 'IN REVENUE SERVICE') continue;
+    if (s.a === home) out.add(s.b);
+    if (s.b === home) out.add(s.a);
+  }
+  for (const n of c.tramNetworks ?? [])
+    for (const l of n.links ?? []) {
+      if (l.from === home) out.add(l.to);
+      if (l.to === home) out.add(l.from);
+    }
+  return out;
 }
 
 /** JSON with stable formatting (schema key order is already applied by Zod parse). */

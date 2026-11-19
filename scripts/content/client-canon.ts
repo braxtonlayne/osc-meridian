@@ -64,7 +64,15 @@ export function nullKey(records: unknown[]): string {
     if (!rec || typeof rec !== 'object') continue;
     const o = rec as Record<string, unknown>;
     if (typeof o.tier === 'number' && o.tier <= 2) return `T${o.tier}`;
-    if (o.class === 'DELTA') return 'SEXTANT';
+    // DELTA: every nulled number (position, depth, capacity, staff) is tier 1 (registry plan).
+    if (o.class === 'DELTA') return 'T1';
+    // Registry plan (canon-merge buildClientCanon): GAMMA depth is T2; ALPHA/BETA positions
+    // and reactor identity at withheld sites are SEXTANT.
+    if (o.class === 'GAMMA') return 'T2';
+    if (o.class === 'ALPHA' || o.class === 'BETA') return 'SEXTANT';
+    // Cover catalogue rows withheld by canon-merge (visibleSurfaceStaff is nulled).
+    if (typeof o.facility === 'string' && 'coverAgency' in o) return 'SEXTANT';
+    if (o.site === 'DETACHED / UNPOSTED') return 'HOLLOW';
   }
   return 'T1';
 }

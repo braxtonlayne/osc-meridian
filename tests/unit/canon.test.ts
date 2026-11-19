@@ -98,7 +98,7 @@ describe('the five discrepancies', () => {
     expect(a.figures.sustained).toBe(23400);
     expect(a.figures.surge).toBe(34700);
     expect(sum(canon.classes.map((k) => k.statedCapacity))).toBe(34700);
-    const alphaCap = sum(canon.facilities.filter((f) => f.class === 'ALPHA').map((f) => f.capacity));
+    const alphaCap = sum(canon.facilities.filter((f) => f.class === 'ALPHA').map((f) => f.capacity!));
     expect(alphaCap).toBe(16000);
   });
 
