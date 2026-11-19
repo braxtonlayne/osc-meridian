@@ -32,7 +32,7 @@ revisions:
 |---|---|---|
 | Small arms | :c[reserves.items.ARMS-SMALL.value]{auth="SFC" ref="SFC-07-0068"} weapons | :c[reserves.items.ARMS-SMALL.text]{auth="SFC" ref="SFC-07-0068"} |
 | Ammunition | :c[reserves.items.ARMS-AMMUNITION.value]{auth="SFC" ref="SFC-07-0068"} rounds | All calibres on issue |
-| Heavy weapon systems | :r[Holdings by system type and bay]{tier=1 auth="CS" ref="CS-07-012"} | :c[reserves.items.ARMS-HEAVY.text]{auth="SFC" ref="SFC-07-0068"} |
+| :r[Heavy weapon systems]{tier=1 auth="SFC" ref="SFC-07-0068"} | :r[Holdings by system type and bay]{tier=1 auth="CS" ref="CS-07-012"} | :c[reserves.items.ARMS-HEAVY.text]{auth="SFC" ref="SFC-07-0068"} |
 
 Small arms are counted by serial number, whether on issue, in a site armory or in the Reserves Stacks. Weapons in repair at the ALPHA-02 armourer's shop are counted. Weapons awaiting disposal are not.
 
@@ -64,10 +64,10 @@ Armed positions are established by Security Forces Command post orders for each 
 | Lot count, ammunition | 25 FEB 2008 | 3 cases | Re-counted 26 FEB 2008; cases found in the adjoining bay, lot labels transposed. Corrected. |
 | Replacement deliveries | JAN to FEB 2008 | | 1,140 weapons received under cover line LI-084; an equal number of worn weapons taken off count for disposal. |
 
-## Heavy weapon systems
+## Holdings on the Council schedule
 
 :::redact{tier=1 auth="CS" ref="CS-07-012"}
-Heavy weapon systems are held under the Council schedule and are not reported on this record. The schedule lists each system by type, bay and serial with the authority for its release.
+A further armament line, :r[Heavy weapon systems]{tier=1 auth="SFC" ref="SFC-07-0068"}, is held under the Council schedule and is not reported on this record. The schedule lists each system by type, bay and serial with the authority for its release.
 :::
 
 Point of contact: Armament Issue Branch, Security Forces Command, ALPHA-02, extension 2-1655.

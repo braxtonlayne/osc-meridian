@@ -101,7 +101,7 @@ Segment lengths, running times and status are carried on :x[OSC-TRN-ENG] and the
 6.2. Government reconstitution.
 
 :::redact{tier=2 auth="COUNCIL" ref="CC-ART-VI"}
-The class as a whole carries the reconstitution capability described in Article VI of the Charter. ALPHA-01 is the primary reconstitution site. ALPHA-05 is the secondary reconstitution site and is maintained to the same standing readiness for its conference suite. The remaining three sites provide continuity of function only and are not fitted for reconstitution. Rail paths between the primary and secondary sites are held in the working timetable by Transit Operations on instruction and are not offered for booking.
+The class as a whole carries the reconstitution capability described in Article VI of the Charter. ALPHA-01 is the primary reconstitution site. ALPHA-05 is the secondary reconstitution site and is maintained to the same standing readiness :r[for its conference suite]{tier=1 auth="COUNCIL" ref="CC-ART-VI"}. The remaining three sites provide continuity of function only and are not fitted for reconstitution. Rail paths between the primary and secondary sites are held in the working timetable by Transit Operations on instruction and are not offered for booking.
 :::
 
 ## 7. Returns

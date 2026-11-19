@@ -108,6 +108,6 @@ Allocations are sized to the sustained figure, distributed by the site share tab
 
 ## Notes
 
-1. Armaments lines are shown to Tier 2 and above. Heavy weapon systems are not reported in this position at any tier below the Council and are carried here as a line only.
+1. Armaments lines are shown to Tier 2 and above. The line :r[Heavy weapon systems]{tier=1 auth="SFC" ref="SFC-07-0068"} is not reported in this position at any tier below the Council and are carried here as a line only.
 2. The biological sample collection is a Records Division holding and is reported here for completeness. It is not a medical stock and is not drawn on.
 3. Corrections to this position are made by the next monthly revision, not by amendment. Queries to the action officer, Stores Control, before 1800Z (1300 CDT) on working days.
