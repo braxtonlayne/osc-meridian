@@ -11,6 +11,8 @@ import { inWorldIso, operatorId } from './session';
 
 /** Workstation identifier printed in audit entries for this terminal. */
 export const WORKSTATION_ID = 'A03-5-114';
+/** Print queue serving this workstation's area (site + level). */
+export const PRINT_QUEUE = 'PRN-A03-5';
 export const MAX_ENTRIES = 2000;
 
 const _entries = signal<AuditEntry[]>([]);
@@ -34,7 +36,7 @@ function phrase(kind: AuditKind, subject: string): string {
     case 'redaction.hover':
       return `${op} examined withheld material in ${subject}. Withholding notice was displayed; no release was made.`;
     case 'print':
-      return `${op} sent ${subject} to print queue PRN-${WORKSTATION_ID.slice(0, 6)}. Cover sheet and distribution stamp applied. Operator is accountable for the printed copy.`;
+      return `${op} sent ${subject} to print queue ${PRINT_QUEUE}. Cover sheet and distribution stamp applied. Operator is accountable for the printed copy.`;
     case 'form.submit':
       return `${op} submitted ${subject} for routing.`;
     case 'mail.read':
