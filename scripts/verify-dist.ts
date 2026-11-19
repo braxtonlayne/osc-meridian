@@ -140,17 +140,72 @@ export interface Needle {
   forms: string[];
 }
 
+const SENTINEL_RE = /\[\[RX:[A-Z0-9+]+:\d+\]\]/g;
+const FACILITY_ID_RE = /^(?:ALPHA|BETA|GAMMA|DELTA)-\d{2}$/;
+
+/**
+ * Every string value the client canon still carries in clear, with sentinels cut out
+ * (a sentinel splits the string; the clear parts on either side still count as clear).
+ */
+export function clearStrings(client: unknown): string[] {
+  const out: string[] = [];
+  const walk = (v: unknown) => {
+    if (typeof v === 'string') {
+      for (const part of v.split(SENTINEL_RE)) if (part.trim()) out.push(part);
+    } else if (Array.isArray(v)) v.forEach(walk);
+    else if (v && typeof v === 'object') Object.values(v).forEach(walk);
+  };
+  walk(client);
+  return out;
+}
+
 /**
  * Withheld client-canon strings to search for: length >= 6, as written, HTML-escaped and
- * JSON-escaped. Exempt: generic reserve category labels that canon-merge itself does not scrub
- * ("Small arms", "Ammunition", "Nuclear reactors": path *.label with scrub=false), which are
- * ordinary words on unrestricted pages. Their values and texts are still checked.
+ * JSON-escaped. Tier-2 / compartment values are skipped when they are public anyway:
+ *  - the same text also occurs in clear somewhere in the client canon (a facility id, city,
+ *    `completed` date or cover string withheld in one field but printed in another), or
+ *  - it is a bare ISO date (YYYY-MM or YYYY-MM-DD), or
+ *  - it is a real agency name whose acronym is a canon funding department (budget.departments),
+ *  - it is a generic reserve category label canon-merge itself does not scrub
+ *    ("Small arms", "Ammunition": reserves.*.label with scrub=false).
+ * Tier-1 values are always checked, except bare facility designations (ALPHA-01 .. DELTA-12),
+ * which are public at every tier and skipped for all keys.
+ * Sentinels (`[[RX:key:len]]`) in the client canon carry no withheld text, so the JS bundle that
+ * embeds canon.client.json is scanned as-is: only its clear values can match.
  */
-export function withheldNeedles(withheld: Withheld[]): Needle[] {
+const ISO_DATE_RE = /^\d{4}-\d{2}(?:-\d{2})?$/;
+
+/** Acronyms of a name, with and without short connecting words ("Department of Energy" -> DOE, DE). */
+export function acronyms(name: string): string[] {
+  const words = name.split(/\s+/).filter(Boolean);
+  const all = words.map((w) => w[0]!.toUpperCase()).join('');
+  const caps = words.filter((w) => !/^(of|and|the|for)$/i.test(w)).map((w) => w[0]!.toUpperCase()).join('');
+  return [...new Set([all, caps])];
+}
+
+/** Real agency names are public (cover identities and funding lines, SPEC §3): exempt when
+ *  their acronym is one of the canon funding departments (budget.departments). */
+export function isAgencyName(text: string, departments: string[]): boolean {
+  if (!/^[A-Z][a-z]+(?:\s+(?:of|and|the|for|[A-Z][a-z]+))+$/.test(text)) return false;
+  return acronyms(text).some((a) => departments.includes(a));
+}
+
+export function withheldNeedles(withheld: Withheld[], client?: unknown, departments: string[] = []): Needle[] {
+  const clear = client === undefined ? [] : clearStrings(client);
+  const haystack = clear.join('\u0000');
+  const isClear = (t: string) => haystack.includes(t);
   const out: Needle[] = [];
   for (const w of withheld) {
     if (w.text.length < 6) continue;
-    if (!w.scrub && w.path.startsWith('reserves.') && w.path.endsWith('.label')) continue;
+    // A bare facility designation is public at every tier; what a field withholds is the
+    // association (e.g. which sites a contractor serves), which the string alone cannot leak.
+    if (FACILITY_ID_RE.test(w.text)) continue;
+    if (!isTier1Key(w.key)) {
+      if (ISO_DATE_RE.test(w.text)) continue; // bare dates collide by coincidence
+      if (isAgencyName(w.text, departments)) continue;
+      if (!w.scrub && w.path.startsWith('reserves.') && w.path.endsWith('.label')) continue;
+      if (isClear(w.text)) continue;
+    }
     const forms = new Set([w.text, escapeHtml(w.text), escapeHtml(w.text).replace(/'/g, '&#x27;'), JSON.stringify(w.text).slice(1, -1)]);
     out.push({ path: w.path, key: w.key, forms: [...forms] });
   }
@@ -313,8 +368,9 @@ function main(): number {
   // 7. values withheld from the client canon never reach baseline output
   const canonPath = join(root, 'content', 'canon', 'canon.json');
   if (existsSync(canonPath)) {
-    const r = deriveRestrictions(JSON.parse(readFileSync(canonPath, 'utf8')));
-    const needles = withheldNeedles(r?.withheld ?? []);
+    const fullCanon = JSON.parse(readFileSync(canonPath, 'utf8')) as { budget?: { departments?: string[] } };
+    const r = deriveRestrictions(fullCanon as Record<string, unknown>);
+    const needles = withheldNeedles(r?.withheld ?? [], r?.client, fullCanon.budget?.departments ?? []);
     const releasesDir = join(dist, 'data', 'releases');
     for (const f of distFiles) {
       if (!TEXT_EXT.has(extname(f).toLowerCase())) continue;

@@ -8,7 +8,7 @@ import { buildContent, loadManifestDocNos, type BuildResult } from '../../script
 import { FrontmatterSchema } from '../../scripts/content/schema.ts';
 import { ContentBuildError } from '../../scripts/content/util.ts';
 import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
-import { findBannedWords, findExternalUrls, findWithheld, isAuthoredName, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
+import { clearStrings, findBannedWords, findExternalUrls, findWithheld, isAgencyName, isAuthoredName, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
 import { renderPage, STATIC_MARKER } from '../../scripts/prerender.ts';
 import { applyReleases, createDocs } from '../../src/core/docs';
 import { createSearch } from '../../src/core/search';
@@ -442,6 +442,52 @@ describe('restricted material never reaches the baseline', () => {
     expect(findWithheld('<td>Dana O&#x27;Brien</td>', needles).map((h) => h.key)).toEqual(['T1']);
     expect(findWithheld('{"t":"near Pueblo"}', needles).map((h) => h.key)).toEqual(['SEXTANT']);
     expect(findWithheld('Small arms issue; CO2 scrubbers', needles)).toEqual([]);
+  });
+
+  it('verify-dist ignores withheld strings that are public elsewhere, except tier 1', () => {
+    const client = {
+      facilities: [
+        { id: 'DELTA-04', completed: '[[RX:SEXTANT:7]]', anchor: { city: '[[RX:SEXTANT:6]]' } },
+        { id: 'BETA-03', completed: '2006-02', anchor: { city: 'Pueblo' } },
+      ],
+      cover: 'Operated by [[RX:SEXTANT:12]] under the Dry Creek Survey Office lease',
+      roster: [{ name: '[[RX:T1:12]]' }],
+    };
+    expect(clearStrings(client)).toContain(' under the Dry Creek Survey Office lease');
+    const needles = withheldNeedles(
+      [
+        { path: 'facilities.DELTA-04.completed', key: 'SEXTANT', text: '2006-02', scrub: false }, // clear in BETA-03
+        { path: 'facilities.DELTA-04.anchor.city', key: 'SEXTANT', text: 'Pueblo', scrub: false }, // clear elsewhere
+        { path: 'coverCatalogue.DELTA-04.office', key: 'SEXTANT', text: 'Dry Creek Survey Office', scrub: true }, // clear part of a string
+        { path: 'contractors.PC-05.sites.2', key: 'T1', text: 'DELTA-04', scrub: false }, // designation
+        { path: 'coverCatalogue.DELTA-04.agency', key: 'SEXTANT', text: 'Bureau of Mines Annex', scrub: true }, // genuinely withheld
+        { path: 'roster.1-0001.name', key: 'T1', text: 'Pueblo', scrub: false }, // tier 1 stays strict
+      ],
+      client,
+    );
+    expect(needles.map((n) => n.path)).toEqual(['coverCatalogue.DELTA-04.agency', 'roster.1-0001.name']);
+  });
+
+  it('verify-dist exempts bare dates and canon funding agencies below tier 1', () => {
+    const deps = ['DOD', 'DOE', 'DHS', 'FEMA'];
+    expect(isAgencyName('Department of Energy', deps)).toBe(true);
+    expect(isAgencyName('Federal Emergency Management Agency', deps)).toBe(true);
+    expect(isAgencyName('Department of Homeland Security', deps)).toBe(true);
+    expect(isAgencyName('Bureau of Mines Annex', deps)).toBe(false);
+    expect(isAgencyName('Heavy weapon systems', deps)).toBe(false);
+    const needles = withheldNeedles(
+      [
+        { path: 'coverCatalogue.BETA-02.coverAgency', key: 'SEXTANT', text: 'Department of Energy', scrub: true },
+        { path: 'coverCatalogue.BETA-05.lastCoverReview', key: 'SEXTANT', text: '2008-04-29', scrub: true },
+        { path: 'facilities.DELTA-08.completed', key: 'SEXTANT', text: '2006-06', scrub: true },
+        { path: 'x.t1.date', key: 'T1', text: '2008-04-29', scrub: true },
+        { path: 'x.t1.agency', key: 'T1', text: 'Department of Energy', scrub: true },
+        { path: 'reserves.ARMS-HEAVY.label', key: 'T1', text: 'Heavy weapon systems', scrub: false },
+      ],
+      {},
+      deps,
+    );
+    expect(needles.map((n) => n.path)).toEqual(['x.t1.date', 'x.t1.agency', 'reserves.ARMS-HEAVY.label']);
   });
 
   it('verify-dist lets tier-2 names stand in authored documents only', () => {
