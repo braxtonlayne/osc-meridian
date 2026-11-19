@@ -12,7 +12,7 @@ Top-level keys in `extended-b.json`:
 | `contractors` | `{ register: Contractor[] }` | 47 primes, PC-01 to PC-47 |
 | `threatDetail` | `{ id, group, label, ownerDivision, contingency: string[], protocol }[]` | 7 threats |
 | `coverCatalogue` | `{ facility, coverAgency, coverFacilityType, visibleSurfaceStaff, publicRecordsPosture, lastCoverReview }[]` | 17 (all ALPHA and BETA) |
-| `realEvents` | `{ id, date, dateText, publicEvent, oscExplanation, citedIn }[]` | 9 |
+| `realEvents` | `{ id, date, dateText, publicEvent, oscExplanation, citedIn }[]` | 13 (RE-01 to RE-13; RE-10 to RE-13 added in pass two) |
 | `calendar` | `{ id, date, dateText, startZ, endZ, timeText, facility, title, category, originator, tier, note }[]` | 40 events, 01 to 31 MAY 2008 |
 
 `threatDetail`, `coverCatalogue`, `realEvents`, `calendar` and `budgetNotes` are not in the current `Canon` interface; the merge script will need to carry them (proposed additions below).
@@ -95,19 +95,27 @@ The whistleblower entry's second paragraph is only "Contingency protocols exist.
 
 All 17 ALPHA and BETA sites: cover agency, cover facility type, visible surface staff (9 to 72), public-records posture, and last cover review (all between JUN 2007 and 20 MAY 2008, inside the 18-month review interval in the glossary). Source cover identities are used as written. **ALPHA-01 has no cover identity in the source** (only "hidden beneath defunct quarry site"); B catalogues it as a Department of the Interior former-quarry reclamation and groundwater monitoring station. If extender A gives ALPHA-01 a different `coverIdentity`, A's wins and this entry should be changed to match.
 
-### Real events (9)
+### Real events (13)
 
-Public, documented 2001 to 2008 events, each with a deadpan OSC explanation and the documents that would cite it. No private individual is named or implicated.
+Public, documented 2001 to 2008 events, each with a deadpan OSC explanation and the documents that would cite it. Governing rules: `docs/SPEC-2.md` §5 (final). Real history only: George W. Bush is president throughout and appears only doing what the public record says (signing, issuing). No private individual is named or implicated; no real person is placed in or near the September 2001 decision. Pass two (CT2) revised RE-01, RE-02 and RE-08 and added RE-10 to RE-13.
 
-1. 17 FEB 2001: Executive Order 13201 (published text: notification of employee rights about union dues). The lore says construction began under EO 13201; the operative annex was "not published".
-2. FEB 2002: Salt Lake City Winter Olympics (a National Special Security Event). Covered the BETA-11 site survey.
-3. 24 JAN / 01 MAR 2003: DHS begins operations; FEMA transferred in. Explains why DHS lines start in FY2003.
-4. 12 to 16 MAY 2003: TOPOFF 2 (Seattle, Chicago). Long-lead equipment moved to BETA-07 and BETA-10.
-5. 14 AUG 2003: Northeast blackout. First network test of the diesel backup at GAMMA-02 and GAMMA-07.
-6. 29 AUG 2005: Hurricane Katrina and the supplementals. BETA-12's visibility and line growth.
-7. DEC 2005: pandemic influenza emergency funding. Cover for the pharmaceutical stockpile and the BETA-03 medical fit-out.
-8. 09 MAY 2007: NSPD-51/HSPD-20, National Continuity Policy. Council minutes record it as "noted".
-9. 15 to 19 OCT 2007: TOPOFF 4 (Portland, Phoenix, Guam). Seal drills at BETA-06 and GAMMA-13.
+1. **RE-01**, 17 FEB 2001: Executive Order 13201 is signed by President George W. Bush and published (text: notification of employee rights about union dues). Construction began in January 2001 under the Council's own authorising instrument; when the order was published the Council entered that instrument on its register as the "annex" to the order. The annex is the Council's paper, never issued with the order and unknown to its issuing office.
+2. **RE-02**, FEB 2002: Salt Lake City Winter Olympics (a National Special Security Event). BETA-11 survey crews worked alongside the federal security surveys under their own contractor markings; no agency engaged or knew of them.
+3. **RE-03**, 24 JAN / 01 MAR 2003: DHS begins operations; FEMA transferred in. Explains why DHS lines start in FY2003.
+4. **RE-04**, 12 to 16 MAY 2003: TOPOFF 2 (Seattle, Chicago). Long-lead equipment moved to BETA-07 and BETA-10.
+5. **RE-05**, 14 AUG 2003: Northeast blackout. First network test of the diesel backup at GAMMA-02 and GAMMA-07.
+6. **RE-06**, 29 AUG 2005: Hurricane Katrina and the supplementals. BETA-12's visibility and line growth.
+7. **RE-07**, DEC 2005: pandemic influenza emergency funding. Cover for the pharmaceutical stockpile and the BETA-03 medical fit-out.
+8. **RE-08**, 09 MAY 2007: NSPD-51/HSPD-20, National Continuity Policy, issued by President George W. Bush. Council minutes record it as "noted"; the Principal Desk extract OSC-MEM-08-0241 cites it.
+9. **RE-09**, 15 to 19 OCT 2007: TOPOFF 4 (Portland, Phoenix, Guam). Seal drills at BETA-06 and GAMMA-13.
+10. **RE-10**, 11 SEP 2001: public record only (four airliners; New York, Arlington, Shanksville; 2,977 killed). No OSC record describes the day. Programme papers refer to it only as Phase 1 objective P1-4, reported met at a meeting held under authority delegated by the Council (Article III): five seats, no names, no clerk (OSC-CNL-DEL-01-04). The Council is told only "objectives met or in hand"; members' copies of its minutes omit the item (OSC-CNL-MIN-01-06). Contingency OSC-ASR-CP-08 (title withheld). No operational detail anywhere.
+11. **RE-11**, 26 OCT 2001: USA PATRIOT Act (S. 1510 96 to 1; H.R. 2975 337 to 79; H.R. 3162 House 357 to 66, Senate 98 to 1; signed as P.L. 107-56; sunset 31 DEC 2005; reauthorization signed 09 MAR 2006). Tracked from the public record only (OSC-MEM-01-0388); second condition of P1-4.
+12. **RE-12**, 18 SEP 2001: P.L. 107-38 ($40 billion supplemental) and the AUMF, P.L. 107-40 (passed 14 SEP: Senate 98 to 0, House 420 to 1). Programme lines opened in FY2002 were placed in the enlarged parent accounts (Comptroller note OSC-MEM-02-0284).
+13. **RE-13**, 02 AUG 2002: P.L. 107-206, the 2002 supplemental. Second of the two supplementals that hide the FY2002 lines.
+
+**The president's handler.** D. H. Carrow (P-2-01-0019), Liaison Officer, Principal Desk, Council Secretariat (roster entry in `extended-c.json`; name and address stripped from client canon), detailed since JAN 2001 to an unnamed Executive Office continuity programs post, "the host office". A fictional officer, never a real staffer. The desk shapes what reaches the principal and when ("principal's attention directed to…", "principal not briefed on programme", "signing scheduled for 26 OCT") and reports to the Secretary to the Council (A. Penhallow). Carrow is not admitted to meetings held under delegated authority. The principal is unwitting and never a member. Papers: OSC-MEM-01-0391 (week of the signing), OSC-MEM-08-0241 (2006 to 2008 extract).
+
+**Real public figures (light background).** Four congressional committee chairs (public roles as of MAY 2008) appear as "continuity readers" on the Secretary's list: no seat, cleared for SITES and BUDGET papers only, extracts by Secretariat courier, never read in. They receive papers and nothing else. See `docs/narrative-2/real-events.md`. Council seats remain recorded by role only.
 
 `citedIn` references real line-item numbers in the generated register where relevant.
 
@@ -155,7 +163,7 @@ PASS  threatDetail 7 entries (3 external, 4 internal)
 PASS  every protocol title withheld with page count
 PASS  cover catalogue covers ALPHA+BETA (17)
 PASS  cover reviews <= 2008-05-31
-PASS  realEvents 6..10  (9)
+PASS  realEvents 6..10  (9)   [pass one; pass two raised the count to 13, RE-10..RE-13]
 PASS  calendar 30..45 events, all MAY 2008  (40)
 PASS  calendar facilities valid
 PASS  calendar has segment 04 possession with no times

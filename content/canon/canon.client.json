@@ -9596,7 +9596,7 @@
       "dateText": "18 SEP 2001",
       "publicEvent": "The President signs the 2001 Emergency Supplemental Appropriations Act for Recovery from and Response to Terrorist Attacks on the United States (Public Law 107-38), providing $40 billion, and the Authorization for Use of Military Force (Public Law 107-40), passed on 14 SEP 2001 by the Senate, 98 to 0, and the House, 420 to 1.",
       "oscExplanation": "Programme lines opened in FY2002 were placed in parent accounts enlarged by the supplemental, so that no programme line is the largest movement in its account. The placement plan was prepared in advance of the appropriation.",
-      "citedIn": "Comptroller note OSC-MEM-02-0061; Ledger, fiscal years 2001 and 2002"
+      "citedIn": "Comptroller note OSC-MEM-02-0284; Ledger, fiscal years 2001 and 2002"
     },
     {
       "id": "RE-13",
@@ -9604,7 +9604,7 @@
       "dateText": "02 AUG 2002",
       "publicEvent": "The President signs the 2002 Supplemental Appropriations Act for Further Recovery From and Response To Terrorist Attacks on the United States (Public Law 107-206).",
       "oscExplanation": "Second of the two supplementals in whose growth the FY2002 programme lines were placed. Comptroller placement unchanged.",
-      "citedIn": "Comptroller note OSC-MEM-02-0061"
+      "citedIn": "Comptroller note OSC-MEM-02-0284"
     }
   ],
   "calendar": [
@@ -20987,7 +20987,7 @@
       },
       "docs": {
         "procedure": "OSC-DIR-0433",
-        "siteCard": "OSC-DIR-0433-B"
+        "siteCard": "OSC-DIR-0434"
       }
     },
     "environ": {
@@ -21310,7 +21310,7 @@
       ],
       "docs": {
         "procedure": "OSC-DIR-0466",
-        "dataSheet": "OSC-MEM-07-1342"
+        "dataSheet": "OSC-MEM-07-0851"
       },
       "mail": {
         "restrictedCall": {
@@ -22210,8 +22210,8 @@
         "bayPrefix": "HCP",
         "stripWidth": 12,
         "procedureDocNo": "OSC-MEM-07-1186",
-        "registerDocNo": "OSC-MEM-08-0244",
-        "maintenanceDocNo": "OSC-MEM-08-0252",
+        "registerDocNo": "OSC-MEM-06-0291",
+        "maintenanceDocNo": "OSC-MEM-08-0152",
         "authorisedOrderPrefix": "CDR",
         "logLimit": 60
       },

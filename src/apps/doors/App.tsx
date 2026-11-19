@@ -57,6 +57,7 @@ import {
 import { DOORS_EMPTY, type DoorLogLine, type DoorOverride, type DoorRecord, type DoorsState } from './types';
 import { Board, LogView, OverridesView, DocPane, type Actions, type Ui } from './views';
 import './doors.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 const TITLE = 'Door and Airlock Control';
 const ISOLATION_NONE: IsolationState = { level: 0, initiations: [], active: false, clearsAt: null };
@@ -105,7 +106,7 @@ export default function App({ win, route }: AppProps) {
   const lastTick = useRef(Date.now());
 
   const own = site === acct.site;
-  const remoteLost = iso.active && (iso.clearsAt == null || now < iso.clearsAt);
+  const remoteLost = isolatedAt(iso, now);
   const stale = remoteLost && !own;
   const nowIso = session.inWorldIso(new Date(now));
 

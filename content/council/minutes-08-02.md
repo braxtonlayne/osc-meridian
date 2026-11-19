@@ -51,6 +51,7 @@ distribution:
   - Seats 01 to 11 (by numbered copy)
   - Secretary to the Council (register copy)
   - Records Division, ALPHA-03 (library extract)
+  - "Continuity readers on the Secretary's list (extract, items 3 and 5; Secretariat courier)"
 xrefs: [OSC-2008-Q2, OSC-SYS-CAL, OSC-CNL-CHR-III, OSC-CNL-SEAT-00, OSC-PER-PH3]
 ---
 
@@ -109,3 +110,7 @@ Session 3 of 2008 will be held on 15 MAY 2008. Attendance is by Council instruct
 Food Service will change to the spring menu from 01 APR 2008 and the soup will be withdrawn (action 08-02/5). The second heater in the anteroom has been fitted.
 
 The session adjourned at 1930Z (1530 EDT).
+
+***
+
+*Readers' extract. Items 3 and 5 were sent by Secretariat courier to the continuity readers on the Secretary's list, who hold no seat and are cleared for SITES and BUDGET papers only: Rep. Ike Skelton, Chairman, House Committee on Armed Services, and Sen. Carl Levin, Chairman, Senate Committee on Armed Services. The extract is numbered as a whole and does not show that other items exist.*

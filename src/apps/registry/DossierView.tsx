@@ -13,6 +13,7 @@ import { cell, connectionsLabel, depthOf, dossierRoute, figureCell, facilityFrom
 import { Bar, CellView, RxText, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 import type { TelemetryState } from './telemetry';
 import { t2Value, useCanonT2 } from './acct';
+import { t2RosterNames } from '@core/canon-release';
 
 type PanelModule = typeof import('./TelemetryPanel');
 let panelPromise: Promise<PanelModule> | null = null;
@@ -65,6 +66,7 @@ export function DossierView(p: DossierProps) {
   const [level, setLevel] = useState<number | null>(null);
   const [sideW, setSideW] = useState(420);
   const panels = usePanels();
+  const t2Names = t2RosterNames(useCanonT2(p.services));
   // Whether a reactor is fitted follows the client canon: null (BETA other than the released
   // one, DELTA) is withheld for every viewer, SEXTANT included; nothing is inferred from telemetry.
   const reactorCell = figureCell(p.f, 'reactor', p.f.reactor, p.viewer);
@@ -84,6 +86,7 @@ export function DossierView(p: DossierProps) {
         <OrgChart
           root={p.f.id}
           sessionTier={p.services.session.tier.value}
+          releasedNames={t2Names}
           onSelectUnit={(u) => {
             if (facilityFromRoute(dossierRoute(u)) && u !== p.f.id) p.onOpenFacility(u);
             else if (u !== p.f.id) p.services.openRoute('/personnel/org');

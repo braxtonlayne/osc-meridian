@@ -122,3 +122,9 @@ All app agents ran as Opus (inherit); graphics they drew in their own src/graphi
 | X2 | Accounts in existing apps | Opus | forms, assurance, mail, terminal, system, personnel… | Action queue (F-126 → deputy → KESTREL), audit review + findings, trace mail, terminal/system per account, T2 values for deputy. |
 | CT1 | Per-account content | Opus | content/variants, content/mail/accounts | 37 variants, 31 t4 flags, 23 account mails. |
 | CT2 | Real events + 9/11 thread (SPEC-2 §5) | Opus | realEvents, new council/assurance/ledger docs | Audit of real-party actions; RE-10..13; unrecorded high table OSC-CNL-DEL-01-04; handler D. H. Carrow (fictional); researchers memo with "we should encourage these guys". |
+
+## Pass two, wave 2C: integration
+| # | Agent | Model | Owns | Result |
+|---|---|---|---|---|
+| I1 | Integration: core, shell, narrative | Opus | src/core, src/shell, src/narrative, targeted app/graphics fixes | Headless reconcilers (lease per account), trace slots, isolatedAt everywhere, shared-key validators, per-account narrative specs, site-local mail times, ringback/allclear/evac, registry + transform exports, org chart T2 names, Lamp contrast. 743 tests; 18/18 cross-account scenario checks. ALPHA-02 position stays SEXTANT-withheld. |
+| I2 | Integration: content | Opus | content/**, docs/canon, manifest, README | 8 renumberings + login mail to 04341..04477, manifest 372 routes, t4 coverage, slot tokens, four deceased members of Congress as continuity readers (papers only, never read in). |

@@ -3,9 +3,11 @@
  * `IsolationState` in src/core/contracts.ts; this app stores a superset of it under
  * the same key, so readers that only know IsolationState keep working.
  *
- * Readers: use `isolatedAt(state, now)` from @shell/isolation rather than `active`
- * alone. A timed isolation (clearsAt set) ends at clearsAt even if no isolate panel
- * was open to write `active: false`.
+ * Readers: use `isolatedAt(state, now)` from `@apps/isolate/state` (re-exported by
+ * @shell/isolation) rather than `active` alone. A timed isolation (clearsAt set) ends at
+ * clearsAt even if no isolate panel was open to write `active: false`; a restoration recorded
+ * against the latest initiation ends it too. `clearedAt(state, now)` gives the wall-clock end;
+ * `readIsolation(raw)` repairs a partial or malformed stored value.
  */
 import type { AccountId, IsolationState } from '@core/contracts';
 
@@ -22,6 +24,8 @@ export interface Initiation {
   operatorId?: string;
   /** Wall-clock ms of the initiation (clearsAt is computed from it). */
   ms?: number;
+  /** Wall-clock ms the isolation this initiation began was restored (automatic or certificate). */
+  clearedMs?: number;
 }
 
 export type RestorationStatus = 'pending' | 'approved' | 'returned' | 'automatic';

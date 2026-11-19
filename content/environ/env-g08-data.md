@@ -13,7 +13,7 @@ date: 2008-04-08
 t4: true
 facility: GAMMA-08
 summary: Design figures for the GAMMA-08 air revitalization plant. Air volume, unit flows, scrubber sizing, filter banks, alarm limits, sensor calibration and the occupancy basis.
-xrefs: [OSC-MEM-08-0164, OSC-DIR-0128]
+xrefs: [OSC-MEM-07-0262, OSC-DIR-0128]
 distribution:
   - Environmental systems watch, GAMMA-08 (posted at the plant room)
   - Site Superintendent, GAMMA-08

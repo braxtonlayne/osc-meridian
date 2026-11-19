@@ -1,7 +1,7 @@
 # Wave 2C integration notes (collected from wave 2B reports)
 
 - muster: `mail.deliver` traces can't carry slots; add `slots` to Trace (data → slots) in core traces delivery. msg-08-04774 is currently written without slots.
-- CT1 per-account mail: trigger shapes `trace`, `docRead`, `app`, `plant`, `mailTo` are not supported by the mail runtime yet; wire per docs/narrative-2/accounts.md (login mail + timed fallbacks for lifesupport 06101–06106, deputy 06201–06209, auditor 06301–06308).
+- CT1 per-account mail: trigger shapes `trace`, `docRead`, `app`, `plant`, `mailTo` are not supported by the mail runtime yet; wire per docs/narrative-2/accounts.md (login mail + timed fallbacks; login mail renumbered by I2 into 04341–04477, triggered mail keeps lifesupport 06105–06106, deputy 06206–06209, auditor 06306–06308; mapping in accounts.md).
 - verify-dist slot-token failure: dist/mail/index.html prints raw `{bay} {testId} {circuit} {callId} {unit}` from content/mail/plant/msg-08-05731..05736, content/mail/patch/msg-08-04931..04936, content/mail/drill/msg-08-05303 (slots in title/summary). Fix: keep slots out of title/summary, or have prerender render undeclared slots as ________.
 - startNarrative currently runs for analyst only; other accounts need their own login mail/rules.
 - deputy divisionId 'CMD' should display as "Facility Command" (X2 handling).

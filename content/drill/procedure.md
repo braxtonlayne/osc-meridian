@@ -11,7 +11,7 @@ originator: TO/ALPHA-01
 revision: 2
 date: 2008-02-25
 summary: How a network seal drill is ordered from the Seal Drill Coordinator, relayed by Network Control over the inter-hub circuits, tram order wires and voice circuits, acknowledged, sealed, reported, stood down or aborted, and observed by OIA.
-xrefs: [OSC-DIR-0433-B, OSC-DIR-0128, OSC-DIR-0412]
+xrefs: [OSC-DIR-0434, OSC-DIR-0128, OSC-DIR-0412]
 distribution:
   - Facility commanders and deputy commanders, ALPHA sites
   - Network Control, Transit Operations, ALPHA-01
@@ -82,7 +82,7 @@ When a drill is stood down or aborted the coordinator issues the drill report by
 
 ## 10. Site action
 
-Site personnel act on Annex B, :x[OSC-DIR-0433-B]. Seal doors and seal-capable air handling zones are listed in the site's door board and in :x[OSC-DIR-0128]. Indications on the coordinator that do not agree with the site are reported under :x[OSC-DIR-0412].
+Site personnel act on Annex B, :x[OSC-DIR-0434]. Seal doors and seal-capable air handling zones are listed in the site's door board and in :x[OSC-DIR-0128]. Indications on the coordinator that do not agree with the site are reported under :x[OSC-DIR-0412].
 
 ## Annex A. Relay sequence
 

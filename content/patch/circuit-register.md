@@ -4,7 +4,7 @@ route: /patch/circuit-register
 app: patch
 family: patch
 template: record
-docNo: OSC-MEM-08-0244
+docNo: OSC-MEM-06-0291
 title: "Hub Circuit Designation Register: Trunk Circuits (Revision 5)"
 marking: UMBRA-C
 originator: CMS/ALPHA-02
@@ -15,7 +15,7 @@ xrefs: [OSC-MEM-07-1186, OSC-DIR-0447, OSC-TRN-SEG-04]
 distribution:
   - Network Operations section, CMS/ALPHA-02
   - Hub command sections, ALPHA-01 to ALPHA-05
-  - "File: CMS-REG 08/0244"
+  - "File: CMS-REG 06/0291"
 recordType: CIRCUIT DESIGNATION REGISTER
 fields:
   - { label: Register, value: "Trunk circuits, all hubs", mono: false }

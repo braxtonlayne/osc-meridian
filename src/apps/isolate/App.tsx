@@ -160,7 +160,7 @@ export default function App({ win, route }: AppProps) {
     const d = traces.find((t) => t.kind === 'form.decided' && t.from === 'deputy' && (t.data?.receipt === pend.cert || t.subject === pend.cert));
     if (!d) return;
     const decision = d.data?.decision === 'approved' ? 'approved' : 'returned';
-    write((prev) => decideCertificate(prev, cfg, { cert: pend.cert, decision, by: 'deputy', iso: d.at, note: d.data?.note }));
+    write((prev) => decideCertificate(prev, cfg, { cert: pend.cert, decision, by: 'deputy', iso: d.at, note: d.data?.note, now: Date.now() }));
   }, [traces.length, s.restorations?.length]);
 
   /* ------------------------------------------------------- annunciator */
@@ -357,7 +357,7 @@ export default function App({ win, route }: AppProps) {
       return refuse({ title: 'Not the certifying officer', body: 'Circuit Restoration Certificates are approved by the Deputy Commander, ALPHA-02, only.', reference: cfg.panel.procedureDocNo });
     const cur = normalize(services.shared.get<IsolateState>(SHARED_KEY, NONE).peek());
     const c = (cur.restorations ?? []).find((x) => x.cert === cert);
-    const next = decideCertificate(cur, cfg, { cert, decision, by: me, iso: inWorldIso(), note: note.trim() || undefined });
+    const next = decideCertificate(cur, cfg, { cert, decision, by: me, iso: inWorldIso(), note: note.trim() || undefined, now: Date.now() });
     if (!next || !c) return;
     services.shared.set(SHARED_KEY, next);
     if (c.trace) services.traces.markSeen(c.trace);

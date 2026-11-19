@@ -4,7 +4,7 @@ route: /drill/site-card
 app: drill
 family: drill
 template: record
-docNo: OSC-DIR-0433-B
+docNo: OSC-DIR-0434
 title: "Annex B: Site Action Card, Seal Drill (Personnel Shelters)"
 marking: UMBRA-U
 originator: TO/ALPHA-01

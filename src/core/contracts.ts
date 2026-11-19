@@ -144,7 +144,9 @@ export interface MailMeta {
 export type SoundCue =
   | 'window' | 'error' | 'mail' | 'relay'
   | 'switch' | 'guard' | 'button' | 'alarm' | 'ack' | 'door' | 'hoist'
-  | 'chime' | 'tone' | 'dtmf' | 'busy' | 'print' | 'shutter';
+  | 'chime' | 'tone' | 'dtmf' | 'busy' | 'print' | 'shutter'
+  /** Pass two: telephone ringback (patch), PA all-clear and evacuation (muster) signals. */
+  | 'ringback' | 'allclear' | 'evac';
 
 /* ------------------------------------------------------------------ pass two */
 

@@ -59,6 +59,7 @@ import { CCTV_EMPTY } from './types';
 import type { CctvState, PtzView } from './types';
 import { printStill } from './print';
 import './cctv.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 type Layout = 1 | 4 | 9 | 16;
 type TreeMode = 'site' | 'recorder';
@@ -239,7 +240,7 @@ export default function App({ win, route }: AppProps) {
   }
 
   /* ---- recorder journal: isolation link changes (idempotent across tabs) */
-  const isoNow = iso.active && (iso.clearsAt === null || iso.clearsAt > now) ? 1 : 0;
+  const isoNow = isolatedAt(iso, now) ? 1 : 0;
   useEffect(() => {
     const last = [...(cctv.journal ?? [])].reverse().find((j) => j.k === 'iso');
     if ((last?.v ?? 0) === isoNow) return;

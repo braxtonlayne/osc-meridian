@@ -4,7 +4,7 @@ route: /patch/maintenance-circuit
 app: patch
 family: patch
 template: memo
-docNo: OSC-MEM-08-0252
+docNo: OSC-MEM-08-0152
 title: "Site Maintenance Circuit: Weekly Line Check and Test"
 marking: TSSCI-OSC
 originator: FE/GAMMA-08

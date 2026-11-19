@@ -7,27 +7,19 @@
 import type { AccountDef, AccountId, IsolationState } from '@core/contracts';
 import type { IsolateCanon, IsolateLevelCanon } from '@core/canon-apps/isolate';
 import type { Initiation, IsolateState, IsolationLevel, Restoration } from './types';
+import { isolatedAt, readIsolation } from './state';
 
 export const NONE: IsolateState = { level: 0, initiations: [], active: false, clearsAt: null, restorations: [], seal: null, withdrawn: false };
 
 /** Fill the panel's optional fields on a bare IsolationState (or nothing). */
 export function normalize(s: IsolationState | IsolateState | null | undefined): IsolateState {
   if (!s || typeof s !== 'object') return { ...NONE };
-  const x = s as IsolateState;
-  return {
-    level: x.level ?? 0,
-    initiations: Array.isArray(x.initiations) ? x.initiations : [],
-    active: !!x.active,
-    clearsAt: typeof x.clearsAt === 'number' ? x.clearsAt : null,
-    restorations: Array.isArray(x.restorations) ? x.restorations : [],
-    seal: x.seal ?? null,
-    withdrawn: !!x.withdrawn || x.level >= 5,
-  };
+  return readIsolation(s);
 }
 
-/** Same rule as the shell (`isolatedAt`): active, and no automatic clear time passed. */
+/** Same rule as the shell (`isolatedAt` in ./state): active, no automatic clear time passed, not restored. */
 export function isIsolated(s: IsolationState, now: number): boolean {
-  return s.active && (s.clearsAt == null || now < s.clearsAt);
+  return isolatedAt(s, now);
 }
 
 export function levelDef(cfg: IsolateCanon, level: number): IsolateLevelCanon | undefined {
@@ -127,10 +119,14 @@ export function nextSealNo(s: IsolateState, cfg: IsolateCanon): string {
   return cfg.seals[Math.min(Math.max(i, 0), cfg.seals.length - 1)]!;
 }
 
-function restored(s: IsolateState, cfg: IsolateCanon, iso: string): IsolateState {
+function restored(s: IsolateState, cfg: IsolateCanon, iso: string, ms?: number | null): IsolateState {
   const def = levelDef(cfg, s.level);
+  const n = s.initiations.length;
+  // Wall-clock end of the isolation, on the initiation that began it (readers: clearedAt in ./state).
+  const initiations = ms == null || !n ? s.initiations : s.initiations.map((i, k) => (k === n - 1 && i.clearedMs == null ? { ...i, clearedMs: ms } : i));
   return {
     ...s,
+    initiations,
     active: false,
     clearsAt: null,
     seal: def?.sealOnRestore ? { no: nextSealNo(s, cfg), fittedAt: iso, broken: false } : s.seal && s.seal.broken ? null : s.seal,
@@ -161,7 +157,7 @@ export function expire(s0: IsolateState, cfg: IsolateCanon, now: number, isoAt: 
     decidedAt: iso,
     note: 'Line checks complete. Circuits restored by Network Operations, ALPHA-02.',
   };
-  return restored({ ...s, restorations: [...rs, auto] }, cfg, iso);
+  return restored({ ...s, restorations: [...rs, auto] }, cfg, iso, s.clearsAt);
 }
 
 export type CertRefusal = 'not-isolated' | 'automatic-only' | 'withdrawn' | 'pending' | 'statement';
@@ -210,7 +206,7 @@ export function attachTrace(s: IsolateState, cert: string, trace: string): Isola
 export function decideCertificate(
   s0: IsolateState,
   cfg: IsolateCanon,
-  a: { cert: string; decision: 'approved' | 'returned'; by: AccountId; iso: string; note?: string },
+  a: { cert: string; decision: 'approved' | 'returned'; by: AccountId; iso: string; note?: string; now?: number },
 ): IsolateState | null {
   const s = normalize(s0);
   const c = (s.restorations ?? []).find((r) => r.cert === a.cert);
@@ -220,7 +216,7 @@ export function decideCertificate(
   );
   const next = { ...s, restorations: rs };
   if (a.decision === 'returned' || s.withdrawn) return next;
-  return restored(next, cfg, a.iso);
+  return restored(next, cfg, a.iso, a.now);
 }
 
 export function breakSeal(s0: IsolateState, a: { by: AccountId; iso: string }): IsolateState | null {

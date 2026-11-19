@@ -64,13 +64,16 @@ export function fallbackSent(raw: string | undefined, entryDate: string, session
   return cand;
 }
 
-/** "1432Z (1032 EDT)" for an ISO instant (ALPHA-03 local is UTC-4 in May). */
-export function zuluLocal(iso: string): string {
+/**
+ * "1432Z (1032 EDT)" for an ISO instant, local time in `zone`: the account's site zone
+ * (session.siteZone: ALPHA-03 and ALPHA-01 EDT, GAMMA-08 CDT, ALPHA-02 MDT). Default EDT.
+ */
+export function zuluLocal(iso: string, zone: { abbr: string; offsetH: number } = { abbr: 'EDT', offsetH: -4 }): string {
   const m = /T(\d{2}):(\d{2})/.exec(iso);
   if (!m) return iso;
   const h = Number(m[1]);
-  const local = `${String((h + 20) % 24).padStart(2, '0')}${m[2]}`;
-  return `${m[1]}${m[2]}Z (${local} EDT)`;
+  const local = `${String((((h + zone.offsetH) % 24) + 24) % 24).padStart(2, '0')}${m[2]}`;
+  return `${m[1]}${m[2]}Z (${local} ${zone.abbr})`;
 }
 
 /** "AUD-080520-004417" */

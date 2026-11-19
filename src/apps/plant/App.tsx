@@ -31,6 +31,7 @@ import { useLive } from './useLive';
 import { PLANT_SHARED_NONE } from './types';
 import type { BankId, DieselSelect, PlantShared, SimMode, SimState } from './types';
 import './plant.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 type View = 'panel' | 'trends' | 'oneline' | 'log' | 'trips';
 
@@ -92,7 +93,7 @@ export default function App({ win, route }: AppProps) {
   const isoState = services.shared.get<IsolationState>('isolation', ISOLATION_NONE).value;
   const drillState = services.shared.get<DrillState | null>('drill', null).value;
   const plantShared = services.shared.get<PlantShared>('plant', PLANT_SHARED_NONE).value;
-  const isolated = isoState.active && (isoState.clearsAt == null || Date.now() < isoState.clearsAt);
+  const isolated = isolatedAt(isoState, Date.now());
   const circuitUp = !isolated || unit.site === def.site;
   const drillAtSite =
     !!drillState && !!unit.site && (drillState.phase === 'propagating' || drillState.phase === 'sealed') && ['sealing', 'sealed'].includes(drillState.sites[unit.site]?.status ?? '');

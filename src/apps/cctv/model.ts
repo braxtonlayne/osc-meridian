@@ -11,6 +11,7 @@ import type { HoistCanon } from '@core/canon-apps/hoist';
 import type { MusterCanon } from '@core/canon-apps/muster';
 import type { AccountDef, DrillState, IsolationState } from '@core/contracts';
 import { isRx } from '@core/rx';
+import { isolatedAt as isolationAt } from '@apps/isolate/state';
 import type { DoorRecord, DoorsState } from '@apps/doors/types';
 import type { HoistState, HoistUnit } from '@apps/hoist/types';
 import type { MusterState } from '@apps/muster/types';
@@ -405,7 +406,7 @@ export function drillAlarm(drill: DrillState | null, facility: string, t: number
 
 export function isolatedAt(iso: IsolationState | null, journal: CctvState['journal'], t: number, now: number): boolean {
   // Past moments: the recorder's journal of link changes. Now: the isolation key itself.
-  if (t >= now - 1500) return !!iso && iso.active && (iso.clearsAt === null || iso.clearsAt > t);
+  if (t >= now - 1500) return isolationAt(iso, t);
   let v: number | null = null;
   for (const j of journal) if (j.k === 'iso' && j.at <= t) v = j.v;
   if (v !== null) return v === 1;

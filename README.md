@@ -6,9 +6,40 @@ terminal and get a desktop with windows, documents, mail, forms, maps and a
 terminal.
 
 **This is fiction.** The agency, its people, facilities and documents do not
-exist and are not based on any real agency. Nothing you type is transmitted
+exist and are not based on any real agency. Real events, laws and public
+figures appear only as background, as the public record has them; the story
+woven around them is invented. Nothing you type is transmitted
 anywhere: there is no server, no analytics, and no request to any third party.
 Any state is kept in your own browser.
+
+## Accounts and set pieces
+
+The lock screen offers four issued credential cards. Choose one and sign in; the
+passphrase is printed on the card, and any input is accepted (nothing real is
+ever asked for). To change account, use Log off from the Start menu and choose
+another card.
+
+| Card | Who | Tier | Site |
+|---|---|---|---|
+| OPR-A03-1147 | Records Division analyst (the default card) | 3 | ALPHA-03 |
+| OPR-G08-0611 | Life-support technician, environmental watch | 4 | GAMMA-08 |
+| OPR-A02-0139 | Deputy Commander | 2 | ALPHA-02 |
+| OPR-A01-0948 | Internal Assurance auditor | 3 | ALPHA-01 |
+
+Each account has its own desktop, mail, document copies, audit trail and saved
+state. The physical plant (doors, drills, trains, isolation) is one world shared
+by all accounts, so an action in one account can show up in another.
+
+The twelve set-piece applications: Hardened Site Survivability Estimator,
+Network Isolation (Manual Initiate), Seal Drill Coordinator, Facility Video,
+Reactor Plant Panel, Door and Airlock Control, Dispatcher Workstation, Shaft
+Hoist Control, Environmental Control, Emergency Broadcast and Public Address,
+Muster Board, and Hub Circuit Patch Panel. Each has an operating procedure in
+the document library.
+
+To reset, open System Tools and choose File → Reinitialise local profile. The
+dialog clears either the current account's profile or every account together
+with the shared plant state. Some consequences can only be cleared this way.
 
 ## Requirements
 

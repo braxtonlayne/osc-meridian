@@ -414,7 +414,11 @@ export function useOps(env: OpsEnv) {
     const t0 = Date.now();
     const max = Math.min(rings, PC.calls.maxRings);
     for (let i = 0; i < max; i++) {
-      later(i * cycle, () => setCall((r) => (r && r.startedAt === run.startedAt && r.phase === 'ringing' ? { ...r, rings: i + 1 } : r)));
+      later(i * cycle, () => {
+        const r = callRef.current;
+        if (r && r.startedAt === run.startedAt && r.phase === 'ringing') services.sound.play('ringback');
+        setCall((r) => (r && r.startedAt === run.startedAt && r.phase === 'ringing' ? { ...r, rings: i + 1 } : r));
+      });
     }
     if (rings > PC.calls.maxRings || !answer) {
       later(max * cycle, () => {

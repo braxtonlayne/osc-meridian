@@ -1,6 +1,6 @@
 # MERIDIAN page manifest
 
-Generated from `content/manifest.json` (240 pages). Spoiler-free: the unlock graph is in `docs/NARRATIVE.md` and `src/narrative/plan.json` only.
+Generated from `content/manifest.json` (372 pages: 240 from pass one, 132 from pass two). Spoiler-free: the unlock graph is in `docs/NARRATIVE.md` and `src/narrative/plan.json` only; pass-two secrets are in `docs/narrative-2/`.
 
 ## Counts per family
 
@@ -9,15 +9,27 @@ Generated from `content/manifest.json` (240 pages). Spoiler-free: the unlock gra
 | registry | 52 |
 | transit | 15 |
 | personnel | 21 |
-| council | 25 |
+| council | 30 |
 | reserves | 16 |
-| ledger | 20 |
-| assurance | 13 |
+| ledger | 21 |
+| assurance | 15 |
 | directives | 24 |
 | forms | 12 |
-| mail | 30 |
+| mail | 128 |
 | system | 12 |
-| **Total** | **240** |
+| strike | 2 |
+| isolate | 2 |
+| drill | 2 |
+| cctv | 2 |
+| plant | 2 |
+| doors | 2 |
+| dispatch | 3 |
+| hoist | 2 |
+| environ | 2 |
+| pa | 2 |
+| muster | 2 |
+| patch | 3 |
+| **Total** | **372** |
 
 ## Counts per owner
 
@@ -29,6 +41,7 @@ Generated from `content/manifest.json` (240 pages). Spoiler-free: the unlock gra
 | transit | 15 |
 | personnel | 21 |
 | council | 25 |
+| real-events | 8 |
 | reserves | 16 |
 | ledger | 20 |
 | assurance | 13 |
@@ -37,8 +50,23 @@ Generated from `content/manifest.json` (240 pages). Spoiler-free: the unlock gra
 | forms | 12 |
 | mail-1 | 15 |
 | mail-2 | 15 |
+| accounts-mail | 23 |
+| cctv | 8 |
+| dispatch | 8 |
+| doors | 8 |
+| drill | 8 |
+| environ | 6 |
+| hoist | 10 |
+| isolate | 16 |
+| muster | 6 |
+| pa | 8 |
+| patch | 9 |
+| plant | 8 |
+| strike | 6 |
 | help | 12 |
-| **Total** | **240** |
+| **Total** | **372** |
+
+Access column: `T<n> <COMPARTMENT>` page requirement; `t4` opens for Tier 4 (lifesupport account); `var:` accounts with their own variant copy (`content/variants/<account>/`, same id, route and docNo).
 
 ## Deviations from the SPEC section 9 sub-lists (family totals unchanged)
 
@@ -80,7 +108,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 |---|---|---|---|---|---|---|
 | registry-class-alpha | /registry/class/alpha | OSC-FAC-CLS-ALPHA | Facility Class Standard: ALPHA (Command & Control Hubs) | UMBRA-C | registry |  |
 | fac-alpha-01 | /registry/facility/alpha-01 | OSC-FAC-ALPHA-01 | Facility Dossier: ALPHA-01 "RAVEN MOUNTAIN" | UMBRA-C | registry |  |
-| fac-alpha-02 | /registry/facility/alpha-02 | OSC-FAC-ALPHA-02 | Facility Dossier: ALPHA-02 "OLYMPUS STATION" | UMBRA-C | registry |  |
+| fac-alpha-02 | /registry/facility/alpha-02 | OSC-FAC-ALPHA-02 | Facility Dossier: ALPHA-02 "OLYMPUS STATION" | UMBRA-C | registry | var: deputy |
 | fac-alpha-03 | /registry/facility/alpha-03 | OSC-FAC-ALPHA-03 | Facility Dossier: ALPHA-03 "ARCHIVE SITE TANGO" | UMBRA-C | registry |  |
 | fac-alpha-04 | /registry/facility/alpha-04 | OSC-FAC-ALPHA-04 | Facility Dossier: ALPHA-04 "WESTERN CONTINUITY STATION" | UMBRA-C | registry |  |
 | fac-alpha-05 | /registry/facility/alpha-05 | OSC-FAC-ALPHA-05 | Facility Dossier: ALPHA-05 "SENTINEL DEEP" | UMBRA-C | registry |  |
@@ -89,7 +117,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
-| registry-class-gamma | /registry/class/gamma | OSC-FAC-CLS-GAMMA | Facility Class Standard: GAMMA (Personnel Shelters) | UMBRA-C | registry |  |
+| registry-class-gamma | /registry/class/gamma | OSC-FAC-CLS-GAMMA | Facility Class Standard: GAMMA (Personnel Shelters) | UMBRA-C | registry | t4; var: lifesupport |
 | registry-class-delta | /registry/class/delta | OSC-FAC-CLS-DELTA | Facility Class Standard: DELTA (Safe Houses & Caches) | UMBRA-U | registry |  |
 | fac-gamma-01 | /registry/facility/gamma-01 | OSC-FAC-GAMMA-01 | Facility Dossier: GAMMA-01 | UMBRA-C | registry |  |
 | fac-gamma-02 | /registry/facility/gamma-02 | OSC-FAC-GAMMA-02 | Facility Dossier: GAMMA-02 | UMBRA-C | registry |  |
@@ -98,7 +126,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | fac-gamma-05 | /registry/facility/gamma-05 | OSC-FAC-GAMMA-05 | Facility Dossier: GAMMA-05 | UMBRA-C | registry |  |
 | fac-gamma-06 | /registry/facility/gamma-06 | OSC-FAC-GAMMA-06 | Facility Dossier: GAMMA-06 | UMBRA-C | registry |  |
 | fac-gamma-07 | /registry/facility/gamma-07 | OSC-FAC-GAMMA-07 | Facility Dossier: GAMMA-07 | UMBRA-C | registry |  |
-| fac-gamma-08 | /registry/facility/gamma-08 | OSC-FAC-GAMMA-08 | Facility Dossier: GAMMA-08 | UMBRA-C | registry |  |
+| fac-gamma-08 | /registry/facility/gamma-08 | OSC-FAC-GAMMA-08 | Facility Dossier: GAMMA-08 | UMBRA-C | registry | t4; var: lifesupport |
 | fac-gamma-09 | /registry/facility/gamma-09 | OSC-FAC-GAMMA-09 | Facility Dossier: GAMMA-09 | UMBRA-C | registry |  |
 | fac-gamma-10 | /registry/facility/gamma-10 | OSC-FAC-GAMMA-10 | Facility Dossier: GAMMA-10 | UMBRA-C | registry |  |
 | fac-gamma-11 | /registry/facility/gamma-11 | OSC-FAC-GAMMA-11 | Facility Dossier: GAMMA-11 | UMBRA-C | registry |  |
@@ -127,20 +155,20 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
 | transit-overview | /transit | OSC-TRN-TT-08-02 | Network Control Overview and Working Timetable No. 2 of 2008 | UMBRA-C | transit |  |
-| transit-rolling-stock | /transit/rolling-stock | OSC-TRN-RS | Rolling Stock Register (Rail and Tram) | UMBRA-C | transit | T3+KESTREL |
+| transit-rolling-stock | /transit/rolling-stock | OSC-TRN-RS | Rolling Stock Register (Rail and Tram) | UMBRA-C | transit | T3 KESTREL; var: deputy |
 | transit-engineering | /transit/engineering | OSC-TRN-ENG | Tunnel Engineering Summary: Lengths, Depths and Environmental Data | UMBRA-C | transit |  |
 | transit-seg-01 | /transit/segment/01 | OSC-TRN-SEG-01 | Segment Engineering Sheet: Segment 01, ALPHA-01 to ALPHA-03 | UMBRA-C | transit |  |
 | transit-seg-02 | /transit/segment/02 | OSC-TRN-SEG-02 | Segment Engineering Sheet: Segment 02, ALPHA-01 to ALPHA-02 | UMBRA-C | transit |  |
 | transit-seg-03 | /transit/segment/03 | OSC-TRN-SEG-03 | Segment Engineering Sheet: Segment 03, ALPHA-02 to ALPHA-04 | UMBRA-C | transit |  |
-| transit-seg-04 | /transit/segment/04 | OSC-TRN-SEG-04 | Segment Engineering Sheet: Segment 04, ALPHA-02 to ALPHA-05 (Commissioning Sheet) | UMBRA-C | transit |  |
+| transit-seg-04 | /transit/segment/04 | OSC-TRN-SEG-04 | Segment Engineering Sheet: Segment 04, ALPHA-02 to ALPHA-05 (Commissioning Sheet) | UMBRA-C | transit | var: deputy |
 | transit-seg-05 | /transit/segment/05 | OSC-TRN-SEG-05 | Segment Engineering Sheet: Segment 05, ALPHA-03 to ALPHA-05 | UMBRA-C | transit |  |
 | transit-seg-06 | /transit/segment/06 | OSC-TRN-SEG-06 | Segment Engineering Sheet: Segment 06, ALPHA-01 to ALPHA-05 | UMBRA-C | transit |  |
 | transit-net-eas | /transit/network/eas | OSC-TRN-NET-EAS | Network Sheet: Eastern Network (hub ALPHA-01) | UMBRA-C | transit |  |
 | transit-net-sou | /transit/network/sou | OSC-TRN-NET-SOU | Network Sheet: Southern Network (hub ALPHA-05) | UMBRA-C | transit |  |
 | transit-net-mtw | /transit/network/mtw | OSC-TRN-NET-MTW | Network Sheet: Mountain/Western Network (hub ALPHA-02 and ALPHA-04) | UMBRA-C | transit |  |
 | transit-net-cen | /transit/network/cen | OSC-TRN-NET-CEN | Network Sheet: Central Network (hub ALPHA-03) | UMBRA-C | transit |  |
-| transit-incident-08-017 | /transit/incident/08-017 | OSC-TRN-INC-08-017 | Incident Log Entry 08-017: Track Circuit Occupancy, Segment 04, No Consist Booked | UMBRA-C | transit |  |
-| transit-possession-08-044 | /transit/possession/08-044 | OSC-TRN-POS-08-044 | Possession 08-044: Segment 04, Portal Seal Walk-Down (with Possession Register, MAY 2008) | UMBRA-C | transit |  |
+| transit-incident-08-017 | /transit/incident/08-017 | OSC-TRN-INC-08-017 | Incident Log Entry 08-017: Track Circuit Occupancy, Segment 04, No Consist Booked | UMBRA-C | transit | var: auditor |
+| transit-possession-08-044 | /transit/possession/08-044 | OSC-TRN-POS-08-044 | Possession 08-044: Segment 04, Portal Seal Walk-Down (with Possession Register, MAY 2008) | UMBRA-C | transit | var: auditor, deputy |
 
 ### personnel (21)
 
@@ -148,9 +176,9 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 |---|---|---|---|---|---|---|
 | personnel-overview | /personnel | OSC-PER-IDX | Personnel Strength Summary as at Pay Run 30 APR 2008 | UMBRA-C | personnel |  |
 | personnel-tier-1 | /personnel/tier/1 | OSC-PER-T1 | Tier 1: Core Council | UMBRA-U | personnel |  |
-| personnel-tier-2 | /personnel/tier/2 | OSC-PER-T2 | Tier 2: Facility Command Staff | UMBRA-C | personnel |  |
+| personnel-tier-2 | /personnel/tier/2 | OSC-PER-T2 | Tier 2: Facility Command Staff | UMBRA-C | personnel | var: deputy |
 | personnel-tier-3 | /personnel/tier/3 | OSC-PER-T3 | Tier 3: Specialized Personnel | TSSCI-OSC | personnel |  |
-| personnel-tier-4 | /personnel/tier/4 | OSC-PER-T4 | Tier 4: Essential Support | TSSCI-OSC | personnel |  |
+| personnel-tier-4 | /personnel/tier/4 | OSC-PER-T4 | Tier 4: Essential Support | TSSCI-OSC | personnel | t4; var: lifesupport |
 | personnel-ratio | /personnel/ratio | OSC-PER-RATIO | Standard Facility Personnel Ratios (ALPHA-01 Model, 4,500 Capacity) | TSSCI-OSC | personnel |  |
 | personnel-directory | /personnel/directory | OSC-PER-DIR | Personnel Directory | UMBRA-C | personnel |  |
 | personnel-phase-1 | /personnel/phase/1 | OSC-PER-PH1 | Recruitment Phase 1: Foundation (2001–2003) | TSSCI-OSC | personnel |  |
@@ -165,8 +193,8 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | personnel-branch-sec | /personnel/branch/sec | OSC-PER-BR-SEC | Functional Branch: Security Forces | TSSCI-OSC | personnel |  |
 | personnel-branch-tec | /personnel/branch/tec | OSC-PER-BR-TEC | Functional Branch: Technical, Engineering and Communications | TSSCI-OSC | personnel |  |
 | personnel-branch-sup | /personnel/branch/sup | OSC-PER-BR-SUP | Functional Branch: Medical, Logistics and Facility Support | TSSCI-OSC | personnel |  |
-| personnel-mem-08-0187 | /personnel/memo/mem-08-0187 | OSC-MEM-08-0187 | Reconciliation of April 2008 Pay Run to Facility Strength Returns (Query PV-Q-08-0031) | TSSCI-OSC | records |  |
-| personnel-mem-08-0203 | /personnel/memo/mem-08-0203 | OSC-MEM-08-0203 | Query PV-Q-08-0031: Closure | TSSCI-OSC | records |  |
+| personnel-mem-08-0187 | /personnel/memo/mem-08-0187 | OSC-MEM-08-0187 | Reconciliation of April 2008 Pay Run to Facility Strength Returns (Query PV-Q-08-0031) | TSSCI-OSC | records | var: auditor |
+| personnel-mem-08-0203 | /personnel/memo/mem-08-0203 | OSC-MEM-08-0203 | Query PV-Q-08-0031: Closure | TSSCI-OSC | records | var: deputy |
 
 ### council (25)
 
@@ -174,10 +202,10 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 |---|---|---|---|---|---|---|
 | council-charter-i | /council/charter/i | OSC-CNL-CHR-I | Council Charter, Article I: Purpose | UMBRA-R | records |  |
 | council-charter-ii | /council/charter/ii | OSC-CNL-CHR-II | Council Charter, Article II: Membership and Succession | UMBRA-R | records |  |
-| council-charter-iii | /council/charter/iii | OSC-CNL-CHR-III | Council Charter, Article III: Authority and Revision | UMBRA-C | records | T3+QUARRY |
-| council-charter-iv | /council/charter/iv | OSC-CNL-CHR-IV | Council Charter, Article IV: Facilities and Custody | UMBRA-C | records | T3+QUARRY |
+| council-charter-iii | /council/charter/iii | OSC-CNL-CHR-III | Council Charter, Article III: Authority and Revision | UMBRA-C | records | T3 QUARRY |
+| council-charter-iv | /council/charter/iv | OSC-CNL-CHR-IV | Council Charter, Article IV: Facilities and Custody | UMBRA-C | records | T3 QUARRY |
 | council-charter-v | /council/charter/v | OSC-CNL-CHR-V | Council Charter, Article V: Personnel and Compartmentation | UMBRA-R | records |  |
-| council-charter-vi | /council/charter/vi | OSC-CNL-CHR-VI | Council Charter, Article VI: Reconstitution | UMBRA-C | records | T3+QUARRY |
+| council-charter-vi | /council/charter/vi | OSC-CNL-CHR-VI | Council Charter, Article VI: Reconstitution | UMBRA-C | records | T3 QUARRY |
 | council-charter-vii | /council/charter/vii | OSC-CNL-CHR-VII | Council Charter, Article VII: Secrecy and Records | UMBRA-R | records |  |
 | council-composition | /council/composition | OSC-CNL-SEAT-00 | Council Composition and Register of Distribution Copies | UMBRA-R | records |  |
 | council-seat-01 | /council/seat/01 | OSC-CNL-SEAT-01 | Council Seat 01: Cabinet-level | UMBRA-R | records |  |
@@ -186,17 +214,30 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | council-seat-04 | /council/seat/04 | OSC-CNL-SEAT-04 | Council Seat 04: Cabinet-level | UMBRA-R | records |  |
 | council-seat-05 | /council/seat/05 | OSC-CNL-SEAT-05 | Council Seat 05: Agency director | UMBRA-R | records |  |
 | council-seat-06 | /council/seat/06 | OSC-CNL-SEAT-06 | Council Seat 06: Agency director | UMBRA-R | records |  |
-| council-seat-07 | /council/seat/07 | OSC-CNL-SEAT-07 | Council Seat 07: Agency director | UMBRA-R | records |  |
+| council-seat-07 | /council/seat/07 | OSC-CNL-SEAT-07 | Council Seat 07: Agency director | UMBRA-R | records | var: auditor |
 | council-seat-08 | /council/seat/08 | OSC-CNL-SEAT-08 | Council Seat 08: Senior military | UMBRA-R | records |  |
 | council-seat-09 | /council/seat/09 | OSC-CNL-SEAT-09 | Council Seat 09: Senior military | UMBRA-R | records |  |
 | council-seat-10 | /council/seat/10 | OSC-CNL-SEAT-10 | Council Seat 10: Defense industry | UMBRA-R | records |  |
 | council-seat-11 | /council/seat/11 | OSC-CNL-SEAT-11 | Council Seat 11: Defense industry | UMBRA-R | records |  |
 | council-minutes-06-04 | /council/minutes/06-04 | OSC-CNL-MIN-06-04 | Minutes of the Council, Session 4 of 2006 | UMBRA-C | records |  |
-| council-minutes-07-03 | /council/minutes/07-03 | OSC-CNL-MIN-07-03 | Minutes of the Council, Session 3 of 2007 | UMBRA-C | records |  |
+| council-minutes-07-03 | /council/minutes/07-03 | OSC-CNL-MIN-07-03 | Minutes of the Council, Session 3 of 2007 | UMBRA-C | records | var: auditor |
 | council-minutes-07-06 | /council/minutes/07-06 | OSC-CNL-MIN-07-06 | Minutes of the Council, Session 6 of 2007 | UMBRA-C | records |  |
 | council-minutes-08-01 | /council/minutes/08-01 | OSC-CNL-MIN-08-01 | Minutes of the Council, Session 1 of 2008 | UMBRA-C | records |  |
 | council-minutes-08-02 | /council/minutes/08-02 | OSC-CNL-MIN-08-02 | Minutes of the Council, Session 2 of 2008 | UMBRA-C | records |  |
-| council-inventory-scan | /council/records/osc-2008-q2 | OSC-2008-Q2 | Facility Inventory and Logistics Network, Revision 2008-Q2 (Scanned Image, Partial) | UMBRA-EO | records |  |
+| council-inventory-scan | /council/records/osc-2008-q2 | OSC-2008-Q2 | Facility Inventory and Logistics Network, Revision 2008-Q2 (Scanned Image, Partial) | UMBRA-EO | records | var: auditor |
+
+### real-events (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| council-del-01-04 | /council/delegated/01-04 | OSC-CNL-DEL-01-04 | Record of a Meeting Held Under Delegated Authority, No. 4 of 2001 | UMBRA-EO | records |  |
+| council-mem-01-0388 | /council/memo/mem-01-0388 | OSC-MEM-01-0388 | Legislative Record: USA PATRIOT Act (Public Law 107-56) | UMBRA-C | records |  |
+| council-mem-01-0391 | /council/memo/mem-01-0391 | OSC-MEM-01-0391 | Liaison Note 01/44: Principal Desk, Week Ending 26 OCT 2001 | UMBRA-C | records |  |
+| council-mem-08-0241 | /council/memo/mem-08-0241 | OSC-MEM-08-0241 | Liaison Notes, Principal Desk: File Extract, 2006 to 2008 | UMBRA-C | records |  |
+| council-minutes-01-06 | /council/minutes/01-06 | OSC-CNL-MIN-01-06 | Minutes of the Council, Session 6 of 2001 (Library Extract) | UMBRA-C | records |  |
+| ledger-mem-02-0284 | /ledger/memo/mem-02-0284 | OSC-MEM-02-0284 | FY2002 Supplemental Appropriations: Placement of Programme Lines in the Parent Accounts | UMBRA-C | records |  |
+| assurance-cp-08 | /assurance/contingency/cp-08 | OSC-ASR-CP-08 | Contingency Register Entry: OSC-CP-08 (Closed 2001) | UMBRA-C | assurance |  |
+| assurance-mem-06-0417 | /assurance/memo/mem-06-0417 | OSC-MEM-06-0417 | Published Commentary on the Events of 11 SEP 2001: Recommendation (Routed Copy, Annotated) | UMBRA-C | records |  |
 
 ### reserves (16)
 
@@ -242,7 +283,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | ledger-fy-06 | /ledger/fy/2006 | OSC-LDG-FY06 | Programme Accounts: Fiscal Year 2006 | UMBRA-C | ledger |  |
 | ledger-fy-07 | /ledger/fy/2007 | OSC-LDG-FY07 | Programme Accounts: Fiscal Year 2007 | UMBRA-C | ledger |  |
 | ledger-fy-08 | /ledger/fy/2008 | OSC-LDG-FY08 | Programme Accounts: Fiscal Year 2008 (to date) | UMBRA-C | ledger |  |
-| ledger-mem-07-0944 | /ledger/memo/mem-07-0944 | OSC-MEM-07-0944 | Segment and Network Engineering Lengths for FY2008 Cost Tables (Routed Copy, Annotated) | UMBRA-C | records |  |
+| ledger-mem-07-0944 | /ledger/memo/mem-07-0944 | OSC-MEM-07-0944 | Segment and Network Engineering Lengths for FY2008 Cost Tables (Routed Copy, Annotated) | UMBRA-C | records | var: deputy |
 
 ### assurance (13)
 
@@ -251,7 +292,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | assurance-threat-01 | /assurance/threat/01 | OSC-ASR-THR-01 | Threat Register Entry 01: Nuclear Exchange | UMBRA-C | assurance |  |
 | assurance-threat-02 | /assurance/threat/02 | OSC-ASR-THR-02 | Threat Register Entry 02: Biological / Chemical | UMBRA-C | assurance |  |
 | assurance-threat-03 | /assurance/threat/03 | OSC-ASR-THR-03 | Threat Register Entry 03: Conventional Military | UMBRA-C | assurance |  |
-| assurance-threat-04 | /assurance/threat/04 | OSC-ASR-THR-04 | Threat Register Entry 04: Outside Agency Discovery | UMBRA-C | assurance |  |
+| assurance-threat-04 | /assurance/threat/04 | OSC-ASR-THR-04 | Threat Register Entry 04: Outside Agency Discovery | UMBRA-C | assurance | var: auditor |
 | assurance-threat-05 | /assurance/threat/05 | OSC-ASR-THR-05 | Threat Register Entry 05: Congressional Investigation | UMBRA-C | assurance |  |
 | assurance-threat-06 | /assurance/threat/06 | OSC-ASR-THR-06 | Threat Register Entry 06: Whistleblowers | UMBRA-C | assurance |  |
 | assurance-threat-07 | /assurance/threat/07 | OSC-ASR-THR-07 | Threat Register Entry 07: Media Exposure | UMBRA-C | assurance |  |
@@ -260,58 +301,58 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | assurance-cg | /assurance/classification-guide | OSC-ASR-CG | Classification Guide and Withholding Authorities | TSSCI-OSC | assurance |  |
 | assurance-cov | /assurance/cover-catalogue | OSC-ASR-COV | Cover Identity Catalogue (ALPHA and BETA) | UMBRA-C | assurance |  |
 | assurance-ctr | /assurance/contractor-register | OSC-ASR-CTR | Contractor Register and Construction Security Protocols | UMBRA-C | assurance |  |
-| assurance-oia-08-031 | /assurance/incident/oia-08-031 | OIA-08-031 | Security Incident OIA-08-031: Electronic Image of Council Record Found on Accession RD-ACC-08-00412 | UMBRA-C | records |  |
+| assurance-oia-08-031 | /assurance/incident/oia-08-031 | OIA-08-031 | Security Incident OIA-08-031: Electronic Image of Council Record Found on Accession RD-ACC-08-00412 | UMBRA-C | records | var: auditor |
 
 ### directives-1 (12)
 
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
 | dir-0107 | /directives/dir-0107 | OSC-DIR-0107 | Space and Parking Allocation at ALPHA-Class Facilities | TSSCI-OSC | directives |  |
-| dir-0115 | /directives/dir-0115 | OSC-DIR-0115 | Badges, Access Rosters and the Lost Badge Procedure | TSSCI-OSC | directives |  |
-| dir-0128 | /directives/dir-0128 | OSC-DIR-0128 | Air Handling: Filter Change Cycles and Seal-Capable Zones | TSSCI-OSC | directives |  |
-| dir-0141 | /directives/dir-0141 | OSC-DIR-0141 | Food Service: Cafeteria Rotation, Dining Hours and Special Diets | TSSCI-OSC | directives |  |
-| dir-0156 | /directives/dir-0156 | OSC-DIR-0156 | Fire Safety, Drills and Refuge Chambers | TSSCI-OSC | directives |  |
-| dir-0163 | /directives/dir-0163 | OSC-DIR-0163 | Visitor Control and Escort | TSSCI-OSC | directives |  |
-| dir-0177 | /directives/dir-0177 | OSC-DIR-0177 | Clean Desk, Burn Bags and Classified Waste | TSSCI-OSC | directives |  |
-| dir-0189 | /directives/dir-0189 | OSC-DIR-0189 | Leave, Federal Holidays and Minimum Manning | TSSCI-OSC | directives |  |
-| dir-0204 | /directives/dir-0204 | OSC-DIR-0204 | Medical Readiness Standard | TSSCI-OSC | directives |  |
+| dir-0115 | /directives/dir-0115 | OSC-DIR-0115 | Badges, Access Rosters and the Lost Badge Procedure | TSSCI-OSC | directives | t4 |
+| dir-0128 | /directives/dir-0128 | OSC-DIR-0128 | Air Handling: Filter Change Cycles and Seal-Capable Zones | TSSCI-OSC | directives | t4; var: lifesupport |
+| dir-0141 | /directives/dir-0141 | OSC-DIR-0141 | Food Service: Cafeteria Rotation, Dining Hours and Special Diets | TSSCI-OSC | directives | t4 |
+| dir-0156 | /directives/dir-0156 | OSC-DIR-0156 | Fire Safety, Drills and Refuge Chambers | TSSCI-OSC | directives | t4; var: lifesupport |
+| dir-0163 | /directives/dir-0163 | OSC-DIR-0163 | Visitor Control and Escort | TSSCI-OSC | directives | t4 |
+| dir-0177 | /directives/dir-0177 | OSC-DIR-0177 | Clean Desk, Burn Bags and Classified Waste | TSSCI-OSC | directives | t4 |
+| dir-0189 | /directives/dir-0189 | OSC-DIR-0189 | Leave, Federal Holidays and Minimum Manning | TSSCI-OSC | directives | t4; var: lifesupport |
+| dir-0204 | /directives/dir-0204 | OSC-DIR-0204 | Medical Readiness Standard | TSSCI-OSC | directives | t4 |
 | dir-0216 | /directives/dir-0216 | OSC-DIR-0216 | Dosimetry | TSSCI-OSC | directives |  |
-| dir-0233 | /directives/dir-0233 | OSC-DIR-0233 | Personnel Strength Accounting and Pay Status | TSSCI-OSC | directives |  |
+| dir-0233 | /directives/dir-0233 | OSC-DIR-0233 | Personnel Strength Accounting and Pay Status | TSSCI-OSC | directives | var: deputy |
 | dir-0247 | /directives/dir-0247 | OSC-DIR-0247 | Probationary Transfer and Interim Review | TSSCI-OSC | directives |  |
 
 ### directives-2 (12)
 
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
-| dir-0262 | /directives/dir-0262 | OSC-DIR-0262 | Passenger Travel by Rail and Tram | TSSCI-OSC | directives |  |
-| dir-0288 | /directives/dir-0288 | OSC-DIR-0288 | Training Compliance and the Annual Security Refresher | TSSCI-OSC | directives |  |
-| dir-0301 | /directives/dir-0301 | OSC-DIR-0301 | MERIDIAN Workstation Use and Accreditation | TSSCI-OSC | directives |  |
-| dir-0319 | /directives/dir-0319 | OSC-DIR-0319 | Print Release and Reproduction of Records | TSSCI-OSC | directives |  |
+| dir-0262 | /directives/dir-0262 | OSC-DIR-0262 | Passenger Travel by Rail and Tram | TSSCI-OSC | directives | t4 |
+| dir-0288 | /directives/dir-0288 | OSC-DIR-0288 | Training Compliance and the Annual Security Refresher | TSSCI-OSC | directives | t4 |
+| dir-0301 | /directives/dir-0301 | OSC-DIR-0301 | MERIDIAN Workstation Use and Accreditation | TSSCI-OSC | directives | t4 |
+| dir-0319 | /directives/dir-0319 | OSC-DIR-0319 | Print Release and Reproduction of Records | TSSCI-OSC | directives | t4 |
 | dir-0336 | /directives/dir-0336 | OSC-DIR-0336 | Records Accession, Custody and Chain-of-Custody Tracing | TSSCI-OSC | directives |  |
 | dir-0354 | /directives/dir-0354 | OSC-DIR-0354 | Records Retention and Destruction | TSSCI-OSC | directives |  |
-| dir-0378 | /directives/dir-0378 | OSC-DIR-0378 | Security Incidents, Self-Reporting and Inquiries | TSSCI-OSC | directives |  |
-| dir-0395 | /directives/dir-0395 | OSC-DIR-0395 | Acting Credentials and Temporary Elevation | TSSCI-OSC | directives |  |
-| dir-0412 | /directives/dir-0412 | OSC-DIR-0412 | Compartment Briefing Requirement and Handling of Compartmented Records | TSSCI-OSC | directives |  |
-| dir-0447 | /directives/dir-0447 | OSC-DIR-0447 | Telephones, Mail Addressing and the Key Distribution Network | TSSCI-OSC | directives |  |
-| dir-0480 | /directives/dir-0480 | OSC-DIR-0480 | Tobacco Use Below Grade | TSSCI-OSC | directives |  |
-| dir-0519 | /directives/dir-0519 | OSC-DIR-0519 | Personal Notes, Notebooks and Private Records | TSSCI-OSC | directives |  |
+| dir-0378 | /directives/dir-0378 | OSC-DIR-0378 | Security Incidents, Self-Reporting and Inquiries | TSSCI-OSC | directives | t4; var: auditor |
+| dir-0395 | /directives/dir-0395 | OSC-DIR-0395 | Acting Credentials and Temporary Elevation | TSSCI-OSC | directives | var: deputy |
+| dir-0412 | /directives/dir-0412 | OSC-DIR-0412 | Compartment Briefing Requirement and Handling of Compartmented Records | TSSCI-OSC | directives | t4 |
+| dir-0447 | /directives/dir-0447 | OSC-DIR-0447 | Telephones, Mail Addressing and the Key Distribution Network | TSSCI-OSC | directives | t4 |
+| dir-0480 | /directives/dir-0480 | OSC-DIR-0480 | Tobacco Use Below Grade | TSSCI-OSC | directives | t4 |
+| dir-0519 | /directives/dir-0519 | OSC-DIR-0519 | Personal Notes, Notebooks and Private Records | TSSCI-OSC | directives | t4 |
 
 ### forms (12)
 
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
-| f-104 | /forms/f-104 | OSC-F-104 | Leave Request | TSSCI-OSC | forms |  |
+| f-104 | /forms/f-104 | OSC-F-104 | Leave Request | TSSCI-OSC | forms | t4; var: lifesupport |
 | f-109 | /forms/f-109 | OSC-F-109 | Travel Authorization (Rail and Tram Passenger) | TSSCI-OSC | forms |  |
-| f-114 | /forms/f-114 | OSC-F-114 | Security Incident Report | TSSCI-OSC | forms |  |
-| f-118 | /forms/f-118 | OSC-F-118 | Visitor Escort Request | TSSCI-OSC | forms |  |
+| f-114 | /forms/f-114 | OSC-F-114 | Security Incident Report | TSSCI-OSC | forms | t4; var: lifesupport |
+| f-118 | /forms/f-118 | OSC-F-118 | Visitor Escort Request | TSSCI-OSC | forms | t4; var: deputy |
 | f-122 | /forms/f-122 | OSC-F-122 | Facility Transfer Request | TSSCI-OSC | forms |  |
-| f-126 | /forms/f-126 | OSC-F-126 | Compartment Access Request | TSSCI-OSC | forms |  |
-| f-131 | /forms/f-131 | OSC-F-131 | Unposted Status Declaration | TSSCI-OSC | forms |  |
+| f-126 | /forms/f-126 | OSC-F-126 | Compartment Access Request | TSSCI-OSC | forms | var: deputy |
+| f-131 | /forms/f-131 | OSC-F-131 | Unposted Status Declaration | TSSCI-OSC | forms | var: deputy |
 | f-137 | /forms/f-137 | OSC-F-137 | Records Destruction Certificate | TSSCI-OSC | forms |  |
 | f-142 | /forms/f-142 | OSC-F-142 | Document Reproduction Request | TSSCI-OSC | forms |  |
-| f-145 | /forms/f-145 | OSC-F-145 | Equipment Issue | TSSCI-OSC | forms |  |
-| f-152 | /forms/f-152 | OSC-F-152 | Medical Readiness Certification | TSSCI-OSC | forms |  |
-| f-160 | /forms/f-160 | OSC-F-160 | Security Violation Self-Report | TSSCI-OSC | forms |  |
+| f-145 | /forms/f-145 | OSC-F-145 | Equipment Issue | TSSCI-OSC | forms | t4 |
+| f-152 | /forms/f-152 | OSC-F-152 | Medical Readiness Certification | TSSCI-OSC | forms | t4 |
+| f-160 | /forms/f-160 | OSC-F-160 | Security Violation Self-Report | TSSCI-OSC | forms | var: auditor |
 
 ### mail-1 (15)
 
@@ -328,7 +369,7 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | msg-08-04459 | /mail/msg-08-04459 | MSG-08-04459 | Print Server Maintenance 16 MAY; Print Release Reminder | TSSCI-OSC | mail |  |
 | msg-08-04470 | /mail/msg-08-04470 | MSG-08-04470 | Tasking: Stacks C Accession Review | TSSCI-OSC | mail |  |
 | msg-08-04471 | /mail/msg-08-04471 | MSG-08-04471 | Annual Security Refresher: Overdue | TSSCI-OSC | mail |  |
-| msg-08-04472 | /mail/msg-08-04472 | MSG-08-04472 | Level 4 Dining: Cycle 4 of 6, Week 3 Menu | TSSCI-OSC | mail |  |
+| msg-08-04472 | /mail/msg-08-04472 | MSG-08-04472 | Level 3 Dining: Cycle 4 of 6, Week 3 Menu | TSSCI-OSC | mail |  |
 | msg-08-04473 | /mail/msg-08-04473 | OSC-CBL-08-01173 | File Copy for Accession: Cable OSC-CBL-08-01173 (Possession, Segment 04) | UMBRA-C | mail |  |
 | msg-08-04474 | /mail/msg-08-04474 | OSC-CBL-08-01208 | File Copy for Accession: Cable OSC-CBL-08-01208 (RX-B08 Startup Testing) | UMBRA-C | mail |  |
 | msg-08-04496 | /mail/msg-08-04496 | MSG-08-04496 | Re: Your Enquiry (Strength Accounting) | TSSCI-OSC | mail |  |
@@ -353,24 +394,221 @@ The SPEC sub-lists leave no room for the Records Library documents (memoranda, i
 | msg-08-04495 | /mail/msg-08-04495 | MSG-08-04495 | Terminal Activity | TSSCI-OSC | mail |  |
 | msg-08-04497 | /mail/msg-08-04497 | MSG-08-04497 | Non-Delivery Notice | TSSCI-OSC | mail |  |
 
+### accounts-mail (23)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-04341 | /mail/msg-08-04341 | MSG-08-04341 | Certifying Officer: ALPHA-03 Requests Routed to You | TSSCI-OSC | mail |  |
+| msg-08-04356 | /mail/msg-08-04356 | MSG-08-04356 | Training: Interview Read-In Refresher, 23 MAY | TSSCI-OSC | mail |  |
+| msg-08-04371 | /mail/msg-08-04371 | MSG-08-04371 | Medical Readiness Appointments, 21 MAY | TSSCI-OSC | mail | t4 |
+| msg-08-04398 | /mail/msg-08-04398 | MSG-08-04398 | Possession 08-044: Escort Detail, 13 MAY | UMBRA-C | mail |  |
+| msg-08-04401 | /mail/msg-08-04401 | MSG-08-04401 | Quarterly Register Return: Suspense 30 MAY | TSSCI-OSC | mail |  |
+| msg-08-04404 | /mail/msg-08-04404 | MSG-08-04404 | Tram Portal Door G08-BD3: Closed and Held, 13 MAY | TSSCI-OSC | mail | t4 |
+| msg-08-04411 | /mail/msg-08-04411 | MSG-08-04411 | Surface Lot B Resurfacing and Shuttle Times | TSSCI-OSC | mail |  |
+| msg-08-04423 | /mail/msg-08-04423 | MSG-08-04423 | Filter Bank A Change Withdrawn; Bank B Sample 22 MAY | TSSCI-OSC | mail | t4 |
+| msg-08-04427 | /mail/msg-08-04427 | MSG-08-04427 | Annex Lot Permits, Quarter 3 | TSSCI-OSC | mail |  |
+| msg-08-04446 | /mail/msg-08-04446 | MSG-08-04446 | Environmental Watch Rota, Week of 19 MAY | TSSCI-OSC | mail | t4 |
+| msg-08-04463 | /mail/msg-08-04463 | MSG-08-04463 | Command Section: Week of 19 MAY | TSSCI-OSC | mail |  |
+| msg-08-04466 | /mail/msg-08-04466 | MSG-08-04466 | HVAC Shop Schedule, Week of 19 MAY | TSSCI-OSC | mail |  |
+| msg-08-04468 | /mail/msg-08-04468 | MSG-08-04468 | Second Reviews Assigned | UMBRA-C | mail |  |
+| msg-08-04477 | /mail/msg-08-04477 | MSG-08-04477 | OIA-08-031: For Your Second Review | UMBRA-C | mail |  |
+| msg-08-06105 | /mail/msg-08-06105 | MSG-08-06105 | Seal Drill: Plant Room Posts | TSSCI-OSC | mail | t4 |
+| msg-08-06106 | /mail/msg-08-06106 | MSG-08-06106 | Door Log Page 14: Countersignature Needed | TSSCI-OSC | mail | t4 |
+| msg-08-06206 | /mail/msg-08-06206 | MSG-08-06206 | Request in Your Queue: OSC-F-126 from ALPHA-03 | TSSCI-OSC | mail |  |
+| msg-08-06207 | /mail/msg-08-06207 | MSG-08-06207 | RE: Possession 08-044: Overrun | UMBRA-C | mail |  |
+| msg-08-06208 | /mail/msg-08-06208 | MSG-08-06208 | OIA Request: ALPHA-02 Status Declarations, 2007 | TSSCI-OSC | mail |  |
+| msg-08-06209 | /mail/msg-08-06209 | MSG-08-06209 | Memorial Day: Hub Deputies Net Call | TSSCI-OSC | mail |  |
+| msg-08-06306 | /mail/msg-08-06306 | MSG-08-06306 | SD-08-1187: Archived Profile, A03-5-114 | TSSCI-OSC | mail |  |
+| msg-08-06307 | /mail/msg-08-06307 | MSG-08-06307 | Your Request of 13 MAY: Register Comparison | UMBRA-C | mail |  |
+| msg-08-06308 | /mail/msg-08-06308 | MSG-08-06308 | Declarations Held in Pay & Strength Accounting | TSSCI-OSC | mail |  |
+
+### cctv (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05881 | /mail/msg-08-05881 | MSG-08-05881 | Video Still Printed at Workstation | TSSCI-OSC | mail |  |
+| msg-08-05882 | /mail/msg-08-05882 | MSG-08-05882 | Refused Requests for Security Video | TSSCI-OSC | mail |  |
+| msg-08-05883 | /mail/msg-08-05883 | MSG-08-05883 | Camera Moved from Workstation | TSSCI-OSC | mail |  |
+| msg-08-05884 | /mail/msg-08-05884 | MSG-08-05884 | Camera Moved from Workstation | TSSCI-OSC | mail | t4 |
+| msg-08-05885 | /mail/msg-08-05885 | MSG-08-05885 | Video Still Printed at Workstation | TSSCI-OSC | mail | t4 |
+| msg-08-05886 | /mail/msg-08-05886 | MSG-08-05886 | Recording Suspended, Platform 3 and Platform 7 Cameras | TSSCI-OSC | mail |  |
+| cctv-viewing-rules | /cctv/viewing-rules | OSC-DIR-0474 | Viewing of Facility Security Video at MERIDIAN Workstations | TSSCI-OSC | cctv |  |
+| cctv-operating-instructions | /cctv/operating-instructions | KB-0216 | Using the Facility Video Client | TSSCI-OSC | cctv | t4 |
+
+### dispatch (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-04761 | /mail/msg-08-04761 | MSG-08-04761 | Dispatch Log Query | UMBRA-C | mail |  |
+| msg-08-04762 | /mail/msg-08-04762 | MSG-08-04762 | Route Refused at Desk: Conflicting Movement | UMBRA-C | mail |  |
+| msg-08-04763 | /mail/msg-08-04763 | MSG-08-04763 | Movement Held: Network Isolation | UMBRA-C | mail |  |
+| msg-08-04764 | /mail/msg-08-04764 | MSG-08-04764 | Movement Under Instruction | UMBRA-C | mail |  |
+| msg-08-04765 | /mail/msg-08-04765 | MSG-08-04765 | Dispatcher Qualification | UMBRA-R | mail |  |
+| dispatch-platform-notice | /dispatch/platform-notice | OSC-TRN-DSP-03 | Tram Platform Indicator: Notice to Platform Users | UMBRA-R | dispatch | T4; t4 |
+| dispatch-procedure | /dispatch/procedure | OSC-TRN-DSP-01 | Dispatcher Workstation, Transit Control Desks: Operating Procedure | UMBRA-C | dispatch | T3 |
+| dispatch-reference | /dispatch/reference | OSC-TRN-DSP-02 | Route and Signal Reference Sheet, Transit Control Desk ALPHA-02 | UMBRA-C | dispatch | T3 |
+
+### doors (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-04651 | /mail/msg-08-04651 | MSG-08-04651 | Door Override Recorded | TSSCI-OSC | mail | t4 |
+| msg-08-04652 | /mail/msg-08-04652 | MSG-08-04652 | Door Override Report | TSSCI-OSC | mail |  |
+| msg-08-04653 | /mail/msg-08-04653 | MSG-08-04653 | Interlock Bypass Switch Operated Without Key | TSSCI-OSC | mail | t4 |
+| msg-08-04654 | /mail/msg-08-04654 | MSG-08-04654 | Repeated Interlock Bypass Attempts | TSSCI-OSC | mail |  |
+| msg-08-04655 | /mail/msg-08-04655 | MSG-08-04655 | Door Open at Watch Change | TSSCI-OSC | mail | t4 |
+| msg-08-04656 | /mail/msg-08-04656 | MSG-08-04656 | Door Record Request | TSSCI-OSC | mail | t4 |
+| doors-airlock-card | /doors/airlock-reference-card | OSC-MEM-08-0147 | Personnel Airlock Cycle and Decontamination: Reference Card | UMBRA-R | doors | t4 |
+| doors-operating-procedure | /doors/operating-procedure | OSC-MEM-08-0146 | Door and Airlock Control Board: Operating Procedure | UMBRA-R | doors | t4 |
+
+### drill (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05301 | /mail/msg-08-05301 | MSG-08-05301 | Seal Drill Report | UMBRA-R | mail |  |
+| msg-08-05302 | /mail/msg-08-05302 | MSG-08-05302 | Seal Drill: Sites Carried as NO REPORT | UMBRA-R | mail |  |
+| msg-08-05303 | /mail/msg-08-05303 | MSG-08-05303 | Query on Drill Relay Traffic: Acknowledgement Time | UMBRA-R | mail |  |
+| msg-08-05304 | /mail/msg-08-05304 | MSG-08-05304 | Seal Drill Order Attempted from Your Workstation | UMBRA-R | mail |  |
+| msg-08-05305 | /mail/msg-08-05305 | MSG-08-05305 | OIA Observation of Network Seal Drill | UMBRA-R | mail |  |
+| msg-08-05306 | /mail/msg-08-05306 | MSG-08-05306 | Seal Drill Held Without an OIA Observer | UMBRA-R | mail |  |
+| drill-procedure | /drill/procedure | OSC-DIR-0433 | Network Seal Drill: Order, Relay and Report | UMBRA-R | drill |  |
+| drill-site-card | /drill/site-card | OSC-DIR-0434 | Annex B: Site Action Card, Seal Drill (Personnel Shelters) | UMBRA-U | drill | t4 |
+
+### environ (6)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05611 | /mail/msg-08-05611 | MSG-08-05611 | CO2 Excursion Recorded | UMBRA-R | mail | t4 |
+| msg-08-05612 | /mail/msg-08-05612 | MSG-08-05612 | Filter Change Overdue | UMBRA-R | mail | t4 |
+| msg-08-05613 | /mail/msg-08-05613 | MSG-08-05613 | Seal Override on ECP-G08-1 | UMBRA-R | mail | t4 |
+| msg-08-05614 | /mail/msg-08-05614 | MSG-08-05614 | Re: Handover Log, CO2 Load Balance | UMBRA-R | mail | t4 |
+| env-g08-data | /environ/data-sheet | OSC-MEM-08-0171 | Air Revitalization Plant, GAMMA-08: Data Sheet | UMBRA-R | environ | t4 |
+| env-g08-sop | /environ/procedure | OSC-MEM-07-0262 | Environmental Control Panel ECP-G08-1: Operating Procedure | UMBRA-R | environ | t4 |
+
+### hoist (10)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-06231 | /mail/msg-08-06231 | MSG-08-06231 | Call to Restricted Landing Not Registered | TSSCI-OSC | mail |  |
+| msg-08-06232 | /mail/msg-08-06232 | MSG-08-06232 | Call to Restricted Landing Not Registered | TSSCI-OSC | mail |  |
+| msg-08-06233 | /mail/msg-08-06233 | MSG-08-06233 | Emergency Stop Applied from Your Workstation | TSSCI-OSC | mail |  |
+| msg-08-06234 | /mail/msg-08-06234 | MSG-08-06234 | Emergency Stop Applied from Your Workstation | TSSCI-OSC | mail |  |
+| msg-08-06235 | /mail/msg-08-06235 | MSG-08-06235 | Emergency Stop, Statement Required | TSSCI-OSC | mail |  |
+| msg-08-06236 | /mail/msg-08-06236 | MSG-08-06236 | Overload Recorded at Landing | TSSCI-OSC | mail |  |
+| msg-08-06237 | /mail/msg-08-06237 | MSG-08-06237 | Position Record Amended | TSSCI-OSC | mail |  |
+| msg-08-06238 | /mail/msg-08-06238 | MSG-08-06238 | Remote Emergency Stop Notified | TSSCI-OSC | mail |  |
+| hoist-procedure | /hoist/procedure | OSC-DIR-0466 | Operation of Shaft Hoists at ALPHA Sites | TSSCI-OSC | hoist |  |
+| hoist-shaft-data | /hoist/shaft-data | OSC-MEM-07-0851 | Hoist and Shaft Data, ALPHA Sites | UMBRA-C | hoist | T3 |
+
+### isolate (16)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05201 | /mail/msg-08-05201 | MSG-08-05201 | Manual Initiation at Your Workstation: Statement Required | UMBRA-C | mail |  |
+| msg-08-05202 | /mail/msg-08-05202 | MSG-08-05202 | Network Notice: Hub Circuits Down | TSSCI-OSC | mail |  |
+| msg-08-05203 | /mail/msg-08-05203 | MSG-08-05203 | Site External Circuits Out of Service | UMBRA-U | mail |  |
+| msg-08-05204 | /mail/msg-08-05204 | MSG-08-05204 | Network Notice: Second Isolation, Restoration by Certificate | TSSCI-OSC | mail |  |
+| msg-08-05205 | /mail/msg-08-05205 | MSG-08-05205 | Control HS-0001: Certifying Officer for Restoration | UMBRA-R | mail |  |
+| msg-08-05206 | /mail/msg-08-05206 | MSG-08-05206 | Second Initiation: Interview | UMBRA-C | mail |  |
+| msg-08-05207 | /mail/msg-08-05207 | MSG-08-05207 | Finding: Operation of Control HS-0001 | UMBRA-C | mail |  |
+| msg-08-05208 | /mail/msg-08-05208 | MSG-08-05208 | Review Assigned: Workstation A03-5-114 | UMBRA-C | mail |  |
+| msg-08-05209 | /mail/msg-08-05209 | MSG-08-05209 | Probation: Adverse Report Entered | TSSCI-OSC | mail |  |
+| msg-08-05210 | /mail/msg-08-05210 | MSG-08-05210 | Tamper Seal Broken: Control HS-0001 | UMBRA-C | mail |  |
+| msg-08-05211 | /mail/msg-08-05211 | MSG-08-05211 | Network Notice: Isolation Held | TSSCI-OSC | mail |  |
+| msg-08-05212 | /mail/msg-08-05212 | MSG-08-05212 | Site External Circuits: No Restoration Date | UMBRA-U | mail |  |
+| msg-08-05213 | /mail/msg-08-05213 | MSG-08-05213 | Circuit Restoration Certificate Approved | TSSCI-OSC | mail |  |
+| msg-08-05214 | /mail/msg-08-05214 | MSG-08-05214 | Circuit Restoration Certificate Returned | TSSCI-OSC | mail |  |
+| isolate-escalation | /isolate/escalation | OSC-MEM-07-0233 | Escalation Schedule, Control HS-0001 (Network Isolation, Manual Initiate) | UMBRA-R | isolate |  |
+| isolate-procedure | /isolate/procedure | OSC-DIR-0507 | Network Isolation, Manual Initiate (Control HS-0001) | UMBRA-R | isolate |  |
+
+### muster (6)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-04771 | /mail/msg-08-04771 | MSG-08-04771 | Muster Report, Personnel Unaccounted | UMBRA-R | mail |  |
+| msg-08-04772 | /mail/msg-08-04772 | MSG-08-04772 | Badge Reads Not on Posted Strength | UMBRA-R | mail |  |
+| msg-08-04773 | /mail/msg-08-04773 | MSG-08-04773 | Muster Close-Out Received With Discrepancies | UMBRA-R | mail |  |
+| msg-08-04774 | /mail/msg-08-04774 | MSG-08-04774 | Referral, Muster Close-Out With Discrepancies | UMBRA-R | mail |  |
+| muster-dir-0461 | /muster/procedure | OSC-DIR-0461 | Personnel Accountability by Badge-Reader Muster | UMBRA-R | muster |  |
+| muster-kb-0316 | /muster/operator-reference | KB-0316 | Muster Board Operator Reference | UMBRA-R | muster | t4 |
+
+### pa (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05741 | /mail/msg-08-05741 | MSG-08-05741 | Public Address Console, Zone Selection Refused | TSSCI-OSC | mail |  |
+| msg-08-05742 | /mail/msg-08-05742 | MSG-08-05742 | Public Address Call to Another Site Controller | TSSCI-OSC | mail |  |
+| msg-08-05743 | /mail/msg-08-05743 | MSG-08-05743 | Selective Call to a Tier 2 Level | TSSCI-OSC | mail |  |
+| msg-08-05744 | /mail/msg-08-05744 | MSG-08-05744 | Tone Test Outside the Test Window | TSSCI-OSC | mail |  |
+| msg-08-05745 | /mail/msg-08-05745 | MSG-08-05745 | Tones Heard Outside the Test Time | TSSCI-OSC | mail | t4 |
+| msg-08-05746 | /mail/msg-08-05746 | MSG-08-05746 | Life Safety Calls on the Public Address | TSSCI-OSC | mail | t4 |
+| dir-0458 | /pa/dir-0458 | OSC-DIR-0458 | Public Address and Emergency Broadcast at Staffed Facilities | TSSCI-OSC | pa |  |
+| kb-0057 | /pa/kb-0057 | KB-0057 | Public Address Console, Message Library and Tone Tests | TSSCI-OSC | pa | t4 |
+
+### patch (9)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-04931 | /mail/msg-08-04931 | MSG-08-04931 | Repatch Without Circuit Order | UMBRA-C | mail |  |
+| msg-08-04932 | /mail/msg-08-04932 | MSG-08-04932 | Circuit Test Failure Report | UMBRA-C | mail |  |
+| msg-08-04933 | /mail/msg-08-04933 | MSG-08-04933 | Call Record Withdrawn | UMBRA-C | mail |  |
+| msg-08-04934 | /mail/msg-08-04934 | MSG-08-04934 | Repatch Without Order Reported at a Hub Bay | UMBRA-C | mail |  |
+| msg-08-04935 | /mail/msg-08-04935 | MSG-08-04935 | Referral: Exchange Record Withdrawn | UMBRA-C | mail |  |
+| msg-08-04936 | /mail/msg-08-04936 | MSG-08-04936 | Maintenance Circuit M1: Fault Logged | TSSCI-OSC | mail | t4 |
+| patch-circuit-register | /patch/circuit-register | OSC-MEM-06-0291 | Hub Circuit Designation Register: Trunk Circuits (Revision 5) | UMBRA-C | patch |  |
+| patch-maintenance-circuit | /patch/maintenance-circuit | OSC-MEM-08-0152 | Site Maintenance Circuit: Weekly Line Check and Test | TSSCI-OSC | patch | t4 |
+| patch-operating-instructions | /patch/operating-instructions | OSC-MEM-07-1186 | Hub Circuit Patch Bays: Patching, Testing and Line Check Calls (Operating Instructions) | UMBRA-C | patch |  |
+
+### plant (8)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05731 | /mail/msg-08-05731 | MSG-08-05731 | Simulator Trip Recorded | UMBRA-C | mail |  |
+| msg-08-05732 | /mail/msg-08-05732 | MSG-08-05732 | Simulator Run Outside Limits | UMBRA-R | mail | t4 |
+| msg-08-05733 | /mail/msg-08-05733 | MSG-08-05733 | Live Plant Display: Control Attempt Recorded | UMBRA-C | mail |  |
+| msg-08-05734 | /mail/msg-08-05734 | MSG-08-05734 | Attempted Operation of RX-A02 Controls | UMBRA-C | mail |  |
+| msg-08-05735 | /mail/msg-08-05735 | MSG-08-05735 | Part-Task Trainer Trip Recorded | UMBRA-R | mail | t4 |
+| msg-08-05736 | /mail/msg-08-05736 | MSG-08-05736 | Simulator Trips at Your Station | UMBRA-R | mail | t4 |
+| plant-sim-card | /plant/sim-card | OSC-RSV-SIM-02 | Part-Task Trainer: Quick Reference | UMBRA-R | plant | t4 |
+| plant-sim-procedure | /plant/sim-procedure | OSC-RSV-SIM-01 | Part-Task Training Simulator: Operating Procedure | UMBRA-C | plant |  |
+
+### strike (6)
+
+| id | route | docNo | title | marking | app | access |
+|---|---|---|---|---|---|---|
+| msg-08-05961 | /mail/msg-08-05961 | MSG-08-05961 | Planning Register Entry: Own Installation | UMBRA-C | mail |  |
+| msg-08-05962 | /mail/msg-08-05962 | MSG-08-05962 | Review Query Raised on a Planning Register Entry | UMBRA-C | mail |  |
+| msg-08-05963 | /mail/msg-08-05963 | MSG-08-05963 | PM-3 Register: Entry by an Operator on Probation | UMBRA-C | mail |  |
+| msg-08-05964 | /mail/msg-08-05964 | MSG-08-05964 | PM-3 Egress Basis | UMBRA-C | mail |  |
+| strike-pm-3 | /strike/pm-3 | OSC-MEM-07-0312 | Planning Model PM-3: Method and Operating Notes | UMBRA-C | strike |  |
+| strike-register | /strike/register | OSC-MEM-08-0166 | PM-3 Planning Register: Entry, Withdrawal and Review | UMBRA-C | strike |  |
+
 ### help (12)
 
 | id | route | docNo | title | marking | app | access |
 |---|---|---|---|---|---|---|
-| system-glossary | /system/glossary | OSC-SYS-GLO | Glossary of Terms | TSSCI-OSC | system |  |
-| system-settings | /system/settings | OSC-SYS-SET | Workstation Settings | TSSCI-OSC | system |  |
+| system-glossary | /system/glossary | OSC-SYS-GLO | Glossary of Terms | TSSCI-OSC | system | t4; var: lifesupport |
+| system-settings | /system/settings | OSC-SYS-SET | Workstation Settings | TSSCI-OSC | system | t4 |
 | system-monitor | /system/monitor | OSC-SYS-MON | System Monitor: Link States and Services | TSSCI-OSC | system |  |
-| system-calendar | /system/calendar | OSC-SYS-CAL | Facility Calendar, MAY 2008 | TSSCI-OSC | system |  |
-| system-colophon | /system/colophon | OSC-SYS-COL | Colophon | TSSCI-OSC | system |  |
-| system-about | /system/about | OSC-SYS-ABT | About This Terminal | TSSCI-OSC | system |  |
-| kb-0001 | /system/kb/kb-0001 | KB-0001 | Getting Started with MERIDIAN 4.1.7 | TSSCI-OSC | system |  |
-| kb-0012 | /system/kb/kb-0012 | KB-0012 | Redaction Marks and Withholding Authorities | TSSCI-OSC | system |  |
-| kb-0019 | /system/kb/kb-0019 | KB-0019 | Printing, Cover Sheets and Print Release | TSSCI-OSC | system |  |
+| system-calendar | /system/calendar | OSC-SYS-CAL | Facility Calendar, MAY 2008 | TSSCI-OSC | system | t4; var: auditor, deputy, lifesupport |
+| system-colophon | /system/colophon | OSC-SYS-COL | Colophon | TSSCI-OSC | system | t4 |
+| system-about | /system/about | OSC-SYS-ABT | About This Terminal | TSSCI-OSC | system | t4; var: auditor, deputy, lifesupport |
+| kb-0001 | /system/kb/kb-0001 | KB-0001 | Getting Started with MERIDIAN 4.1.7 | TSSCI-OSC | system | t4 |
+| kb-0012 | /system/kb/kb-0012 | KB-0012 | Redaction Marks and Withholding Authorities | TSSCI-OSC | system | t4 |
+| kb-0019 | /system/kb/kb-0019 | KB-0019 | Printing, Cover Sheets and Print Release | TSSCI-OSC | system | t4 |
 | kb-0026 | /system/kb/kb-0026 | KB-0026 | Terminal: Documented Commands | TSSCI-OSC | system |  |
-| kb-0031 | /system/kb/kb-0031 | KB-0031 | Looking Up Work Orders from the Workstation | TSSCI-OSC | system |  |
+| kb-0031 | /system/kb/kb-0031 | KB-0031 | Looking Up Work Orders from the Workstation | TSSCI-OSC | system | var: lifesupport |
 | kb-0042 | /system/kb/kb-0042 | KB-0042 | Reading the Network Control Board | TSSCI-OSC | system |  |
 
-## Cross-reference graph summary
+## Account variants (38)
+
+| Account | Variant ids |
+|---|---|
+| lifesupport | system-about, system-calendar, dir-0128, dir-0156, dir-0189, f-104, f-114, fac-gamma-08, kb-0031, personnel-tier-4, registry-class-gamma, system-glossary |
+| deputy | system-about, system-calendar, transit-possession-08-044, dir-0233, dir-0395, f-118, f-126, f-131, fac-alpha-02, ledger-mem-07-0944, personnel-mem-08-0203, personnel-tier-2, transit-rolling-stock, transit-seg-04 |
+| auditor | assurance-oia-08-031, assurance-threat-04, council-inventory-scan, council-minutes-07-03, council-seat-07, dir-0378, f-160, personnel-mem-08-0187, system-about, system-calendar, transit-incident-08-017, transit-possession-08-044 |
+
+## Cross-reference graph summary (pass one, 240 pages)
 
 476 required cross-references across 240 pages; every target is a manifest docNo (or alias). Most-cited documents:
 

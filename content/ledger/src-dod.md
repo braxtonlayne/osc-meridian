@@ -14,6 +14,7 @@ summary: Defense-wide infrastructure appropriations, distributed across programm
 xrefs: [OSC-LDG-IDX, OSC-LDG-REG]
 distribution:
   - Comptroller file (CMP/ALPHA-01)
+  - "Continuity reader, fiscal-year totals only (Secretariat courier): Rep. John P. Murtha, Chairman, Subcommittee on Defense, House Committee on Appropriations"
 fields:
   Source code: DOD
   Source: Defense-wide infrastructure appropriations

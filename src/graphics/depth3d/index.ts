@@ -14,7 +14,7 @@ import { createChrome, type ViewImpl } from './chrome';
 import { DepthSection2D } from './DepthSection2D';
 import { buildSiteModel, type SiteModel } from './model';
 
-export { DepthSection2D, type DepthSection2DProps } from './DepthSection2D';
+export { DepthSection2D, SECTION_GUTTER_L, SECTION_PAD_B, SECTION_PAD_T, sectionTransform, type DepthSection2DProps } from './DepthSection2D';
 export { DepthViewer, type DepthViewerProps } from './DepthViewer';
 export { alphaSiteIds, buildSiteModel, isWithheld, type LevelModel, type SiteModel } from './model';
 

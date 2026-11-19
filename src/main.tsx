@@ -5,13 +5,16 @@
  *   3. fix the active account (pointer in localStorage) and its storage namespace
  *   4. render the shell (self-test panel, or a plain workspace after an account switch)
  *   5. in parallel: legacy key migration, canon (lazy chunk), session from the AccountDef,
- *      audit trail, window positions, mail/recent stores, cross-account traces
+ *      audit trail, window positions, mail/recent stores, cross-account traces, the
+ *      account's narrative, and the headless plant reconcilers (lazy chunk)
  *   6. self-test completes -> lock screen -> sign-in -> the URL's route opens as a window
  */
 import '@design/styles';
 import './shell/shell.css';
 import { render } from 'preact';
-import { docsService, followRouteRebuilds, loadCanon, loadRoutes } from '@shell/adapters';
+import { canonNow, docsService, followRouteRebuilds, loadCanon, loadRoutes } from '@shell/adapters';
+import { startReconcile } from '@shell/reconcile';
+import { zoneForState } from '@sim/time';
 import { initSession, satisfies } from '@core/session';
 import * as session from '@core/session';
 import { initAudit } from '@core/audit';
@@ -55,11 +58,17 @@ const ready = (async () => {
     compartments: def.compartments,
     roleTitle: def.roleTitle,
   });
+  // Site-local time follows the account's site (canon anchor state). ALPHA-02's location is
+  // withheld, so the deputy's zone is the documented MDT (docs/narrative-2/accounts.md).
+  const anchor = canonNow().full?.facilities.find((f) => f.id === def.site)?.anchor?.state;
+  session.siteZone.value = anchor ? zoneForState(anchor) : accountId === 'deputy' ? { abbr: 'MDT', offsetH: -6 } : zoneForState(null);
   await Promise.all([initAudit(), initWm(), initStores()]);
   await startTraceWatch();
-  // The pass-one narrative (login mail, segment 04, OIA consequences) is the analyst's.
-  // Other accounts' scripted queues arrive in wave 2B/2C.
-  if (accountId === 'analyst') await startNarrative();
+  // Per-account narrative: the analyst runs the pass-one engine unchanged; lifesupport, deputy
+  // and auditor run their login mail and triggered queues (src/narrative/accounts.ts).
+  await startNarrative(accountId);
+  // Headless plant reconcilers (lazy chunk); they run only while signed in.
+  startReconcile();
 })().catch((err: unknown) => {
   console.error('MERIDIAN initialisation', err);
 });

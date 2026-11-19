@@ -7,9 +7,12 @@
  *     source of truth shared with content, mail, the calendar and the graphics.
  *     Example: real 19 NOV 2026 14:30 local -> in-world 19 MAY 2008 14:30, and the
  *     same date on any other real day.
- *   - Site-local time for ALPHA-03 is US Eastern. Because the in-world date is
- *     always in May (daylight time), site-local is always UTC-4 and labelled EDT,
- *     whatever the visitor's real season.
+ *   - Site-local time is the signed-in account's site: US zone of the facility's anchor
+ *     state in canon (ALPHA-03 Kentucky and ALPHA-01 Virginia: EDT, UTC-4; GAMMA-08
+ *     Texas: CDT, UTC-5). ALPHA-02's anchor is withheld in the client canon, so its zone
+ *     is the documented one for the deputy's account (MDT, UTC-6; docs/narrative-2/accounts.md).
+ *     The in-world date is always in May, so the label is always the daylight-time one,
+ *     whatever the visitor's real season. Default before sign-in: EDT.
  *
  * PROBATION DAY RULE:
  *   Accounts not on probation (AccountDef.probationStart null) have probationDay 0;
@@ -57,10 +60,17 @@ export function zulu(now: Date = new Date()): string {
   return `${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}Z`;
 }
 
-/** Site-local (ALPHA-03, Eastern Daylight, UTC-4) "1030 EDT". */
-export function siteLocal(now: Date = new Date()): string {
-  const h = (now.getUTCHours() + 24 - 4) % 24;
-  return `${pad2(h)}${pad2(now.getUTCMinutes())} EDT`;
+/** Site-local zone of the signed-in account (see the rule above). */
+export interface SiteZone {
+  abbr: string;
+  offsetH: number;
+}
+export const siteZone = signal<SiteZone>({ abbr: 'EDT', offsetH: -4 });
+
+/** Site-local "1030 EDT" in the account's site zone (or `zone`). */
+export function siteLocal(now: Date = new Date(), zone: SiteZone = siteZone.peek()): string {
+  const h = (((now.getUTCHours() + zone.offsetH) % 24) + 24) % 24;
+  return `${pad2(h)}${pad2(now.getUTCMinutes())} ${zone.abbr}`;
 }
 
 export function probationDayFor(probationStartIso: string | null, now: Date = new Date()): number {

@@ -4,7 +4,7 @@ route: /strike/register
 app: strike
 family: strike
 template: memo
-docNo: OSC-MEM-08-0301
+docNo: OSC-MEM-08-0166
 title: "PM-3 Planning Register: Entry, Withdrawal and Review"
 marking: UMBRA-C
 originator: OCP/ALPHA-01

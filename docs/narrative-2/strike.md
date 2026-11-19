@@ -3,7 +3,7 @@
 ## Shape
 A planning toy for continuity exercises. Pick a point and one of seven generic yield steps; PM-3 reads every installation whose position the workstation holds against its hardening class and depth (canon `survivability`). Entries go to a shared, append-only planning register (shared key `strike`, `src/apps/strike/types.ts`). Every screen and printout says SIMPLIFIED PLANNING MODEL, NOT FOR ENGINEERING USE and carries the canon disclaimer.
 
-Documents: `/strike/pm-3` (OSC-MEM-07-0312, method and operating notes, rev 2, 12 MAR 2007) and `/strike/register` (OSC-MEM-08-0301, register procedure).
+Documents: `/strike/pm-3` (OSC-MEM-07-0312, method and operating notes, rev 2, 12 MAR 2007) and `/strike/register` (OSC-MEM-08-0166, register procedure).
 
 ## Per account
 | Account | What PM-3 does |

@@ -12,7 +12,7 @@ import * as session from './session';
 import { loadSync, saveSync, load, save, loadFrom, flush } from './persist';
 import * as accounts from './accounts';
 import { shared } from './shared';
-import { createTraces, processArrivals } from './traces';
+import { createTraces, inboundMailTraces, processArrivals, traceMsgNo, traceSubject } from './traces';
 import { hashOf, normalize, pushPath, replacePath } from './router';
 import { heldHits, isHeldEntry } from './search';
 import { readableByTier4 } from './docs';
@@ -92,10 +92,22 @@ export const mailState = {
   /** Delivery time and slot values per message (narrative engine). */
   meta: signal<Record<string, MailMeta>>({}),
 };
+/**
+ * Unread count for the taskbar and services.mail.unread: delivered messages not read, plus
+ * messages that arrived as traces (mail, finding, form.decided, notice) whose transfer number
+ * (MSG-08-8xxxx) has no mail.read line yet. Message Traffic counts the same way.
+ */
 const unread = computed(() => {
   const r = new Set(mailState.read.value);
-  return mailState.delivered.value.filter((id) => !r.has(id)).length;
+  const content = mailState.delivered.value.filter((id) => !r.has(id)).length;
+  const traceMail = inboundMailTraces(traces.mine.value, accounts.activeId.value).filter((t) => !r.has(traceMsgNo(t))).length;
+  return content + traceMail;
 });
+
+/** Replace `{token}` slots in a title with delivered values; an unfilled slot prints as a blank line. */
+export function fillSlots(text: string, slots: Record<string, string> | undefined): string {
+  return text.replace(/\{([A-Za-z]\w*)\}/g, (_m, k: string) => slots?.[k] ?? '________');
+}
 
 function persistMail(): void {
   save('mail', { delivered: mailState.delivered.peek(), read: mailState.read.peek(), meta: mailState.meta.peek() });
@@ -112,7 +124,7 @@ function deliverMail(msgId: string, opts: MailDeliverOptions = {}): void {
   if (opts.silent) return;
   cue('mail');
   const entry = byIdMap.get(msgId);
-  notify(entry ? `New message: ${entry.title}` : 'New message received.', { from: 'Message Traffic' });
+  notify(entry ? `New message: ${fillSlots(entry.title, opts.slots)}` : 'New message received.', { from: 'Message Traffic' });
 }
 
 export async function initStores(): Promise<void> {
@@ -557,6 +569,16 @@ async function readAudit(id: AccountId): Promise<AuditEntry[]> {
 
 const traces = createTraces(shared, () => accounts.activeId.peek(), () => session.inWorldIso());
 
+/** Forms' decision consumer (lazy: the Forms routing module is not part of the shell chunk). */
+async function runDecisions(): Promise<void> {
+  try {
+    const { applyDecisions } = await import('@apps/forms/decisions');
+    applyDecisions(services);
+  } catch (err) {
+    console.error('MERIDIAN decisions', err);
+  }
+}
+
 /**
  * Receive traces addressed to this account: once at sign-in (silent mail delivery)
  * and then live while signed in. Call after the audit trail and mail stores loaded.
@@ -575,9 +597,16 @@ export async function startTraceWatch(): Promise<void> {
       deliver: deliverMail,
       markSeen: (id) => traces.markSeen(id),
       silent: batch,
+      announce: (t) => {
+        cue('mail');
+        notify(`New message: ${traceSubject(t)}`, { from: 'Message Traffic' });
+      },
     });
+    const first = batch;
     batch = false;
     if (fresh.length) save('traces:arrived', [...arrived]);
+    // Decisions on forms this account filed apply at sign-in and on arrival, with no window open.
+    if (first || fresh.some((t) => t.kind === 'form.decided')) void runDecisions();
   };
   audit.subscribe((e) => {
     if (e.kind === 'login') {

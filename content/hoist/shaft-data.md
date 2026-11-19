@@ -4,7 +4,7 @@ route: /hoist/shaft-data
 app: hoist
 family: hoist
 template: memo
-docNo: OSC-MEM-07-1342
+docNo: OSC-MEM-07-0851
 title: Hoist and Shaft Data, ALPHA Sites
 marking: UMBRA-C
 originator: FE/ALPHA-02

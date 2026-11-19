@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AppProps, DocJson, RouteEntry, Trace } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
-import { tick } from '@core/session';
+import { siteZone, tick } from '@core/session';
 import { loadCanonT2 } from '@core/canon-release';
 import { applyDecisions } from '@apps/forms/decisions';
 import {
@@ -190,7 +190,7 @@ export default function App({ win, route }: AppProps) {
   // RIGHT_PANE_MIN_ROOT the pane moves under the list until the window widens.
   const pos = previewPos === 'right' && rootW < RIGHT_PANE_MIN_ROOT ? 'bottom' : previewPos;
   const [pane, setPane] = useState<'folders' | 'list' | 'message'>(route ? 'message' : 'list');
-  const [lastCheck, setLastCheck] = useState<string>(() => zuluLocal(new Date().toISOString()));
+  const [lastCheck, setLastCheck] = useState<string>(() => zuluLocal(new Date().toISOString(), siteZone.peek()));
   const seenCount = useRef(-1);
 
   /* ---------------- width -> handheld layout */
@@ -252,7 +252,7 @@ export default function App({ win, route }: AppProps) {
   useEffect(() => {
     if (seenCount.current >= 0 && arrivals > seenCount.current) {
       const n = arrivals - seenCount.current;
-      setStatus(`${n} new item${n === 1 ? '' : 's'} received ${zuluLocal(new Date().toISOString())}.`);
+      setStatus(`${n} new item${n === 1 ? '' : 's'} received ${zuluLocal(new Date().toISOString(), siteZone.peek())}.`);
     }
     seenCount.current = arrivals;
   }, [arrivals]);
@@ -591,7 +591,7 @@ export default function App({ win, route }: AppProps) {
     // traffic for another issued account's mailbox is delivered into that account
     for (const t of outgoingTraces(m, account, services.account.byEmail)) services.traces.post(t);
     setDraft(null);
-    setStatus(`Message dispatched to the message centre ${zuluLocal(new Date().toISOString())}. A copy is filed in Sent Items.`);
+    setStatus(`Message dispatched to the message centre ${zuluLocal(new Date().toISOString(), siteZone.peek())}. A copy is filed in Sent Items.`);
   };
 
   const returnReceipt = (r: Row) => {
@@ -614,7 +614,7 @@ export default function App({ win, route }: AppProps) {
   };
 
   const check = () => {
-    const t = zuluLocal(new Date().toISOString());
+    const t = zuluLocal(new Date().toISOString(), siteZone.peek());
     setLastCheck(t);
     const n = rows.filter((r) => r.unread).length;
     setStatus(`Mailbox checked ${t}. ${n ? `${n} unread item${n === 1 ? '' : 's'}.` : 'No unread items.'} Traffic is delivered as it is released by the message centre.`);
@@ -1186,7 +1186,7 @@ function MessagePane({ row, route, doc, delivery, dir, services, receiptPending,
     const html = isReport
       ? textToHtml(
           [
-            `Your message ${sentDocNo(s)} "${s.subject}" (${s.precedence}) was accepted by the message transfer system at ${zuluLocal(s.at)}.`,
+            `Your message ${sentDocNo(s)} "${s.subject}" (${s.precedence}) was accepted by the message transfer system at ${zuluLocal(s.at, siteZone.peek())}.`,
             lines
               .map((l) =>
                 l.outcome === 'delivered'

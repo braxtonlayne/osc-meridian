@@ -1,6 +1,6 @@
 # Seal Drill Coordinator: secrets and consequences (spoiler; not shipped)
 
-App `drill`, route `/drill`, documents `/drill/procedure` (OSC-DIR-0433) and `/drill/site-card` (OSC-DIR-0433-B, t4). Shared keys `drill` and `drill-register` (src/apps/drill/types.ts).
+App `drill`, route `/drill`, documents `/drill/procedure` (OSC-DIR-0433) and `/drill/site-card` (OSC-DIR-0434, t4). Shared keys `drill` and `drill-register` (src/apps/drill/types.ts).
 
 ## The drill
 

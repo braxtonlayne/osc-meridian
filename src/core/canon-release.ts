@@ -47,3 +47,13 @@ export const t2Path = {
   accountName: (accountId: string) => `accounts.${accountId}.name`,
   gammaDepth: (facilityId: string) => `facilities.${facilityId}.depthFt`,
 };
+
+/** Roster names in a CANON-T2 map, by personnel number (for @graphics/org `releasedNames`). */
+export function t2RosterNames(map: Record<string, string> | null | undefined): Record<string, string> | undefined {
+  if (!map) return undefined;
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(map)) {
+    if (k.startsWith('roster.') && k.endsWith('.name')) out[k.slice(7, -5)] = v;
+  }
+  return out;
+}

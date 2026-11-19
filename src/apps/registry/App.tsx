@@ -33,6 +33,7 @@ import { HOME_SITE, canon, className, facilityById, fmt, useRxAudit, useViewer }
 import { seedFor, useTelemetry } from './telemetry';
 import './registry.css';
 import { T4Home, t4Refused, useCanonT2 } from './acct';
+import { t2RosterNames } from '@core/canon-release';
 
 type HomeTab = 'register' | 'map' | 'document' | 'organisation';
 type Notice = { title: string; body: string; reference?: string; kind?: 'info' | 'warning' | 'error' };
@@ -390,6 +391,7 @@ function RegistryApp({ win, route }: AppProps) {
           <OrgChart
             root="COUNCIL"
             sessionTier={services.session.tier.value}
+            releasedNames={t2RosterNames(t2)}
             onSelectUnit={(u) => {
               if (facilityById.has(u)) openDossier(u);
               else if ((CLASS_IDS as readonly string[]).includes(u)) go(classRoute(u as ClassId));

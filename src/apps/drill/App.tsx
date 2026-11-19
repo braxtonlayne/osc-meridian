@@ -40,11 +40,11 @@ import { canon, dtg, frag, PHASE_WORD, SD, STATUS_WORD, zl } from './shared';
 import { DRILL_KEY, REGISTER_KEY, type DrillRecord, type DrillStateExt } from './types';
 import { LogView, MapView, MimicView, registerRows, RegisterView, SiteDetail, TimelineView, type LogRow } from './views';
 import './drill.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 type View = 'map' | 'mimic' | 'timeline' | 'log' | 'register' | 'site' | 'document';
 
 const ISOLATION_NONE: IsolationState = { level: 0, initiations: [], active: false, clearsAt: null };
-const isolatedAt = (s: IsolationState, now: number) => s.active && (s.clearsAt === null || s.clearsAt > now);
 
 interface Notice {
   title: string;

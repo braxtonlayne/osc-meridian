@@ -42,6 +42,7 @@ import {
 import { DocBody, RouteRefusal, useDoc, useT2Names } from './shared';
 import { PA_EMPTY, type PaRequest, type PaState } from './types';
 import './pa.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 type View = 'console' | 'log' | 'zones';
 const TITLE = 'Emergency Broadcast and Public Address';
@@ -115,7 +116,7 @@ export default function App({ win, route }: AppProps) {
     };
   }, []);
 
-  const isolated = iso.active && (iso.clearsAt == null || now < iso.clearsAt);
+  const isolated = isolatedAt(iso, now);
   const dSites = useMemo(() => drillSites(drill), [drill]);
   const drillHere = dSites.has(own);
   const testWindow = inTestWindow(new Date(now), IN_WORLD_DATE_ISO);
@@ -169,6 +170,12 @@ export default function App({ win, route }: AppProps) {
   function playTones(id: string | null) {
     const t = pa.tones.find((x) => x.id === id);
     if (!t) return;
+    // The muster (evacuation) and all-clear signals have their own synthesized cues.
+    const own: SoundCue | null = t.id === 'EVAC' ? 'evac' : t.id === 'CLEAR' ? 'allclear' : null;
+    if (own) {
+      services.sound.play(own);
+      return;
+    }
     let at = 0;
     for (const s of t.steps) {
       const cue = s.cue as SoundCue;

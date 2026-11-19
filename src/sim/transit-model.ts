@@ -19,6 +19,7 @@
 import type { CalendarEvent, FacilityId, NetworkId, RailSegment, TramNetwork } from '@core/canon-types';
 import type { DrillState, IsolationState } from '@core/contracts';
 import { seg04LogLine } from '@narrative/seg04';
+import { isolatedAt, latestInitiation } from '@apps/isolate/state';
 import { SEG04_LABEL, SEG04_NO, seg04BlockId, seg04Phase, type Seg04Window } from './seg04';
 import { hash32, hhmmLocal, hhmmZ, inWorldDateIso, inWorldDay, inWorldWeekday, parseZ, rng, utcDayStart, zAndLocal, zoneForState, type Zone } from './time';
 
@@ -875,9 +876,9 @@ export function wallOfInWorld(iso: string, now: number): number {
 /** The current isolation, if the network is isolated now: ref and wall-clock start. */
 export function isolationNow(plant: PlantInput, now: number): { ref: string; at: number } | null {
   const s = plant.isolation;
-  if (!s || !s.active || (s.clearsAt != null && now >= s.clearsAt)) return null;
-  const last = s.initiations[s.initiations.length - 1];
-  return { ref: last?.ref ?? 'ISOLATION', at: last ? wallOfInWorld(last.at, now) : now };
+  if (!isolatedAt(s, now)) return null;
+  const last = latestInitiation(s);
+  return { ref: last?.ref ?? 'ISOLATION', at: last ? (typeof last.ms === 'number' ? last.ms : wallOfInWorld(last.at, now)) : now };
 }
 
 /** The current seal drill, if it holds trains now (propagating or sealed). */

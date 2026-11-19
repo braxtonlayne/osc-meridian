@@ -10,6 +10,7 @@
 import { signal } from '@preact/signals';
 import type { ReadonlySignal, Signal } from '@preact/signals';
 import type { SharedStore } from './contracts';
+import { SHARED_VALIDATORS } from './shared-keys';
 
 export const SHARED_PREFIX = 'meridian:shared:';
 export const SHARED_CHANNEL = 'meridian-shared';
@@ -29,6 +30,8 @@ export interface SharedStoreOptions {
   channelName?: string;
   /** Listen for `storage` events on this target (default: window when present). */
   eventTarget?: EventTarget | null;
+  /** Per-key validate/migrate (default: SHARED_VALIDATORS in ./shared-keys). */
+  validators?: Record<string, (raw: unknown) => unknown>;
 }
 
 function defaultStorage(): Storage | null {
@@ -56,10 +59,20 @@ export function createSharedStore(opts: SharedStoreOptions = {}): SharedStoreHan
     return memory.get(key) ?? null;
   };
 
-  const parse = (raw: string | null): { ok: boolean; value: unknown } => {
+  const validators = opts.validators ?? SHARED_VALIDATORS;
+  /**
+   * Parse and validate a stored value. Anything unusable (bad JSON, wrong shape, a validator
+   * that throws) reads as absent, so the reader's fallback applies: bad stored state never
+   * reaches a reader in a shape that throws.
+   */
+  const parse = (raw: string | null, key?: string): { ok: boolean; value: unknown } => {
     if (raw == null) return { ok: false, value: undefined };
     try {
-      return { ok: true, value: JSON.parse(raw) as unknown };
+      const v = JSON.parse(raw) as unknown;
+      const fn = key !== undefined ? validators[key] : undefined;
+      if (!fn) return { ok: true, value: v };
+      const out = fn(v);
+      return out === undefined ? { ok: false, value: undefined } : { ok: true, value: out };
     } catch {
       return { ok: false, value: undefined };
     }
@@ -73,7 +86,7 @@ export function createSharedStore(opts: SharedStoreOptions = {}): SharedStoreHan
     raws.set(key, raw);
     const s = sigs.get(key);
     if (!s) return;
-    const p = parse(raw);
+    const p = parse(raw, key);
     s.value = p.ok ? p.value : fallbacks.get(key);
   };
 
@@ -108,7 +121,7 @@ export function createSharedStore(opts: SharedStoreOptions = {}): SharedStoreHan
       fallbacks.set(key, fallback);
       const raw = readRaw(key);
       raws.set(key, raw);
-      const p = parse(raw);
+      const p = parse(raw, key);
       s = signal<unknown>(p.ok ? p.value : fallback);
       sigs.set(key, s);
     }
@@ -125,8 +138,10 @@ export function createSharedStore(opts: SharedStoreOptions = {}): SharedStoreHan
     }
     raws.set(key, raw);
     const s = sigs.get(key);
-    if (s) s.value = JSON.parse(raw) as unknown;
-    else get(key, value);
+    if (s) {
+      const p = parse(raw, key);
+      s.value = p.ok ? p.value : fallbacks.get(key);
+    } else get(key, value);
     try {
       chan?.postMessage({ key, raw } satisfies Msg);
     } catch {
@@ -136,9 +151,9 @@ export function createSharedStore(opts: SharedStoreOptions = {}): SharedStoreHan
 
   function update<T>(key: string, fallback: T, fn: (prev: T) => T): void {
     // Read storage, not the signal: another tab may have written since our last event.
-    const p = parse(readRaw(key));
+    const p = parse(readRaw(key), key);
     const prev = (p.ok ? p.value : (sigs.get(key)?.peek() ?? fallback)) as T;
-    set(key, fn(prev));
+    set(key, fn(prev ?? fallback));
   }
 
   return {

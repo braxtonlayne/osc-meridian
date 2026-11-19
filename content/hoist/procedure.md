@@ -10,7 +10,7 @@ marking: TSSCI-OSC
 originator: FE/ALPHA-02
 revision: 3
 date: 2008-04-07
-xrefs: [OSC-DIR-0301, OSC-DIR-0412, OSC-DIR-0378, OSC-MEM-07-1342]
+xrefs: [OSC-DIR-0301, OSC-DIR-0412, OSC-DIR-0378, OSC-MEM-07-0851]
 summary: Facilities Engineering procedure for the personnel, freight and vehicle hoists and the emergency egress winders at the ALPHA sites, including remote display and calls from MERIDIAN workstations, interlocks, emergency stop, brake tests and loading.
 distribution:
   - Duty hoist drivers and hoist engineers, ALPHA-01 to ALPHA-05
@@ -37,7 +37,7 @@ revisions:
 
 ## Purpose
 
-This directive sets the rules for operating the shaft hoists at the ALPHA sites, from the winder house and from MERIDIAN workstations running Shaft Hoist Control. Hoist data is in :x[OSC-MEM-07-1342].
+This directive sets the rules for operating the shaft hoists at the ALPHA sites, from the winder house and from MERIDIAN workstations running Shaft Hoist Control. Hoist data is in :x[OSC-MEM-07-0851].
 
 ## Applicability
 
@@ -72,7 +72,7 @@ Tier 1 levels are not served by the shaft hoists. They are reached by escorted l
 
 ## Interlocks
 
-The drive will not run with the landing or cage gates open, with the load cell above the rated payload or the rated number of persons, while a brake test is in progress, or while the hoist is tripped. Rated loads are in :x[OSC-MEM-07-1342]. The onsetter reports the loading to the driver with the gates open; an overload holds the cage at the landing until it is unloaded, and is recorded.
+The drive will not run with the landing or cage gates open, with the load cell above the rated payload or the rated number of persons, while a brake test is in progress, or while the hoist is tripped. Rated loads are in :x[OSC-MEM-07-0851]. The onsetter reports the loading to the driver with the gates open; an overload holds the cage at the landing until it is unloaded, and is recorded.
 
 During a network seal drill the portal landing is sealed when the site begins to seal. Runs and calls to the portal landing are held until stand-down. Runs below the portal are not affected.
 
@@ -102,7 +102,7 @@ The Chief Engineer, Facilities Engineering, is the office of primary responsibil
 
 ## References
 
-(a) :x[OSC-MEM-07-1342], Hoist and Shaft Data, ALPHA Sites. (b) :x[OSC-DIR-0301], MERIDIAN Workstation Use and Accreditation. (c) :x[OSC-DIR-0412], Compartment Briefing Requirement and Handling of Compartmented Records. (d) :x[OSC-DIR-0378], Security Incidents, Self-Reporting and Inquiries.
+(a) :x[OSC-MEM-07-0851], Hoist and Shaft Data, ALPHA Sites. (b) :x[OSC-DIR-0301], MERIDIAN Workstation Use and Accreditation. (c) :x[OSC-DIR-0412], Compartment Briefing Requirement and Handling of Compartmented Records. (d) :x[OSC-DIR-0378], Security Incidents, Self-Reporting and Inquiries.
 
 ## Supersession
 

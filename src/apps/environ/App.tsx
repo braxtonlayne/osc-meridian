@@ -24,6 +24,7 @@ import { BalanceView, FiltrationView, HandoverView, PanelView, ScrubberView, Zon
 import { DocPane } from './DocPane';
 import { TILES, zl, type Role } from './common';
 import './environ.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 const TITLE = 'Environmental Control';
 const MARKING: MarkingId = 'UMBRA-R';
@@ -53,7 +54,7 @@ export default function App({ win, route }: AppProps) {
   const docRoute = route && route.route !== '/environ' ? route : null;
 
   const iso = services.shared.get<IsolationState | null>('isolation', null).value;
-  const isolated = !!iso && iso.active && (iso.clearsAt == null || Date.now() < iso.clearsAt);
+  const isolated = isolatedAt(iso, Date.now());
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

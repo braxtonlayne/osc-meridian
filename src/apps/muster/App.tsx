@@ -21,6 +21,7 @@ import { CloseoutView, NetworkBoard, PointBoard, SiteBoard, siteStatus, type Net
 import { DocPane, RouteRefusal, routeKey } from './docs';
 import { printCloseout } from './print';
 import './muster.css';
+import { isolatedAt } from '@apps/isolate/state';
 
 type View = 'network' | 'site' | 'point' | 'closeout';
 const HOME = '/muster';
@@ -59,7 +60,7 @@ export default function App({ win, route }: AppProps) {
   const drill = services.shared.get<DrillState | null>('drill', null).value;
   const iso = services.shared.get<IsolationState>('isolation', ISO_NONE).value;
   const now = tick.value;
-  const isolated = iso.active && (iso.clearsAt === null || iso.clearsAt > now);
+  const isolated = isolatedAt(iso, now);
   const homeSite = MUSTER_SITES.includes(acct.site) ? acct.site : MUSTER_SITES[0]!;
   const visibleSites = perms.network ? MUSTER_SITES : [homeSite];
   const offline = (s: string) => isolated && s !== acct.site;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { AccountDef, DrillState } from '@core/contracts';
+import type { DrillStateExt } from '@apps/drill/types';
 import {
   DC,
   DOORS_EMPTY,
@@ -95,13 +96,23 @@ describe('airlock', () => {
 });
 
 describe('seal drill', () => {
-  const drill = (phase: DrillState['phase'], endedAt: number | null = null): DrillState => ({
+  // The coordinator's shape (DrillStateExt, v: 1); applyDrill reads only the core fields.
+  const drill = (phase: DrillState['phase'], endedAt: number | null = null): DrillStateExt => ({
+    v: 1,
     id: 'SD-08-0519-01',
     orderedAt: 0,
     by: 'deputy',
     phase,
     sites: { 'GAMMA-08': { ordered: 0, acknowledged: 1000, sealed: null, status: 'sealing' } },
     endedAt,
+    msPerMin: 2000,
+    plan: {},
+    tickedAt: 0,
+    sealedAt: null,
+    isolatedAtOrder: false,
+    observer: null,
+    endedBy: null,
+    secondOfficer: '',
   });
   it('closes every open drill door at the site, at drill time, and is idempotent', () => {
     const r = applyDrill(DOORS_EMPTY, drill('propagating'), 2000)!;

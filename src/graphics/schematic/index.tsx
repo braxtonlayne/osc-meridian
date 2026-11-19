@@ -145,14 +145,16 @@ interface Geometry {
 
 const HEAD_H = 16;
 /** At or below this width the legend moves under the board (it would cover the track); transit passes 600 as its narrow minimum. */
-const LEGEND_BELOW_W = 640;
+export const LEGEND_BELOW_W = 640;
 /** Band reserved for the one-column legend: up to six rows of 13px plus its title. */
-const LEGEND_BAND_H = 6 * 13 + 22 + 8;
+export const LEGEND_BAND_H = 6 * 13 + 22 + 8;
 
-const pathD = (pts: readonly Pt[]) =>
-  pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
-
-function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
+/**
+ * Layout-to-pixel transform of a LineDiagram drawn at width x height: scale `s`, offset
+ * (`ox`, `oy`), whether the legend sits below, compact sizing, and the ALPHA hub box size.
+ * Overlays drawn over a LineDiagram (drill PortalMarks) use this to stay registered with it.
+ */
+export function schematicTransform(width: number, height: number) {
   const L = SCHEMATIC_LAYOUT;
   const legendBelow = width <= LEGEND_BELOW_W;
   const boardH = legendBelow ? Math.max(40, height - LEGEND_BAND_H) : height;
@@ -160,6 +162,17 @@ function buildGeometry(width: number, height: number, blockCounts?: Readonly<Rec
   const ox = Math.round((width - L.width * s) / 2);
   const oy = Math.round((boardH - L.height * s) / 2);
   const compact = s < 0.8;
+  const alphaW = compact ? Math.max(42, 96 * s) : Math.round(96 * s);
+  const alphaH = compact ? 17 : Math.round(36 * s);
+  return { s, ox, oy, legendBelow, compact, alphaW, alphaH };
+}
+
+const pathD = (pts: readonly Pt[]) =>
+  pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
+
+function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
+  const L = SCHEMATIC_LAYOUT;
+  const { s, ox, oy, legendBelow, compact } = schematicTransform(width, height);
   const sz: Sizes = compact
     ? { compact, s, railO: 4, railI: 2, tram: 1, tramOcc: 3, dark: 1, ch: 4.8, alphaW: Math.max(42, 96 * s), alphaH: 17, beta: 9, gamma: 5 }
     : { compact, s, railO: 8, railI: 4, tram: 2, tramOcc: 4, dark: 2, ch: 5.4, alphaW: Math.round(96 * s), alphaH: Math.round(36 * s), beta: 11, gamma: 7 };

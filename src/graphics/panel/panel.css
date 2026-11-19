@@ -327,6 +327,17 @@
 .pk-lamp {
   min-width: 56px;
 }
+/* Lit hot spot (filament glare) and, on small lamps, a darker unlit lens: on/off contrast at 22px. */
+.pk-lamp__hot {
+  fill: color-mix(in srgb, var(--pk-lens) 25%, var(--surface));
+}
+.pk-lamp--sm.is-dark {
+  --pk-cap: color-mix(in srgb, var(--pk-lens) 22%, var(--toner));
+}
+.pk-lamp--sm.is-lit .pk-lens {
+  stroke: color-mix(in srgb, var(--pk-lens) 60%, var(--surface));
+  stroke-width: 1.5;
+}
 .pk-pb.is-disabled .pk-cap-ink {
   fill: color-mix(in srgb, var(--pk-ink) 45%, var(--pk-cap));
 }

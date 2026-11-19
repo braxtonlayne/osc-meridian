@@ -20,7 +20,7 @@ export const APPS: AppDefinition[] = [
   { id: 'system', title: 'System Tools', icon: 'system', homeRoute: '/system', minSize: { w: 480, h: 360 }, defaultSize: { w: 760, h: 540 }, load: () => import('./system/App') },
   // Pass two: plant and operations set pieces (docs/SPEC-2.md §3).
   { id: 'strike', title: 'Hardened Site Survivability Estimator', icon: 'strike', homeRoute: '/strike', minSize: { w: 720, h: 460 }, defaultSize: { w: 1120, h: 680 }, load: () => import('./strike/App') },
-  { id: 'isolate', title: 'Network Isolation, Manual Initiate', icon: 'isolate', homeRoute: '/isolate', minSize: { w: 520, h: 420 }, defaultSize: { w: 760, h: 600 }, load: () => import('./isolate/App') },
+  { id: 'isolate', title: 'Network Isolation, Manual Initiate', icon: 'isolate', homeRoute: '/isolate', minSize: { w: 520, h: 420 }, defaultSize: { w: 960, h: 680 }, load: () => import('./isolate/App') },
   { id: 'drill', title: 'Seal Drill Coordinator', icon: 'drill', homeRoute: '/drill', minSize: { w: 720, h: 460 }, defaultSize: { w: 1120, h: 680 }, load: () => import('./drill/App') },
   { id: 'cctv', title: 'Facility Video', icon: 'cctv', homeRoute: '/cctv', minSize: { w: 640, h: 440 }, defaultSize: { w: 1040, h: 680 }, load: () => import('./cctv/App') },
   { id: 'plant', title: 'Reactor Plant Panel', icon: 'plant', homeRoute: '/plant', minSize: { w: 760, h: 500 }, defaultSize: { w: 1180, h: 700 }, load: () => import('./plant/App') },

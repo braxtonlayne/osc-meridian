@@ -33,8 +33,16 @@ const SEG04_HUB = 'ALPHA-05';
  * per hub; during re-key the link is reported DEGRADED. Otherwise NOMINAL.
  * While the segment 04 movement is running (narrative engine, start..end) the
  * ALPHA-05 link reports BUSY: the hub is carrying the unbooked movement's traffic.
- * While the network is isolated (shared key `isolation`) every remote hub is DOWN.
+ * While the network is isolated (shared key `isolation`) every remote hub is DOWN. Otherwise a
+ * direct hub route that the patch panel reports DOWN or DEGRADED (shared key `patch`, `links`,
+ * keyed "A|B" sorted; patching and test faults only) shows that state and note.
  */
+interface PatchLink {
+  state?: unknown;
+  note?: unknown;
+}
+const patchShared = services.shared.get<{ links?: Record<string, PatchLink> } | null>('patch', null);
+
 export function hubLinks(now: number): { id: string; state: LinkState; note: string }[] {
   const minute = new Date(now).getUTCMinutes();
   const ev = seg04.value;
@@ -42,6 +50,11 @@ export function hubLinks(now: number): { id: string; state: LinkState; note: str
   const iso = isolation.value;
   const isolated = isolatedAt(iso, now);
   const isoRef = latestInitiation(iso)?.ref;
+  const plinks = patchShared.value?.links;
+  const patched = (id: string): PatchLink | undefined => {
+    const l = plinks && typeof plinks === 'object' ? plinks[[session.site.value, id].sort().join('|')] : undefined;
+    return l && typeof l === 'object' ? l : undefined;
+  };
   const hubs = canonNow()
     .facilities.filter((f) => f.class === 'ALPHA')
     .map((f) => f.id)
@@ -49,9 +62,13 @@ export function hubLinks(now: number): { id: string; state: LinkState; note: str
   return hubs.map((id, i) => {
     if (id === session.site.value) return { id, state: 'LOCAL' as const, note: 'This site' };
     if (isolated) return { id, state: 'DOWN' as const, note: `Hub circuit down; network isolated${isoRef ? ` by manual initiate ${isoRef}` : ''}` };
+    const p = patched(id);
+    const pnote = typeof p?.note === 'string' && p.note ? p.note : null;
+    if (p?.state === 'DOWN') return { id, state: 'DOWN' as const, note: pnote ?? 'Hub circuit down; data bearer out of service' };
     if (segActive && id === SEG04_HUB) return { id, state: 'BUSY' as const, note: 'Link saturated; segment 04 movement traffic. Controlled mail queued' };
     const start = (i * 13 + 7) % 60;
     const inRekey = (minute - start + 60) % 60 < 3;
+    if (p?.state === 'DEGRADED') return { id, state: 'DEGRADED' as const, note: pnote ?? 'Circuit fault on the route; traffic queued' };
     return inRekey
       ? { id, state: 'DEGRADED' as const, note: 'QKD re-key in progress; traffic queued' }
       : { id, state: 'NOMINAL' as const, note: 'Link up; key current' };
@@ -73,10 +90,12 @@ export function sessionElapsed(now: number): string {
   return `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
 }
 
+const ZONE_NAMES: Record<string, string> = { EDT: 'Eastern', CDT: 'Central', MDT: 'Mountain', MST: 'Mountain', PDT: 'Pacific' };
+
 function Clock() {
   const now = new Date(session.tick.value);
   return (
-    <div class="tray-clock" title={`In-world date ${session.formatInWorldDate(now)}. Site-local time is ALPHA-03 (Eastern).`}>
+    <div class="tray-clock" title={`In-world date ${session.formatInWorldDate(now)}. Site-local time is ${session.site.value} (${ZONE_NAMES[session.siteZone.value.abbr] ?? session.siteZone.value.abbr}).`}>
       <span class="mono">{session.zulu(now)}</span>
       <span class="mono tray-clock-local">({session.siteLocal(now)})</span>
       <span class="tray-clock-date">{session.formatInWorldDate(now)}</span>
@@ -91,7 +110,8 @@ export function SessionPanel() {
   const comps = session.compartments.value;
   const tier = session.tier.value;
   const acting = session.actingTier2.value;
-  const div = c.divisions.find((d) => d.id === session.divisionId.value)?.name ?? session.divisionId.value;
+  // CMD (a facility's command section) is not a canon division.
+  const div = c.divisions.find((d) => d.id === session.divisionId.value)?.name ?? (session.divisionId.value === 'CMD' ? 'Facility Command' : session.divisionId.value);
   return (
     <table class="session-panel">
       <tbody>

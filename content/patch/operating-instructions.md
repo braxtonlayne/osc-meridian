@@ -11,7 +11,7 @@ originator: CMS/ALPHA-02
 revision: 2
 date: 2008-02-18
 summary: Network Operations instructions for the hub circuit patch bays operated from MERIDIAN positions. Circuit classes, who may patch, the busy lamp rule, repatches without a circuit order, tests and limits, monitoring, line check calls and conduct while the network is isolated.
-xrefs: [OSC-DIR-0447, OSC-ASR-COMM, OSC-DIR-0378, OSC-MEM-08-0244]
+xrefs: [OSC-DIR-0447, OSC-ASR-COMM, OSC-DIR-0378, OSC-MEM-06-0291]
 numbered: false
 distribution:
   - Network Operations section, CMS/ALPHA-02
@@ -29,13 +29,13 @@ subject: "Hub Circuit Patch Bays: Patching, Testing and Line Check Calls"
 references:
   - "OSC-DIR-0447, Telephones, Mail Addressing and the Key Distribution Network"
   - "OSC-ASR-COMM, Communications Security Protocols"
-  - "OSC-MEM-08-0244, Hub Circuit Designation Register"
+  - "OSC-MEM-06-0291, Hub Circuit Designation Register"
 signature: { name: "Network Operations", title: "Watch Supervisor, CMS/ALPHA-02" }
 ---
 
 **1. The bays.** Each hub has one voice-frequency and data patch bay, designated HCP followed by the short form of the hub (HCP-A01 to HCP-A05). The bay is worked from the Hub Circuit Patch Panel at a MERIDIAN position; the cords are placed by the bay's remote patching unit, not by hand. Every circuit that terminates at the hub appears on two jacks: LINE, towards the cable, and EQPT, towards the site switch or multiplexer. With no cord in either jack the two are connected inside the bay (normal-through). A cord in either jack breaks the normal. Each circuit has a designation strip and a busy lamp. Four utility jacks sit on the bottom strip: TEST SET, OPR POSN (operator position), MONITOR and LOOP PLUG.
 
-**2. Circuit classes.** Circuits are designated in the register :x[OSC-MEM-08-0244].
+**2. Circuit classes.** Circuits are designated in the register :x[OSC-MEM-06-0291].
 
 | Class | Designation | On each route | Carried on |
 |---|---|---|---|

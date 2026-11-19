@@ -4,7 +4,7 @@ route: /environ/procedure
 app: environ
 family: environ
 template: record
-docNo: OSC-MEM-08-0164
+docNo: OSC-MEM-07-0262
 title: "Environmental Control Panel ECP-G08-1: Operating Procedure"
 marking: UMBRA-R
 originator: FE/GAMMA-08

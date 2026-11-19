@@ -7,7 +7,7 @@
  * The board transform is the one LineDiagram uses (uniform scale to fit, centred, legend band
  * under the board at or below 640 px wide); SCHEMATIC_LAYOUT gives the node positions.
  */
-import { SCHEMATIC_LAYOUT } from '@graphics/schematic';
+import { SCHEMATIC_LAYOUT, schematicTransform } from '@graphics/schematic';
 import type { GanttStatus } from './Gantt';
 import './drill-graphics.css';
 
@@ -27,19 +27,9 @@ export interface PortalMarksProps {
   selected?: string | null;
 }
 
-/** Same constants as LineDiagram's buildGeometry (schematic/index.tsx). */
-const LEGEND_BELOW_W = 640;
-const LEGEND_BAND_H = 6 * 13 + 22 + 8;
-
+/** LineDiagram's own layout-to-pixel transform (schematic/index.tsx), so the marks stay registered. */
 export function boardTransform(width: number, height: number) {
-  const L = SCHEMATIC_LAYOUT;
-  const boardH = width <= LEGEND_BELOW_W ? Math.max(40, height - LEGEND_BAND_H) : height;
-  const s = Math.max(0.2, Math.min(width / L.width, boardH / L.height));
-  const ox = Math.round((width - L.width * s) / 2);
-  const oy = Math.round((boardH - L.height * s) / 2);
-  const compact = s < 0.8;
-  const alphaW = compact ? Math.max(42, 96 * s) : Math.round(96 * s);
-  const alphaH = compact ? 17 : Math.round(36 * s);
+  const { s, ox, oy, compact, alphaW, alphaH } = schematicTransform(width, height);
   return { s, ox, oy, compact, alphaW, alphaH };
 }
 

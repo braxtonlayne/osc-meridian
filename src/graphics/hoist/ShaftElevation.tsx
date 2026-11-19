@@ -4,13 +4,11 @@
  * cage at its live depth, and a tick at every landing the selected hoist serves.
  *
  * The overlay is a second SVG with the same viewBox, placed exactly over the elevation. Its
- * coordinate transform repeats the one in DepthSection2D (margins, fit, centring); a unit test
- * pins the two together through `sectionTransform`.
+ * coordinate transform is DepthSection2D's own (`sectionTransform`, exported by depth3d).
  */
 import type { JSX } from 'preact';
-import { DepthSection2D, buildSiteModel } from '@graphics/depth3d';
+import { DepthSection2D, buildSiteModel, sectionTransform } from '@graphics/depth3d';
 import { PLAN } from '@graphics/depth3d/model';
-import type { SiteModel } from '@graphics/depth3d/model';
 import './hoist-graphics.css';
 
 export interface ElevationCage {
@@ -36,20 +34,8 @@ export interface ShaftElevationProps {
   height?: number;
 }
 
-/** The x/y transform DepthSection2D uses for a drawing of `width` x `height`. */
-export function sectionTransform(m: SiteModel, width: number, height: number): { X: (x: number) => number; Y: (y: number) => number; s: number } {
-  const gL = 68;
-  const gR = Math.min(256, Math.round(width * 0.36));
-  const padT = 14;
-  const padB = 58;
-  const availW = Math.max(60, width - gL - gR);
-  const availH = Math.max(60, height - padT - padB);
-  const b = m.bounds;
-  const s = Math.min(availH / (b.y1 - b.y0), availW / (b.x1 - b.x0));
-  const cx = (b.x0 + b.x1) / 2;
-  const cy = (b.y0 + b.y1) / 2;
-  return { X: (x) => gL + availW / 2 + (x - cx) * s, Y: (y) => padT + availH / 2 - (y - cy) * s, s };
-}
+/** The x/y transform DepthSection2D uses (exported by depth3d; re-exported here for callers). */
+export { sectionTransform };
 
 export function ShaftElevation({ facilityId, tier, cages, selectedLevel = null, onSelectLevel, width = 520, height = 600 }: ShaftElevationProps): JSX.Element {
   const m = buildSiteModel(facilityId);

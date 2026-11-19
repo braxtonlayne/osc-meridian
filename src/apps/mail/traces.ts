@@ -12,6 +12,7 @@
  */
 import type { AccountDef, AccountId, Trace } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
+import { traceMsgNo } from '@core/traces';
 import { decisionLine } from '@apps/forms/routing';
 import { dtgFromIso, normPrecedence, type Outgoing, type Precedence } from './model';
 
@@ -27,12 +28,8 @@ export function inboundMailTraces(mine: readonly Trace[], me: AccountId): Trace[
   return mine.filter((t) => isMailTrace(t) && t.from !== me && (t.to === me || t.to === 'all'));
 }
 
-/** In-world message number the transfer system gives a trace: "MSG-08-80007" (series 8xxxx). */
-export function traceMsgNo(t: Pick<Trace, 'id' | 'at'>): string {
-  const seq = Number(/(\d+)$/.exec(t.id)?.[1] ?? 0);
-  const yy = /^\d{2}(\d{2})/.exec(t.at)?.[1] ?? '08';
-  return `MSG-${yy}-${String(80000 + (seq % 20000)).padStart(5, '0')}`;
-}
+/** In-world message number the transfer system gives a trace: "MSG-08-80007" (series 8xxxx); core counts unread with it too. */
+export { traceMsgNo };
 
 const list = (v: string | undefined) => (v ? v.split(/[;,]/).map((x) => x.trim()).filter(Boolean) : []);
 

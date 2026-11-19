@@ -38,6 +38,36 @@ export function addressedTo(t: Trace, me: AccountId): boolean {
   return t.to === me || t.to === 'all';
 }
 
+/** Trace kinds Message Traffic shows as delivered messages (src/apps/mail/traces.ts). */
+export const MAIL_TRACE_KINDS: readonly Trace['kind'][] = ['mail', 'finding', 'form.decided', 'notice'];
+
+/** Traces this account receives as messages: addressed here (or to all), not posted by itself. */
+export function inboundMailTraces(mine: readonly Trace[], me: AccountId): Trace[] {
+  return mine.filter((t) => MAIL_TRACE_KINDS.includes(t.kind) && t.from !== me && addressedTo(t, me));
+}
+
+/** In-world message number the transfer system gives a trace: "MSG-08-80007" (series 8xxxx). */
+export function traceMsgNo(t: Pick<Trace, 'id' | 'at'>): string {
+  const seq = Number(/(\d+)$/.exec(t.id)?.[1] ?? 0);
+  const yy = /^\d{2}(\d{2})/.exec(t.at)?.[1] ?? '08';
+  return `MSG-${yy}-${String(80000 + (seq % 20000)).padStart(5, '0')}`;
+}
+
+/** Subject line of a message trace as Message Traffic shows it (toasts use the same words). */
+export function traceSubject(t: Trace): string {
+  const d = t.data ?? {};
+  switch (t.kind) {
+    case 'mail':
+      return d.subject || t.subject;
+    case 'finding':
+      return `Finding ${d.ref ?? t.subject}`;
+    case 'form.decided':
+      return `Decision on ${d.receipt ?? t.subject}`;
+    default:
+      return t.subject;
+  }
+}
+
 export function createTraces(store: SharedStore, me: () => AccountId, nowIso: () => string): TracesApi {
   const all = store.get<Trace[]>(TRACES_KEY, []);
   const mine = computed(() => {
@@ -96,6 +126,8 @@ export interface ArrivalContext {
   markSeen(id: string): void;
   /** Sign-in batch: deliver without toast or sound. */
   silent: boolean;
+  /** A message trace (mail, finding, decision, notice) arrived live: toast it (optional). */
+  announce?(t: Trace): void;
 }
 
 /**
@@ -115,9 +147,11 @@ export function processArrivals(mine: readonly Trace[], ctx: ArrivalContext): Tr
     if (t.msgId) data.msgId = t.msgId;
     ctx.log('trace', t.id, arrivalDetail(t, from, from ? ctx.opShort(from) : t.from), data);
     if (t.kind === 'mail.deliver' && t.msgId) {
-      if (!(t.seenBy ?? []).includes(ctx.me)) ctx.deliver(t.msgId, ctx.silent ? { silent: true } : {});
+      // The trace's data travels as the message's slots ({date}, {bay}, ...).
+      const slots = t.data && Object.keys(t.data).length ? { ...t.data } : undefined;
+      if (!(t.seenBy ?? []).includes(ctx.me)) ctx.deliver(t.msgId, { ...(ctx.silent ? { silent: true } : {}), ...(slots ? { slots } : {}) });
       ctx.markSeen(t.id);
-    }
+    } else if (!ctx.silent && MAIL_TRACE_KINDS.includes(t.kind)) ctx.announce?.(t);
   }
   return fresh;
 }

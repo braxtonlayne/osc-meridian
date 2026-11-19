@@ -71,13 +71,15 @@ export function Lamp({ legend, lit, color = 'white', size = 'md', showState = fa
   const c = d / 2;
   const word = lit ? (words?.on ?? 'ON') : (words?.off ?? 'OFF');
   return (
-    <div class={cx('pk-ctl', 'pk-lamp', `pk-lens--${color}`, lit ? 'is-lit' : 'is-dark')} role="img" aria-label={`${legendText(legend)}: ${word}`}>
+    <div class={cx('pk-ctl', 'pk-lamp', `pk-lamp--${size}`, `pk-lens--${color}`, lit ? 'is-lit' : 'is-dark')} role="img" aria-label={`${legendText(legend)}: ${word}`}>
       {tag ? <span class="pk-tag">{tag}</span> : null}
       <svg width={d} height={d} viewBox={`0 0 ${d} ${d}`} aria-hidden="true" class="pk-lamp__svg">
         <circle cx={c} cy={c} r={c - 0.5} class="pk-f-bezel pk-s-outer" />
         <circle cx={c} cy={c} r={c - 3} class="pk-f-face pk-s-sh" />
         <path d={arc(c, c, c - 3, 45, 225)} class="pk-s-hi pk-nofill" />
-        <circle cx={c} cy={c} r={c - 5.5} class="pk-lens pk-s-dark" />
+        {/* Small lamps: a wider lens and a lit hot spot, so on and off read at a glance (and in screenshots). */}
+        <circle cx={c} cy={c} r={size === 'sm' ? c - 4 : c - 5.5} class="pk-lens pk-s-dark" />
+        {lit ? <circle cx={c - d * 0.09} cy={c - d * 0.09} r={Math.max(1.5, d * 0.08)} class="pk-lamp__hot" /> : null}
       </svg>
       <Plate text={legend} size="sm" />
       {showState ? <span class="pk-state-word">{word}</span> : null}

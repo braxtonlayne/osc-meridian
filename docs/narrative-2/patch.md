@@ -2,7 +2,7 @@
 
 ## The secret: T04-SP1, the segment 04 pair that is not open
 
-The register (OSC-MEM-08-0244, note 3) says the two segment 04 pairs, T04-SP1 and T04-SP2, were laid with the guideway, are not assigned, and "are open at both ends". The operating instructions (OSC-MEM-07-1186 para 6) say a test on an unassigned spare returns "open circuit, no termination".
+The register (OSC-MEM-06-0291, note 3) says the two segment 04 pairs, T04-SP1 and T04-SP2, were laid with the guideway, are not assigned, and "are open at both ends". The operating instructions (OSC-MEM-07-1186 para 6) say a test on an unassigned spare returns "open circuit, no termination".
 
 T04-SP2 behaves as documented. T04-SP1 does not:
 
@@ -38,7 +38,7 @@ Seeded faults that give a FAIL to find: T05-V2 noise (ALPHA-03 and ALPHA-05), T0
 - **analyst (T3, ALPHA-03):** operates HCP-A03: tests, monitors, calls, site patches. Trunk and network repatches go in after a confirm, tagged NO ORDER and reported. Views the other four bays; network circuits at other bays are withheld (strip masked).
 - **deputy (T2, ALPHA-02):** operates HCP-A02 fully. Repatches carry the order CDR-A02/date. Views the other bays with network circuits shown.
 - **auditor (T3, OIA, ALPHA-01):** monitor cords at any bay. Every other cord is refused (para 7).
-- **lifesupport (T4, GAMMA-08):** sees only the GAMMA-08 terminal block (TEST SET and OPR POSN, no other utilities). May test and call G08-M1 (ringdown to "Maintenance Control."). Everything else is refused with OSC-MEM-08-0252. Help shows only that document.
+- **lifesupport (T4, GAMMA-08):** sees only the GAMMA-08 terminal block (TEST SET and OPR POSN, no other utilities). May test and call G08-M1 (ringdown to "Maintenance Control."). Everything else is refused with OSC-MEM-08-0152. Help shows only that document.
 
 ## Shared key `patch`
 

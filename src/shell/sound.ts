@@ -267,5 +267,36 @@ export function playCue(cue: SoundCue): void {
       click(c, t, 0.3, 5, 4200, 1.8);
       click(c, t + 0.022, 0.12, 4, 2400, 1.2);
       break;
+    case 'ringback':
+      // Ringback heard by the caller: 440 + 480 Hz, one ring burst (the caller sets the cadence).
+      held(c, 440, t, 1.6, 'sine', 0.03);
+      held(c, 480, t, 1.6, 'sine', 0.03);
+      break;
+    case 'allclear':
+      // All-clear: steady 700 Hz horn, 4 s, through a speaker-horn band limit.
+      held(c, 700, t, 4, 'sawtooth', 0.025, c.destination, 2200);
+      held(c, 1400, t, 4, 'sine', 0.008);
+      break;
+    case 'evac':
+      // Evacuation (muster) signal: rising and falling warble, 600-1100 Hz, 8 s.
+      for (let i = 0; i < 8; i++) {
+        const o = c.createOscillator();
+        o.type = 'square';
+        o.frequency.setValueAtTime(600, t + i);
+        o.frequency.linearRampToValueAtTime(1100, t + i + 0.5);
+        o.frequency.linearRampToValueAtTime(600, t + i + 1);
+        const lp = c.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 2400;
+        const g = c.createGain();
+        g.gain.setValueAtTime(0, t + i);
+        g.gain.linearRampToValueAtTime(0.025, t + i + 0.03);
+        g.gain.setValueAtTime(0.025, t + i + 0.97);
+        g.gain.linearRampToValueAtTime(0, t + i + 1);
+        o.connect(lp).connect(g).connect(c.destination);
+        o.start(t + i);
+        o.stop(t + i + 1.05);
+      }
+      break;
   }
 }

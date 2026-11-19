@@ -13,6 +13,7 @@ import type { AccountDef, DrillState, IsolationState } from '@core/contracts';
 import type { Canon, ClassId, FacilityId, TierNo } from '@core/canon-types';
 import type { PaCanon, PaMessage, PaToneId } from '@core/canon-apps/pa';
 import type { PaOutcome, PaRequest, PaState, PaStatus } from './types';
+import { clearedAt } from '@apps/isolate/state';
 
 export const canon = canonJson as unknown as Canon;
 export const pa = canon.apps.pa as PaCanon;
@@ -506,12 +507,16 @@ export function autoBroadcasts(drill: DrillState | null, iso: IsolationState | n
   }
   if (iso) {
     const n = iso.initiations.length;
+    const cleared = clearedAt(iso, now);
     iso.initiations.forEach((i, idx) => {
-      const at = wallFromInWorld(i.at, now);
+      const ms = (i as { ms?: unknown }).ms;
+      const at = typeof ms === 'number' ? ms : wallFromInWorld(i.at, now);
       if (at == null) return;
       mk(at, '35', ['NET-ALL'], `iso:${i.ref}`, i.ref, 'isolation', 'NETWORK');
       const latest = idx === n - 1;
-      if (latest && iso.clearsAt != null && iso.clearsAt <= now) mk(Math.max(iso.clearsAt, at + 1), '36', ['NET-ALL'], `iso:${i.ref}:restored`, i.ref, 'isolation', 'NETWORK');
+      // Restored (36) at the wall-clock clear time (isolate's clearedAt: clearsAt or a restoration),
+      // or, for an old value with no clear time, when a reader saw `active` go false.
+      if (latest && cleared != null && cleared <= now) mk(Math.max(cleared, at + 1), '36', ['NET-ALL'], `iso:${i.ref}:restored`, i.ref, 'isolation', 'NETWORK');
       else if (latest && !iso.active && lastSeen.isolationActive) mk(Math.max(now, at + 1), '36', ['NET-ALL'], `iso:${i.ref}:restored`, i.ref, 'isolation', 'NETWORK');
     });
   }

@@ -6,7 +6,7 @@ Owner: canon agent C2. Data file: `content/canon/extended-c.json`, merged by `sc
 
 | Key | Shape | Count | Where it comes from |
 |---|---|---|---|
-| `roster` (additions) | `Person[]`, merged by `pn` | 3 | extended-c.json |
+| `roster` (additions) | `Person[]`, merged by `pn` | 4 (Ashcombe, Vance, Voss; Carrow added by CT2 for the Principal Desk) | extended-c.json |
 | `accounts` | `AccountDef[]` (contracts.ts) | 4 | extended-c.json |
 | `survivability` | `Survivability` | 4 hardening classes, 7 contours, 7 yields, 35 sites | extended-c.json |
 | `sealDrill` | `SealDrill` | 3 class timings, 35-step `sequence` | timings in extended-c.json; `sequence` computed |
@@ -87,3 +87,26 @@ Each site's points have an `assigned` count (posted staff assigned to that point
 The client canon sanitiser covers everything new: the three roster additions go through the existing roster rules (the deputy's name and address become `T2` sentinels); accounts and plant data contain no restricted value (a test checks they reach the client unchanged and sentinel-free; a cross-check fails the merge if an account string contains a Tier 1 or 2 name or surname).
 
 canon-merge writes `public/data/releases/<releaseFileName('CANON-T2')>.json` (currently `50210e11796867ab.json`), the encoded `{ "<dot path>": "<value>" }` of every value the client canon withholds under `T2` (roster names and addresses, Tier 2 level names and notes, GAMMA cover stories outside the home network, Tier 2 reserve labels, texts and values), plus GAMMA depths of record and `accounts.deputy.name` / `accounts.deputy.rosterEmail`. Tier 1 and compartment-keyed values are never written. `src/core/canon-release.ts` `loadCanonT2()` fetches and decodes it; call it only when the session satisfies T2. Like the document releases it is obfuscated, not secret.
+
+### App fragments (`canon.apps`, wave 2B)
+
+Each set-piece app keeps its own numbers in `content/canon/apps/<appId>.json` (schema `src/core/canon-apps/<appId>.ts`), merged into `canon.apps[<appId>]` and read by the app as `canon.apps.<appId>`. Fragments may only add app-local figures; anything that touches the shared world (facilities, doors, cameras, hoists, muster points, seal timings, accounts) comes from the keys above. Document numbers below follow the scheme in `docs/canon/extended-a.md` (audited and renumbered in wave 2C by I2; see the numbering notes there).
+
+| App | Fragment keys (summary) | Documents (content/<appId>/) | Mail (MSG-08-, content/mail/<appId>/) |
+|---|---|---|---|
+| strike | `caveat`, yield and listing ranges, register prefix and show limit, DELTA and position withholding, refusals, messages, gazetteer | OSC-MEM-07-0312 (PM-3 method), OSC-MEM-08-0166 (planning register) | 05961 to 05964 |
+| isolate | `panel` (cover, hold), `levels` (escalation 1 to 5), `seals`, `outcomeMail`, `archived`, `counter` | OSC-DIR-0507 (procedure), OSC-MEM-07-0233 (escalation schedule) | 05201 to 05214 |
+| drill | drill id prefix, tick, hold, register cap, order position, completion rule, drilled sites, calendar holds, order wire, history, mail | OSC-DIR-0433 (procedure), OSC-DIR-0434 (site card, t4) | 05301 to 05306 |
+| cctv | DVR client, recorder, activity profiles, train and platform cameras, PTZ presets, segment 04, unassigned cameras, muster camera, still prefix | OSC-DIR-0474 (procedure), KB-0216 (t4) | 05881 to 05886 |
+| plant | panel, point-kinetics model, rods, trips, alarms, electrical, limits, meters, initial conditions, trainer, history, live link, qualification, events | OSC-RSV-SIM-01 (procedure), OSC-RSV-SIM-02 (card, t4) | 05731 to 05736 |
+| doors | motion, airlock, pressure, shift change, local zones, log cap and retention, bypass key prefix, history | OSC-MEM-08-0146 (procedure, t4), OSC-MEM-08-0147 (airlock card, t4) | 04651 to 04656 |
+| dispatch | desk, working and training modes, stock, possessions, segment 04, platform site and service | OSC-TRN-DSP-01 (procedure), OSC-TRN-DSP-02 (reference), OSC-TRN-DSP-03 (GAMMA-08 platform notice, t4) | 04761 to 04765 |
+| hoist | model, landing compartments, sump vanes | OSC-DIR-0466 (procedure), OSC-MEM-07-0851 (shaft data) | 06231 to 06238 |
+| environ | GAMMA-08 panel: volume, zones, AHUs, fan speeds, make-up, metabolic load, occupancy by local hour, scrubbers, CBRN filtration, thermal, limits, model, calibration, watches | OSC-MEM-07-0262 (SOP, t4), OSC-MEM-08-0171 (plant data, t4); cites OSC-DIR-0128 (t4, lifesupport variant) | 05611 to 05614 |
+| pa | system, priorities, tone sequences, message library, withheld messages, test window, speakers, zones, division zones, network key, history | OSC-DIR-0458 (procedure), KB-0057 (t4) | 05741 to 05746 |
+| muster | system, badge, classes, no-badge rate, roster accounted, readers, unknown badges, site accounts | OSC-DIR-0461 (procedure), KB-0316 (t4) | 04771 to 04774 |
+| patch | panel, limits, jitter, monitor, tests, traffic, calls, exchanges, ringdowns, pencil, messages, circuits | OSC-MEM-07-1186 (operating instructions), OSC-MEM-06-0291 (circuit register), OSC-MEM-08-0152 (GAMMA-08 maintenance circuit, t4) | 04931 to 04936 |
+
+Per-account mail (content/mail/accounts/, CT1): login mail sits in the pass-one delivery run (04341 to 04477, dated 06 to 17 MAY); triggered mail keeps 06105 to 06106 (lifesupport), 06206 to 06209 (deputy) and 06306 to 06308 (auditor). Mapping in `docs/narrative-2/accounts.md`.
+
+Tier 4 rule for the fragments' citations: every document a set-piece app cites in a refusal or action card that a Tier 4 session can reach is `t4: true` or has a lifesupport variant. Wave 2C added `t4` to OSC-DIR-0319 (printing and reproduction, cited by print and export refusals in six apps) and OSC-DIR-0412 (compartment handling, the general refusal reference) and a lifesupport extract of KB-0031 (cited by the plant work-order refusal). Procedures cited only from Tier 3 views (DIR-0433, 0458, 0461, 0466, 0474, 0507, MEM-07-0233, 07-1186, 06-0291, 07-0851, RSV-SIM-01, TRN-DSP-01/02, OSC-ASR-CG) stay Tier 3: a Tier 4 session reaches them only as the standard refusal (DIR-0301), and the apps it can operate point it at the t4 cards above.
