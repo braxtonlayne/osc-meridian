@@ -334,6 +334,7 @@ export const canonSchema = z.strictObject({
   council: z.strictObject({ composition: z.array(staffLine), seats: z.array(councilSeat) }),
   reactors: z.array(reactor),
   divisions: z.array(division),
+  offices: z.array(z.strictObject({ id: z.string().min(1), name: z.string().min(1), parentDivision: z.string().min(1), site: facilityId.nullable() })),
   compartments: z.array(compartment),
   roster: z.array(person),
   glossary: z.array(glossaryTerm),
@@ -469,6 +470,9 @@ export interface CrossCheckOptions {
 export function canonCrossChecks(c: Canon, opts: CrossCheckOptions): string[] {
   const errs: string[] = [];
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+  // Offices hang under an existing division (they are not counted as divisions).
+  for (const o of c.offices ?? []) if (!c.divisions.some((d) => d.id === o.parentDivision)) errs.push(`office ${o.id}: unknown parent division ${o.parentDivision}`);
 
   // Facility ids unique.
   const ids = new Set<string>();

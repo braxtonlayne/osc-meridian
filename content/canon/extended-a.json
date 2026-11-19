@@ -2059,6 +2059,20 @@
       "headId": "P-2-01-0083"
     }
   ],
+  "offices": [
+    {
+      "id": "OCP",
+      "name": "Operations and Continuity Planning",
+      "parentDivision": "IAD",
+      "site": "ALPHA-01"
+    },
+    {
+      "id": "OGC",
+      "name": "Office of General Counsel",
+      "parentDivision": "CS",
+      "site": "ALPHA-01"
+    }
+  ],
   "compartments": [
     {
       "id": "KESTREL",

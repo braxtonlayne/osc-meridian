@@ -189,7 +189,9 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
 
   // extended-a facility handling.
   if (inputs.extendedA) {
-    const { facilityPatches, deltaFacilities, ...rest } = inputs.extendedA;
+    const { facilityPatches, deltaFacilities, offices, ...rest } = inputs.extendedA;
+    // Offices are an extender-A addition with no source counterpart (not divisions).
+    if (Array.isArray(offices)) merged.offices = offices;
     let facilities = merged.facilities as JsonObj[];
     if (isObj(facilityPatches)) {
       facilities = facilities.map((f) => {
@@ -245,11 +247,15 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
   const c = merged as unknown as Canon;
 
   // threatDetail.ownerDivision is a division name written before extended-a's ids existed:
-  // resolve it to a Division.id by exact name, then by the alias table; null when unmatched.
+  // resolve it to a Division.id by exact name, then by the alias table, then through an office
+  // (offices[], extender A) to its parent division; null when unmatched.
+  c.offices ??= [];
   for (const t of c.threatDetail ?? []) {
     const byName = c.divisions.find((d) => d.name.toLowerCase() === t.ownerDivision.toLowerCase());
     const alias = DIVISION_ALIASES[t.ownerDivision];
-    const id = byName?.id ?? (alias && c.divisions.some((d) => d.id === alias) ? alias : null);
+    const office = c.offices.find((o) => o.name.toLowerCase() === t.ownerDivision.toLowerCase());
+    const viaOffice = office && c.divisions.some((d) => d.id === office.parentDivision) ? office.parentDivision : null;
+    const id = byName?.id ?? (alias && c.divisions.some((d) => d.id === alias) ? alias : viaOffice);
     t.ownerDivisionId = id;
     if (!id && c.divisions.length > 0) warnings.push(`threatDetail ${t.id}: owner division "${t.ownerDivision}" has no Division record`);
   }
@@ -301,9 +307,8 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
   const canon = parsed.data as Canon;
   errors.push(...canonCrossChecks(canon, { extendedA: !!inputs.extendedA }));
 
-  // Geographic sanity (informational; documented in docs/canon/inconsistencies.md).
-  const short = tunnelShorterThanCrowFlies(canon);
-  if (short.length) warnings.push(`${short.length} tunnel lengths are shorter than the straight-line distance between computed positions (see docs/canon/inconsistencies.md)`);
+  // Tunnel lengths shorter than the straight line are a source discrepancy (stated lengths are
+  // route-miles as returned, not survey): canon, reported by main() as an info line only.
 
   return { canon, warnings, errors };
 }
@@ -598,6 +603,10 @@ function main(): void {
   writeFileSync(clientOut, clientText);
   console.log(`canon-merge: wrote ${clientOut} (${withheld.length} values withheld${scrubbed.length ? `; scrubbed from ${scrubbed.join(', ')}` : ''})`);
 
+  // Info only: stated tunnel lengths come from the lore source (docs/canon/inconsistencies.md item 16).
+  const short = tunnelShorterThanCrowFlies(canon);
+  if (short.length)
+    console.log(`canon-merge: info: ${short.length} tunnel lengths are shorter than the straight line (source route-miles as returned; inconsistencies.md 16): ${short.map((t) => `${t.label} ${t.statedMi}/${t.straightMi}`).join("; ")}`);
   const h = canon.headline;
   console.log(
     `canon-merge: wrote ${out} (${canon.facilities.length} facilities; staff ${h.staffTotal} = posted ${h.staffPosted} + unposted ${h.staffUnposted}; ` +

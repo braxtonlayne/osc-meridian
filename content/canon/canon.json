@@ -6775,6 +6775,20 @@
       "headId": "P-2-01-0083"
     }
   ],
+  "offices": [
+    {
+      "id": "OCP",
+      "name": "Operations and Continuity Planning",
+      "parentDivision": "IAD",
+      "site": "ALPHA-01"
+    },
+    {
+      "id": "OGC",
+      "name": "Office of General Counsel",
+      "parentDivision": "CS",
+      "site": "ALPHA-01"
+    }
+  ],
   "compartments": [
     {
       "id": "KESTREL",
@@ -9228,7 +9242,7 @@
       "group": "external",
       "label": "Nuclear Exchange",
       "ownerDivision": "Operations and Continuity Planning",
-      "ownerDivisionId": null,
+      "ownerDivisionId": "IAD",
       "contingency": [
         "The network is designed for survival and for post-event governance. Facility depth and hardening are sufficient for a direct near-strike; rail and tram tunnels are EMP-rated and seismic-isolated.",
         "On warning, ALPHA hubs assume SEALED state on Council or facility commander order. Transit Control suspends revenue service and holds consists at the nearest terminal. Essential personnel extraction to GAMMA-class shelters proceeds by the routes held at DELTA-class extraction route nodes.",
@@ -9309,7 +9323,7 @@
       "group": "internal",
       "label": "Congressional Investigation",
       "ownerDivision": "Office of General Counsel",
-      "ownerDivisionId": null,
+      "ownerDivisionId": "CS",
       "contingency": [
         "Legal frameworks are established. Classification authorities prevent disclosure even under subpoena. Congressional oversight committees possess no awareness of programme existence.",
         "Questions arising from appropriations review are answered at line-item level by the parent department, within the cover title of the line item concerned."

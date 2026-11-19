@@ -207,6 +207,14 @@ export interface Division {
   headId: string | null;
 }
 
+/** An office inside a division (not counted as a division). Extender A. */
+export interface Office {
+  id: string; // "OGC"
+  name: string; // "Office of General Counsel"
+  parentDivision: string; // Division.id
+  site: FacilityId | null;
+}
+
 export interface Person {
   pn: string; // personnel number, canon format
   name: string; // invented
@@ -385,6 +393,7 @@ export interface Canon {
   council: { composition: StaffLine[]; seats: CouncilSeat[] };
   reactors: Reactor[];
   divisions: Division[];
+  offices: Office[];
   compartments: Compartment[];
   roster: Person[];
   glossary: GlossaryTerm[];
