@@ -178,10 +178,8 @@ export function accessRecord(entries: readonly AuditEntry[], terms: readonly str
   });
 }
 
-/** Accession numbers (RD-ACC-YY-NNNNN) named in a string. */
-export function accessionsIn(s: string): string[] {
-  return [...new Set(s.match(/RD-ACC-\d{2}-\d{5}/g) ?? [])];
-}
+// Moved to src/apps/shared/access-log (also used by the Records Library viewer).
+export { accessionsIn, accessLogRows, appendRowsAfterHeading } from '../shared/access-log';
 
 /* ------------------------------------------------------------ incidents */
 
@@ -259,44 +257,6 @@ export function ticketFields(lines: readonly FieldLine[]): TicketFields {
 
 /** Section headings that hold a ticket's worklog. */
 export const WORKLOG_HEADING = /work ?log|action log|actions taken|log of action|inquiry log|chronolog/i;
-
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-/**
- * The operator's own entries for a ticket's access log, in the log's columns
- * (Date / time, Workstation, Operator, Recorded as). `items` are the index items the log
- * covers (e.g. the EYES ONLY image); `accessions` are accession numbers named by the ticket.
- */
-export function accessLogRows(
-  entries: readonly AuditEntry[],
-  o: { ticket: string; items: readonly string[]; accessions: readonly string[]; workstation: string; operator: string },
-): string[][] {
-  const items = new Set(o.items.map((x) => x.toUpperCase()));
-  const acc = o.accessions.map((x) => x.toUpperCase());
-  const ticket = o.ticket.toUpperCase();
-  const out: string[][] = [];
-  for (const e of entries) {
-    const subj = e.subject.toUpperCase();
-    let what: string | null = null;
-    if (e.kind === 'doc.read' && items.has(subj)) what = `Opened. Access recorded under ${o.ticket}.`;
-    else if (e.kind === 'doc.read' && subj === ticket) what = 'Incident record displayed.';
-    else if (e.kind === 'search' && (subj.includes(ticket) || acc.some((a) => subj.includes(a) || subj.includes(a.slice(-5))))) what = `Index query "${e.subject}".`;
-    if (what) out.push([`${auditDate(e.at)} ${auditTime(e.at)}`, o.workstation, o.operator, what]);
-  }
-  return out;
-}
-
-/** Append rows to the first table after the heading with id `headingId` (before the next h2). */
-export function appendRowsAfterHeading(html: string, headingId: string, rows: readonly string[][]): string {
-  if (!rows.length) return html;
-  const h = html.search(new RegExp(`<h[1-6][^>]*\\bid="${headingId}"`));
-  if (h < 0) return html;
-  const nextH2 = html.indexOf('<h2', h + 3);
-  const end = html.indexOf('</tbody>', h);
-  if (end < 0 || (nextH2 >= 0 && end > nextH2)) return html;
-  const tr = rows.map((r) => `<tr class="asr-own-access">${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
-  return html.slice(0, end) + tr + html.slice(end);
-}
 
 /* -------------------------------------------------------------- threats */
 

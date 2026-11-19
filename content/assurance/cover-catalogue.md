@@ -8,8 +8,8 @@ docNo: OSC-ASR-COV
 title: Cover Identity Catalogue (ALPHA and BETA)
 marking: UMBRA-C
 originator: CVO/ALPHA-04
-revision: 10
-date: 2008-05-20
+revision: 9
+date: 2008-05-14
 summary: "Seventeen entries: cover agency, cover facility type, visible surface staff, public records posture and last cover review."
 xrefs: [OSC-FAC-IDX, OSC-FAC-ALPHA-03, OSC-FAC-BETA-09, OSC-ASR-THR-07, OSC-ASR-THR-04, OSC-SYS-CAL, OSC-ASR-CG]
 distribution:
@@ -25,7 +25,6 @@ fields:
   - { label: Review interval, value: Not exceeding eighteen months }
   - { label: Classes covered, value: "ALPHA and BETA (GAMMA and DELTA sites hold no cover catalogue entry)" }
 revisions:
-  - { rev: "10", date: 20 MAY 2008, change: "Cover review entered (one site).", by: CVO/ALPHA-04 }
   - { rev: "9", date: 14 MAY 2008, change: "Cover review entered (one site).", by: CVO/ALPHA-04 }
   - { rev: "8", date: 06 MAY 2008, change: "Cover review entered (one site). Visible staffing figure amended.", by: CVO/ALPHA-04 }
   - { rev: "7", date: 29 APR 2008, change: "Cover review entered (one site). Review programme for the third quarter issued.", by: CVO/ALPHA-04 }
@@ -90,4 +89,4 @@ Next review: **28 MAY 2008**, 1500Z (1000 CDT), at the site. Brought forward fro
 
 7.2 Markings and withholding authorities follow :x[OSC-ASR-CG]. Site-to-cover correspondence beyond the reader's own connections is SEXTANT.
 
-Issued 20 MAY 2008, R. Kerr, Director, Cover Operations.
+Issued 14 MAY 2008, R. Kerr, Director, Cover Operations.

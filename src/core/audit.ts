@@ -54,7 +54,7 @@ function phrase(kind: AuditKind, subject: string): string {
     case 'logout':
       return `${op} logged off workstation ${WORKSTATION_ID}.`;
     case 'timeout':
-      return `Session for ${op.toLowerCase()} locked by the workstation after ten minutes without input. Open work was retained.`;
+      return `Session for ${op.toLowerCase()} locked by the workstation after fifteen minutes without input. Open work was retained.`;
     case 'system':
       return `${subject}.`;
     default:

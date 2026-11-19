@@ -5,7 +5,7 @@ import type { CompartmentId } from '@core/canon-types';
 import { createRuntime } from './runtime';
 import type { RuntimeIo } from './runtime';
 import type { NarrativeState } from './rules';
-import { seg04 } from './seg04';
+import { reportTransitBoard, seg04 } from './seg04';
 
 function fakeServices() {
   const subs = new Set<(e: AuditEntry) => void>();
@@ -90,7 +90,11 @@ describe('narrative runtime', () => {
     log('login', 'OPR-A03-1147');
     const fireAt = rt.state().session!.seg04.fireAt;
     clock.advance(fireAt - clock.now() + 5000);
+    expect(seg04.value).toBeNull(); // due, but the board is not shown
+    reportTransitBoard(true); // showing the board starts it at once, without waiting for a tick
     expect(seg04.value).not.toBeNull();
+    expect(seg04.value!.start).toBe(clock.now());
+    reportTransitBoard(false);
     clock.advance(4 * 60_000);
     expect(seg04.value).toBeNull();
     expect(calls.audit.filter(([k]) => k === 'system')).toHaveLength(1);

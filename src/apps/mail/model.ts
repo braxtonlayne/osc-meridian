@@ -10,6 +10,7 @@
  */
 import type { AuditEntry, DocJson, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
+import { inWorldIso } from '@core/session';
 
 /* ------------------------------------------------------------ precedence */
 
@@ -47,6 +48,20 @@ export function dtgFromIso(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
   if (!m) return iso;
   return `${m[3]}${m[4]}${m[5]}Z ${MONTHS[Number(m[2]) - 1]} ${m[1]!.slice(2)}`;
+}
+
+/**
+ * Sent DTG when there is no delivery record: the message's own frontmatter DTG, else the
+ * entry date; never later than the session date. A DTG dated after the session date (or an
+ * unparseable one) gives way to the session clock (`sessionIso`, in-world ISO).
+ */
+export function fallbackSent(raw: string | undefined, entryDate: string, sessionIso: string): string {
+  const day = sessionIso.slice(0, 10);
+  const own = raw && dtgKey(raw) ? raw : undefined;
+  const cand = own ?? (/^\d{4}-\d{2}-\d{2}$/.test(entryDate) ? dtgFromIso(`${entryDate}T00:00`) : undefined);
+  const key = cand ? dtgKey(cand) : null;
+  if (!cand || !key || key.slice(0, 10) > day) return dtgFromIso(sessionIso);
+  return cand;
 }
 
 /** "1432Z (1032 EDT)" for an ISO instant (ALPHA-03 local is UTC-4 in May). */
@@ -122,11 +137,11 @@ export interface Delivery {
  * Traffic that arrives during the session (any arrival rule other than login) is stamped with
  * its delivery time; slot tokens in the subject are filled from the delivery record.
  */
-export function readHeaders(entry: RouteEntry, doc?: DocJson | null, delivery?: Delivery): MsgHeaders {
+export function readHeaders(entry: RouteEntry, doc?: DocJson | null, delivery?: Delivery, sessionIso: string = inWorldIso()): MsgHeaders {
   const h = doc ? envelope(doc) : {};
   const arrival = arrivalType(doc);
   const stamped = delivery?.at && arrival && arrival !== 'login' ? dtgFromIso(delivery.at) : undefined;
-  const sent = stamped ?? strOf(h.sent) ?? strOf(h.dtg) ?? dtgFromIso(`${entry.date}T00:00`);
+  const sent = stamped ?? fallbackSent(strOf(h.sent) ?? strOf(h.dtg), entry.date, sessionIso);
   const from = strOf(h.from) ?? strOf(h.fm) ?? entry.originator;
   const slots = strArr(h.slots);
   const subject = strOf(h.subject) ?? strOf(h.subj) ?? entry.title;

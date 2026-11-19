@@ -41,7 +41,17 @@ export interface DirContext {
   sponsorable: readonly CompartmentId[];
   compartmentIds: readonly CompartmentId[];
   divisionName: (id: string) => string;
+  /**
+   * Rows of the directory document (OSC-PER-DIR) as loaded with the session's releases,
+   * keyed by personnel number: [pn, name, post, site, division, mail, remarks]. A cell is
+   * null while still withheld. Fields the client canon carries as sentinels take their
+   * released value from here; the canon never holds the text.
+   */
+  released?: ReadonlyMap<string, readonly (string | null)[]>;
 }
+
+/** Column of each field in the directory document's table. */
+const DOC_COL = { name: 1, role: 2, division: 4, email: 5, notes: 6 } as const;
 
 const text = (s: string): Cell => ({ text: s });
 const bar = (key: string, s: string): Cell => ({ rx: { key, len: Math.max(1, s.length) } });
@@ -66,6 +76,13 @@ function cellFor(value: string | null | undefined): Cell {
 }
 
 export function buildRow(p: Person, ctx: DirContext): DirRow {
+  const doc = ctx.released?.get(p.pn);
+  /** A canon value, or the document's released text where canon has only a sentinel. */
+  const field = (v: string | null | undefined, k: keyof typeof DOC_COL): Cell => {
+    const r = doc?.[DOC_COL[k]];
+    return rxInfo(v) && typeof r === 'string' && r ? text(r) : cellFor(v);
+  };
+  const docDivision = doc?.[DOC_COL.division];
   const unposted = p.site === UNPOSTED_SITE;
   const hollow = unposted && !ctx.holds('HOLLOW');
   const held = parseHolds(p.notes, ctx.compartmentIds);
@@ -73,7 +90,8 @@ export function buildRow(p: Person, ctx: DirContext): DirRow {
     ctx.holds(c as CompartmentId) || ctx.sponsorable.includes(c as CompartmentId) ? text(c) : bar(c, c),
   );
   const notes = stripHolds(p.notes);
-  const division = p.divisionId ? ctx.divisionName(p.divisionId) : '';
+  const divisionId = p.divisionId ?? (unposted && typeof docDivision === 'string' && docDivision ? docDivision : null);
+  const division = divisionId ? ctx.divisionName(divisionId) : '';
   if (hollow) {
     return {
       pn: p.pn,
@@ -93,17 +111,17 @@ export function buildRow(p: Person, ctx: DirContext): DirRow {
   }
   return {
     pn: p.pn,
-    name: cellFor(p.name),
+    name: field(p.name, 'name'),
     rank: cellFor(p.rank),
-    role: cellFor(p.role),
+    role: field(p.role, 'role'),
     tier: text(String(p.tier)),
     tierNo: p.tier,
     site: p.site,
     division: text(division),
-    divisionId: p.divisionId,
-    email: cellFor(p.email),
+    divisionId,
+    email: field(p.email, 'email'),
     holds,
-    notes: cellFor(notes),
+    notes: field(notes, 'notes'),
     unposted,
   };
 }

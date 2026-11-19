@@ -87,6 +87,8 @@ export interface SessionState {
   hoverDocs: Record<string, number>;
   firstHoverAt: number | null;
   refusals: number;
+  /** Transit Control windows open, by audit subject (from window.open / window.close lines). */
+  transitWins?: string[];
   seg04: Seg04State;
 }
 
@@ -139,9 +141,10 @@ export function reviveState(raw: unknown): NarrativeState {
 
 export type NarrativeEvent =
   | { type: 'audit'; entry: AuditEntry; now: number; newSession?: boolean }
-  | { type: 'tick'; now: number }
+  /** boardOpen: Transit Control board visible (reported by the app); falls back to open transit windows. */
+  | { type: 'tick'; now: number; boardOpen?: boolean }
   /** Reconcile with the session store (grants made outside the engine). */
-  | { type: 'sync'; compartments: string[]; acting: boolean };
+  | { type: 'sync'; compartments: string[]; acting: boolean; now?: number };
 
 export type Effect =
   | { type: 'grant'; key: CompartmentId | 'ACTING-T2'; reason: string }
@@ -162,6 +165,13 @@ const MIN = 60_000;
 /** Longest gap between ticks that still counts as active time (sleep, background tab). */
 export const TICK_CAP_MS = 30_000;
 export const SEG04_DELAY_MIN: [number, number] = [6, 25];
+/**
+ * Once due, the movement waits for the board to be open in an unlocked session.
+ * If the board is never opened it still runs, unwatched, this long after it fell due,
+ * so the withdrawal record exists for audit tail.
+ */
+export const SEG04_UNWATCHED_AFTER_MS = 20 * MIN;
+const TRANSIT_WINDOW = /\bin Transit Control\.$|\bopened Transit Control\.$|\bclosed Transit Control\.$|^Transit Control$/;
 export const SCAN_DOCNO = 'OSC-2008-Q2';
 const MARKING_RANK: Record<MarkingId, number> = { 'TSSCI-OSC': 0, 'UMBRA-R': 1, 'UMBRA-C': 2, 'UMBRA-U': 3, 'UMBRA-EO': 4 };
 
@@ -336,15 +346,23 @@ class Run {
   constructor(
     public s: NarrativeState,
     public ctx: Ctx,
+    /** Wall-clock ms of the event being processed (delivery moment). */
+    public now: number,
   ) {}
 
+  /**
+   * Deliver now. Triggered (non-login) mail always carries `{date}` = the
+   * in-world session date at the moment of delivery, so "today" in a body
+   * resolves to the date the taskbar shows; rule slots override it.
+   */
   deliver(id: string, extra: Omit<Extract<Effect, { type: 'mail' }>, 'type' | 'id'> = {}): void {
     if (!extra.repeat) {
       if (this.s.mail.includes(id)) return;
       this.s.mail.push(id);
     } else if (!this.s.mail.includes(id)) this.s.mail.push(id);
     this.s.pending = this.s.pending.filter((p) => p.id !== id);
-    this.effects.push({ type: 'mail', id, ...extra });
+    const out = extra.silent ? extra : { ...extra, slots: { date: dateSlot(this.now), ...extra.slots } };
+    this.effects.push({ type: 'mail', id, ...out });
   }
 
   /** Queue an audit-rule message with its plan delay; slots captured now. */
@@ -406,6 +424,7 @@ class Run {
       hoverDocs: {},
       firstHoverAt: null,
       refusals: 0,
+      transitWins: [],
       seg04: { fireAt: now + delay, startedAt: null, watched: false, withdrawn: false },
     };
     this.s.lastTick = now;
@@ -428,13 +447,23 @@ class Run {
       case 'logout':
         s.session = null;
         return;
+      case 'window.close':
+        if (s.session && TRANSIT_WINDOW.test(e.detail)) {
+          const w = (s.session.transitWins ??= []);
+          const i = w.lastIndexOf(e.subject);
+          w.splice(i >= 0 ? i : w.length - 1, 1);
+        }
+        return;
       case 'system':
       case 'clearance.grant':
       case 'mail.read':
-      case 'window.close':
         return;
       default:
         break;
+    }
+
+    if (s.session && e.kind === 'window.open' && !REFUSED.test(e.detail) && TRANSIT_WINDOW.test(e.detail)) {
+      (s.session.transitWins ??= []).push(e.subject);
     }
 
     const doc = displayedDocNo(e);
@@ -550,7 +579,7 @@ class Run {
     return null;
   }
 
-  tick(now: number): void {
+  tick(now: number, boardOpen = false): void {
     const s = this.s;
     const sess = s.session;
     if (sess && !sess.locked && s.lastTick !== null) s.activeMs += Math.min(Math.max(now - s.lastTick, 0), TICK_CAP_MS);
@@ -566,7 +595,8 @@ class Run {
 
     if (!sess) return;
     const g = sess.seg04;
-    if (g.startedAt === null && !sess.locked && now >= g.fireAt) g.startedAt = now;
+    const open = boardOpen || (sess.transitWins?.length ?? 0) > 0;
+    if (g.startedAt === null && !sess.locked && now >= g.fireAt && (open || now >= g.fireAt + SEG04_UNWATCHED_AFTER_MS)) g.startedAt = now;
     if (g.startedAt !== null && !g.withdrawn && now >= g.startedAt + SEG04_DURATION_MS + SEG04_LOG_HOLD_MS) {
       g.withdrawn = true;
       this.effects.push({
@@ -585,8 +615,8 @@ class Run {
 }
 
 export function reduce(state: NarrativeState, ev: NarrativeEvent, ctx: Ctx): { state: NarrativeState; effects: Effect[] } {
-  const run = new Run(clone(state), ctx);
-  if (ev.type === 'tick') run.tick(ev.now);
+  const run = new Run(clone(state), ctx, ev.type === 'sync' ? (ev.now ?? state.lastTick ?? 0) : ev.now);
+  if (ev.type === 'tick') run.tick(ev.now, !!ev.boardOpen);
   else if (ev.type === 'sync') run.sync(ev.compartments, ev.acting);
   else run.audit(ev.entry, ev.now, !!ev.newSession);
   return { state: run.s, effects: run.effects };

@@ -97,3 +97,22 @@ describe('filtering and sorting', () => {
     expect(rows.map((r) => r.pn)).not.toContain(canon.operator.pn);
   });
 });
+
+describe('values released by the directory document', () => {
+  it('shows the released name, post, mail and remarks of unposted entries under HOLLOW, never without', () => {
+    const p = canon.roster.find((x) => x.site === UNPOSTED_SITE)!;
+    const released = new Map([[p.pn, [p.pn, 'Released Name', 'Released post', UNPOSTED_SITE, null, 'released@a03.rd.mer', 'Last posted ALPHA-02.']]]);
+    const h = buildRow(p, { ...ctx(['LANTERN', 'HOLLOW']), released });
+    expect(cellText(h.name)).toBe('Released Name');
+    expect(cellText(h.role)).toBe('Released post');
+    expect(cellText(h.email)).toBe('released@a03.rd.mer');
+    const n = buildRow(p, { ...ctx(['LANTERN']), released });
+    for (const c of [n.name, n.role, n.email]) expect('rx' in c).toBe(true);
+  });
+  it('keeps the bar where the document cell is still withheld', () => {
+    const p = canon.roster.find((x) => x.site === UNPOSTED_SITE)!;
+    const released = new Map([[p.pn, [p.pn, null, null, null, null, null, null]]]);
+    const h = buildRow(p, { ...ctx(['LANTERN', 'HOLLOW']), released });
+    if (rxInfo(p.name)) expect('rx' in h.name).toBe(true);
+  });
+});

@@ -3,12 +3,13 @@
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { DocJson, Services } from '@core/contracts';
-import { phase } from '@core/session';
+import { IN_WORLD_DATE_ISO, phase } from '@core/session';
 import { routes } from '@core/services';
-import { seg04, seg04WatchData, seg04WatchDetail, WORKSTATION } from '@narrative/engine';
+import { reportTransitBoard, seg04, seg04WatchData, seg04WatchDetail, WORKSTATION } from '@narrative/engine';
 import type { Seg04Window } from '@sim/seg04';
 import type { BoardState, Timetable } from '@sim/transit-model';
 import { parseBlockSheet, parseTimetable, withBlockSheets, type BlockSheet, type SimModel } from '@sim/transit-model';
+import { setInWorldDate } from '@sim/time';
 import { canonModel, createSim, EMPTY_CONFIG, type SimConfig } from '@sim/transit-sim';
 
 export const baseModel = canonModel();
@@ -150,6 +151,8 @@ export function useBoard(cfg: Omit<SimConfig, 'seg04'>): BoardState | null {
       w.onmessage = (ev: MessageEvent<{ type: string; state: BoardState }>) => {
         if (ev.data.type === 'state') setState(ev.data.state);
       };
+      // The worker has its own module state: give it the session's in-world date first.
+      w.postMessage({ type: 'date', iso: IN_WORLD_DATE_ISO });
       const tick = () => w.postMessage({ type: 'tick', now: Date.now() });
       tick();
       const h = setInterval(tick, 1000);
@@ -161,6 +164,7 @@ export function useBoard(cfg: Omit<SimConfig, 'seg04'>): BoardState | null {
         },
       };
     } else {
+      setInWorldDate(IN_WORLD_DATE_ISO);
       const sim = createSim();
       let current: SimConfig = { ...EMPTY_CONFIG };
       const tick = () => setState(sim.state(Date.now(), current));
@@ -264,4 +268,48 @@ export function useSeg04Watch(services: Services, root: { current: HTMLElement |
       if (lastWin) flush(services, lastWin);
     };
   }, [services, root]);
+}
+
+/* ------------------------------------------------- board visibility report */
+
+/** Transit windows whose board view is on screen; the engine is told whether any is. */
+const showing = new Set<object>();
+let reported: boolean | null = null;
+
+/** Add or remove one window's board from the visible set and report the change (pure bookkeeping, testable). */
+export function setBoardShowing(token: object, visible: boolean, report: (v: boolean) => void = reportTransitBoard): void {
+  if (visible) showing.add(token);
+  else showing.delete(token);
+  const any = showing.size > 0;
+  if (any !== reported) {
+    reported = any;
+    report(any);
+  }
+}
+
+/**
+ * Report to the narrative engine whether this window's board (line diagram, geographic,
+ * tunnel 3D) is on screen: board view selected, window laid out (not minimised or closed)
+ * and the browser tab visible. Re-checked on view change, element resize (a minimised
+ * window is display:none), visibilitychange, and unmount.
+ */
+export function useBoardReport(root: { current: HTMLElement | null }, boardView: boolean): void {
+  const token = useRef({}).current;
+  useEffect(() => {
+    const check = () => {
+      const el = root.current;
+      const visible = boardView && !!el && el.getClientRects().length > 0 && document.visibilityState === 'visible';
+      setBoardShowing(token, visible);
+    };
+    check();
+    const el = root.current;
+    const ro = typeof ResizeObserver !== 'undefined' && el ? new ResizeObserver(check) : null;
+    if (ro && el) ro.observe(el);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      ro?.disconnect();
+      document.removeEventListener('visibilitychange', check);
+      setBoardShowing(token, false);
+    };
+  }, [root, boardView]);
 }

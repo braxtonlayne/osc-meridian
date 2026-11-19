@@ -158,6 +158,13 @@ export interface Services {
     read: ReadonlySignal<string[]>;
     /** Delivery time and slot values per delivered message id. */
     meta: ReadonlySignal<Record<string, MailMeta>>;
+    /**
+     * False only for a message document (route family `mail`) not yet delivered to this
+     * operator; true for every other document and for unknown numbers. Takes a docNo, an alias
+     * or a route path. Apps that list or open documents from their own data (not through
+     * services.search / services.openRoute, which already apply it) must check this.
+     */
+    isHeld(docNoOrRoute: string): boolean;
   };
   sound: { play(cue: SoundCue): void };
   settings: {

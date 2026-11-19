@@ -27,6 +27,19 @@ const _seg04 = signal<Seg04Window | null>(null);
 /** Current or just-finished movement (null outside start .. end + log hold). */
 export const seg04: ReadonlySignal<Seg04Window | null> = _seg04;
 
+const _boardVisible = signal(false);
+/** Whether the Transit Control board is on screen (not minimised), as reported by the app. */
+export const transitBoardVisible: ReadonlySignal<boolean> = _boardVisible;
+/**
+ * Transit Control calls this when its board view becomes visible or hidden
+ * (opened, minimised, restored, closed). A due movement starts at once when the
+ * board is visible in an unlocked session. Without these calls the engine falls
+ * back to open/close lines in the audit trail.
+ */
+export function reportTransitBoard(visible: boolean): void {
+  _boardVisible.value = visible;
+}
+
 /** Engine-internal: publish the window derived from engine state. */
 export function publishSeg04(w: Seg04Window | null): void {
   const cur = _seg04.peek();

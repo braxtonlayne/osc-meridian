@@ -16,7 +16,7 @@ import type { NarrativeRuntime } from './runtime';
 
 export { reduce, initialState, formRefusal, WORKSTATION } from './rules';
 export type { NarrativeState, NarrativeEvent, Effect } from './rules';
-export { seg04, seg04Blocks, seg04LogLine, seg04LogVisible, seg04WatchData, seg04WatchDetail, SEG04_CONSIST_LABEL } from './seg04';
+export { seg04, reportTransitBoard, transitBoardVisible, seg04Blocks, seg04LogLine, seg04LogVisible, seg04WatchData, seg04WatchDetail, SEG04_CONSIST_LABEL } from './seg04';
 
 let running: Promise<NarrativeRuntime> | null = null;
 

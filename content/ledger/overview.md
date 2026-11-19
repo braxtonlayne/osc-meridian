@@ -11,7 +11,7 @@ originator: CMP/ALPHA-01
 revision: 8
 date: 2008-04-15
 summary: Programme accounts by category, fiscal year, funding source and appropriating department, with the source-to-category flow through the cover line items. Comptroller, ALPHA-01.
-xrefs: [OSC-LDG-REG, OSC-LDG-CAT-FACILITY, OSC-LDG-CAT-TRANSIT, OSC-LDG-SRC-BLACK]
+xrefs: [OSC-LDG-REG, OSC-LDG-CAT-FACILITY, OSC-LDG-CAT-TRANSIT, OSC-LDG-SRC-BLACK, OSC-MEM-07-0944]
 distribution:
   - Council Secretariat, ALPHA-01 (cost return file)
   - Facility Commanders, ALPHA-01 to ALPHA-05
@@ -124,6 +124,8 @@ The Ledger application draws this table as a flow chart from source appropriatio
 6. **Personnel Costs.** Personnel Costs ($:c[budget.categories.PERSONNEL.amountB]B) is a programme category and not a payroll total. Payroll for personnel in categories other than POSTED is carried within it and is not separately identified.
 
 7. **Facility attribution.** Programme cost is not stated by facility in any table issued by the Comptroller. Requests for cost by site are referred to the Council Secretariat.
+
+8. **Transit mileage.** Transit cost per mile is stated in :x[OSC-LDG-CAT-TRANSIT] on the certified mileage and on the engineering lengths supplied for the FY2008 tables (:x[OSC-MEM-07-0944]).
 
 ## Audit exposure
 

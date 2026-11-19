@@ -5,8 +5,9 @@
  *   const docs = createDocs({ satisfies: (k) => clearance.satisfies(k) });
  *   services.docs = docs;
  * `satisfies` is called on every load(), so compartments granted mid-session take effect on the
- * next load of a document. Release files (data/releases/<KEY>.json) are fetched at most once
- * each, and only for keys the session satisfies. Tier-1 keys are never requested (none ship).
+ * next load of a document. Release files (data/releases/<hash of KEY>.json, encoded body; see
+ * release-codec.ts: obfuscated, not secret) are fetched at most once each, and only for keys
+ * the session satisfies. Tier-1 keys are never requested (none ship).
  *
  * Released text replaces the baseline bar:
  *   inline  <span class="rx-released" data-rx="<id>" data-key data-auth data-ref>…</span>
@@ -14,6 +15,7 @@
  */
 import type { DocJson, ReleaseKey, RouteEntry, Services } from './contracts';
 import { asset } from './base';
+import { decodeRelease, releaseFileName } from './release-codec';
 
 const generated = import.meta.glob<RouteEntry[]>('../../.generated/routes.json', { eager: true, import: 'default' });
 const GENERATED_ROUTES: RouteEntry[] = Object.values(generated)[0] ?? [];
@@ -140,8 +142,8 @@ export function createDocs(deps: DocsDeps): DocsService {
   const getRelease = (key: string) => {
     let p = releaseCache.get(key);
     if (!p) {
-      // '+' is kept literal: release files are named exactly <KEY>.json on disk.
-      p = (fetchJson(asset(`data/releases/${key}.json`)) as Promise<Record<string, string>>).catch(() => {
+      // Files are named by a hash of the key and their body is encoded (release-codec.ts).
+      p = fetchJson(asset(`data/releases/${releaseFileName(key)}.json`)).then((payload) => decodeRelease(key, payload)).catch(() => {
         releaseCache.delete(key);
         return {};
       });

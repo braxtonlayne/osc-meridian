@@ -1,14 +1,16 @@
 /**
- * Pure formatting for narrative slots and audit lines. Mirrors the in-world date
- * rule in src/core/session.ts (date pinned to May 2008, day of month follows the
- * visitor's local clock, site-local is always EDT = UTC-4) without importing
- * the session store, so the rule engine stays free of runtime state.
+ * Pure formatting for narrative slots and audit lines. The calendar date comes
+ * from session.inWorldDate() (canon.meta.inWorldDate, fixed); time of day is the
+ * visitor's real clock; site-local is always EDT = UTC-4.
  */
+import { inWorldDate } from '@core/session';
+
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const pad = (n: number, w = 2) => String(n).padStart(w, '0');
 
-function inWorldDay(ms: number): number {
-  return Math.min(Math.max(new Date(ms).getDate(), 1), 31);
+/** In-world calendar date (fixed by canon.meta.inWorldDate); only time of day is real. */
+function day(ms: number): Date {
+  return inWorldDate(new Date(ms));
 }
 
 /** "1430Z" */
@@ -30,12 +32,14 @@ export function timeSlot(ms: number): string {
 
 /** "19 MAY 2008" */
 export function dateSlot(ms: number): string {
-  return `${pad(inWorldDay(ms))} ${MONTHS[4]} 2008`;
+  const d = day(ms);
+  return `${pad(d.getUTCDate())} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 /** "AUD-080519-004417" */
 export function auditRef(ms: number, seq: number): string {
-  return `AUD-0805${pad(inWorldDay(ms))}-${pad(seq, 6)}`;
+  const d = day(ms);
+  return `AUD-${String(d.getUTCFullYear()).slice(2)}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}-${pad(seq, 6)}`;
 }
 
 /** "2 min 30 s", "45 s" */

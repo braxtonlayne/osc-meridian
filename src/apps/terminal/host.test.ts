@@ -277,3 +277,46 @@ describe('completion', () => {
     expect(complete('site ALPHA-03', c).line).toBe('site ALPHA-03 ');
   });
 });
+
+describe('holdings and released document values', () => {
+  const msg: RouteEntry = { id: 'msg-08-09999', route: '/mail/msg-08-09999', app: 'mail', family: 'mail', template: 'message', docNo: 'MSG-08-09999', title: 'Not yet delivered', marking: 'UMBRA-U', originator: 'OIA/ALPHA-01', revision: 1, date: '2008-05-19', summary: '' };
+  const all = [...routes, msg];
+  const isHeld = (d: string) => d !== msg.route && d !== msg.docNo;
+
+  it('OPEN of an undelivered message prints the in-world refusal; LOOKUP and completion omit it', () => {
+    const c = ctx({ routes: all, isHeld });
+    const o = run('open MSG-08-09999', c);
+    expect(o.lines).toEqual(['No such message held.']);
+    expect(o.effects).toEqual([]);
+    expect(run('lookup MSG-08-09999', c).lines[0]).toContain('is not on the register');
+    expect(complete('open MSG-08-0999', { routes: all, canon, isHeld }).options).toEqual([]);
+    // Delivered: listed and opened as before.
+    const held = ctx({ routes: all, isHeld: () => true });
+    expect(run('open MSG-08-09999', held).effects).toEqual([{ kind: 'open', route: msg.route }]);
+    expect(complete('open MSG-08-0999', { routes: all, canon, isHeld: () => true }).line).toBe('open MSG-08-09999 ');
+  });
+
+  const custody = new Map([['Origin', ['Origin', 'Council Secretariat registry, ALPHA-01']]]);
+  it('trace 00412 releases the origin from the incident record only with SEXTANT and BRIAR', () => {
+    const docRows = (no: string) => (no === 'OIA-08-031' ? custody : undefined);
+    const both = text(run('trace RD-ACC-08-00412', ctx({ compartments: ['LANTERN', 'SEXTANT', 'BRIAR'], docRows })).lines);
+    expect(both).toContain('Council Secretariat registry, ALPHA-01 to');
+    expect(both).not.toContain('Withheld (SEXTANT/BRIAR)');
+    const one = text(run('trace RD-ACC-08-00412', ctx({ compartments: ['LANTERN', 'SEXTANT'], docRows })).lines);
+    expect(one).toContain('Withheld (SEXTANT/BRIAR)');
+    expect(one).not.toContain('Council Secretariat');
+  });
+
+  it('strength unposted prints names and last postings released by the directory', () => {
+    const carried = canon.roster.filter((p) => p.site === 'DETACHED / UNPOSTED');
+    const rows = new Map(carried.map((p, i) => [p.pn, [p.pn, `Test Person${i}`, null, null, null, null, `Last posted ALPHA-0${i + 1}, effective 0${i + 1} MAY 2008.`]]));
+    const docRows = (no: string) => (no === 'OSC-PER-DIR' ? rows : undefined);
+    const t = text(run('strength unposted', ctx({ compartments: ['LANTERN', 'HOLLOW'], docRows })).lines);
+    carried.forEach((p, i) => {
+      expect(t).toContain(`PERSON${i}, T.`);
+      expect(t).toContain(`ALPHA-0${i + 1}`);
+      expect(t).toContain(`0${i + 1} MAY 2008`);
+    });
+    expect(t).not.toContain('[[RX:');
+  });
+});

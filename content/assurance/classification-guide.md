@@ -68,7 +68,19 @@ revisions:
 
 4.2 LANTERN is granted to all Records Division personnel on posting. Every other compartment is granted by briefing on the grounds listed in :x[OSC-DIR-0412] para 4.
 
-4.3 A redaction may be keyed to a tier, to a compartment, or to both (for example, a compartment at Tier 2). Holding the compartment without the tier, or the tier without the compartment, does not release it.
+4.3 Compartments approvable on request. For the purposes of :x[OSC-DIR-0412] para 4(b), the compartments below are designated as approvable on a request made on :x[OSC-F-126] and sponsored by a holder. A compartment not designated here is granted only under para 4(c) to (e).
+
+| Compartment | Approvable on request (OSC-F-126) | Otherwise granted under |
+|---|---|---|
+| KESTREL | Yes | |
+| SEXTANT | Yes | |
+| HOLLOW | No | DIR-0412 para 4(c) to (e) |
+| TALLOW | No | DIR-0412 para 4(c) to (e) |
+| BRIAR | No | DIR-0412 para 4(c) to (e) |
+| QUARRY | No | DIR-0412 para 4(c) to (e) |
+| LANTERN | Not requested | Posting to the Records Division |
+
+4.4 A redaction may be keyed to a tier, to a compartment, or to both (for example, a compartment at Tier 2). Holding the compartment without the tier, or the tier without the compartment, does not release it.
 
 ## 5. Handling rules
 

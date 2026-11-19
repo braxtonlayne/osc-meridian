@@ -71,7 +71,7 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
           {resumed && (
             <div class="lock-status" role="status">
               {reason === 'timeout'
-                ? 'This workstation was locked after ten minutes without input. Your open work has been retained. Sign in to resume.'
+                ? 'This workstation was locked after fifteen minutes without input. Your open work has been retained. Sign in to resume.'
                 : reason === 'logoff'
                   ? 'You have logged off. Open windows were closed. Sign in to begin a new session.'
                   : 'This workstation is locked. Your open work has been retained. Sign in to resume.'}

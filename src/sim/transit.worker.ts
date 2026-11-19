@@ -7,8 +7,10 @@
  * the engine's movement window always agree on the time.
  *
  * Messages in:  { type: 'config', ...Partial<SimConfig> }   { type: 'tick', now }
+ *               { type: 'date', iso }  (the session's in-world date, "2008-05-19")
  * Messages out: { type: 'state', state: BoardState }
  */
+import { setInWorldDate } from './time';
 import { createSim, EMPTY_CONFIG, type SimConfig } from './transit-sim';
 
 const sim = createSim();
@@ -21,8 +23,11 @@ function post(now: number): void {
 }
 
 self.onmessage = (ev: MessageEvent) => {
-  const { type, now, ...rest } = ev.data as { type: string; now?: number } & Partial<SimConfig>;
-  if (type === 'config') {
+  const { type, now, iso, ...rest } = ev.data as { type: string; now?: number; iso?: string } & Partial<SimConfig>;
+  if (type === 'date') {
+    if (typeof iso === 'string') setInWorldDate(iso);
+    post(last);
+  } else if (type === 'config') {
     cfg = { ...cfg, ...rest };
     post(last);
   } else if (type === 'tick') post(typeof now === 'number' ? now : Date.now());

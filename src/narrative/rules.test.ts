@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { auditRef, dateSlot, localOf, timeSlot, zuluOf } from './format';
 import planJson from './plan.json';
 import { SPEC } from './spec';
-import { A2_PATTERN, formRefusal, initialState, isQueryOfInterest, isUndeliverable, reduce, seg04Window, TICK_CAP_MS } from './rules';
+import { A2_PATTERN, SEG04_UNWATCHED_AFTER_MS, formRefusal, initialState, isQueryOfInterest, isUndeliverable, reduce, seg04Window, TICK_CAP_MS } from './rules';
 import type { Ctx, Effect, NarrativeEvent, NarrativeState } from './rules';
 import type { AuditEntry, AuditKind } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
@@ -21,6 +22,8 @@ class H {
   fx: Effect[] = [];
   now = T0;
   seq = 100;
+  /** Transit board visible (reported by the app). */
+  board = false;
 
   send(ev: NarrativeEvent): Effect[] {
     const r = reduce(this.s, ev, ctx);
@@ -53,7 +56,7 @@ class H {
     const end = this.now + ms;
     while (this.now < end) {
       this.now = Math.min(this.now + 5000, end);
-      out.push(...this.send({ type: 'tick', now: this.now }));
+      out.push(...this.send({ type: 'tick', now: this.now, boardOpen: this.board }));
     }
     return out;
   }
@@ -223,6 +226,7 @@ describe('unlock steps', () => {
     const fireAt = h.s.session!.seg04.fireAt;
     expect(fireAt - T0).toBeGreaterThanOrEqual(6 * 60_000);
     expect(fireAt - T0).toBeLessThanOrEqual(25 * 60_000);
+    h.board = true;
     h.advance(fireAt - h.now + 5000);
     const w = seg04Window(h.s, h.now)!;
     expect(w.end - w.start).toBe(SEG04_DURATION_MS);
@@ -243,22 +247,61 @@ describe('unlock steps', () => {
 
   it('S09 unwatched: only the withdrawal line, no mail; once per session', () => {
     const h = session();
-    const fx = h.advance(30 * 60_000);
+    const fx = h.advance(50 * 60_000);
     expect(fx.filter((f) => f.type === 'audit')).toHaveLength(1);
+    expect(h.s.session!.seg04.startedAt! - h.s.session!.seg04.fireAt).toBeGreaterThanOrEqual(SEG04_UNWATCHED_AFTER_MS);
     expect(h.mailIds(fx)).not.toContain('msg-08-04493');
     expect(h.advance(60 * 60_000).filter((f) => f.type === 'audit')).toHaveLength(0);
     h.login(true); // a new sign-in draws a new movement
-    expect(h.advance(30 * 60_000).filter((f) => f.type === 'audit')).toHaveLength(1);
+    expect(h.advance(50 * 60_000).filter((f) => f.type === 'audit')).toHaveLength(1);
   });
 
-  it('the movement never fires while locked; it fires at unlock', () => {
+  it('the movement never fires while locked; with the board open it fires within 60 s of unlock', () => {
     const h = session();
+    h.board = true;
     h.audit('timeout', 'x');
     h.advance(40 * 60_000);
     expect(h.s.session!.seg04.startedAt).toBeNull();
+    const unlockedAt = h.now;
     h.login(false);
+    h.advance(60_000);
+    expect(h.s.session!.seg04.startedAt).not.toBeNull();
+    expect(h.s.session!.seg04.startedAt! - unlockedAt).toBeLessThanOrEqual(60_000);
+  });
+
+  it('when due with the board open and unlocked, it fires at once', () => {
+    const h = session();
+    const fireAt = h.s.session!.seg04.fireAt;
+    h.advance(fireAt - h.now + 10_000);
+    expect(h.s.session!.seg04.startedAt).toBeNull(); // due, board not shown: waits
+    h.now += 1000;
+    h.send({ type: 'tick', now: h.now, boardOpen: true }); // the runtime ticks as soon as the board is shown
+    expect(h.s.session!.seg04.startedAt).toBe(h.now);
+  });
+
+  it('falls back to Transit Control window open/close lines when the app does not report the board', () => {
+    const h = session();
+    const fireAt = h.s.session!.seg04.fireAt;
+    h.audit('window.open', 'Transit Control', 'Operator OPR-A03-1147 opened Transit Control.');
+    h.audit('window.close', 'Transit Control', 'Operator OPR-A03-1147 closed Transit Control.');
+    h.advance(fireAt - h.now + 10_000);
+    expect(h.s.session!.seg04.startedAt).toBeNull();
+    h.audit('window.open', 'OSC-TRN-OVW', 'Operator OPR-A03-1147 opened OSC-TRN-OVW (TOP SECRET//SCI//OSC) in Transit Control.');
     h.advance(5000);
     expect(h.s.session!.seg04.startedAt).toBe(h.now);
+  });
+
+  it('an idle lock just before the due time does not cost a board watcher the movement', () => {
+    const h = session();
+    h.board = true;
+    const fireAt = h.s.session!.seg04.fireAt;
+    h.advance(fireAt - h.now - 60_000);
+    h.audit('timeout', 'x');
+    h.advance(10 * 60_000);
+    expect(h.s.session!.seg04.startedAt).toBeNull();
+    h.login(false);
+    h.advance(5000);
+    expect(seg04Window(h.s, h.now)!.start).toBe(h.now);
   });
 
   it('S10 SEXTANT needs the witnessed movement or KESTREL', () => {
@@ -330,6 +373,40 @@ describe('unlock steps', () => {
   });
 });
 
+describe('delivery date', () => {
+  it('triggered mail carries {date} = the in-world date at the moment of delivery; login mail does not', () => {
+    const h = new H();
+    expect(h.mails(h.login()).every((m) => !m.slots)).toBe(true);
+    h.read('OSC-2008-Q2');
+    const step = h.mails(h.read('OSC-DIR-0412'))[0]!;
+    expect(step.slots).toEqual({ date: '19 MAY 2008' });
+    h.now = new Date(2026, 10, 19, 23, 58).getTime(); // the OIA mail falls due after local midnight
+    const oia = h.mails(h.advance(6 * 60_000)).find((m) => m.id === 'msg-08-04490')!;
+    expect(oia.slots!.date).toBe('19 MAY 2008'); // the in-world date is fixed by canon
+    expect(oia.slots!.time).toBe('1500Z (1100 EDT)'); // the rule slot keeps the time of the access
+  });
+
+  it('uses the canon in-world date whatever the system clock says', () => {
+    vi.useFakeTimers();
+    try {
+      for (const real of [new Date(2031, 1, 3, 9, 15), new Date(2024, 11, 31, 23, 59)]) {
+        vi.setSystemTime(real);
+        const now = Date.now();
+        expect(dateSlot(now)).toBe('19 MAY 2008');
+        expect(auditRef(now, 42)).toBe('AUD-080519-000042');
+        expect(timeSlot(now)).toBe(`${zuluOf(now)} (${localOf(now)})`);
+        const h = new H();
+        h.now = now;
+        h.login();
+        const m = h.mails(h.read('OSC-DIR-0412'))[0]!;
+        expect(m.slots).toEqual({ date: '19 MAY 2008' });
+      }
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
 describe('audit consequences', () => {
   it('A2: second query of interest in a session, once, quoting it', () => {
     const h = session();
@@ -378,8 +455,8 @@ describe('audit consequences', () => {
     const h = session();
     const a = h.audit('mail.send', 'x', '', { to: 'C.Dimmick@a03.rd.mer', subject: 'Locker', body: 'Your items' });
     const b = h.audit('mail.send', 'x', '', { to: 'r.tobin@a02.fe.mer, m.okafor@a03.rd.mer' });
-    expect(h.mails(a)).toEqual([{ type: 'mail', id: 'msg-08-04497', slots: { recipient: 'c.dimmick@a03.rd.mer' }, repeat: true }]);
-    expect(h.mails(b)[0]!.slots).toEqual({ recipient: 'r.tobin@a02.fe.mer' });
+    expect(h.mails(a)).toEqual([{ type: 'mail', id: 'msg-08-04497', slots: { date: '19 MAY 2008', recipient: 'c.dimmick@a03.rd.mer' }, repeat: true }]);
+    expect(h.mails(b)[0]!.slots).toEqual({ date: '19 MAY 2008', recipient: 'r.tobin@a02.fe.mer' });
     expect(h.mailIds(h.audit('mail.send', 'x', '', { to: 'm.okafor@a03.rd.mer' }))).toEqual([]);
   });
 
@@ -494,6 +571,7 @@ describe('engine properties', () => {
 
   it('withdrawal line timing matches the published window', () => {
     const h = session();
+    h.board = true;
     h.advance(h.s.session!.seg04.fireAt - h.now + 5000);
     const st = h.s.session!.seg04.startedAt!;
     expect(h.advance(SEG04_DURATION_MS + SEG04_LOG_HOLD_MS - (h.now - st) - 5000).filter((f) => f.type === 'audit')).toHaveLength(0);

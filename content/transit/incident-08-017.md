@@ -65,7 +65,7 @@ Possession record: :x[OSC-TRN-POS-08-044]. Segment record: :x[OSC-TRN-SEG-04].
 
 ## Log extract, 01 MAY to 19 MAY 2008
 
-Network Control incident log, all networks. Extract generated 19 MAY 2008 2300Z (1900 EDT). Times are Zulu with the local time at the location of the incident. Tram links are shown by network link code.
+Network Control incident log, all networks. Extract generated 19 MAY 2008 1030Z (0630 EDT). Times are Zulu with the local time at the location of the incident. Tram links are shown by network link code.
 
 | Serial | Date | Time | Location | Entry | Watch | Status |
 |---|---|---|---|---|---|---|
@@ -81,6 +81,6 @@ Network Control incident log, all networks. Extract generated 19 MAY 2008 2300Z 
 | 08-019 | 15 MAY | 1702Z (1202 CDT) | CE link C4 | TCE-019 failed daily brake test at the stabling point. Consist withdrawn. Path cancelled; no passengers booked. | 2 | Closed |
 | 08-020 | 16 MAY | 1317Z (0717 MDT) | ALPHA-02 platform 1 | R02-111 door 5 slow to close; door adjusted by depot staff in the platform. Path 2U02 departed 1321Z, 21 min late. | 1 | Closed |
 | 08-021 | 17 MAY | 1830Z (1430 EDT) | ALPHA-01 platform 4 | Unattended bag on platform. Owner traced through travel office within 15 min. Bag returned. | 2 | Closed |
-| 08-022 | 19 MAY | 1501Z (1101 EDT) | ALPHA-01 Level 13 concourse | Escalator E2 returned to service after replacement of comb plate and step chain tensioner. Entry 08-010 closed. | 2 | Closed |
+| 08-022 | 19 MAY | 0901Z (0501 EDT) | ALPHA-01 Level 13 concourse | Escalator E2 returned to service after replacement of comb plate and step chain tensioner. Entry 08-010 closed. | 2 | Closed |
 
 Unscheduled movements are entered in this log and not in the working timetable. Board conventions: :x[KB-0042].

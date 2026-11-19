@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Facility } from '@core/canon-types';
 import { buildPlant } from '@graphics/reactor/model';
 import type { Reading, SiteSeed, TelemetryIn, TelemetryOut } from '@sim/telemetry.worker';
+import { inWorldDate } from '@core/session';
 import { canon } from './shared';
 
 /**
@@ -40,8 +41,8 @@ export function seedFor(f: Facility): SiteSeed | null {
 
 /** Offset (ms) that maps the real clock onto the pinned in-world date, same time of day. */
 export function inWorldOffsetMs(now = new Date()): number {
-  const day = Math.min(Math.max(now.getDate(), 1), 31);
-  const world = Date.UTC(2008, 4, day, now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+  const d = inWorldDate(now); // UTC midnight of the session's in-world date
+  const world = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
   return world - now.getTime();
 }
 

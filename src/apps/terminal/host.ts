@@ -16,6 +16,7 @@
 import type { AppId, AuditEntry, RouteEntry } from '@core/contracts';
 import type { Canon, Facility, FacilityId, MarkingId, TierNo } from '@core/canon-types';
 import { hasRx, isRx, rxPlain } from '@core/rx';
+import { formatInWorldDate } from '@core/session';
 import {
   ACCESSION_HELD,
   DIVISION_UTILITIES,
@@ -49,7 +50,21 @@ export interface HostContext {
   unread: number;
   routes: readonly RouteEntry[];
   satisfies(key: string): boolean;
+  /** services.mail.isHeld: false for a message document not yet delivered. Omitted: everything is held. */
+  isHeld?(docNoOrRoute: string): boolean;
+  /**
+   * Table rows of a document as loaded with the session's releases (shared/released.ts),
+   * keyed by first cell; null cells are still withheld. Released values the client canon
+   * carries only as sentinels are read from here. Omitted or not yet loaded: undefined.
+   */
+  docRows?(docNo: string): ReadonlyMap<string, readonly (string | null)[]> | undefined;
   appTitle(id: AppId): string;
+}
+
+/** Routes the operator may see listed: undelivered messages are not on this operator's register. */
+function heldRoutes(ctx: Pick<HostContext, 'routes' | 'isHeld'>): readonly RouteEntry[] {
+  const held = ctx.isHeld;
+  return held ? ctx.routes.filter((r) => held(r.route)) : ctx.routes;
 }
 
 export type Effect =
@@ -79,10 +94,9 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 
 export const fmtN = (n: number | null | undefined): string => (n === null || n === undefined ? '--' : NF.format(n));
 
-/** In-world host date: the visitor's day of the month, pinned to May 2008. */
+/** In-world host date: the session's fixed in-world date (canon.meta.inWorldDate), "19 MAY 2008". */
 export function hostDate(now: Date): string {
-  const d = Math.min(Math.max(now.getDate(), 1), 31);
-  return `${pad2(d)} MAY 2008`;
+  return formatInWorldDate(now);
 }
 export const zulu = (now: Date): string => `${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}Z`;
 /** ALPHA-03 site-local (Eastern Daylight). */
@@ -310,7 +324,7 @@ export function formatFind(q: string, hits: readonly { route: RouteEntry }[], co
 
 const lookup: Handler = (p, ctx) => {
   if (!p.rest) return out(['LOOKUP: specify a document number.']);
-  const r = findDoc(ctx.routes, p.rest);
+  const r = findDoc(heldRoutes(ctx), p.rest);
   if (!r) return out([`LOOKUP: ${p.rest.toUpperCase()} is not on the register.`]);
   const marking = ctx.canon.markings.find((m) => m.id === r.marking);
   const key = accessKey(r);
@@ -334,6 +348,8 @@ export function isoToOsc(iso: string): string {
 const open: Handler = (p, ctx) => {
   if (!p.rest) return out(['OPEN: specify a document number or route.']);
   const r = findDoc(ctx.routes, p.rest);
+  // An undelivered message: refused in-world, without confirming it exists or opening anything.
+  if (r && ctx.isHeld && !ctx.isHeld(r.route)) return out(['No such message held.']);
   if (!r) {
     if (p.rest.startsWith('/')) return out([`Requesting ${p.rest}.`], [{ kind: 'open', route: p.rest }]);
     return out([`OPEN: ${p.rest.toUpperCase()} is not on the register. Check the number against the register.`]);
@@ -479,6 +495,11 @@ export function parseAccession(arg: string): number | null {
   return m ? Number(m[1]) : null;
 }
 
+/** Incident record that carries the 00412 custody origin under BRIAR. */
+export const CUSTODY_DOCNO = 'OIA-08-031';
+/** Directory document whose HOLLOW release carries unposted names and last postings. */
+export const DIRECTORY_DOCNO = 'OSC-PER-DIR';
+
 const trace: Handler = (p, ctx) => {
   if (!p.args[0]) return out(['TRACE: specify an accession number (RD-ACC-08-00398).']);
   const n = parseAccession(p.args[0]);
@@ -487,7 +508,10 @@ const trace: Handler = (p, ctx) => {
   if (!a) return out([`TRACE: no custody record for ${accessionNo(n)} on this host.`]);
   const lines = [`CHAIN OF CUSTODY  ${a.no}  ${stamp(ctx.now)}`, ...kv('Description', a.description, ctx.cols)];
   if (n === ACCESSION_HELD) {
-    lines.push(...kv('Hop 1  origin', `${bar(28)}  Withheld (SEXTANT/BRIAR)`, ctx.cols, 16));
+    // Released to a holder of both compartments, from the incident record (OIA-08-031).
+    const both = ctx.satisfies('SEXTANT') && ctx.satisfies('BRIAR');
+    const origin = both ? ctx.docRows?.(CUSTODY_DOCNO)?.get('Origin')?.[1] : null;
+    lines.push(...kv('Hop 1  origin', origin ? `${origin} to ${a.hops[0]!.to}` : `${bar(28)}  Withheld (SEXTANT/BRIAR)`, ctx.cols, 16));
     const h = a.hops[1]!;
     lines.push(...kv('Hop 2', `${h.date}  ${h.from} to ${h.to}  receipt ${h.receipt}`, ctx.cols, 16));
   } else {
@@ -518,10 +542,14 @@ const strength: Handler = (p, ctx) => {
       const carried = c.roster.filter((x) => x.site === UNPOSTED);
       const lw = Math.max(10, Math.min(26, ctx.cols - 43));
       lines.push(`${col('PN', 13)}${col('NAME', 18)}${col('LAST POSTED', lw)}EFFECTIVE`);
-      for (const x of carried) {
+      const dir = ctx.docRows?.(DIRECTORY_DOCNO);
+      for (const x0 of carried) {
+        // Name and remarks released by the directory document (columns 1 and 6); canon has sentinels.
+        const row = dir?.get(x0.pn);
+        const x = { ...x0, name: row?.[1] || x0.name, notes: row?.[6] || x0.notes };
         // Notes the client canon withholds (HOLLOW sentinels) print as bars, not as "none".
         const held = hasRx(x.notes);
-        const last = /Last posted ([^.]+)\./.exec(x.notes)?.[1] ?? (held ? bar(Math.min(12, lw - 1)) : '--');
+        const last = /Last posted ([^,.]+)/.exec(x.notes)?.[1] ?? (held ? bar(Math.min(12, lw - 1)) : '--');
         const eff = /effective (\d{2} [A-Z]{3} \d{4})/.exec(x.notes)?.[1] ?? (held ? bar(11) : '--');
         lines.push(`${col(x.pn, 13)}${col(shortName(x.name), 18)}${col(last, lw)}${eff}`);
       }
@@ -684,7 +712,7 @@ function commonPrefix(xs: string[]): string {
 }
 
 /** Tab completion over documented commands, their subcommands, docNos and facility ids. */
-export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon'>): Completion {
+export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon' | 'isHeld'>): Completion {
   const m = /^(\s*)(\S*)(\s+)?(.*)$/.exec(line)!;
   const [, lead = '', word = '', gap, tail = ''] = m;
   let pool: string[];
@@ -704,7 +732,7 @@ export function complete(line: string, ctx: Pick<HostContext, 'routes' | 'canon'
     const sub: Record<string, string[]> = { rail: ['status'], audit: ['tail'], clearance: ['status', 'request'], mail: ['open'] };
     if (sub[cmd]) pool = lastSpace >= 0 ? [] : sub[cmd]!;
     else if (cmd === 'open' || cmd === 'lookup') {
-      pool = ctx.routes.map((r) => r.docNo);
+      pool = heldRoutes(ctx).map((r) => r.docNo);
       upper = true;
     } else if (cmd === 'site') {
       pool = ctx.canon.facilities.map((f) => f.id);

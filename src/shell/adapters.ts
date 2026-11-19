@@ -11,6 +11,7 @@
 import { h } from 'preact';
 import type { ComponentType } from 'preact';
 import { signal } from '@preact/signals';
+import { IN_WORLD_DATE_ISO } from '@core/session';
 import type { Canon, CompartmentId, Marking, MarkingId } from '@core/canon-types';
 import type { DocJson, RouteEntry } from '@core/contracts';
 import { BASE as PIPELINE_BASE, asset as pipelineAsset } from '@core/base';
@@ -48,7 +49,7 @@ export interface ShellCanon {
  * value to render against; these are structural defaults, never shown as facts.
  */
 const EMPTY: ShellCanon = {
-  meta: { environment: 'MERIDIAN Workstation Environment', release: '', agency: 'Office of Strategic Continuity', inWorldDate: '2008-05-31', sourceDocNo: '', sourceRevision: '' },
+  meta: { environment: 'MERIDIAN Workstation Environment', release: '', agency: 'Office of Strategic Continuity', inWorldDate: IN_WORLD_DATE_ISO, sourceDocNo: '', sourceRevision: '' },
   markings: [],
   operator: {
     operatorId: '',

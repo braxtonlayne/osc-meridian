@@ -263,7 +263,7 @@ function WithheldText({ text, id, audit, tier }: { text: string; id: string; aud
 function DocumentsTab(p: DossierProps) {
   const id = p.f.id as FacilityId;
   const xrefs = p.load.state === 'ready' ? new Set(p.load.doc.xrefs.map((x) => x.docNo)) : new Set<string>();
-  const all = p.services.docs.all();
+  const all = p.services.docs.all().filter((r) => p.services.mail.isHeld(r.route));
   const rows = all
     .filter((r) => r.id !== p.entry.id && (r.facility === id || xrefs.has(r.docNo) || r.title.includes(id)))
     .sort((a, b) => (a.docNo < b.docNo ? -1 : 1));

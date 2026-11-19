@@ -10,6 +10,7 @@ import * as audit from './audit';
 import * as session from './session';
 import { loadSync, saveSync, load, save } from './persist';
 import { hashOf, normalize, pushPath, replacePath } from './router';
+import { heldHits, isHeldEntry } from './search';
 import { APPS, appById, appForPath, isAppId } from '@apps/index';
 import { canonNow, loadDoc, markingById, printDocument, searchRoutes } from '@shell/adapters';
 import type { SearchHit } from '@shell/adapters';
@@ -170,7 +171,7 @@ function onNavigate(w: Win, target: string): void {
   const hash = hashOf(target);
   const entry = byRouteMap.get(p);
   const owner = entry ? appById(entry.app) : appForPath(p);
-  if (!owner || owner.id !== w.appId || (entry && routeKey(entry) && !session.satisfies(routeKey(entry)!))) {
+  if (!owner || owner.id !== w.appId || (entry && !heldEntry(entry)) || (entry && routeKey(entry) && !session.satisfies(routeKey(entry)!))) {
     openRoute(p + hash);
     return;
   }
@@ -258,6 +259,37 @@ function openRefusal(path: string, title: string, refusal: { authority: string; 
   return w;
 }
 
+/** False only for a message the narrative has not yet delivered to this operator. */
+function heldEntry(r: RouteEntry): boolean {
+  return isHeldEntry(r, mailState.delivered.peek());
+}
+
+/** services.mail.isHeld: by docNo (or alias) or route path. Unknown documents count as held. */
+function isHeld(docNoOrRoute: string): boolean {
+  const k = docNoOrRoute.trim();
+  const up = k.toUpperCase();
+  const r =
+    (k.startsWith('/') ? byRouteMap.get(normalize(k)) : undefined) ??
+    byDocNoMap.get(up) ??
+    byIdMap.get(k) ??
+    routes.peek().find((x) => x.aliases?.some((a) => a.toUpperCase() === up));
+  return r ? heldEntry(r) : true;
+}
+
+/** In-world refusal for an undelivered message. The subject is not shown: only the number asked for. */
+function openNotHeld(path: string, entry: RouteEntry): Win {
+  return openRefusal(
+    path,
+    'Message not held',
+    {
+      authority: 'MERIDIAN Message Centre',
+      ref: entry.docNo,
+      reason: `${entry.docNo} is not held in the mailbox of operator ${session.operatorId.peek()}. Messages are displayed to the addressee only after delivery.`,
+    },
+    entry.docNo,
+  );
+}
+
 export interface OpenRouteOptions {
   push?: boolean;
 }
@@ -283,6 +315,11 @@ function openRouteNew(p: string, push: boolean, hash: string): Win | null {
     if (push) pushPath(p, hash);
   };
   const entry = byRouteMap.get(p);
+  if (entry && !heldEntry(entry)) {
+    const w = openNotHeld(p, entry);
+    pushIt();
+    return w;
+  }
   if (entry) {
     const def = appById(entry.app);
     const key = routeKey(entry);
@@ -421,7 +458,8 @@ function print(docId: string): void {
 let searchAuditTimer: ReturnType<typeof setTimeout> | null = null;
 
 export async function searchAll(q: string): Promise<{ hits: SearchHit[]; withheld: number }> {
-  const raw = await searchRoutes(q, routes.peek());
+  // Undelivered messages are dropped before anything else: not listed, not counted as withheld.
+  const raw = heldHits(await searchRoutes(q, routes.peek()), mailState.delivered.peek());
   const hits: SearchHit[] = [];
   let withheld = 0;
   for (const h of raw) {
@@ -482,6 +520,7 @@ export const services: Services = {
     delivered: mailState.delivered,
     read: mailState.read,
     meta: mailState.meta,
+    isHeld,
   },
   sound: {
     play(cue: SoundCue) {

@@ -1,13 +1,25 @@
 /**
  * Time helpers for the transit simulation. Pure; safe in a worker (no DOM, no signals).
  *
- * The in-world date follows the rule in src/core/session.ts: the calendar day is the
- * visitor's real local day of month, pinned to May 2008; time of day is real. Board
+ * The in-world date follows the rule in src/core/session.ts: the calendar date is fixed
+ * (canon.meta.inWorldDate, 19 MAY 2008); time of day is real. The main thread passes the
+ * session date into the simulation worker (setInWorldDate); the canon value is the default. Board
  * times are Zulu with the platform's local time in brackets. Every facility on the
  * network is in a US state that observed daylight time in May 2008 except Arizona.
  */
 
+// Named JSON import: Vite bundles only the meta object, not the whole client canon.
+import { meta as canonMeta } from '@canon';
+
 const pad2 = (n: number) => String(n).padStart(2, '0');
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+let worldDate: string = canonMeta.inWorldDate;
+
+/** Set the in-world date ("2008-05-19"), e.g. from session.inWorldDate() on the main thread or a worker message. */
+export function setInWorldDate(iso: string): void {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) worldDate = iso;
+}
 
 /** Zone label and offset from UTC (hours) in May, by the US state of the facility anchor. */
 const ZONE_BY_STATE: Record<string, [string, number]> = {};
@@ -50,24 +62,30 @@ export function hhmmssZ(ms: number): string {
   return `${pad2(d.getUTCHours())}${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}Z`;
 }
 
-/** In-world day of month (1..31) for a real instant, per the session rule (local day). */
-export function inWorldDay(ms: number): number {
-  return Math.min(Math.max(new Date(ms).getDate(), 1), 31);
+/** In-world day of month (1..31). The calendar date is fixed; `ms` is kept for callers. */
+export function inWorldDay(_ms: number): number {
+  return Number(worldDate.slice(8, 10));
 }
 
 /** "2008-05-19" */
-export function inWorldDateIso(ms: number): string {
-  return `2008-05-${pad2(inWorldDay(ms))}`;
+export function inWorldDateIso(_ms: number): string {
+  return worldDate;
 }
 
 /** "19 MAY 2008" */
-export function inWorldDateText(ms: number): string {
-  return `${pad2(inWorldDay(ms))} MAY 2008`;
+export function inWorldDateText(_ms: number): string {
+  return `${worldDate.slice(8, 10)} ${MONTHS[Number(worldDate.slice(5, 7)) - 1]} ${worldDate.slice(0, 4)}`;
+}
+
+/** "2008-05-19" -> "19 MAY 2008" (any ISO date; the text as given, no clock involved). */
+export function isoDateText(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? `${m[3]} ${MONTHS[Number(m[2]) - 1] ?? '???'} ${m[1]}` : iso;
 }
 
 /** Day of week of the in-world date, 0 = Sunday. */
-export function inWorldWeekday(ms: number): number {
-  return new Date(Date.UTC(2008, 4, inWorldDay(ms))).getUTCDay();
+export function inWorldWeekday(_ms: number): number {
+  return new Date(`${worldDate}T00:00:00Z`).getUTCDay();
 }
 
 export const WEEKDAYS = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];

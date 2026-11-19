@@ -12,10 +12,13 @@
  *     DOM property / CSS pseudo-class spellings of "placeholder" are code, not text, and are skipped.
  *  4. any internal href/src in prerendered HTML does not resolve to a file or route in dist/;
  *  5. headline-figure drift (rules in .generated/canon-figures.json, see scripts/content/figures.ts);
- *  6. any release file is keyed to tier 1, or contains an rx id whose redaction key is tier 1.
- *  7. any string withheld by buildClientCanon (length >= 6; see withheldNeedles for the one
- *     exemption) appears in any dist file outside data/releases/ (baseline HTML, JS, docs JSON,
- *     search index), or a tier-1 withheld string appears in a release file. Exception: tier-2
+ *  6. any release file is not named by a key hash, matches no document's key, is keyed to
+ *     tier 1, is not encoded / does not decode with its key, or contains a tier-1 rx id
+ *     (see checkReleaseFiles and src/core/release-codec.ts).
+ *  7. any string withheld by buildClientCanon (length >= 6; see withheldNeedles for the
+ *     exemptions) appears in any dist file outside data/releases/ (baseline HTML, JS, docs JSON,
+ *     search index); any withheld string appears in clear in a release file's raw bytes; or a
+ *     tier-1 withheld string appears in a decoded release file. Exception: tier-2
  *     roster names and emails may appear in baseline document files (signatures, From/To
  *     lines); see isAuthoredName.
  *  8. any prerendered page prints a raw `{identifier}` message-slot token in its static text or
@@ -28,6 +31,7 @@ import { fileURLToPath } from 'node:url';
 import type { DocJson, RouteEntry } from '../src/core/contracts';
 import { checkDrift, type FigureRule } from './content/figures.ts';
 import { escapeHtml, isTier1Key, normalizeBase } from './content/util.ts';
+import { decodeRelease, isEncodedRelease, releaseFileName } from '../src/core/release-codec';
 import { deriveRestrictions, type Withheld } from './content/client-canon.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -39,6 +43,39 @@ const dist = resolve(root, (distArg >= 0 ? process.argv[distArg + 1] : process.e
 export const SLOT_TOKEN_RE = /\{[A-Za-z_][A-Za-z0-9_]*\}/g;
 
 /** Slot tokens in the visible text of every static article on a prerendered page. */
+/**
+ * Release files must be named by releaseFileName(key) for a key some document uses, never
+ * tier 1, and hold an encoded body that decodes with that key. Returns, per file, the decoded
+ * body or a problem message (messages about tier 1 start with "tier-1").
+ */
+export function checkReleaseFiles(
+  files: string[],
+  knownKeys: Iterable<string>,
+): [string, { key: string; body: Record<string, string> } | string][] {
+  const byName = new Map<string, string>();
+  for (const k of knownKeys) byName.set(releaseFileName(k), k);
+  return files.map((f) => {
+    const name = f.split(/[\\/]/).pop()!;
+    const m = /^([0-9a-f]{16})\.json$/.exec(name);
+    if (!m) return [f, 'release file name must be a key hash (it may spell out a compartment)'];
+    const key = byName.get(m[1]!);
+    if (key === undefined) return [f, 'release file matches no redaction key in data/docs'];
+    if (isTier1Key(key)) return [f, `tier-1 release file (${key})`];
+    let payload: unknown;
+    try {
+      payload = JSON.parse(readFileSync(f, 'utf8'));
+    } catch {
+      return [f, 'release file is not JSON'];
+    }
+    if (!isEncodedRelease(payload)) return [f, 'release file body is not encoded'];
+    try {
+      return [f, { key, body: decodeRelease(key, payload) }];
+    } catch (e) {
+      return [f, `release file does not decode with its key: ${(e as Error).message}`];
+    }
+  });
+}
+
 export function findSlotTokens(html: string): string[] {
   const out: string[] = [];
   for (const m of html.matchAll(/<article class="static-doc[\s\S]*?<\/article>/g)) {
@@ -377,17 +414,24 @@ function main(): number {
 
   // 6. tier-1 never ships
   const t1Ids = new Set<string>();
+  const knownKeys = new Set<string>();
   const docsDir = join(dist, 'data', 'docs');
   for (const f of walk(docsDir).filter((x) => x.endsWith('.json'))) {
     const d = JSON.parse(readFileSync(f, 'utf8')) as DocJson;
-    for (const rx of d.redactions ?? []) if (isTier1Key(rx.key)) t1Ids.add(rx.id);
+    for (const rx of d.redactions ?? []) {
+      knownKeys.add(rx.key);
+      if (isTier1Key(rx.key)) t1Ids.add(rx.id);
+    }
   }
+  const decoded = new Map<string, Record<string, string>>();
   for (const dir of [join(dist, 'data', 'releases'), join(root, 'public', 'data', 'releases')]) {
-    for (const f of walk(dir)) {
-      const key = decodeURIComponent(f.split(sep).pop()!.replace(/\.json$/, ''));
-      if (isTier1Key(key)) fail('tier1', `${rel(f)} is a tier-1 release file`);
-      const body = JSON.parse(readFileSync(f, 'utf8')) as Record<string, string>;
-      for (const id of Object.keys(body)) if (t1Ids.has(id)) fail('tier1', `${rel(f)} contains tier-1 redaction ${id}`);
+    for (const [f, check] of checkReleaseFiles(walk(dir), knownKeys)) {
+      if (typeof check === 'string') {
+        fail(check.startsWith('tier-1') ? 'tier1' : 'releases', `${rel(f)}: ${check}`);
+        continue;
+      }
+      decoded.set(f, check.body);
+      for (const id of Object.keys(check.body)) if (t1Ids.has(id)) fail('tier1', `${rel(f)} contains tier-1 redaction ${id}`);
     }
   }
 
@@ -402,9 +446,18 @@ function main(): number {
       if (!TEXT_EXT.has(extname(f).toLowerCase())) continue;
       const isRelease = f.startsWith(releasesDir + sep);
       const text = readFileSync(f, 'utf8');
-      const list = isRelease ? needles.filter((n) => isTier1Key(n.key)) : isDocFile(f) ? needles.filter((n) => !isAuthoredName(n)) : needles;
+      // Release files are encoded: no withheld string may appear in their raw bytes at all.
+      const list = isRelease ? needles : isDocFile(f) ? needles.filter((n) => !isAuthoredName(n)) : needles;
       for (const hit of findWithheld(text, list)) {
-        fail('withheld', `${rel(f)}:${lineAt(text, hit.index)} contains ${hit.key} value ${hit.path}${isRelease ? ' (tier 1 in a release file)' : ''}`);
+        fail('withheld', `${rel(f)}:${lineAt(text, hit.index)} contains ${hit.key} value ${hit.path}${isRelease ? ' in clear (release files must be encoded)' : ''}`);
+      }
+      // Decoded, a release may carry its own key's text but never a tier-1 value.
+      const body = isRelease ? decoded.get(f) : undefined;
+      if (body) {
+        const clear = Object.values(body).join('\n');
+        for (const hit of findWithheld(clear, needles.filter((n) => isTier1Key(n.key)))) {
+          fail('withheld', `${rel(f)} (decoded) contains ${hit.key} value ${hit.path} (tier 1 in a release file)`);
+        }
       }
     }
   }

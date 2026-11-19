@@ -2,7 +2,7 @@
 
 `scripts/build-content.ts` compiles `content/<family>/<slug>.md` into the generated outputs
 listed in `docs/CONTRACTS.md` (`.generated/routes.json`, `.generated/canon-figures.json`,
-`public/data/docs/<id>.json`, `public/data/releases/<KEY>.json`, `public/data/search.json`).
+`public/data/docs/<id>.json`, `public/data/releases/<hash>.json` (encoded per key; `src/core/release-codec.ts`), `public/data/search.json`).
 `npm run content` runs it with defaults. Any problem prints as `file:line  message` and exits 1.
 
 ## Validating your own pages (content agents)

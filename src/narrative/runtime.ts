@@ -6,7 +6,7 @@
 import type { AuditEntry, Services } from '@core/contracts';
 import { reduce, reviveState, seg04Window } from './rules';
 import type { Ctx, Effect, NarrativeEvent, NarrativeState } from './rules';
-import { publishSeg04 } from './seg04';
+import { publishSeg04, transitBoardVisible } from './seg04';
 
 export interface RuntimeIo {
   load(): Promise<unknown>;
@@ -91,8 +91,13 @@ export async function createRuntime(svc: Services, io: RuntimeIo): Promise<Narra
     dispatch({ type: 'audit', entry, now: io.now(), newSession });
   });
 
-  dispatch({ type: 'sync', compartments: [...svc.session.compartments.peek()], acting: svc.session.actingTier2.peek() });
-  const stopTimer = io.every(TICK_MS, () => dispatch({ type: 'tick', now: io.now() }));
+  dispatch({ type: 'sync', compartments: [...svc.session.compartments.peek()], acting: svc.session.actingTier2.peek(), now: io.now() });
+  const tick = () => dispatch({ type: 'tick', now: io.now(), boardOpen: transitBoardVisible.peek() });
+  const stopTimer = io.every(TICK_MS, tick);
+  // Board shown: tick at once so a due movement starts while it is on screen.
+  const stopBoard = transitBoardVisible.subscribe((v) => {
+    if (v) tick();
+  });
 
   return {
     state: () => state,
@@ -100,6 +105,7 @@ export async function createRuntime(svc: Services, io: RuntimeIo): Promise<Narra
     stop() {
       unsubscribe();
       stopTimer();
+      stopBoard();
     },
   };
 }

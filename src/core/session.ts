@@ -3,11 +3,10 @@
  *
  * IN-WORLD DATE RULE (deterministic, documented here and nowhere else):
  *   - Time of day follows the visitor's real clock.
- *   - The calendar date is pinned to May 2008. The in-world day of month is the
- *     visitor's real local day of month (1..31). Every real month has at most 31
- *     days, so the in-world date is always within 01 MAY 2008 .. 31 MAY 2008 and
- *     can never pass the 31 MAY 2008 ceiling.
- *     Example: real 19 NOV 2026 14:30 local -> in-world 19 MAY 2008 14:30.
+ *   - The calendar date is fixed: canon.meta.inWorldDate (19 MAY 2008), the single
+ *     source of truth shared with content, mail, the calendar and the graphics.
+ *     Example: real 19 NOV 2026 14:30 local -> in-world 19 MAY 2008 14:30, and the
+ *     same date on any other real day.
  *   - Site-local time for ALPHA-03 is US Eastern. Because the in-world date is
  *     always in May (daylight time), site-local is always UTC-4 and labelled EDT,
  *     whatever the visitor's real season.
@@ -15,21 +14,25 @@
  * PROBATION DAY RULE:
  *   probationDay = (in-world date - canon.operator.probationStart) in whole days + 1,
  *   clamped to 1..90 (the probationary transfer is 90 days). With the canonical
- *   start of 14 APR 2008 this yields day 18 on 01 MAY and day 48 on 31 MAY.
+ *   start of 14 APR 2008 and the fixed date 19 MAY 2008 this yields day 36.
  */
 import { computed, signal } from '@preact/signals';
 import type { CompartmentId, TierNo } from './canon-types';
 import { load, save } from './persist';
+// Named JSON import: Vite bundles only the meta object, not the whole client canon.
+import { meta as canonMeta } from '@canon';
+
+/** The in-world date, ISO ("2008-05-19"), from canon. */
+export const IN_WORLD_DATE_ISO: string = canonMeta.inWorldDate;
 
 export const PROBATION_LENGTH_DAYS = 90;
-export const IDLE_TIMEOUT_MS = 10 * 60 * 1000;
+export const IDLE_TIMEOUT_MS = 15 * 60 * 1000; // matches the account notice (msg-08-04106) and DIR-0301 para 4
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-/** In-world calendar date (UTC midnight of the pinned May 2008 day). */
-export function inWorldDate(now: Date = new Date()): Date {
-  const day = Math.min(Math.max(now.getDate(), 1), 31);
-  return new Date(Date.UTC(2008, 4, day));
+/** In-world calendar date: UTC midnight of canon.meta.inWorldDate (the `now` argument is kept for callers). */
+export function inWorldDate(_now: Date = new Date()): Date {
+  return new Date(IN_WORLD_DATE_ISO + 'T00:00:00Z');
 }
 
 /** "19 MAY 2008" */

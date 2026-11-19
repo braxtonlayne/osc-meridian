@@ -48,6 +48,30 @@ export function accessKey(access: { tier?: number; compartment?: string } | unde
   return null;
 }
 
+/** Route family of mailbox messages: they exist for the operator only once delivered. */
+export const MESSAGE_FAMILY = 'mail';
+
+/** True for a message document (route family `mail`). */
+export function isMessageEntry(r: Pick<RouteEntry, 'family'>): boolean {
+  return r.family === MESSAGE_FAMILY;
+}
+
+/**
+ * Whether the operator holds a document: everything that is not a message, and messages
+ * whose id is in the delivered list. An undelivered message is not held anywhere the
+ * operator can reach (search, records, terminal, direct route).
+ */
+export function isHeldEntry(r: Pick<RouteEntry, 'family' | 'id'>, delivered: ReadonlySet<string> | readonly string[]): boolean {
+  if (!isMessageEntry(r)) return true;
+  return Array.isArray(delivered) ? delivered.includes(r.id) : (delivered as ReadonlySet<string>).has(r.id);
+}
+
+/** Drops hits for messages not yet delivered. Not counted as withheld: their existence is not disclosed. */
+export function heldHits<T extends { route: Pick<RouteEntry, 'family' | 'id'> }>(hits: readonly T[], delivered: readonly string[]): T[] {
+  const set = new Set(delivered);
+  return hits.filter((h) => isHeldEntry(h.route, set));
+}
+
 export interface SearchHit {
   route: RouteEntry;
   score: number;

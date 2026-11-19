@@ -73,12 +73,12 @@ Body Markdown (GFM) plus directives (remark-directive):
 - **Drift trigger phrases** (exact wording; see `scripts/content/figures.ts`): "certified mileage", "sustained capacity", "total surge berthing", "total personnel", "total posted staff", "DETACHED / UNPOSTED", "total programme cost". Any page using a phrase must show the canon figure next to it (use `:c[...]`).
 - Unknown bare `:word` stays plain text; any other unknown directive fails the build.
 
-Redaction is resolved **at build time**: baseline HTML contains only `<span class="rx" data-rx="<id>" data-len="<chars>" data-auth=".." data-ref="..">` with no hidden text; hidden HTML goes to `public/data/releases/<KEY>.json` (never emitted for tier 1). The client fetches a release file only once the session satisfies its key.
+Redaction is resolved **at build time**: baseline HTML contains only `<span class="rx" data-rx="<id>" data-len="<chars>" data-auth=".." data-ref="..">` with no hidden text; hidden HTML goes to `public/data/releases/<releaseFileName(KEY)>.json`, encoded (never emitted for tier 1; obfuscated, not secret: see `src/core/release-codec.ts`). The client fetches a release file only once the session satisfies its key.
 
 ## Generated outputs (pipeline)
 - `.generated/routes.json` — `RouteEntry[]` (imported by the shell at build time)
 - `public/data/docs/<id>.json` — `DocJson`
-- `public/data/releases/<KEY>.json` — `{ [rxId]: html }`
+- `public/data/releases/<16-hex hash of KEY>.json` — `{ v: 1, d: base64 }`, which decodes (`decodeRelease(KEY, …)`) to `{ [rxId]: html }`
 - `public/data/search.json` — MiniSearch index over baseline (already-redacted) text
 - `dist/<route>/index.html` for every route (prerender), plus `dist/404.html`, `dist/.nojekyll`
 
@@ -119,6 +119,7 @@ Owner: integration (`src/narrative/**`). Started once from `src/main.tsx` after 
 - `services.mail.deliver(msgId, opts?)` with `MailDeliverOptions { slots?, read?, silent?, repeat? }`; `repeat` re-delivers an already delivered message as unread with new slots (non-delivery notice, every time).
 - `services.mail.meta`: `Record<msgId, { at, slots? }>`; `at` is the in-world ISO delivery time (use it for `dateMode: delivery`); the mail app replaces `{token}` in the body/slotTemplate with `slots[token]`.
 - `services.mail.delivered` / `services.mail.read`: `ReadonlySignal<string[]>` of message ids (delivery order; read set kept from `mail.read` audit entries). Apps read mailbox state only through these, never from shell internals.
+- `services.mail.isHeld(docNoOrRoute)`: `false` only for a message document (family `mail`) the narrative has not yet delivered; `true` for everything else, including unknown numbers. Accepts a docNo, alias or route path. `services.search` / `searchAll` drop undelivered messages (they are not counted as withheld), and `services.openRoute` (and in-window navigation) to one opens an in-world "Message not held" refusal from the MERIDIAN Message Centre that does not show the subject. Apps that list documents from `services.docs.all()` (terminal completion and listings, records browse) must filter with `isHeld`.
 
 **What apps must log for the engine to see:**
 | Kind | subject | data |
@@ -135,4 +136,7 @@ Owner: integration (`src/narrative/**`). Started once from `src/main.tsx` after 
 - Flags via `services.session.flags` (set with `setFlag`): `oriented`, `accessionHeld`, `scanRead`, `queryRead` (F-131 receipt history), `mileageQuery`, `seg04Witnessed`, `strengthRun`, `interimReview`, `oiaReviewedPrints` (stamp later print cover sheets REVIEWED-OIA). A page/form gated on `flag:<name>` checks `services.session.flags.value[name]`.
 - Compartments and ACTING-T2 via `services.clearance.grant` (so `session.compartments` / `actingTier2` / `satisfies` update as usual).
 - `@narrative/engine`: `seg04` signal (`{ start, end } | null`, wall-clock ms, held 60 s after `end` for the incident log), `seg04Blocks(now, w)` (lit blocks 1..12 from the ALPHA-05 end), `seg04LogLine(now, block)`, `seg04LogVisible(now, w)`, `SEG04_CONSIST_LABEL`; `formRefusal(formNo, fields)` returns the in-world refusal text for F-122 (probationer) and F-126 non-approvable compartments, or null.
+- `reportTransitBoard(visible: boolean)` (from `@narrative/engine`): Transit Control calls it whenever its board becomes visible or hidden (open, minimise, restore, close); `transitBoardVisible` is the read-only signal. Without these calls the engine falls back to Transit Control `window.open` / `window.close` audit lines.
+- **Segment 04 scheduling:** each sign-in (not unlock) draws a due time 6–25 min after login. Once due, the movement starts at once if the session is unlocked and the board is shown (the engine ticks as soon as the board is reported visible). If it is locked when due, it starts within 60 s of unlock with the board shown (in practice on the next 5 s tick). If the board is never shown, it runs unwatched 20 min after it fell due (unlocked), so the withdrawal line still reaches audit tail. Never while locked; once per sign-in.
+- **`{date}` slot:** every triggered (non-login) delivery carries `slots.date` = the in-world date at the moment of delivery (`19 MAY 2008`, same clock as the taskbar); rule slots override it. Content that says "today" should use `{date}`, not a literal date. Login mail carries no slots.
 - Terminal: `clearance request acting` before the interim review should print "Not eligible: probationary (DIR-0247)"; check `services.session.flags.value.interimReview`.

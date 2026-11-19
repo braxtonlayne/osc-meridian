@@ -10,6 +10,7 @@ import type { ComponentChildren } from 'preact';
 import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
+import { WORKSTATION_ID } from '@core/audit';
 import { load as loadStore, save as saveStore } from '@core/persist';
 import {
   Button,
@@ -43,11 +44,13 @@ import {
 import { LibraryView, useFolders } from './LibraryView';
 import { EMPTY_SEARCH, PAGE_SIZE, SearchView, filteredHits, type Hit, type SearchState } from './SearchView';
 import { DocView, withheldCount } from './DocView';
+import { ticketTerms, withOwnAccess } from '../shared/access-log';
 import { APP_NAME, MATCHERS, canon, markingLabel, markingRank } from './shared';
 
 const HOME = '/records';
 const SAVED_KEY = 'records.savedQueries';
 const LOWEST: MarkingId = ([...canon.markings].sort((a, b) => a.rank - b.rank)[0]?.id ?? 'TSSCI-OSC') as MarkingId;
+const TOP: MarkingId | undefined = [...canon.markings].sort((a, b) => b.rank - a.rank)[0]?.id as MarkingId | undefined;
 
 type View = 'library' | 'search';
 type DocState = { status: 'idle' } | { status: 'loading' } | { status: 'ready'; doc: DocJson } | { status: 'failed' };
@@ -80,7 +83,13 @@ export default function App({ win, route }: AppProps) {
   const auditEntries = services.audit.entries.value;
   const satisfies = (k: string) => services.clearance.satisfies(k);
 
-  const routes = useMemo(() => services.docs.all(), []);
+  // Undelivered messages are not in this operator's holdings (services.mail.isHeld).
+  const delivered = services.mail.delivered.value;
+  const heldByDocNo = (d: string): RouteEntry | undefined => {
+    const r = services.docs.byDocNo(d);
+    return r && services.mail.isHeld(r.route) ? r : undefined;
+  };
+  const routes = useMemo(() => services.docs.all().filter((r) => services.mail.isHeld(r.route)), [delivered]);
   const recent = useMemo(() => {
     const seen = new Set<string>();
     const out: RouteEntry[] = [];
@@ -229,6 +238,13 @@ export default function App({ win, route }: AppProps) {
   const visibleHits = filteredHits(search);
   const pageHits = visibleHits.slice((Math.max(1, search.page) - 1) * PAGE_SIZE, Math.max(1, search.page) * PAGE_SIZE);
   const doc = docState.status === 'ready' ? docState.doc : null;
+  // An incident ticket's access log carries this workstation's own recorded access, as in Assurance.
+  const shownDoc = useMemo(() => {
+    if (!doc) return null;
+    const terms = ticketTerms(doc, doc, services.docs.byDocNo, TOP);
+    const operator = `${services.session.operatorId.value} (${canon.operator.pn})`;
+    return withOwnAccess(doc, { entries: auditEntries, terms, workstation: WORKSTATION_ID, operator });
+  }, [doc, auditEntries]);
 
   const screenMarking: MarkingId = route
     ? route.marking
@@ -319,7 +335,7 @@ export default function App({ win, route }: AppProps) {
           score: h.score,
           snippet: h.snippet,
         }));
-        const exact = resolveDocNo(query, services.docs.byDocNo);
+        const exact = resolveDocNo(query, heldByDocNo);
         if (exact && !hits.some((h) => h.route.route === exact.route)) {
           const k = accessKeyOf(exact.access);
           if (!k || satisfies(k))
@@ -640,7 +656,7 @@ export default function App({ win, route }: AppProps) {
     } else {
       body = (
         <DocView
-          doc={doc}
+          doc={shownDoc ?? doc}
           showProps={showProps}
           narrow={narrow}
           width={width}
@@ -732,7 +748,11 @@ export default function App({ win, route }: AppProps) {
         setDialog={setDialog}
         saved={saved}
         onOpenNumber={(value) => {
-          const r = resolveDocNo(value, services.docs.byDocNo);
+          const r = resolveDocNo(value, heldByDocNo);
+          if (!r && resolveDocNo(value, services.docs.byDocNo)) {
+            setDialog({ kind: 'open', value, error: 'No such message held.' });
+            return;
+          }
           if (!r) {
             const v = value.trim().toUpperCase();
             const s = seriesOf(v, MATCHERS);

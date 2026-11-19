@@ -4,7 +4,8 @@
  * content/<family>/<slug>.md  ->  .generated/routes.json            RouteEntry[] sorted by route
  *                                 .generated/canon-figures.json     drift rules (figures.ts)
  *                                 public/data/docs/<id>.json        DocJson (baseline-redacted)
- *                                 public/data/releases/<KEY>.json   { rxId: html } (never tier 1)
+ *                                 public/data/releases/<hash>.json  encoded { rxId: html } (never tier 1;
+ *                                                                   src/core/release-codec.ts)
  *                                 public/data/search.json           MiniSearch (baseline text only)
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -20,6 +21,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import type { DocJson, RedactionInfo, RouteEntry } from '../../src/core/contracts';
 import { SEARCH_OPTIONS, type SearchDoc } from '../../src/core/search';
+import { encodeRelease, releaseFileName } from '../../src/core/release-codec';
 import { CORE_KEYS, PLANNING_KEYS, FrontmatterSchema, type Frontmatter } from './schema.ts';
 import { loadCanon, type CanonData } from './canon.ts';
 import { deriveRestrictions, type Restrictions } from './client-canon.ts';
@@ -498,7 +500,8 @@ export function writeOutputs(outDir: string, r: BuildResult): void {
   for (const d of r.docs) writeFileSync(join(data, 'docs', `${d.id}.json`), JSON.stringify(d));
   for (const [key, m] of Object.entries(r.releases)) {
     if (isTier1Key(key)) throw new Error(`refusing to write tier-1 release ${key}`);
-    writeFileSync(join(data, 'releases', `${key}.json`), JSON.stringify(m));
+    // Obfuscated, not secret: hashed file name, XOR-keystream + base64 body (src/core/release-codec.ts).
+    writeFileSync(join(data, 'releases', `${releaseFileName(key)}.json`), JSON.stringify(encodeRelease(key, m)));
   }
   writeFileSync(join(data, 'search.json'), r.searchJson);
 }

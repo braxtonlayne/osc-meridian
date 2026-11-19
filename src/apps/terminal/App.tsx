@@ -13,7 +13,8 @@ import { appById } from '@apps/index';
 import { MenuBar, StatusBar, Toolbar, ToolbarButton, ToolbarSeparator, ToolbarSpacer, ToolbarLabel } from '@design/index';
 import type { MenuBarMenu } from '@design/index';
 import { RefusalState } from '@graphics/states';
-import { COMPARTMENT_MARKING, complete, formatConsist, formatFind, run, stamp, zulu } from './host';
+import { loadTableRows, type ReleasedCell } from '../shared/released';
+import { COMPARTMENT_MARKING, CUSTODY_DOCNO, DIRECTORY_DOCNO, complete, formatConsist, formatFind, run, stamp, zulu } from './host';
 import type { Effect, HostContext } from './host';
 import { HOST, HOST_TITLE, PROMPT, WORKSTATION } from './records';
 import { mountConsole } from './console';
@@ -114,6 +115,22 @@ export default function App({ win, route }: AppProps) {
     setMarkingState(BASE_MARKING);
   };
 
+  // Released table rows of the documents the host reads (directory, custody record),
+  // reloaded when the access determination changes so new releases apply.
+  const docRows = useRef(new Map<string, Map<string, ReleasedCell[]>>());
+  const accessSig = `${services.session.compartments.value.join(',')}|${services.session.actingTier2.value ? 'A' : ''}`;
+  useEffect(() => {
+    let live = true;
+    for (const no of [DIRECTORY_DOCNO, CUSTODY_DOCNO]) {
+      void loadTableRows(services, no).then((m) => {
+        if (live) docRows.current.set(no, m);
+      });
+    }
+    return () => {
+      live = false;
+    };
+  }, [accessSig]);
+
   const context = (c: ConsoleHandle): HostContext => ({
     canon,
     now: new Date(),
@@ -129,6 +146,8 @@ export default function App({ win, route }: AppProps) {
     audit: services.audit.entries.peek(),
     unread: services.mail.unread.peek(),
     routes: services.docs.all(),
+    isHeld: (d: string) => services.mail.isHeld(d),
+    docRows: (no: string) => docRows.current.get(no),
     satisfies: services.clearance.satisfies,
     appTitle: (id) => appById(id)?.title ?? id,
   });
@@ -247,7 +266,7 @@ export default function App({ win, route }: AppProps) {
       PROMPT,
       {
         onLine: (l) => onLineRef.current(l),
-        onComplete: (l) => complete(l, { routes: services.docs.all(), canon }),
+        onComplete: (l) => complete(l, { routes: services.docs.all(), canon, isHeld: (d: string) => services.mail.isHeld(d) }),
         onReconnect: () => handle && connect(handle),
         onMode: (m) => setMode(m),
         onResize: (cols, rows) => setSize(`${cols}x${rows}`),

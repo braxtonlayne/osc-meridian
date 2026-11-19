@@ -8,11 +8,17 @@ import { buildContent, loadManifestDocNos, type BuildResult } from '../../script
 import { FrontmatterSchema } from '../../scripts/content/schema.ts';
 import { ContentBuildError } from '../../scripts/content/util.ts';
 import { checkDrift, figureRules } from '../../scripts/content/figures.ts';
-import { clearStrings, findBannedWords, findExternalUrls, findWithheld, isAgencyName, isAuthoredName, findSlotTokens, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
+import { clearStrings, findBannedWords, findExternalUrls, findWithheld, isAgencyName, isAuthoredName, checkReleaseFiles, findSlotTokens, isDocFile, withheldNeedles } from '../../scripts/verify-dist.ts';
 import { appHomeHtml, blankSlots, readAppHomes, renderPage, SLOT_BLANK, STATIC_MARKER } from '../../scripts/prerender.ts';
 import { applyReleases, createDocs } from '../../src/core/docs';
 import { createSearch } from '../../src/core/search';
 import type { RouteEntry } from '../../src/core/contracts';
+import { decodeRelease, encodeRelease, releaseFileName, type EncodedRelease } from '../../src/core/release-codec';
+
+/** Release files as the content build writes them: { <hash>: encoded body }. */
+function releaseFiles(releases: Record<string, Record<string, string>>): Record<string, EncodedRelease> {
+  return Object.fromEntries(Object.entries(releases).map(([k, m]) => [releaseFileName(k), encodeRelease(k, m)]));
+}
 
 const FIXTURES = resolve(__dirname, '../fixtures/content');
 const CANON = resolve(__dirname, '../fixtures/canon.json');
@@ -115,8 +121,11 @@ describe('content pipeline', () => {
     try {
       buildContent({ contentDir: FIXTURES, canonPath: CANON, outDir: out });
       const files = walk(out);
-      expect(files.some((f) => /releases[\\/]T2\.json$/.test(f))).toBe(true);
-      expect(files.some((f) => /T1\.json$/.test(f))).toBe(false);
+      const t2File = files.find((f) => f.endsWith(`${releaseFileName('T2')}.json`));
+      expect(t2File).toBeDefined();
+      expect(decodeRelease('T2', JSON.parse(readFileSync(t2File!, 'utf8')))).toEqual(r.releases.T2);
+      expect(files.some((f) => /(T1|T2|KESTREL)\.json$/.test(f))).toBe(false);
+      expect(files.some((f) => f.endsWith(`${releaseFileName('T1')}.json`))).toBe(false);
       for (const f of files) {
         const text = readFileSync(f, 'utf8');
         for (const s of HIDDEN_T1) expect(text, `${f} contains ${s}`).not.toContain(s);
@@ -363,7 +372,7 @@ describe('restricted material never reaches the baseline', () => {
         const d = /data\/docs\/(.+)\.json$/.exec(url);
         if (d) return r.docs.find((x) => x.id === d[1]);
         const k = /data\/releases\/(.+)\.json$/.exec(url);
-        return r.releases[k![1]!] ?? {};
+        return releaseFiles(r.releases)[k![1]!] ?? {};
       };
       const closed = await createDocs({ satisfies: (k) => k === 'T3', routes: r.routes, fetchJson }).load('dir-0099');
       expect(closed.xrefs).toEqual([]);
@@ -585,7 +594,8 @@ describe('docs service', () => {
     const doc = /data\/docs\/(.+)\.json$/.exec(url);
     if (doc) return r.docs.find((d) => d.id === decodeURIComponent(doc[1]!));
     const rel = /data\/releases\/(.+)\.json$/.exec(url);
-    if (rel && r.releases[rel[1]!]) return r.releases[rel[1]!];
+    const files = releaseFiles(r.releases);
+    if (rel && files[rel[1]!]) return files[rel[1]!];
     throw new Error(`404 ${url}`);
   };
 
@@ -598,8 +608,8 @@ describe('docs service', () => {
     expect(d.html).not.toContain('Heron Gate');
     expect(d.html).toContain('data-rx="dir-0001-6"'); // inner compartment bar still in place
     await docs.load('dir-0001');
-    expect(fetched.filter((u) => u.includes('releases/T2.json'))).toHaveLength(1);
-    expect(fetched.some((u) => /releases\/(KESTREL|T1)/.test(u))).toBe(false);
+    expect(fetched.filter((u) => u.includes(`releases/${releaseFileName('T2')}.json`))).toHaveLength(1);
+    expect(fetched.some((u) => [releaseFileName('KESTREL'), releaseFileName('T1')].some((n) => u.includes(n)))).toBe(false);
     expect(docs.byDocNo('OSC-MEM-08-0002')?.route).toBe('/records/mem-08-0002');
     expect(docs.byRoute('/directives/dir-0001')?.docNo).toBe('OSC-DIR-0001');
     expect(docs.all()).toHaveLength(2);
@@ -694,5 +704,44 @@ describe('static message slots and app homes', () => {
     expect(html).toContain('href="/osc-meridian/mail/msg-1"');
     const empty = appHomeHtml({ id: 'terminal', title: 'Terminal', homeRoute: '/terminal' }, routes, '/');
     expect(empty).toContain('holds no filed documents');
+  });
+});
+
+describe('release file obfuscation', () => {
+  const body = { 'dir-0001-2': 'Heron Gate', 'dir-0001-3': '<p>Käse — “quoted” Marbleford</p>' };
+
+  it('round-trips with the right key, hides names and text, and rejects the wrong key', () => {
+    const enc = encodeRelease('KESTREL', body);
+    const raw = JSON.stringify(enc);
+    expect(raw).not.toMatch(/Heron|Marbleford|dir-0001/);
+    expect(decodeRelease('KESTREL', enc)).toEqual(body);
+    expect(() => decodeRelease('HOLLOW', enc)).toThrow();
+    expect(() => decodeRelease('KESTREL', body)).toThrow(/not encoded/);
+    expect(releaseFileName('KESTREL')).toMatch(/^[0-9a-f]{16}$/);
+    expect(releaseFileName('KESTREL')).not.toBe(releaseFileName('KESTREL+T2'));
+  });
+
+  it('verify-dist accepts only hashed, encoded, non-tier-1 release files', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'meridian-rel-'));
+    try {
+      const put = (name: string, v: unknown) => {
+        const f = join(dir, name);
+        writeFileSync(f, JSON.stringify(v));
+        return f;
+      };
+      const good = put(`${releaseFileName('KESTREL')}.json`, encodeRelease('KESTREL', body));
+      const clear = put(`${releaseFileName('T2')}.json`, body);
+      const named = put('KESTREL.json', encodeRelease('KESTREL', body));
+      const t1 = put(`${releaseFileName('T1')}.json`, encodeRelease('T1', body));
+      const swapped = put(`${releaseFileName('HOLLOW')}.json`, encodeRelease('KESTREL', body));
+      const res = new Map(checkReleaseFiles([good, clear, named, t1, swapped], ['KESTREL', 'T2', 'T1', 'HOLLOW']));
+      expect(res.get(good)).toEqual({ key: 'KESTREL', body });
+      expect(res.get(clear)).toMatch(/not encoded/);
+      expect(res.get(named)).toMatch(/key hash/);
+      expect(res.get(t1)).toMatch(/^tier-1/);
+      expect(res.get(swapped)).toMatch(/does not decode/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

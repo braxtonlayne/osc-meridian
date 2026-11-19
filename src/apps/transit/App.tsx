@@ -19,7 +19,7 @@ import { RefusalState } from '@graphics/states';
 import type { TunnelLayer } from '@graphics/tunnelmap';
 import { hhmmLocal, hhmmssZ, zoneForState } from '@sim/time';
 import { diagramBlockCounts } from '@sim/transit-model';
-import { logBaseFrom, TIMETABLE_DOCNO, useBoard, useSeg04Watch, useSheets, useTimetable, watchAt } from './board';
+import { logBaseFrom, TIMETABLE_DOCNO, useBoard, useBoardReport, useSeg04Watch, useSheets, useTimetable, watchAt } from './board';
 import { GeoView } from './geo';
 import { Tunnel3DView } from './tunnel3d';
 import { Detail, DiagramView, EnvironmentView, LogView, MovementTable, MovementsView, PossessionView, TimetableView, useSize, type Snapshot } from './views';
@@ -93,6 +93,7 @@ export default function App({ win, route }: AppProps) {
 
   const viewDef = VIEWS.find((v) => v.id === view)!;
   useSeg04Watch(services, rootRef, view === 'document' && docEntry ? `document ${docEntry.docNo}` : viewDef.watch);
+  useBoardReport(rootRef, view === 'diagram' || view === 'geo' || view === '3d');
 
   /* access */
   const key = route ? accessKey(route) : null;

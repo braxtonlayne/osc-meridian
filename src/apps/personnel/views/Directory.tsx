@@ -5,7 +5,11 @@ import type { CompartmentId } from '@core/canon-types';
 import { canon, divisionName, fmt, personByPn, SPONSORABLE, UNPOSTED } from '../model';
 import { buildRow, filterRows, sortKey, type DirFilter, type DirRow } from '../directory';
 import { dirPreset, orgPreset } from '../state';
-import { CellView, usePer } from '../ui';
+import { CellView, RxText, usePer } from '../ui';
+import { loadTableRows, type ReleasedCell } from '../../shared/released';
+
+/** The registered directory document; its release carries the HOLLOW fields. */
+const DIRECTORY_DOCNO = 'OSC-PER-DIR';
 
 const EMPTY: DirFilter = { query: '', tier: null, site: null, divisionId: null };
 
@@ -18,6 +22,17 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
   const per = usePer();
   const { services } = per;
   const held = services.session.compartments.value;
+  const acting = services.session.actingTier2.value;
+  // Released directory fields come from the directory document as loaded with this
+  // session's releases (the client canon carries only sentinels for them).
+  const [released, setReleased] = useState<Map<string, ReleasedCell[]>>(() => new Map());
+  useEffect(() => {
+    let live = true;
+    void loadTableRows(services, DIRECTORY_DOCNO).then((m) => live && setReleased(m));
+    return () => {
+      live = false;
+    };
+  }, [held.join(','), acting]);
   const [filter, setFilter] = useState<DirFilter>(() => dirPreset.peek() ?? EMPTY);
   const [sel, setSel] = useState<string[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -35,9 +50,10 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
           sponsorable: SPONSORABLE,
           compartmentIds: canon.compartments.map((c) => c.id),
           divisionName,
+          released,
         }),
       ),
-    [held.join(',')],
+    [held.join(','), released],
   );
   const shown = useMemo(() => filterRows(rows, filter), [rows, filter]);
 
@@ -69,7 +85,7 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
     { key: 'name', header: 'Name', sortValue: (r) => sortKey(r.name), render: (r) => <CellView c={r.name} /> },
     { key: 'role', header: 'Post', wrap: true, sortValue: (r) => sortKey(r.role), render: (r) => <CellView c={r.role} /> },
     { key: 'tier', header: 'Tier', width: 40, align: 'center', mono: true, sortValue: (r) => r.tierNo ?? 9, render: (r) => <CellView c={r.tier} /> },
-    { key: 'site', header: 'Site', width: 150, mono: true, wrap: true, sortValue: (r) => r.site },
+    { key: 'site', header: 'Site', width: 150, mono: true, wrap: true, sortValue: (r) => r.site, render: (r) => <RxText s={r.site} /> },
     { key: 'div', header: 'Division', sortValue: (r) => sortKey(r.division), render: (r) => <CellView c={r.division} /> },
     { key: 'email', header: 'Mail address', mono: true, sortValue: (r) => sortKey(r.email), render: (r) => <CellView c={r.email} /> },
     {
@@ -143,7 +159,7 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
               { label: 'Rank or title', value: <CellView c={selected.rank} /> },
               { label: 'Post', value: <CellView c={selected.role} /> },
               { label: 'Tier', value: <CellView c={selected.tier} />, mono: true },
-              { label: 'Site', value: selected.site, mono: true },
+              { label: 'Site', value: <RxText s={selected.site} />, mono: true },
               { label: 'Division', value: <CellView c={selected.division} /> },
               { label: 'Mail address', value: <CellView c={selected.email} />, mono: true },
               { label: 'Holds', value: selected.holds.length ? <span class="per-holds">{selected.holds.map((c, i) => <CellView key={i} c={c} />)}</span> : 'None recorded' },

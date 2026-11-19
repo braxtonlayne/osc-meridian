@@ -338,7 +338,7 @@ export interface Canon {
     environment: string; // "MERIDIAN Workstation Environment"
     release: string; // "4.1.7"
     agency: string; // "Office of Strategic Continuity"
-    inWorldDate: string; // "2008-05-31" (date ceiling)
+    inWorldDate: string; // "2008-05-19": the session date (src/core/session.ts). The date ceiling is DATE_CEILING (canon-schema).
     sourceDocNo: string;
     sourceRevision: string; // "2008-Q2"
   };

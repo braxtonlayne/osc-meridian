@@ -346,7 +346,7 @@ Items from the facility calendar (:x[OSC-SYS-CAL]) open to the reader's tier.
 | A03-CMD-08-047 | 08 MAY 2008 | Memorial Day minimum manning, 26 MAY 2008 (:x[MSG-08-04362]) | //SIGNED// G. IMRIE / for R. TEAGUE, Deputy Commander |
 | A03-CMD-08-049 | 13 MAY 2008 | Lost property cupboard, Level 1: items held over 30 days to be disposed of 30 MAY 2008 | //SIGNED// G. IMRIE / for R. TEAGUE, Deputy Commander |
 | A03-CMD-08-050 | 19 MAY 2008 | Dining hall holiday hours, 26 MAY 2008 | //SIGNED// G. IMRIE / for R. TEAGUE, Deputy Commander |
-| A03-CMD-08-052 | 20 MAY 2008 | Medical readiness appointments, 21 MAY 2008: personnel with certifications expiring 31 MAY 2008 to attend | //SIGNED// G. IMRIE / for R. TEAGUE, Deputy Commander |
+| A03-CMD-08-052 | 19 MAY 2008 | Medical readiness appointments, 21 MAY 2008: personnel with certifications expiring 31 MAY 2008 to attend | //SIGNED// G. IMRIE / for R. TEAGUE, Deputy Commander |
 
 16.2. Registry and directive references:
 

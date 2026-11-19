@@ -11,7 +11,7 @@ import { LineDiagram, type DiagramNetwork, type SchematicTrain } from '@graphics
 import type { Services } from '@core/contracts';
 import { SEG04_LABEL } from '@sim/seg04';
 import { blockId, diagramBlockCounts, envReading, incNo, stamp, type BoardState, type LogEntry, type Movement, type MoveStatus, type PossessionState, type SimLink, type SimModel, type TrainState } from '@sim/transit-model';
-import { durText, hhmmZ } from '@sim/time';
+import { durText, hhmmZ, isoDateText } from '@sim/time';
 import type { TimetableDoc } from './board';
 
 export type Snapshot = BoardState;
@@ -280,7 +280,7 @@ export function TimetableView({ model, state, tt, narrow }: { model: SimModel; s
         ))}
         <span class="tr-note">
           {tt ? `Working timetable ${tt.timetable.source} rev ${tt.revision}` : 'Working timetable not loaded'}
-          {state ? `. Movements booked to depart ${state.date.slice(8)} MAY 2008 (UTC day).` : ''}
+          {state ? `. Movements booked to depart ${isoDateText(state.date)} (UTC day).` : ''}
         </span>
       </div>
       <TimetableTable model={model} rows={rows} state={state} narrow={narrow} />
@@ -334,7 +334,7 @@ export function PossessionView({ state, services, onOpen }: { state: Snapshot | 
   const docs = services.docs.all().filter((r) => /^OSC-TRN-POS-/.test(r.docNo));
   const docFor = (p: PossessionState) => docs.find((d) => p.link && d.title.toLowerCase().includes(p.limits.toLowerCase()) && d.date <= p.date);
   const cols: Column<PossessionState>[] = [
-    { key: 'date', header: 'Date', mono: true, render: (p) => `${p.date.slice(8)} MAY 2008`, sortValue: (p) => p.date },
+    { key: 'date', header: 'Date', mono: true, render: (p) => isoDateText(p.date), sortValue: (p) => p.date },
     { key: 'limits', header: 'Limits' },
     { key: 'time', header: 'Times', render: (p) => p.timeText },
     { key: 'originator', header: 'Booked by', mono: true },

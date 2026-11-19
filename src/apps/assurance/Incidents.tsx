@@ -5,7 +5,8 @@ import { useServices } from '@core/services';
 import { WORKSTATION_ID } from '@core/audit';
 import { Button, DataTable, GroupBox, PropertyGrid, Select, Tabs, formatOscDate, type Column } from '@design/index';
 import { EmptyState } from '@graphics/states';
-import { accessLogRows, accessRecord, accessionsIn, appendRowsAfterHeading, actionLabel, auditDate, auditRef, auditTime, normalizeFields, ticketFields, ticketSubject, WORKLOG_HEADING, type TicketFields } from './logic';
+import { accessRecord, actionLabel, auditDate, auditRef, auditTime, normalizeFields, ticketFields, ticketSubject, WORKLOG_HEADING, type TicketFields } from './logic';
+import { ticketTerms, withOwnAccess } from '../shared/access-log';
 import { DocBody, RouteRefusal, RxText, canRead, canon, markingOf, useDoc, useGridCols, type DocState } from './shared';
 
 /* ---------------------------------------------------------------- queue */
@@ -146,16 +147,8 @@ function TicketBody({ entry, onBack, onRefuseEdit }: { entry: RouteEntry; onBack
   // The ticket's access log, with this operator's own recorded access appended in the log's columns.
   const ticketState: DocState = useMemo(() => {
     if (!doc) return state;
-    const accessions = terms.filter((t) => t.startsWith('RD-ACC-'));
-    const items = terms.filter((t) => t !== entry.docNo && !t.startsWith('RD-ACC-'));
-    const own = accessLogRows(all, {
-      ticket: entry.docNo,
-      items,
-      accessions,
-      workstation: WORKSTATION_ID,
-      operator: `${services.session.operatorId.value} (${canon.operator.pn})`,
-    });
-    return { status: 'ready', doc: { ...doc, html: appendRowsAfterHeading(doc.html, 'access-log', own) } };
+    const operator = `${services.session.operatorId.value} (${canon.operator.pn})`;
+    return { status: 'ready', doc: withOwnAccess(doc, { entries: all, terms, workstation: WORKSTATION_ID, operator }) };
   }, [doc, all, terms]);
 
   const lines: [string, string | undefined, boolean?][] = [
@@ -236,13 +229,7 @@ function TicketBody({ entry, onBack, onRefuseEdit }: { entry: RouteEntry; onBack
 
 /** Ticket number, the documents it references at EYES ONLY, and any accession numbers in its title. */
 function termsFor(entry: RouteEntry, doc: DocJson | null, byDocNo: (d: string) => RouteEntry | undefined): string[] {
-  const t = new Set<string>([entry.docNo, ...accessionsIn(entry.title)]);
-  if (doc) {
-    for (const a of accessionsIn(`${doc.title} ${doc.summary}`)) t.add(a);
-    const top = [...canon.markings].sort((a, b) => b.rank - a.rank)[0]?.id;
-    for (const x of doc.xrefs) if (byDocNo(x.docNo)?.marking === top) t.add(x.docNo);
-  }
-  return [...t];
+  return ticketTerms(entry, doc, byDocNo, [...canon.markings].sort((a, b) => b.rank - a.rank)[0]?.id);
 }
 
 function AccessRecord({ entries, ticket, terms }: { entries: AuditEntry[]; ticket: string; terms: string[] }) {
