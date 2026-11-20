@@ -1,0 +1,203 @@
+/* @graphics/drill. Tokens only. Grey register: status colour appears only in the 9px squares. */
+
+/* ---- timeline ---- */
+.dg-gantt {
+  display: block;
+  font-family: var(--font-mono);
+  shape-rendering: crispEdges;
+  outline: none;
+}
+.dg-gantt:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: -2px;
+}
+.dg-axis-text {
+  font-size: 9px;
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+}
+.dg-grid {
+  stroke: var(--row-rule);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+.dg-grid-major {
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.dg-row-bg {
+  fill: transparent;
+}
+.dg-row:nth-child(even) .dg-row-bg {
+  fill: var(--zebra);
+}
+.dg-row.is-sel .dg-row-bg {
+  fill: var(--select-bg);
+}
+.dg-row.is-sel .dg-label,
+.dg-row.is-sel .dg-sub,
+.dg-row.is-sel .dg-status {
+  fill: var(--select-fg);
+}
+.dg-row {
+  cursor: default;
+}
+.dg-label {
+  font-size: 10px;
+  fill: var(--text-1);
+}
+.dg-sub {
+  font-size: 9px;
+  fill: var(--text-3);
+}
+.dg-status {
+  font-size: 9px;
+  fill: var(--text-1);
+  font-family: var(--font-ui);
+  letter-spacing: 0.02em;
+}
+.dg-sealby {
+  stroke: var(--text-3);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.dg-wait {
+  fill: var(--surface);
+  stroke: var(--text-2);
+  stroke-width: 1;
+}
+.dg-doors {
+  fill: var(--title-inactive-bg);
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.dg-held {
+  fill: var(--chrome-face);
+  stroke: var(--text-2);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+.dg-checks {
+  fill: var(--title-active-bg);
+}
+.dg-receipt {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.dg-receipt.is-cut {
+  stroke: var(--text-3);
+  stroke-dasharray: 2 2;
+}
+.dg-ackmark {
+  fill: var(--text-1);
+}
+.dg-sealmark {
+  fill: var(--text-1);
+}
+.dg-nomark {
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  fill: none;
+  shape-rendering: auto;
+}
+.dg-now {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.dg-sq {
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.dg-sq--pending {
+  fill: var(--st-offline);
+}
+.dg-sq--acknowledged,
+.dg-sq--sealing {
+  fill: var(--st-degraded);
+}
+.dg-sq--sealed {
+  fill: var(--st-nominal);
+}
+.dg-sq--no-report {
+  fill: var(--st-fault);
+}
+
+/* ---- portal marks over the line diagram ---- */
+.dg-portals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  shape-rendering: crispEdges;
+}
+.dg-portal-frame {
+  fill: var(--surface);
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.dg-portal-leaf {
+  fill: var(--text-1);
+}
+.dg-portal-bar {
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+.dg-portal--pending .dg-portal-frame {
+  stroke-dasharray: 2 1;
+}
+.dg-portal--acknowledged .dg-portal-frame {
+  stroke-dasharray: 3 2;
+  stroke: var(--text-1);
+}
+.dg-portal--sealed .dg-portal-frame {
+  stroke: var(--text-1);
+}
+.dg-portal-q {
+  font: 700 8px var(--font-mono);
+  fill: var(--text-1);
+}
+.dg-portal--cut .dg-portal-frame {
+  stroke-dasharray: 2 2;
+}
+.dg-portal--cut .dg-portal-q {
+  fill: var(--text-3);
+}
+.dg-portal.is-sel .dg-portal-frame {
+  stroke: var(--text-1);
+  stroke-width: 2;
+}
+
+/* ---- map layer ---- */
+.dg-relay {
+  stroke: var(--text-2);
+  stroke-width: 1;
+  fill: none;
+}
+.dg-relay--rail {
+  stroke: var(--text-1);
+  stroke-width: 2;
+}
+.dg-relay--voice {
+  stroke-dasharray: 4 3;
+}
+.dg-ring {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.dg-ring--ordered {
+  stroke-dasharray: 2 2;
+  stroke: var(--text-2);
+}
+.dg-ring--sealed {
+  stroke-width: 2;
+  shape-rendering: crispEdges;
+}
+.dg-ring--noreport {
+  stroke-width: 2;
+}
+.dg-ring--cut {
+  stroke: var(--text-3);
+  stroke-dasharray: 2 2;
+  shape-rendering: crispEdges;
+}

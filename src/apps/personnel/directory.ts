@@ -48,6 +48,11 @@ export interface DirContext {
    * released value from here; the canon never holds the text.
    */
   released?: ReadonlyMap<string, readonly (string | null)[]>;
+  /**
+   * CANON-T2 values (src/core/canon-release.ts), present only when the session satisfies T2.
+   * A T2 name or address sentinel takes its value from `roster.<pn>.name` / `.email`.
+   */
+  t2?: Readonly<Record<string, string>> | null;
 }
 
 /** Column of each field in the directory document's table. */
@@ -76,10 +81,15 @@ function cellFor(value: string | null | undefined): Cell {
 }
 
 export function buildRow(p: Person, ctx: DirContext): DirRow {
-  const doc = ctx.released?.get(p.pn);
+  // Only rows laid out as DOC_COL (the seven-column "carried centrally" and "withheld" tables);
+  // the posted-personnel canon table adds a Rank column, so its cells would land in the wrong field.
+  const row = ctx.released?.get(p.pn);
+  const doc = row && row.length === 7 ? row : undefined;
   /** A canon value, or the document's released text where canon has only a sentinel. */
   const field = (v: string | null | undefined, k: keyof typeof DOC_COL): Cell => {
     const r = doc?.[DOC_COL[k]];
+    const t = (k === 'name' || k === 'email') && rxInfo(v)?.key === 'T2' ? ctx.t2?.[`roster.${p.pn}.${k}`] : undefined;
+    if (t) return text(t);
     return rxInfo(v) && typeof r === 'string' && r ? text(r) : cellFor(v);
   };
   const docDivision = doc?.[DOC_COL.division];

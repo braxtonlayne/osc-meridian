@@ -90,3 +90,51 @@ Orchestrator: Claude (Opus 5.5 / Fable 5.2 session). Graphics agents run with mo
 | I3 | Integration: accessibility + visual (shell/design) | inherit | src/shell, src/design, src/graphics/{lock,scan,banners,states}, redaction plugin | Focus management, --text-3, PropertyGrid markup, title-bar ring, lock card, terminal escape + screenReaderMode, forms live region; print pagination, list markers, redaction clamp/widths, lock at 1024, refusal window, menu dup | Done; axe 0 violations on lock/registry/f-104/personnel; print PDF 6 pages; tsc/eslint clean; vitest 388/388. |
 | V1b | Final re-audit | inherit | audit worktree | Same as V1 on cbc2e61 | All pass: build (240 routes + 7 app homes), unit 388/388, test:dist, build:pages, rehearse 5/5, test:e2e 5/5; static audit 240/240 + 7 homes; 30/30 live sample, 0 console errors; 1,053 requests all local. |
 | F1 | Playtest fix round | inherit | engine, integration, app-layout, pipeline, continuity, client-canon agents (resumed) | Undelivered mail hidden (searchAll filter, mail.isHeld, terminal/records/registry); HOLLOW release rendered via shared released.ts; trace gate; shared access-log helper; release files obfuscated + hashed names; mail DTG from session clock + {date} slot; seg-04 waits for visible board (reportTransitBoard); idle lock 15 min; in-world date single source canon.meta.inWorldDate = 2008-05-19 everywhere (was following real day of month); content dates ≤ 19 MAY; CG approvable-on-request table; DIR-0412 refusal text = RefusalState; on-path pointers to MEM-08-0187 and MEM-07-0944 | Done; unit tests green per agent (engine 46, core 400, apps+sim 239, pipeline 41). |
+
+## Pass two, wave 2A: foundations (2026-11-19, parallel)
+Owner directive for pass two: reuse graphics first, Opus for new graphics, Fable only if an Opus result fails review (docs/DECISIONS.md).
+
+| # | Agent | Model | Owns | Brief | Result |
+|---|---|---|---|---|---|
+| S2 | Accounts core + shell | inherit (Opus) | src/core/{services,session,audit,persist,router,accounts,traces,shared}.ts, src/shell/**, src/apps/index.ts, stubs | Namespaced persistence + migration, 4-card lock screen, account switch by reload, shared store (BroadcastChannel), traces, Tier 4 refusal, 13 synthesized cues + stop, isolation shell reactions, 12 apps registered | Done; 514/514 tests; Playwright: per-account desktops/mail/audit, switch without bleed, cross-tab isolation, finding trace, handheld. Lock header fixed to workstation site ALPHA-03. startNarrative analyst-only pending wave 2C. Sounds not listened to. |
+| P2 | Pipeline | inherit (Opus) | scripts/**, src/core/{docs,search}.ts | New app families, t4 flag, account variants (@account doc JSON, prefixed rx ids), per-account search indexes, 12 new app homes, verify-dist rules for variants | Done; 62 pipeline tests; build passes with 240 routes + 19 app homes. Keeps CANON-T2 release across content builds. |
+| C2 | Canon extension | inherit (Opus) | content/canon/extended-c.json, canon-merge, canon-schema/types, canon-release.ts | accounts, survivability PM-3, sealDrill, doors 296, cameras 372, hoists 15, musterPoints, apps fragment mechanism, CANON-T2 encoded release (181 values) | Done; 121 canon tests. lifesupport OPR-G08-0611 at GAMMA-08; deputy OPR-A02-0139 (P-2-04-0139, name T2-only); auditor OPR-A01-0948 at ALPHA-01. |
+| GX1 | Panel hardware kit | **Opus** | src/graphics/panel/** | Guarded switch, buttons, lamps, key/selector/toggle switches, ISA-18.1 annunciator, meters, segment display, plates, panel frame, mimic helpers | Done; 25 tests; orchestrator reviewed sample panel and guard states: passes, no Fable rerun. |
+| GX2 | Icons for 12 apps + 27 controls | **Opus** | src/graphics/icons/** | Same hand as the 93-id set, separate 16/32 drawings | Done (93 → 132 ids). Orchestrator reviewed 4x app sheet: matches the set, passes; environ/isolate/muster/chime 16px slightly weaker. No Fable rerun. |
+
+## Pass two, wave 2B: set pieces and accounts in content (2026-11-19, parallel)
+All app agents ran as Opus (inherit); graphics they drew in their own src/graphics/<app>/ folders are Opus-drawn. No Fable agents in wave 2B.
+
+| # | Agent | Model | Owns | Result |
+|---|---|---|---|---|
+| AP1 | strike: Hardened Site Survivability Estimator PM-3 | Opus | src/apps/strike, content/strike, canon apps/strike | Map point + yield, cube-root contours, survivability table, register/compare/print, per-account rules; secret: SEG 04 in egress list (847 of 6,074). Fixed a DELTA anchor-city leak in its canon fragment. |
+| AP2 | isolate: Network Isolation Manual Initiate | Opus | src/apps/isolate (+graphics) | GuardedSwitch, 5-level permanent escalation, tamper seal, restoration certificate approved by deputy; 14 mails; secret: archived initiation NI-080327-01. |
+| AP3 | drill: Seal Drill Coordinator | Opus | src/apps/drill, src/graphics/drill | Map/schematic/Gantt propagation from canon sealDrill, two-officer order; secret: ALPHA-05 acknowledges before the order arrives. |
+| AP4 | cctv: Facility Video DVR client | Opus | src/apps/cctv, src/graphics/cctv | Procedural Canvas cameras (372), layouts, PTZ, 60-min playback, reflects plant state; secret: A02-C24 shows the seg04 train during a recorder gap. |
+| AP5 | plant: Reactor Plant Panel | Opus | src/apps/plant | Fully operable training simulator, display-only live mode; secret: only unplanned trip on 30 MAR 2007. |
+| AP6 | doors: Door and Airlock Control | Opus | src/apps/doors, src/graphics/doors | 296 doors, interlocks, decon, overrides, drill reaction; secret: A05-AL3 on unlisted level 12. |
+| AP7 | dispatch: Dispatcher Workstation | Opus | src/apps/dispatch, src/sim/transit*, minimal src/apps/transit | Route setting, dispatched trains in the transit sim, holds; secret: SEG 04 key position 3. |
+| AP8 | hoist: Shaft Hoist Control | Opus | src/apps/hoist | 15 hoists at canon depths/speeds, driver's console; secret: vanes below the deepest listed stop. |
+| AP9 | environ: Environmental Control | Opus | src/apps/environ | Scrubbers, CBRN filtration, CO2/O2 model, handover log; secret: CO2 balance implies 6–9 unposted occupants. |
+| AP10 | pa: Emergency Broadcast / PA | Opus | src/apps/pa | Zones, numbered library, tone sequences, queue/pre-emption; secret: withheld message 40, Zone 00. |
+| AP11 | muster: Muster Board | Opus | src/apps/muster | Badge muster, reconciliation 3,847/3,057/790 from canon; secret: dead seg04 reader logs unposted badges. |
+| AP12 | patch: Hub Circuit Patch Panel | Opus | src/apps/patch, src/graphics/patch | Jack field, tests, calls; secret: T04-SP1 answers "Platform seven." |
+| X2 | Accounts in existing apps | Opus | forms, assurance, mail, terminal, system, personnel… | Action queue (F-126 → deputy → KESTREL), audit review + findings, trace mail, terminal/system per account, T2 values for deputy. |
+| CT1 | Per-account content | Opus | content/variants, content/mail/accounts | 37 variants, 31 t4 flags, 23 account mails. |
+| CT2 | Real events + 9/11 thread (SPEC-2 §5) | Opus | realEvents, new council/assurance/ledger docs | Audit of real-party actions; RE-10..13; unrecorded high table OSC-CNL-DEL-01-04; handler D. H. Carrow (fictional); researchers memo with "we should encourage these guys". |
+
+## Pass two, wave 2C: integration
+| # | Agent | Model | Owns | Result |
+|---|---|---|---|---|
+| I1 | Integration: core, shell, narrative | Opus | src/core, src/shell, src/narrative, targeted app/graphics fixes | Headless reconcilers (lease per account), trace slots, isolatedAt everywhere, shared-key validators, per-account narrative specs, site-local mail times, ringback/allclear/evac, registry + transform exports, org chart T2 names, Lamp contrast. 743 tests; 18/18 cross-account scenario checks. ALPHA-02 position stays SEXTANT-withheld. |
+| I2 | Integration: content | Opus | content/**, docs/canon, manifest, README | 8 renumberings + login mail to 04341..04477, manifest 372 routes, t4 coverage, slot tokens, four deceased members of Congress as continuity readers (papers only, never read in). |
+
+## Pass two: verification and fixes
+| # | Agent | Model | Result |
+|---|---|---|---|
+| PT-A | Playtest analyst + deputy (unaided, no spoilers) | Opus | Cross-account F-126 → KESTREL, mail both ways, restoration certificate; 9 differing documents; 12 set pieces; 11 secrets found; 2 high, 6 medium, 15 low defects (docs/playtest-2/pt-a.md). |
+| PT-B | Playtest lifesupport + auditor | Opus | Environ job satisfying; findings delivered; 11 secrets; Tier 4 world leaks, workstation identity, mail dates (docs/playtest-2/pt-b.md). |
+| V2 | Audit: gates, leaks, budgets, guardrails, a11y, menus | Opus | Network 1,488 requests all local; 334 menu items none dead; §5 real-name audit passes; failures: Tier 1 text in client JS, shell 206.8 KB gz, doors keyboard, colophon, axe (docs/playtest-2/audit.md). |
+| F2 | Fix audit failures | Opus | Sanitiser corpus + verify rule 11 (JS leak scan, 104 → 0), shell 124.7 KB gz + rule 12 budget gate, SVG tabindex sweep + test, colophon, axe 0 serious. |
+| F3 | Fix PT-B defects | Opus | Closed-world filter for Tier 4, workstation per account (A03-5-114, G08-3-002, A02-7-002, A01-4-022), mail dated at delivery, mediums. |
+| F4 | Fix PT-A defects | Opus | In-world chart dates, mail held during isolation, F-126 decisions via registry, drill fixes, hoist depths from canon, drill holds trains, Cc delivery, ALPHA-02 MDT. |

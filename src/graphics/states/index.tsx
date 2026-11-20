@@ -11,6 +11,8 @@
 import { Fragment } from 'preact';
 import type { ComponentChildren, JSX } from 'preact';
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
+import { closeWorldText } from '@core/closed-world';
+import { activeDef } from '@core/accounts';
 import './states.css';
 
 /* ------------------------------------------------------------------ */
@@ -268,10 +270,13 @@ const REQUEST_LABEL = 'Request access (OSC Form 21)…';
  * Fills its container (a window content area) unless `compact`.
  */
 export function RefusalState(props: RefusalStateProps): JSX.Element {
+  // Tier 4 closed world (SPEC-2 §1): a refusal shown to a Tier 4 operator names no other facility.
+  const me = activeDef.peek();
+  const close = (x: string): string => (me.tier === 4 ? closeWorldText(x, me.site) : x);
+  const authority = close(props.authority);
+  const reason = close(props.reason);
+  const reference = close(props.reference);
   const {
-    authority,
-    reference,
-    reason,
     requirement,
     docNo,
     onRequestAccess,

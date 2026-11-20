@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   APP_ICON_IDS,
   BUTTON_ICON_IDS,
+  CONTROL_ICON_IDS,
   FILE_ICON_IDS,
   ICON_IDS,
   MORE_ICON_IDS,
@@ -73,6 +74,7 @@ const all: ReadonlyArray<[string, readonly IconId[]]> = [
   ['File types', FILE_ICON_IDS],
   ['Shell', UI_ICON_IDS],
   ['Application detail', MORE_ICON_IDS],
+  ['Plant controls', CONTROL_ICON_IDS],
 ];
 
 const sheets: Record<string, string> = {
@@ -83,6 +85,7 @@ const sheets: Record<string, string> = {
   'sheet-4x-files': sheet('MERIDIAN icons, 4x: file types', 4, 232, [all[1] ?? ['', []]]),
   'sheet-4x-ui': sheet('MERIDIAN icons, 4x: shell', 4, 232, [all[2] ?? ['', []]]),
   'sheet-4x-more': sheet('MERIDIAN icons, 4x: application detail', 4, 232, [all[3] ?? ['', []]]),
+  'sheet-4x-controls': sheet('MERIDIAN icons, 4x: plant controls', 4, 232, [all[4] ?? ['', []]]),
   'sheet-buttons': buttonSheet,
 };
 

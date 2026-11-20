@@ -37,13 +37,17 @@ function CalendarPanel({ docNo }: { docNo: string }) {
   const [day, setDay] = useState(today);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const shown = useMemo(() => EVENTS.filter((e) => (!site || e.facility === site) && (!cat || e.category === cat)), [site, cat]);
+  // Tier 4: the operator's own site only (a Tier 4 view names no other facility, DIR-0301).
+  const own = services.account.def.value;
+  const pool = useMemo(() => (own.tier === 4 ? EVENTS.filter((e) => e.facility === own.site) : EVENTS), [own.id]);
+  const facilities = useMemo(() => (own.tier === 4 ? [own.site] : FACILITIES), [own.id]);
+  const shown = useMemo(() => pool.filter((e) => (!site || e.facility === site) && (!cat || e.category === cat)), [site, cat, pool]);
   const byDay = useMemo(() => {
     const m = new Map<string, CalendarEvent[]>();
     for (const e of shown) m.set(e.date, [...(m.get(e.date) ?? []), e]);
     return m;
   }, [shown]);
-  const categories = useMemo(() => [...new Set(EVENTS.filter((e) => eventReleased(e, tier)).map((e) => e.category))].sort(), [tier]);
+  const categories = useMemo(() => [...new Set(pool.filter((e) => eventReleased(e, tier)).map((e) => e.category))].sort(), [tier, pool]);
   const withheld = shown.filter((e) => !eventReleased(e, tier)).length;
 
   useEffect(() => {
@@ -93,7 +97,7 @@ function CalendarPanel({ docNo }: { docNo: string }) {
         <ToolbarLabel>Site</ToolbarLabel>
         <select class="sys-select toolbar__focusable" aria-label="Site" value={site} onChange={(e) => setSite((e.target as HTMLSelectElement).value)}>
           <option value="">All sites</option>
-          {FACILITIES.map((f) => (
+          {facilities.map((f) => (
             <option key={f} value={f}>
               {f}
               {f === session.site.value ? ' (this site)' : ''}

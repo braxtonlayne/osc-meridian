@@ -271,7 +271,7 @@
   }
   .desk-root {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
     grid-template-columns: minmax(0, 1fr);
   }
   .workspace {
@@ -774,7 +774,7 @@
     position: absolute;
     left: 2px;
     bottom: calc(100% + 2px);
-    width: min(560px, calc(100vw - 8px));
+    width: min(860px, calc(100vw - 8px));
     background: var(--chrome-face);
     border: 1px solid var(--chrome-outer);
     box-shadow:
@@ -798,7 +798,7 @@
   }
   .dir-cols {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
+    grid-template-columns: 1fr 1.1fr 1.2fr;
   }
   .dir-col + .dir-col {
     border-left: 1px solid var(--chrome-shadow);
@@ -1084,6 +1084,109 @@
   html[data-density='compact'] .sh-menu-item {
     padding-top: 1px;
     padding-bottom: 1px;
+  }
+
+  /* ------------------------------------------ pass two: accounts */
+  .boot-skipped {
+    position: fixed;
+    inset: 0;
+    background: var(--ws-bg);
+    cursor: wait;
+  }
+  .lock-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+  .lock-cards-h {
+    font-size: 11px;
+    color: var(--text-2);
+    margin: 0 0 4px;
+  }
+  .lock-cardopt {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 6px;
+    align-items: start;
+    padding: 4px 6px;
+    background: var(--paper);
+    border: 1px solid;
+    border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+    cursor: default;
+    font: inherit;
+    text-align: left;
+    color: var(--text-1);
+  }
+  .lock-cardopt[aria-checked='true'] {
+    background: var(--surface);
+    border-color: var(--chrome-outer) var(--chrome-hi) var(--chrome-hi) var(--chrome-outer);
+    box-shadow: inset 1px 1px var(--chrome-shadow);
+    outline: 1px solid var(--text-1);
+    outline-offset: -3px;
+  }
+  .lock-cardopt-mark {
+    grid-row: span 2;
+    width: 10px;
+    height: 10px;
+    margin-top: 3px;
+    border: 1px solid var(--chrome-outer);
+    background: var(--surface);
+  }
+  .lock-cardopt[aria-checked='true'] .lock-cardopt-mark {
+    background: var(--text-1);
+  }
+  .lock-cardopt-id {
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .lock-cardopt-role {
+    font-size: 11px;
+    color: var(--text-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lock-review {
+    margin: 10px 12px 0;
+    padding: 4px 8px;
+    background: var(--surface);
+    border: 1px solid var(--chrome-outer);
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .is-handheld .lock-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* ----------------------------------------- pass two: isolation */
+  /* Always present (an empty auto row when not isolated) so the desk-root grid keeps its rows. */
+  .iso-notice-slot {
+    min-width: 0;
+  }
+  .iso-notice {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    min-height: 16px;
+    padding: 1px 8px;
+    background: var(--chrome-face);
+    border-bottom: 1px solid var(--chrome-outer);
+    color: var(--text-1);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .is-handheld .iso-notice {
+    white-space: normal;
+    justify-content: flex-start;
   }
 
 }

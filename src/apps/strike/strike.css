@@ -1,0 +1,447 @@
+/* Hardened Site Survivability Estimator. Tokens only (src/design/tokens.css). */
+
+.stk-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  container-type: inline-size;
+  container-name: stk;
+  position: relative;
+}
+.stk-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-2) var(--sp-3);
+}
+.stk-body > *,
+.stk-body .tabs,
+.stk-body [role='tabpanel'] {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.stk-tabbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+.stk-tabbody > *,
+.stk-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stk-app > .toolbar {
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+}
+.stk-refusal {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: var(--sp-4);
+  background: var(--surface);
+}
+.mono,
+.stk-app .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.stk-app .num {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ estimate */
+.stk-est {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-rows: minmax(200px, 1fr) minmax(170px, 0.9fr);
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  background: var(--chrome-face);
+}
+.stk-inputs {
+  grid-row: 1 / span 2;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 0;
+}
+.stk-mapcell,
+.stk-plotcell,
+.stk-results {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.stk-results {
+  grid-column: 2 / span 2;
+}
+.stk-cap {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+  color: var(--text-2);
+  padding: 0 0 var(--sp-1);
+}
+.stk-mapframe,
+.stk-plotframe {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  border: 1px solid var(--chrome-shadow);
+  border-right-color: var(--chrome-hi);
+  border-bottom-color: var(--chrome-hi);
+  background: var(--row-hover);
+  overflow: hidden;
+}
+.stk-mapframe:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 1px;
+}
+.stk-mapframe > .um {
+  position: absolute;
+  inset: 0;
+}
+.stk-plotframe > svg {
+  position: absolute;
+  inset: 0;
+}
+.stk-plotempty {
+  padding: var(--sp-3);
+  color: var(--text-3);
+}
+.stk-hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+.stk-ring {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1;
+  pointer-events: none;
+}
+.stk-gz path,
+.stk-gz circle {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+.stk-caveat {
+  border: 1px solid var(--text-1);
+  background: var(--surface);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+}
+.stk-caveat strong {
+  letter-spacing: var(--tracking-caps);
+}
+.stk-anchor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  align-items: flex-start;
+}
+.stk-anchor > :first-child {
+  align-self: stretch;
+}
+.stk-readout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--sp-2);
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-sm);
+}
+.stk-readout dt {
+  color: var(--text-2);
+}
+.stk-readout dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.stk-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  align-items: stretch;
+}
+.stk-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-sm);
+  color: var(--text-2);
+  min-height: var(--lh-sm);
+}
+.stk-note--bar {
+  padding: var(--sp-1) var(--sp-2);
+  border-bottom: 1px solid var(--row-rule);
+  background: var(--paper);
+  color: var(--text-1);
+}
+.stk-foot {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+  color: var(--text-2);
+}
+.stk-mini {
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  background: var(--surface);
+  width: 100%;
+}
+.stk-mini caption {
+  text-align: left;
+  font-weight: var(--fw-semibold);
+  padding: 0 0 var(--sp-1);
+}
+.stk-mini th,
+.stk-mini td {
+  border: 1px solid var(--row-rule);
+  padding: 0 var(--sp-2);
+  height: var(--row-h);
+}
+.stk-mini th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+  text-align: right;
+}
+.stk-site {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.stk-own {
+  color: var(--text-2);
+  font-family: var(--font-ui);
+}
+.stk-dim {
+  color: var(--text-3);
+}
+.stk-row-dim td {
+  color: var(--text-2);
+}
+.stk-results .dt-wrap,
+.stk-results > :nth-child(2) {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ------------------------------------------------------------ register */
+.stk-reg {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+.stk-reg__table {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stk-reg__table > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.stk-reg > .stk-foot {
+  padding: var(--sp-1) var(--sp-2);
+}
+
+/* ------------------------------------------------------------- compare */
+.stk-cmp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  min-height: 0;
+  overflow: auto;
+}
+.stk-cmp__pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+.stk-cmp__sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+}
+.stk-cmp__table {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------- model */
+.stk-model {
+  overflow: auto;
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.stk-sheet h3 {
+  margin: var(--sp-3) 0 var(--sp-1);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.stk-sheet p,
+.stk-sheet ol {
+  margin: 0 0 var(--sp-2);
+  max-width: 90ch;
+}
+.stk-sheet ol {
+  padding-left: var(--sp-7);
+}
+.stk-sheet li {
+  margin-bottom: var(--sp-1);
+}
+.stk-tbl {
+  border-collapse: collapse;
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  width: 100%;
+  max-width: 1000px;
+}
+.stk-tbl--narrow {
+  width: auto;
+}
+.stk-tbl th,
+.stk-tbl td {
+  border: 1px solid var(--row-rule);
+  padding: 2px var(--sp-2);
+  text-align: left;
+  vertical-align: top;
+}
+.stk-tbl th {
+  background: var(--th-bg);
+  font-weight: var(--fw-semibold);
+}
+.stk-tbl th.num {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ document */
+.stk-docwrap {
+  overflow: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+.stk-doc--loading {
+  padding: var(--sp-4);
+  color: var(--text-2);
+}
+
+/* ------------------------------------------------------------ handheld */
+@container stk (max-width: 860px) {
+  .stk-est {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+  .stk-est > * {
+    flex: 0 0 auto;
+  }
+  .stk-inputs {
+    overflow: visible;
+  }
+  .stk-mapframe,
+  .stk-plotframe {
+    flex: 0 0 auto;
+    height: 260px;
+  }
+  .stk-results {
+    min-height: 320px;
+  }
+  .stk-cmp__sides {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------- print sheet */
+@media screen {
+  .stk-print-root {
+    display: none;
+  }
+}
+@media print {
+  .stk-print {
+    font: 8pt/1.3 var(--font-ui);
+    color: var(--print-ink);
+  }
+  .stk-print__caveat {
+    margin: 6pt 0 0;
+    border: 1pt solid var(--print-ink);
+    padding: 3pt 6pt;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .stk-print__title {
+    margin: 8pt 0 2pt;
+    font-size: 12pt;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .stk-print__sub {
+    margin: 0 0 6pt;
+  }
+  .stk-print__id,
+  .stk-print__grid {
+    border-collapse: collapse;
+    margin-bottom: 6pt;
+    width: 100%;
+  }
+  .stk-print__id th,
+  .stk-print__id td {
+    text-align: left;
+    padding: 1pt 6pt 1pt 0;
+    vertical-align: top;
+  }
+  .stk-print__grid caption {
+    text-align: left;
+    font-weight: 700;
+    padding-bottom: 2pt;
+  }
+  .stk-print__grid th,
+  .stk-print__grid td {
+    border: 0.5pt solid var(--print-ink);
+    padding: 1pt 3pt;
+    text-align: left;
+  }
+  .stk-print__grid .num {
+    text-align: right;
+    font-family: var(--font-mono);
+  }
+  .stk-print__note {
+    margin: 0 0 4pt;
+  }
+  .stk-print__disclaimer {
+    margin: 6pt 0 4pt;
+    border-top: 0.5pt solid var(--print-ink);
+    padding-top: 4pt;
+    font-style: italic;
+  }
+  .stk-print__foot {
+    margin: 0 0 4pt;
+    font-weight: 700;
+  }
+}

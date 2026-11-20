@@ -9,6 +9,7 @@
  * window.open (refusals), redaction.hover.
  */
 import './personnel.css';
+import { T4Home, t4Refused } from './acct';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AppProps, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
@@ -94,7 +95,15 @@ function navTree(): TreeNode[] {
   return out;
 }
 
-export default function App({ win, route }: AppProps) {
+export default function App(props: AppProps) {
+  const services = useServices();
+  const view: View = parsePath(props.route?.route ?? HOME) ?? { kind: 'overview' };
+  const entry = props.route ?? services.docs.byRoute(pathOf(view)) ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Personnel System" docNo={entry?.docNo ?? 'OSC-PER-IDX'} />;
+  return <PersonnelApp {...props} />;
+}
+
+function PersonnelApp({ win, route }: AppProps) {
   const services = useServices();
   const path = route?.route ?? HOME;
   const view: View = parsePath(path) ?? { kind: 'overview' };
@@ -211,7 +220,13 @@ export default function App({ win, route }: AppProps) {
 
   const goItems: MenuItem[] = navEntries().map((e) => ({ label: e.group ? `${e.group}: ${e.label}` : e.label, checked: e.path === pathOf(view), radio: true, onSelect: () => go(e.path) }));
 
-  const menus: MenuBarMenu[] = [
+  // Tier 4 closed world (SPEC-2 §1): only the notice issued to Tier 4 opens here, as a document with no
+  // network summary, directory, calculator, org chart or section tree.
+  const t4 = services.session.tier.value === 4;
+  const t4Menus: MenuBarMenu[] = [
+    { label: '&File', items: [{ label: '&Print...', shortcut: 'Ctrl+P', onSelect: print }, { separator: true }, { label: '&Close', shortcut: 'Alt+F4', onSelect: () => win.close() }] },
+  ];
+  const menus: MenuBarMenu[] = t4 ? t4Menus : [
     {
       label: '&File',
       items: [
@@ -306,6 +321,8 @@ export default function App({ win, route }: AppProps) {
         />
       </div>
     );
+  } else if (t4) {
+    body = <DocPane entry={entry} reloadKey={reloadKey} />;
   } else {
     let inner;
     if (tab === 'doc') inner = <DocPane entry={entry} reloadKey={reloadKey} />;
@@ -368,12 +385,13 @@ export default function App({ win, route }: AppProps) {
     );
   }
 
-  const showNav = navShown && !narrow;
+  const showNav = navShown && !narrow && !t4;
 
   return (
     <Ctx.Provider value={ctx}>
       <div class="per-app" ref={rootRef} onKeyDown={onKeyDown}>
         <MenuBar menus={menus} label="Personnel System menu" />
+        {t4 ? null : (
         <Toolbar label="Personnel System">
           <ToolbarButton label="&Summary" pressed={view.kind === 'overview'} onClick={() => go(HOME)} />
           <ToolbarButton label="Directory" pressed={view.kind === 'directory'} onClick={() => go('/personnel/directory')} />
@@ -384,7 +402,8 @@ export default function App({ win, route }: AppProps) {
           <ToolbarButton label="Print" onClick={print} title="Print document (Ctrl+P)" />
           <ToolbarSpacer />
         </Toolbar>
-        {narrow ? (
+        )}
+        {narrow && !t4 ? (
           <div class="per-navsel">
             <Select
               label="Section"

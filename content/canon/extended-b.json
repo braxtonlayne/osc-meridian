@@ -4176,8 +4176,8 @@
       "id": "RE-01",
       "date": "2001-02-17",
       "dateText": "17 FEB 2001",
-      "publicEvent": "Executive Order 13201 is signed and published. Its published text concerns notification of employee rights regarding payment of union dues or fees by federal contractors.",
-      "oscExplanation": "Facility construction was initiated in January 2001 under Executive Order 13201. The order's published text is the public instrument; the operative provisions for the OSC are carried in an annex that was not published. Contractor notification language in the published order is cited in OSC prime contracts as the basis for their contractor-relations clauses.",
+      "publicEvent": "Executive Order 13201 is signed by President George W. Bush and published. Its text concerns notification of employee rights regarding payment of union dues or fees by federal contractors.",
+      "oscExplanation": "Facility construction was initiated in January 2001 under the Council's own authorising instrument. When Executive Order 13201 was published on 17 FEB 2001, the Council entered that instrument on its register as the annex to the order and has cited the order's number since as the programme's public authority. The annex is a Council instrument: it was not issued with the order, and the order's issuing office has no record or knowledge of it. Contractor-notification language in the published order is cited in OSC prime contracts as the basis for their contractor-relations clauses.",
       "citedIn": "Council Charter commentary; Directives library, contractor relations directive; Facility Inventory section 01"
     },
     {
@@ -4185,7 +4185,7 @@
       "date": "2002-02-08",
       "dateText": "08 FEB 2002 to 24 FEB 2002",
       "publicEvent": "The XIX Olympic Winter Games are held in Salt Lake City, Utah, designated a National Special Security Event with extensive federal security infrastructure in the region.",
-      "oscExplanation": "Site survey and geotechnical characterisation for BETA-11 (31 miles E of Salt Lake City) was conducted under the cover of games security infrastructure surveys. Survey vehicles and drilling crews were indistinguishable from the federal security build-up of that winter.",
+      "oscExplanation": "Site survey and geotechnical characterisation for BETA-11 (31 miles E of Salt Lake City) was timed to the security build-up for the Games. OSC survey vehicles and drilling crews worked in the region alongside the federal security infrastructure surveys of that winter, under their own contractor markings, and were not distinguished from them by observers. No federal security agency engaged or knew of the OSC crews.",
       "citedIn": "Ledger, LI-018; BETA-11 dossier, document tab"
     },
     {
@@ -4232,9 +4232,9 @@
       "id": "RE-08",
       "date": "2007-05-09",
       "dateText": "09 MAY 2007",
-      "publicEvent": "National Security Presidential Directive 51 / Homeland Security Presidential Directive 20, the National Continuity Policy, is issued.",
+      "publicEvent": "National Security Presidential Directive 51 / Homeland Security Presidential Directive 20, the National Continuity Policy, is issued by President George W. Bush.",
       "oscExplanation": "Cited in OSC directives as the public framework for continuity of government. The policy is used as the reference for cover documents at ALPHA-05 and BETA-12. Council minutes for the quarter record it as \"noted\".",
-      "citedIn": "Directives library, references sections; Council minutes, Q2 2007"
+      "citedIn": "Directives library, references sections; Council minutes, Q2 2007; liaison note extract OSC-MEM-08-0241"
     },
     {
       "id": "RE-09",
@@ -4243,6 +4243,38 @@
       "publicEvent": "TOPOFF 4, a national full-scale exercise, is conducted with venues in Portland, Oregon; Phoenix, Arizona; and Guam.",
       "oscExplanation": "BETA-06 (Phoenix) and GAMMA-13 (Portland) held seal drills during the exercise week, timed so that any surface observation would be attributed to the exercise. Both drills are recorded as SEALED (DRILL) in facility telemetry history.",
       "citedIn": "BETA-06 and GAMMA-13 dossiers, telemetry tab; Assurance, biological/chemical contingency"
+    },
+    {
+      "id": "RE-10",
+      "date": "2001-09-11",
+      "dateText": "11 SEP 2001",
+      "publicEvent": "Four commercial airliners are hijacked. Two are flown into the towers of the World Trade Center in New York City, one into the Pentagon in Arlington, Virginia, and one crashes near Shanksville, Pennsylvania. 2,977 people are killed.",
+      "oscExplanation": "No OSC record describes the day. Programme papers refer to it only as Phase 1 objective P1-4, reported met at a meeting held under authority delegated by the Council (Article III), whose attendance was not recorded: five seats, no names. The Council's register copy for Session 6 of 2001 records only that the delegation's Phase 1 objectives were reported met, with no particulars laid; members' copies omit the item. Contingency OSC-CP-08 (title withheld; 23 pages; revision 1) was closed and withdrawn in DEC 2001. Particulars are Tier 1 and are not held in MERIDIAN.",
+      "citedIn": "Council, record of a meeting under delegated authority OSC-CNL-DEL-01-04; Council minutes OSC-CNL-MIN-01-06 (register copy only); Assurance, contingency register entry OSC-ASR-CP-08; Cover Operations memorandum OSC-MEM-06-0417"
+    },
+    {
+      "id": "RE-11",
+      "date": "2001-10-26",
+      "dateText": "26 OCT 2001",
+      "publicEvent": "The USA PATRIOT Act becomes law. S. 1510 passes the Senate on 11 OCT 2001, 96 to 1; H.R. 2975 passes the House on 12 OCT 2001, 337 to 79. The final bill, H.R. 3162, is introduced on 23 OCT 2001, passes the House on 24 OCT 2001, 357 to 66, and the Senate on 25 OCT 2001, 98 to 1. President George W. Bush signs it on 26 OCT 2001 as Public Law 107-56. Several surveillance provisions are set to expire on 31 DEC 2005; the USA PATRIOT Improvement and Reauthorization Act is signed on 09 MAR 2006.",
+      "oscExplanation": "Tracked by the Council Secretariat from the public record only. The outcome is recorded as consistent with programme requirements and is the second of the two conditions of Phase 1 objective P1-4. The Secretariat's liaison desk followed the signing arrangements through its liaison officer. The President was not briefed on the programme and is not aware of it; no member of Congress was briefed on the objective.",
+      "citedIn": "Council Secretariat, legislative record OSC-MEM-01-0388; liaison notes OSC-MEM-01-0391 and OSC-MEM-08-0241; record OSC-CNL-DEL-01-04"
+    },
+    {
+      "id": "RE-12",
+      "date": "2001-09-18",
+      "dateText": "18 SEP 2001",
+      "publicEvent": "The President signs the 2001 Emergency Supplemental Appropriations Act for Recovery from and Response to Terrorist Attacks on the United States (Public Law 107-38), providing $40 billion, and the Authorization for Use of Military Force (Public Law 107-40), passed on 14 SEP 2001 by the Senate, 98 to 0, and the House, 420 to 1.",
+      "oscExplanation": "Programme lines opened in FY2002 were placed in parent accounts enlarged by the supplemental, so that no programme line is the largest movement in its account. The placement plan was prepared in advance of the appropriation.",
+      "citedIn": "Comptroller note OSC-MEM-02-0284; Ledger, fiscal years 2001 and 2002"
+    },
+    {
+      "id": "RE-13",
+      "date": "2002-08-02",
+      "dateText": "02 AUG 2002",
+      "publicEvent": "The President signs the 2002 Supplemental Appropriations Act for Further Recovery From and Response To Terrorist Attacks on the United States (Public Law 107-206).",
+      "oscExplanation": "Second of the two supplementals in whose growth the FY2002 programme lines were placed. Comptroller placement unchanged.",
+      "citedIn": "Comptroller note OSC-MEM-02-0284"
     }
   ],
   "calendar": [

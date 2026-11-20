@@ -1,0 +1,368 @@
+{
+  "client": {
+    "title": "Facility Video",
+    "product": "MERIDIAN Facility Video client",
+    "release": "3.2.114",
+    "recorderModel": "DVR-4116",
+    "contract": "SF-02-118",
+    "originator": "SFC/ALPHA-02",
+    "maintainer": "CMS/ALPHA-02"
+  },
+  "recorder": {
+    "channelsPerUnit": 16,
+    "retentionMin": 60,
+    "multiRes": [
+      352,
+      240
+    ],
+    "singleRes": [
+      704,
+      480
+    ],
+    "fps": [
+      {
+        "layout": 1,
+        "fps": 6
+      },
+      {
+        "layout": 4,
+        "fps": 4
+      },
+      {
+        "layout": 9,
+        "fps": 3
+      },
+      {
+        "layout": 16,
+        "fps": 2
+      }
+    ],
+    "playbackSpeeds": [
+      1,
+      4,
+      16
+    ],
+    "blockPx": 8,
+    "blockMix": 0.16,
+    "grayLevels": 112,
+    "ptzMoveSec": 1.6,
+    "ptzStepDeg": 6,
+    "zoomStep": 0.25,
+    "zoomMax": 3,
+    "parkMin": 10
+  },
+  "activity": {
+    "shiftChangesLocal": [
+      7,
+      15,
+      23
+    ],
+    "shiftWindowMin": 25,
+    "mealsLocal": [
+      {
+        "from": 6.5,
+        "to": 8
+      },
+      {
+        "from": 11.5,
+        "to": 13
+      },
+      {
+        "from": 17.5,
+        "to": 19
+      }
+    ],
+    "nightFromLocal": 23,
+    "nightToLocal": 5,
+    "slotSec": [
+      {
+        "kind": "corridor",
+        "sec": 70
+      },
+      {
+        "kind": "portal",
+        "sec": 150
+      },
+      {
+        "kind": "platform",
+        "sec": 200
+      },
+      {
+        "kind": "vault",
+        "sec": 900
+      },
+      {
+        "kind": "hoist",
+        "sec": 170
+      },
+      {
+        "kind": "plant",
+        "sec": 260
+      },
+      {
+        "kind": "assembly",
+        "sec": 40
+      }
+    ],
+    "dayRate": 0.42,
+    "nightRate": 0.12,
+    "shiftRate": 0.85,
+    "walkMps": 1.3,
+    "cartMps": 3.4,
+    "cartShare": 0.12,
+    "seatedDay": 14,
+    "seatedMeal": 46,
+    "seatedNight": 3
+  },
+  "trains": {
+    "boardingMin": 5,
+    "dwellMin": 8,
+    "approachSec": 22
+  },
+  "platforms": [
+    {
+      "camera": "A01-C23",
+      "serves": "ALPHA-02"
+    },
+    {
+      "camera": "A01-C24",
+      "serves": "ALPHA-03"
+    },
+    {
+      "camera": "A01-C25",
+      "serves": "ALPHA-05"
+    },
+    {
+      "camera": "A01-C26",
+      "serves": "tram"
+    },
+    {
+      "camera": "A01-C27",
+      "serves": "tram"
+    },
+    {
+      "camera": "A02-C22",
+      "serves": "ALPHA-01"
+    },
+    {
+      "camera": "A02-C23",
+      "serves": "ALPHA-04"
+    },
+    {
+      "camera": "A02-C24",
+      "serves": "SEG04"
+    },
+    {
+      "camera": "A02-C25",
+      "serves": "tram"
+    },
+    {
+      "camera": "A02-C26",
+      "serves": "tram"
+    },
+    {
+      "camera": "A02-C27",
+      "serves": "tram"
+    },
+    {
+      "camera": "A03-C25",
+      "serves": "ALPHA-01"
+    },
+    {
+      "camera": "A03-C26",
+      "serves": "ALPHA-05"
+    },
+    {
+      "camera": "A03-C27",
+      "serves": "tram"
+    },
+    {
+      "camera": "A04-C21",
+      "serves": "ALPHA-02"
+    },
+    {
+      "camera": "A04-C22",
+      "serves": "BETA-07"
+    },
+    {
+      "camera": "A04-C23",
+      "serves": "BETA-08"
+    },
+    {
+      "camera": "A04-C24",
+      "serves": "GAMMA-12"
+    },
+    {
+      "camera": "A05-C21",
+      "serves": "ALPHA-01"
+    },
+    {
+      "camera": "A05-C22",
+      "serves": "ALPHA-03"
+    },
+    {
+      "camera": "A05-C23",
+      "serves": "tram"
+    },
+    {
+      "camera": "A05-C24",
+      "serves": "tram"
+    },
+    {
+      "camera": "A05-C25",
+      "serves": "tram"
+    },
+    {
+      "camera": "A05-C26",
+      "serves": "tram"
+    },
+    {
+      "camera": "A05-C27",
+      "serves": "SEG04"
+    }
+  ],
+  "presets": [
+    {
+      "scene": "gate",
+      "list": [
+        {
+          "n": 1,
+          "name": "HOME",
+          "yaw": 0,
+          "pitch": -7,
+          "zoom": 1
+        },
+        {
+          "n": 2,
+          "name": "BARRIER",
+          "yaw": 9,
+          "pitch": -5,
+          "zoom": 2.1
+        },
+        {
+          "n": 3,
+          "name": "FENCE LINE",
+          "yaw": -32,
+          "pitch": -4,
+          "zoom": 1.3
+        }
+      ]
+    },
+    {
+      "scene": "portal",
+      "list": [
+        {
+          "n": 1,
+          "name": "HOME",
+          "yaw": 0,
+          "pitch": -9,
+          "zoom": 1
+        },
+        {
+          "n": 2,
+          "name": "DOOR",
+          "yaw": 1,
+          "pitch": -5,
+          "zoom": 1.9
+        },
+        {
+          "n": 3,
+          "name": "APPROACH",
+          "yaw": -24,
+          "pitch": -14,
+          "zoom": 1.15
+        }
+      ]
+    },
+    {
+      "scene": "platform",
+      "list": [
+        {
+          "n": 1,
+          "name": "HOME",
+          "yaw": 0,
+          "pitch": -8,
+          "zoom": 1
+        },
+        {
+          "n": 2,
+          "name": "TRACK",
+          "yaw": 11,
+          "pitch": -7,
+          "zoom": 1.5
+        },
+        {
+          "n": 3,
+          "name": "TUNNEL PORTAL",
+          "yaw": 5,
+          "pitch": -3,
+          "zoom": 2.6
+        }
+      ]
+    },
+    {
+      "scene": "assembly",
+      "list": [
+        {
+          "n": 1,
+          "name": "HOME",
+          "yaw": 0,
+          "pitch": -15,
+          "zoom": 1
+        },
+        {
+          "n": 2,
+          "name": "SERVERY",
+          "yaw": 0,
+          "pitch": -8,
+          "zoom": 1.8
+        },
+        {
+          "n": 3,
+          "name": "EXIT",
+          "yaw": -28,
+          "pitch": -12,
+          "zoom": 1.2
+        }
+      ]
+    }
+  ],
+  "seg04": {
+    "nearCamera": "A02-C24",
+    "farCamera": "A05-C27",
+    "portalDoorNear": "A02-BD9",
+    "portalDoorFar": "A05-BD8",
+    "doorLeadSec": 30,
+    "approachSec": 24,
+    "eventText": "REC SUSPENDED (HOST)"
+  },
+  "unassigned": {
+    "facility": "ALPHA-02",
+    "unit": "DVR-A02-2",
+    "channel": 16,
+    "osdTitle": "CAM16",
+    "placard": "12",
+    "scene": "hoist",
+    "hoist": "A02-H2"
+  },
+  "musterCamera": {
+    "camera": "A02-C24",
+    "reader": "A02-MP3-R3",
+    "standing": 3,
+    "leaveAfterMin": 20
+  },
+  "mail": {
+    "printNetwork": "msg-08-05881",
+    "printSite": "msg-08-05885",
+    "restricted": "msg-08-05882",
+    "restrictedAfter": 3,
+    "ptzNetwork": "msg-08-05883",
+    "ptzSite": "msg-08-05884",
+    "recordGap": "msg-08-05886"
+  },
+  "docs": {
+    "instructions": "KB-0216",
+    "rules": "OSC-DIR-0474"
+  },
+  "stillPrefix": "VS-08"
+}

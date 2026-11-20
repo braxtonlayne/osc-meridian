@@ -1,7 +1,7 @@
 /**
  * @graphics/org: organisation chart and tier pyramid.
  *
- *   OrgChart({ root?, sessionTier, onSelectPerson?, onSelectUnit?, width?, height? })
+ *   OrgChart({ root?, sessionTier, releasedNames?, onSelectPerson?, onSelectUnit?, width?, height? })
  *   TierPyramid({ width, height, highlightTier? })
  *
  * The chart is laid out with d3-hierarchy (tidy tree, see layout.ts) and drawn
@@ -25,6 +25,11 @@ export interface OrgChartProps {
   root?: OrgRoot;
   /** The session's tier (1 highest). Names of people with tier < sessionTier are withheld. */
   sessionTier: number;
+  /**
+   * Names released to this session by personnel number (e.g. the CANON-T2 roster names for a T2
+   * session). A person whose name the client canon withholds but who is listed here is named.
+   */
+  releasedNames?: Readonly<Record<string, string>>;
   /** Personnel number of the box (or unit head line) activated. */
   onSelectPerson?: (pn: string) => void;
   /** Division id, facility id, class id, or COUNCIL / DIVISIONS / FACILITIES / ACCOUNTING / POSTED. */
@@ -80,7 +85,7 @@ function WithheldName({ length }: { length: number }): JSX.Element {
 }
 
 export function OrgChart(props: OrgChartProps): JSX.Element {
-  const { root, sessionTier, onSelectPerson, onSelectUnit, width, height } = props;
+  const { root, sessionTier, releasedNames, onSelectPerson, onSelectUnit, width, height } = props;
   const model = useMemo(() => buildModel(root), [root]);
   // Expansion state belongs to one chart; a new root starts from that chart's defaults.
   const [exp, setExp] = useState<{ model: typeof model; open: ReadonlySet<string> }>(() => ({ model, open: new Set(model.open) }));
@@ -209,7 +214,8 @@ export function OrgChart(props: OrgChartProps): JSX.Element {
   const box = (p: Placed): JSX.Element => {
     const n = p.n;
     const unit = n.kind !== 'person';
-    const withheld = n.person ? nameWithheld(n.person, sessionTier) : false;
+    const released = n.person ? releasedNames?.[n.person.pn] : undefined;
+    const withheld = n.person ? !released && nameWithheld(n.person, sessionTier) : false;
     const headPn = unit && n.person ? n.person.pn : null;
     return (
       <div
@@ -227,7 +233,7 @@ export function OrgChart(props: OrgChartProps): JSX.Element {
               ) : (
                 <>
                   {n.person.rank ? <span class="org-box__rank">{n.person.rank} </span> : null}
-                  {n.person.name}
+                  {released ?? n.person.name}
                 </>
               )
             ) : (

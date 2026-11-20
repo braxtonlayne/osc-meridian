@@ -1,0 +1,317 @@
+/* Facility Video. Tokens only. */
+.cctv {
+  container-type: inline-size;
+  container-name: cctv;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+}
+.cctv-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cctv-docpad {
+  padding: var(--sp-3);
+  background: var(--surface);
+  min-height: 100%;
+  overflow: auto;
+}
+.cctv-note {
+  margin: var(--sp-3);
+  color: var(--text-2);
+}
+.cctv-dim {
+  color: var(--text-3);
+}
+.cctv-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+}
+.cctv-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 0;
+}
+.cctv-tree {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+}
+.cctv-ptz {
+  flex: none;
+  padding: var(--sp-2);
+  border: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+}
+.cctv-ptz-head {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-2);
+}
+.cctv-ptz-pad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-1);
+}
+.cctv-presets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2);
+}
+.cctv-btn {
+  min-height: var(--ctl-h);
+  padding: 0 var(--sp-2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  text-align: left;
+  color: var(--text-1);
+  background: var(--chrome-face);
+  border: 1px solid;
+  border-color: var(--chrome-hi) var(--chrome-shadow) var(--chrome-shadow) var(--chrome-hi);
+  border-radius: var(--radius);
+  cursor: default;
+}
+.cctv-ptz-pad .cctv-btn {
+  text-align: center;
+}
+.cctv-btn:disabled {
+  color: var(--text-3);
+}
+.cctv-btn.is-on {
+  color: var(--select-fg);
+  background: var(--select-bg);
+}
+.cctv-btn:active:not(:disabled) {
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  background: var(--chrome-dark);
+}
+.cctv-btn:focus-visible,
+.cctv-wall:focus-visible,
+.cctv-timeline:focus-visible,
+.cctv-ev:focus-visible {
+  outline: var(--focus-ring);
+}
+.cctv-center {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.cctv-wall {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: var(--hole);
+  border: 1px solid var(--chrome-shadow);
+}
+.cctv-tile {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  border: 1px solid transparent;
+}
+.cctv-tile.is-sel {
+  border-color: var(--select-bg);
+}
+.cctv-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: var(--hole);
+}
+.cctv-pb {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  border: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+}
+.cctv-pb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.cctv-pb-time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  margin-left: auto;
+}
+.cctv-timeline {
+  position: relative;
+  height: 22px;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  cursor: pointer;
+}
+.cctv-mark {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 1px;
+  background: var(--text-3);
+}
+.cctv-mark--e {
+  width: 3px;
+  background: var(--text-1);
+}
+.cctv-gap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Recording gap: neutral hatch, not a status fill. */
+  background: repeating-linear-gradient(45deg, var(--chrome-shadow) 0 2px, transparent 2px 5px);
+}
+.cctv-cursor {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--select-bg);
+}
+.cctv-events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 120px;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+}
+.cctv-ev {
+  display: flex;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: 1px var(--sp-2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  text-align: left;
+  color: var(--text-1);
+  background: none;
+  border: 0;
+  cursor: default;
+}
+.cctv-ev:hover {
+  background: var(--row-hover);
+}
+.cctv-ev-t,
+.cctv-ev-k {
+  font-family: var(--font-mono);
+  flex: none;
+}
+.cctv-ev-k {
+  width: 9ch;
+}
+.cctv-still {
+  display: block;
+  max-width: min(560px, 80vw);
+  width: 100%;
+  border: 1px solid var(--chrome-shadow);
+}
+/* The camera list toggle is for handheld widths only. */
+.cctv .toolbar > :first-child {
+  display: none;
+}
+
+@container cctv (max-width: 900px) {
+  .cctv .toolbar > :first-child {
+    display: inline-flex;
+  }
+  .cctv-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cctv-side {
+    display: none;
+  }
+  .cctv-body--tree .cctv-side {
+    display: flex;
+    max-height: 45cqh;
+  }
+  .cctv-ptz {
+    display: none;
+  }
+  .cctv-body--tree .cctv-center {
+    display: none;
+  }
+  .cctv-body--tree .cctv-side {
+    max-height: none;
+  }
+  .cctv-pb-time {
+    margin-left: 0;
+  }
+  .cctv > .toolbar {
+    height: auto;
+    flex-wrap: wrap;
+  }
+  .cctv-wall {
+    grid-auto-rows: auto;
+    align-content: start;
+    overflow: auto;
+  }
+  .cctv-tile {
+    aspect-ratio: 22 / 15;
+  }
+}
+
+.cctv-print-root {
+  display: none;
+}
+@media print {
+  .cctv-print {
+    color: var(--print-ink);
+  }
+  .cctv-print-mark {
+    text-align: center;
+    font-weight: var(--fw-bold);
+    margin: 0 0 8pt;
+  }
+  .cctv-print-title {
+    font-size: 14pt;
+    margin: 0 0 8pt;
+  }
+  .cctv-print-img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--print-ink);
+    margin-bottom: 10pt;
+  }
+  .cctv-print-table {
+    border-collapse: collapse;
+    margin-bottom: 10pt;
+  }
+  .cctv-print-table th {
+    text-align: left;
+    padding: 2pt 12pt 2pt 0;
+    font-weight: var(--fw-semibold);
+  }
+  .cctv-print-foot {
+    font-size: 8pt;
+  }
+}
+.cctv-pb-bar select {
+  min-width: 8ch;
+}
+.cctv > .toolbar,
+.cctv > [role='menubar'] {
+  flex: none;
+}

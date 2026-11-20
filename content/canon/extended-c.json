@@ -1,0 +1,3424 @@
+{
+  "$comment": "Canon extender C (pass two). Accounts and shared plant data. Documented in docs/canon/extended-c.md. BETA and GAMMA doors, cameras and muster points are generated from the templates by scripts/canon-merge.ts; ALPHA entries are listed in full.",
+  "roster": [
+    {
+      "pn": "P-2-04-0139",
+      "name": "Leland R. Ashcombe",
+      "rank": null,
+      "role": "Deputy Commander, ALPHA-02",
+      "tier": 2,
+      "site": "ALPHA-02",
+      "divisionId": null,
+      "email": "l.ashcombe@a02.cmd.mer",
+      "notes": "Signs ALPHA-02 routine notices. Approving official for compartment access requests, visitor escort requests, rail and tram travel and incoming transfers at ALPHA-02. Acting credentials delegated by the facility commander under DIR-0395. Command mailbox deputy.cmdr@a02.cmd.mer."
+    },
+    {
+      "pn": "P-3-07-0948",
+      "name": "Harriet L. Vance",
+      "rank": null,
+      "role": "Assurance Auditor, Office of Internal Assurance",
+      "tier": 3,
+      "site": "ALPHA-01",
+      "divisionId": "OIA",
+      "email": "h.vance@a01.oia.mer",
+      "notes": "Holds BRIAR. Workstation audit trail review for all facilities. Findings issued under OIA references. Reports to the Director, OIA."
+    },
+    {
+      "pn": "P-4-07-0611",
+      "name": "Darlene M. Voss",
+      "rank": null,
+      "role": "Life Support Technician (Environmental Systems)",
+      "tier": 4,
+      "site": "GAMMA-08",
+      "divisionId": "FE",
+      "email": "d.voss@g08.fe.mer",
+      "notes": "Environmental systems watch, GAMMA-08. Air handling, CO2 scrubbers, filtration and seal checks. Signs filter change records under DIR-0128."
+    },
+    {
+      "pn": "P-2-01-0019",
+      "name": "Desmond H. Carrow",
+      "rank": null,
+      "role": "Liaison Officer (Principal Desk), Council Secretariat",
+      "tier": 2,
+      "site": "ALPHA-01",
+      "divisionId": "CS",
+      "email": "d.carrow@a01.cs.mer",
+      "notes": "Detailed since 2001-01 to an Executive Office continuity programs post. Reports to the Secretary to the Council. Not admitted to meetings held under delegated authority."
+    }
+  ],
+  "accounts": [
+    {
+      "id": "analyst",
+      "operatorId": "OPR-A03-1147",
+      "passphrase": "ballast pewter orchard ninety",
+      "pn": "P-3-06-1147",
+      "displayName": "ANALYST (PROBATIONARY) 3-1147",
+      "roleTitle": "Analyst (Probationary), Accessions & Review Branch, Records Division",
+      "tier": 3,
+      "site": "ALPHA-03",
+      "divisionId": "RD",
+      "compartments": [
+        "LANTERN"
+      ],
+      "probationStart": "2008-04-14",
+      "email": "analyst.1147@a03.rd.mer",
+      "supervisorPn": "P-2-04-0218",
+      "approves": [],
+      "auditReader": false,
+      "workstation": "A03-5-114",
+      "printQueue": "PRN-A03-5",
+      "desktop": [
+        "registry",
+        "transit",
+        "personnel",
+        "records",
+        "mail",
+        "ledger",
+        "reserves",
+        "assurance",
+        "directives",
+        "forms",
+        "terminal",
+        "system"
+      ]
+    },
+    {
+      "id": "lifesupport",
+      "operatorId": "OPR-G08-0611",
+      "passphrase": "damper cistern pallid forty",
+      "pn": "P-4-07-0611",
+      "displayName": "LIFE SUPPORT TECHNICIAN 4-0611",
+      "roleTitle": "Life Support Technician (Environmental Systems), GAMMA-08",
+      "tier": 4,
+      "site": "GAMMA-08",
+      "divisionId": "FE",
+      "compartments": [],
+      "probationStart": null,
+      "email": "d.voss@g08.fe.mer",
+      "supervisorPn": "P-2-06-0343",
+      "approves": [],
+      "auditReader": false,
+      "workstation": "G08-3-002",
+      "printQueue": "PRN-G08-3",
+      "desktop": [
+        "environ",
+        "doors",
+        "cctv",
+        "muster",
+        "pa",
+        "drill",
+        "forms",
+        "mail",
+        "directives",
+        "system"
+      ]
+    },
+    {
+      "id": "deputy",
+      "operatorId": "OPR-A02-0139",
+      "passphrase": "granite halyard sorrel eleven",
+      "pn": "P-2-04-0139",
+      "displayName": "DEPUTY COMMANDER 2-0139",
+      "roleTitle": "Deputy Commander, ALPHA-02",
+      "tier": 2,
+      "site": "ALPHA-02",
+      "divisionId": "CMD",
+      "compartments": [],
+      "probationStart": null,
+      "email": "deputy.cmdr@a02.cmd.mer",
+      "supervisorPn": "P-2-03-0039",
+      "approves": [
+        "OSC-F-126",
+        "OSC-F-122",
+        "OSC-F-118",
+        "OSC-F-109"
+      ],
+      "auditReader": false,
+      "workstation": "A02-7-002",
+      "printQueue": "PRN-A02-7",
+      "desktop": [
+        "registry",
+        "transit",
+        "dispatch",
+        "drill",
+        "isolate",
+        "strike",
+        "plant",
+        "doors",
+        "hoist",
+        "cctv",
+        "environ",
+        "muster",
+        "pa",
+        "patch",
+        "personnel",
+        "forms",
+        "mail",
+        "directives",
+        "system"
+      ]
+    },
+    {
+      "id": "auditor",
+      "operatorId": "OPR-A01-0948",
+      "passphrase": "ferrule quarto hemlock sixty",
+      "pn": "P-3-07-0948",
+      "displayName": "ASSURANCE AUDITOR 3-0948",
+      "roleTitle": "Assurance Auditor, Office of Internal Assurance",
+      "tier": 3,
+      "site": "ALPHA-01",
+      "divisionId": "OIA",
+      "compartments": [
+        "BRIAR"
+      ],
+      "probationStart": null,
+      "email": "h.vance@a01.oia.mer",
+      "supervisorPn": "P-2-01-0047",
+      "approves": [],
+      "auditReader": true,
+      "workstation": "A01-4-022",
+      "printQueue": "PRN-A01-4",
+      "desktop": [
+        "assurance",
+        "records",
+        "personnel",
+        "ledger",
+        "reserves",
+        "directives",
+        "forms",
+        "mail",
+        "cctv",
+        "registry",
+        "terminal",
+        "system"
+      ]
+    }
+  ],
+  "survivability": {
+    "model": {
+      "id": "PM-3",
+      "title": "Hardened Site Survivability Estimator",
+      "revision": 2,
+      "date": "2007-03-12",
+      "originator": "OCP/ALPHA-01",
+      "marking": "UMBRA-C",
+      "disclaimer": "Planning model PM-3 gives rounded, order-of-magnitude estimates for continuity planning only. It is not an engineering assessment and must not be cited as a statement of any facility's design rating. It takes no account of ground conditions, portal geometry, repeated events, fire, or loss of external services. Figures are notional.",
+      "method": [
+        "Surface peak overpressure at a site is read from the contour table: range to a contour in statute miles = range coefficient x (yield in kt) to the power 1/3.",
+        "Between contours the overpressure is interpolated on logarithms of range and overpressure. Beyond the outermost contour the site is taken as unaffected. Inside the innermost contour the overpressure is above the range of the model.",
+        "Effective site rating = rated overpressure of the hardening class x (1 + depth coupling x model depth in thousands of feet).",
+        "Estimated condition is read from the ratio of site overpressure to effective rating. Inside the innermost contour the condition is NOT ASSURED.",
+        "Model depth is the facility depth of record. Where the depth of record is not held by the user, GAMMA sites are modelled at the planning depth below.",
+        "DELTA sites are not modelled."
+      ]
+    },
+    "classes": [
+      {
+        "id": "H1",
+        "name": "Deep mined hub",
+        "description": "Mined in competent rock below 800 ft. Shaft or adit access with multiple blast doors in series; blast valves on all air intakes.",
+        "ratedPsi": 1000,
+        "depthCoupling": 0.5
+      },
+      {
+        "id": "H2",
+        "name": "Deep mined regional centre",
+        "description": "Mined below 400 ft. Single portal with a blast door and airlock; blast valves on air intakes.",
+        "ratedPsi": 500,
+        "depthCoupling": 0.6
+      },
+      {
+        "id": "H3",
+        "name": "Mined shelter, dual portal",
+        "description": "Mined shelter with two portals, each with a blast door; blast valves on the main air intake.",
+        "ratedPsi": 200,
+        "depthCoupling": 0.8
+      },
+      {
+        "id": "H4",
+        "name": "Mined shelter, single portal",
+        "description": "Mined shelter with one portal and one blast door; air intake closed by manual damper.",
+        "ratedPsi": 100,
+        "depthCoupling": 0.8
+      }
+    ],
+    "gammaPlanningDepthFt": 150,
+    "conditions": [
+      {
+        "id": "OPERATIONAL",
+        "maxRatio": 0.5,
+        "text": "Expected to remain operational. Surface cover facility may be lost."
+      },
+      {
+        "id": "DEGRADED",
+        "maxRatio": 1,
+        "text": "Expected to remain habitable. Portal equipment and external services likely lost."
+      },
+      {
+        "id": "ISOLATED",
+        "maxRatio": 2,
+        "text": "Interior expected to survive. Portals likely blocked; egress by tunnel or after clearance only."
+      },
+      {
+        "id": "NOT ASSURED",
+        "maxRatio": null,
+        "text": "Survival of the facility is not assured by this model."
+      }
+    ],
+    "contours": [
+      {
+        "psi": 2,
+        "rangeCoeffMi": 0.75
+      },
+      {
+        "psi": 5,
+        "rangeCoeffMi": 0.45
+      },
+      {
+        "psi": 20,
+        "rangeCoeffMi": 0.22
+      },
+      {
+        "psi": 100,
+        "rangeCoeffMi": 0.11
+      },
+      {
+        "psi": 300,
+        "rangeCoeffMi": 0.07
+      },
+      {
+        "psi": 1000,
+        "rangeCoeffMi": 0.045
+      },
+      {
+        "psi": 3000,
+        "rangeCoeffMi": 0.03
+      }
+    ],
+    "yieldsKt": [
+      10,
+      20,
+      50,
+      100,
+      200,
+      500,
+      1000
+    ],
+    "facilities": [
+      {
+        "facility": "ALPHA-01",
+        "hardeningClass": "H1"
+      },
+      {
+        "facility": "ALPHA-02",
+        "hardeningClass": "H1"
+      },
+      {
+        "facility": "ALPHA-03",
+        "hardeningClass": "H1"
+      },
+      {
+        "facility": "ALPHA-04",
+        "hardeningClass": "H1"
+      },
+      {
+        "facility": "ALPHA-05",
+        "hardeningClass": "H1"
+      },
+      {
+        "facility": "BETA-01",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-02",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-03",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-04",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-05",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-06",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-07",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-08",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-09",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-10",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-11",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "BETA-12",
+        "hardeningClass": "H2"
+      },
+      {
+        "facility": "GAMMA-01",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-02",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-03",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-04",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-05",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-06",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-07",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-08",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-09",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-10",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-11",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-12",
+        "hardeningClass": "H3"
+      },
+      {
+        "facility": "GAMMA-13",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-14",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-15",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-16",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-17",
+        "hardeningClass": "H4"
+      },
+      {
+        "facility": "GAMMA-18",
+        "hardeningClass": "H3"
+      }
+    ],
+    "notModelled": {
+      "classId": "DELTA",
+      "text": "DELTA sites are not modelled. Their survivability depends on concealment, not hardening."
+    }
+  },
+  "sealDrill": {
+    "timeScale": 30,
+    "origin": "ALPHA-01",
+    "classes": [
+      {
+        "classId": "ALPHA",
+        "ackMin": 2,
+        "doorCycleMin": 4,
+        "sealMin": 9
+      },
+      {
+        "classId": "BETA",
+        "ackMin": 3,
+        "doorCycleMin": 3,
+        "sealMin": 8
+      },
+      {
+        "classId": "GAMMA",
+        "ackMin": 4,
+        "doorCycleMin": 2,
+        "sealMin": 7
+      }
+    ],
+    "relay": {
+      "hubHopMin": 1,
+      "tramHopMin": 1,
+      "unlinkedMin": 3
+    },
+    "rules": [
+      "The drill order is issued by Network Control, ALPHA-01, and is acknowledged by ALPHA-01 at once.",
+      "Network Control relays the order to the other ALPHA hubs over the inter-hub circuits, one relay interval per rail segment in revenue service between the hub and ALPHA-01.",
+      "Each hub relays the order down its tram network, one relay interval per tram link, BETA before GAMMA.",
+      "Sites with no tram link are ordered by voice circuit from Network Control after the networks, one voice interval apart, in designation order.",
+      "Times to acknowledge, cycle doors and report sealed are counted from the moment a site receives the order.",
+      "A site that has not reported sealed by twice its class seal time is carried as NO REPORT."
+    ],
+    "excluded": {
+      "classId": "DELTA",
+      "text": "DELTA sites are not ordered in a network seal drill. They report by telephone on the next scheduled check."
+    }
+  },
+  "templateLevels": {
+    "BETA": [
+      {
+        "n": 0,
+        "name": "Surface cover facility"
+      },
+      {
+        "n": 1,
+        "name": "Portal level"
+      },
+      {
+        "n": 2,
+        "name": "Operations level"
+      },
+      {
+        "n": 3,
+        "name": "Berthing and services level"
+      },
+      {
+        "n": 4,
+        "name": "Plant level"
+      }
+    ],
+    "GAMMA": [
+      {
+        "n": 0,
+        "name": "Surface access building"
+      },
+      {
+        "n": 1,
+        "name": "Entry level"
+      },
+      {
+        "n": 2,
+        "name": "Shelter hall level"
+      },
+      {
+        "n": 3,
+        "name": "Plant room level"
+      }
+    ]
+  },
+  "doors": {
+    "sites": [
+      {
+        "facility": "ALPHA-01",
+        "doors": [
+          {
+            "id": "A01-PD1",
+            "level": 1,
+            "location": "Vehicle lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-PD2",
+            "level": 1,
+            "location": "Personnel lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 20,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-BD1",
+            "level": 1,
+            "location": "Shaft collar blast door, vehicle lift",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-AL1-O",
+            "level": 1,
+            "location": "Personnel lift head airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-AL1-I",
+            "level": 1,
+            "location": "Personnel lift head airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-BD2",
+            "level": 2,
+            "location": "Level 2 shaft station blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-BD3",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-BD4",
+            "level": 9,
+            "location": "Level 9 plant isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A01-BD5",
+            "level": 11,
+            "location": "Level 11 lift lobby door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 1
+          },
+          {
+            "id": "A01-BD6",
+            "level": 12,
+            "location": "Level 12 lift lobby door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 1
+          },
+          {
+            "id": "A01-BD7",
+            "level": 13,
+            "location": "Segment 01 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-BD8",
+            "level": 13,
+            "location": "Segment 02 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-BD9",
+            "level": 13,
+            "location": "Segment 06 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-BD10",
+            "level": 13,
+            "location": "Eastern Network tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-AL2-O",
+            "level": 13,
+            "location": "Level 13 tunnel airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-AL2-I",
+            "level": 13,
+            "location": "Level 13 tunnel airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "A01-AL1",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "outer": "A01-AL1-O",
+            "inner": "A01-AL1-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "A01-AL2",
+            "level": 13,
+            "location": "Level 13 tunnel airlock",
+            "outer": "A01-AL2-O",
+            "inner": "A01-AL2-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-02",
+        "doors": [
+          {
+            "id": "A02-PD1",
+            "level": 1,
+            "location": "Adit portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-BD1",
+            "level": 1,
+            "location": "Blast door 1, adit",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 75,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-BD2",
+            "level": 1,
+            "location": "Blast door 2, adit",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 75,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-AL1-O",
+            "level": 1,
+            "location": "Personnel airlock beside blast door 2, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-AL1-I",
+            "level": 1,
+            "location": "Personnel airlock beside blast door 2, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-BD3",
+            "level": 2,
+            "location": "Level 2 shaft station blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-BD4",
+            "level": 5,
+            "location": "Level 5 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-BD5",
+            "level": 9,
+            "location": "Level 9 plant isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A02-BD6",
+            "level": 10,
+            "location": "Level 10 depot road door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-BD7",
+            "level": 11,
+            "location": "Segment 02 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-BD8",
+            "level": 11,
+            "location": "Segment 03 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-BD9",
+            "level": 11,
+            "location": "Segment 04 tunnel portal door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-BD10",
+            "level": 11,
+            "location": "Mountain/Western Network tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-AL2-O",
+            "level": 11,
+            "location": "Level 11 tunnel airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-AL2-I",
+            "level": 11,
+            "location": "Level 11 tunnel airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "A02-AL1",
+            "level": 1,
+            "location": "Personnel airlock beside blast door 2",
+            "outer": "A02-AL1-O",
+            "inner": "A02-AL1-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "A02-AL2",
+            "level": 11,
+            "location": "Level 11 tunnel airlock",
+            "outer": "A02-AL2-O",
+            "inner": "A02-AL2-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-03",
+        "doors": [
+          {
+            "id": "A03-PD1",
+            "level": 1,
+            "location": "Vehicle lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-PD2",
+            "level": 1,
+            "location": "Personnel lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 20,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-BD1",
+            "level": 1,
+            "location": "Shaft collar blast door, vehicle lift",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-AL1-O",
+            "level": 1,
+            "location": "Personnel lift head airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-AL1-I",
+            "level": 1,
+            "location": "Personnel lift head airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-BD2",
+            "level": 2,
+            "location": "Level 2 shaft station blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-BD3",
+            "level": 6,
+            "location": "Level 6 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-BD4",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-BD5",
+            "level": 8,
+            "location": "Level 8 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-BD6",
+            "level": 9,
+            "location": "Level 9 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A03-BD7",
+            "level": 10,
+            "location": "Level 10 plant isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A03-BD8",
+            "level": 11,
+            "location": "Level 11 lift lobby door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 1
+          },
+          {
+            "id": "A03-BD9",
+            "level": 12,
+            "location": "Segment 01 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-BD10",
+            "level": 12,
+            "location": "Segment 05 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-BD11",
+            "level": 12,
+            "location": "Central Network tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-AL2-O",
+            "level": 12,
+            "location": "Level 12 tunnel airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-AL2-I",
+            "level": 12,
+            "location": "Level 12 tunnel airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "A03-AL1",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "outer": "A03-AL1-O",
+            "inner": "A03-AL1-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "A03-AL2",
+            "level": 12,
+            "location": "Level 12 tunnel airlock",
+            "outer": "A03-AL2-O",
+            "inner": "A03-AL2-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-04",
+        "doors": [
+          {
+            "id": "A04-PD1",
+            "level": 1,
+            "location": "Vehicle lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-PD2",
+            "level": 1,
+            "location": "Personnel lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 20,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-BD1",
+            "level": 1,
+            "location": "Shaft collar blast door, vehicle lift",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-AL1-O",
+            "level": 1,
+            "location": "Personnel lift head airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-AL1-I",
+            "level": 1,
+            "location": "Personnel lift head airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-BD2",
+            "level": 2,
+            "location": "Level 2 shaft station blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-BD3",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A04-BD4",
+            "level": 8,
+            "location": "Level 8 plant isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A04-BD5",
+            "level": 9,
+            "location": "Level 9 depot road door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-BD6",
+            "level": 10,
+            "location": "Segment 03 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-BD7",
+            "level": 10,
+            "location": "Western tram tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-AL2-O",
+            "level": 10,
+            "location": "Level 10 tunnel airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-AL2-I",
+            "level": 10,
+            "location": "Level 10 tunnel airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "A04-AL1",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "outer": "A04-AL1-O",
+            "inner": "A04-AL1-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "A04-AL2",
+            "level": 10,
+            "location": "Level 10 tunnel airlock",
+            "outer": "A04-AL2-O",
+            "inner": "A04-AL2-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-05",
+        "doors": [
+          {
+            "id": "A05-PD1",
+            "level": 1,
+            "location": "Vehicle lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-PD2",
+            "level": 1,
+            "location": "Personnel lift head portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 20,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-BD1",
+            "level": 1,
+            "location": "Shaft collar blast door, vehicle lift",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 1000,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-AL1-O",
+            "level": 1,
+            "location": "Personnel lift head airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-AL1-I",
+            "level": 1,
+            "location": "Personnel lift head airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-BD2",
+            "level": 2,
+            "location": "Level 2 shaft station blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-BD3",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-BD5",
+            "level": 8,
+            "location": "Level 8 lift lobby door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 40,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 1
+          },
+          {
+            "id": "A05-BD4",
+            "level": 10,
+            "location": "Level 10 plant isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "ratedPsi": 50,
+            "sealsOnDrill": true,
+            "tier": 2
+          },
+          {
+            "id": "A05-BD6",
+            "level": 11,
+            "location": "Segment 05 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-BD7",
+            "level": 11,
+            "location": "Segment 06 tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-BD8",
+            "level": 11,
+            "location": "Segment 04 tunnel portal door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-BD9",
+            "level": 11,
+            "location": "Southern Network tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "ratedPsi": 300,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-AL2-O",
+            "level": 11,
+            "location": "Level 11 tunnel airlock, outer door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-AL2-I",
+            "level": 11,
+            "location": "Level 11 tunnel airlock, inner door",
+            "kind": "airlock",
+            "normal": "closed",
+            "cycleSec": 8,
+            "ratedPsi": null,
+            "sealsOnDrill": true,
+            "tier": 3
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "A05-AL1",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "outer": "A05-AL1-O",
+            "inner": "A05-AL1-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "A05-AL2",
+            "level": 11,
+            "location": "Level 11 tunnel airlock",
+            "outer": "A05-AL2-O",
+            "inner": "A05-AL2-I",
+            "cycleSec": 90,
+            "deconSec": 300,
+            "tier": 3
+          }
+        ]
+      }
+    ],
+    "templates": {
+      "BETA": {
+        "doors": [
+          {
+            "id": "PD1",
+            "level": 1,
+            "location": "Vehicle portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "rated": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "BD1",
+            "level": 1,
+            "location": "Portal blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "rated": "class",
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "BD2",
+            "level": 1,
+            "location": "Tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "rated": 300,
+            "sealsOnDrill": true,
+            "tier": 4,
+            "when": "tram"
+          },
+          {
+            "id": "BD3",
+            "level": 4,
+            "location": "Plant level isolation door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 45,
+            "rated": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "AL1",
+            "level": 1,
+            "location": "Personnel airlock",
+            "cycleSec": 90,
+            "doorCycleSec": 8,
+            "deconSec": 300,
+            "tier": 4
+          },
+          {
+            "id": "AL2",
+            "level": 1,
+            "location": "Tram platform airlock",
+            "cycleSec": 90,
+            "doorCycleSec": 8,
+            "deconSec": null,
+            "tier": 4,
+            "when": "tram"
+          }
+        ]
+      },
+      "GAMMA": {
+        "doors": [
+          {
+            "id": "PD1",
+            "level": 1,
+            "location": "Entry portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "rated": null,
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "BD1",
+            "level": 1,
+            "location": "Entry blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 45,
+            "rated": "class",
+            "sealsOnDrill": true,
+            "tier": 4
+          },
+          {
+            "id": "PD2",
+            "level": 1,
+            "location": "Second portal door",
+            "kind": "portal",
+            "normal": "closed",
+            "cycleSec": 30,
+            "rated": null,
+            "sealsOnDrill": true,
+            "tier": 4,
+            "when": "dual-portal"
+          },
+          {
+            "id": "BD2",
+            "level": 1,
+            "location": "Second portal blast door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 45,
+            "rated": "class",
+            "sealsOnDrill": true,
+            "tier": 4,
+            "when": "dual-portal"
+          },
+          {
+            "id": "BD3",
+            "level": 1,
+            "location": "Tram tunnel portal door",
+            "kind": "blast",
+            "normal": "open",
+            "cycleSec": 60,
+            "rated": 300,
+            "sealsOnDrill": true,
+            "tier": 4,
+            "when": "tram"
+          },
+          {
+            "id": "BD4",
+            "level": 3,
+            "location": "Plant room door",
+            "kind": "blast",
+            "normal": "closed",
+            "cycleSec": 30,
+            "rated": 50,
+            "sealsOnDrill": true,
+            "tier": 4
+          }
+        ],
+        "airlocks": [
+          {
+            "id": "AL1",
+            "level": 1,
+            "location": "Personnel airlock",
+            "cycleSec": 90,
+            "doorCycleSec": 8,
+            "deconSec": 240,
+            "tier": 4
+          }
+        ]
+      }
+    }
+  },
+  "cameras": {
+    "sites": [
+      {
+        "facility": "ALPHA-01",
+        "cameras": [
+          {
+            "id": "A01-C01",
+            "level": 0,
+            "location": "Surface gate",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-C02",
+            "level": 1,
+            "location": "Vehicle lift head",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-C03",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "kind": "portal",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C04",
+            "level": 1,
+            "location": "Hoist H1 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C05",
+            "level": 1,
+            "location": "Hoist H2 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C06",
+            "level": 1,
+            "location": "Egress winder H3 collar",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C07",
+            "level": 2,
+            "location": "Level 2 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C08",
+            "level": 2,
+            "location": "Level 2 air handling hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C09",
+            "level": 3,
+            "location": "Level 3 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C10",
+            "level": 4,
+            "location": "Level 4 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C11",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "kind": "assembly",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A01-C12",
+            "level": 5,
+            "location": "Level 5 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A01-C13",
+            "level": 6,
+            "location": "Level 6 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A01-C14",
+            "level": 7,
+            "location": "Level 7 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A01-C15",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A01-C16",
+            "level": 8,
+            "location": "Level 8 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A01-C17",
+            "level": 9,
+            "location": "Level 9 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A01-C18",
+            "level": 9,
+            "location": "Level 9 generator hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A01-C19",
+            "level": 10,
+            "location": "Level 10 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A01-C20",
+            "level": 11,
+            "location": "Level 11 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 1
+          },
+          {
+            "id": "A01-C21",
+            "level": 12,
+            "location": "Level 12 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 1
+          },
+          {
+            "id": "A01-C22",
+            "level": 13,
+            "location": "Level 13 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A01-C23",
+            "level": 13,
+            "location": "Level 13 platform 1",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-C24",
+            "level": 13,
+            "location": "Level 13 platform 2",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-C25",
+            "level": 13,
+            "location": "Level 13 platform 3",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-C26",
+            "level": 13,
+            "location": "Level 13 platform 4",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A01-C27",
+            "level": 13,
+            "location": "Level 13 platform 5",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-02",
+        "cameras": [
+          {
+            "id": "A02-C01",
+            "level": 0,
+            "location": "Surface gate",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-C02",
+            "level": 1,
+            "location": "Adit portal",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-C03",
+            "level": 1,
+            "location": "Blast door 2 vestibule",
+            "kind": "portal",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C04",
+            "level": 1,
+            "location": "Hoist H1 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C05",
+            "level": 1,
+            "location": "Hoist H2 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C06",
+            "level": 1,
+            "location": "Egress winder H3 collar",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C07",
+            "level": 2,
+            "location": "Level 2 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C08",
+            "level": 2,
+            "location": "Level 2 air handling hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C09",
+            "level": 3,
+            "location": "Level 3 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C10",
+            "level": 4,
+            "location": "Level 4 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A02-C11",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "kind": "assembly",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A02-C12",
+            "level": 5,
+            "location": "Level 5 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C13",
+            "level": 5,
+            "location": "Level 5 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C14",
+            "level": 6,
+            "location": "Level 6 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C15",
+            "level": 7,
+            "location": "Level 7 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A02-C16",
+            "level": 8,
+            "location": "Level 8 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A02-C17",
+            "level": 9,
+            "location": "Level 9 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A02-C18",
+            "level": 9,
+            "location": "Level 9 generator hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A02-C19",
+            "level": 10,
+            "location": "Level 10 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C20",
+            "level": 10,
+            "location": "Level 10 depot road",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C21",
+            "level": 11,
+            "location": "Level 11 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A02-C22",
+            "level": 11,
+            "location": "Level 11 platform 1",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-C23",
+            "level": 11,
+            "location": "Level 11 platform 2",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-C24",
+            "level": 11,
+            "location": "Level 11 platform 3",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-C25",
+            "level": 11,
+            "location": "Level 11 platform 4",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-C26",
+            "level": 11,
+            "location": "Level 11 platform 5",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A02-C27",
+            "level": 11,
+            "location": "Level 11 platform 6",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-03",
+        "cameras": [
+          {
+            "id": "A03-C01",
+            "level": 0,
+            "location": "Surface gate",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-C02",
+            "level": 1,
+            "location": "Vehicle lift head",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-C03",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "kind": "portal",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C04",
+            "level": 1,
+            "location": "Hoist H1 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C05",
+            "level": 1,
+            "location": "Hoist H2 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C06",
+            "level": 1,
+            "location": "Egress winder H3 collar",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C07",
+            "level": 2,
+            "location": "Level 2 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C08",
+            "level": 2,
+            "location": "Level 2 air handling hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C09",
+            "level": 3,
+            "location": "Level 3 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C10",
+            "level": 3,
+            "location": "Level 3 dining hall",
+            "kind": "assembly",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A03-C11",
+            "level": 4,
+            "location": "Level 4 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A03-C12",
+            "level": 5,
+            "location": "Level 5 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C13",
+            "level": 6,
+            "location": "Level 6 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C14",
+            "level": 6,
+            "location": "Level 6 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C15",
+            "level": 7,
+            "location": "Level 7 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C16",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C17",
+            "level": 8,
+            "location": "Level 8 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C18",
+            "level": 8,
+            "location": "Level 8 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C19",
+            "level": 9,
+            "location": "Level 9 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A03-C20",
+            "level": 9,
+            "location": "Level 9 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A03-C21",
+            "level": 10,
+            "location": "Level 10 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A03-C22",
+            "level": 10,
+            "location": "Level 10 generator hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A03-C23",
+            "level": 11,
+            "location": "Level 11 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 1
+          },
+          {
+            "id": "A03-C24",
+            "level": 12,
+            "location": "Level 12 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A03-C25",
+            "level": 12,
+            "location": "Level 12 platform 1",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-C26",
+            "level": 12,
+            "location": "Level 12 platform 2",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A03-C27",
+            "level": 12,
+            "location": "Level 12 platform 3",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-04",
+        "cameras": [
+          {
+            "id": "A04-C01",
+            "level": 0,
+            "location": "Surface gate",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-C02",
+            "level": 1,
+            "location": "Vehicle lift head",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-C03",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "kind": "portal",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C04",
+            "level": 1,
+            "location": "Hoist H1 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C05",
+            "level": 1,
+            "location": "Hoist H2 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C06",
+            "level": 1,
+            "location": "Egress winder H3 collar",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C07",
+            "level": 2,
+            "location": "Level 2 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C08",
+            "level": 2,
+            "location": "Level 2 air handling hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C09",
+            "level": 3,
+            "location": "Level 3 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C10",
+            "level": 4,
+            "location": "Level 4 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A04-C11",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "kind": "assembly",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A04-C12",
+            "level": 5,
+            "location": "Level 5 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A04-C13",
+            "level": 6,
+            "location": "Level 6 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A04-C14",
+            "level": 7,
+            "location": "Level 7 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A04-C15",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A04-C16",
+            "level": 8,
+            "location": "Level 8 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A04-C17",
+            "level": 8,
+            "location": "Level 8 generator hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A04-C18",
+            "level": 9,
+            "location": "Level 9 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A04-C19",
+            "level": 9,
+            "location": "Level 9 depot road",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A04-C20",
+            "level": 10,
+            "location": "Level 10 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A04-C21",
+            "level": 10,
+            "location": "Level 10 platform 1",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-C22",
+            "level": 10,
+            "location": "Level 10 platform 2",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-C23",
+            "level": 10,
+            "location": "Level 10 platform 3",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A04-C24",
+            "level": 10,
+            "location": "Level 10 platform 4",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-05",
+        "cameras": [
+          {
+            "id": "A05-C01",
+            "level": 0,
+            "location": "Surface gate",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-C02",
+            "level": 1,
+            "location": "Vehicle lift head",
+            "kind": "portal",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-C03",
+            "level": 1,
+            "location": "Personnel lift head airlock",
+            "kind": "portal",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C04",
+            "level": 1,
+            "location": "Hoist H1 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C05",
+            "level": 1,
+            "location": "Hoist H2 collar landing",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C06",
+            "level": 1,
+            "location": "Egress winder H3 collar",
+            "kind": "hoist",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C07",
+            "level": 2,
+            "location": "Level 2 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C08",
+            "level": 2,
+            "location": "Level 2 air handling hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C09",
+            "level": 3,
+            "location": "Level 3 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C10",
+            "level": 4,
+            "location": "Level 4 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 4
+          },
+          {
+            "id": "A05-C11",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "kind": "assembly",
+            "ptz": true,
+            "tier": 4
+          },
+          {
+            "id": "A05-C12",
+            "level": 5,
+            "location": "Level 5 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A05-C13",
+            "level": 6,
+            "location": "Level 6 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A05-C14",
+            "level": 7,
+            "location": "Level 7 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A05-C15",
+            "level": 7,
+            "location": "Level 7 vault door",
+            "kind": "vault",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A05-C16",
+            "level": 8,
+            "location": "Level 8 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 1
+          },
+          {
+            "id": "A05-C17",
+            "level": 9,
+            "location": "Level 9 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A05-C18",
+            "level": 10,
+            "location": "Level 10 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A05-C19",
+            "level": 10,
+            "location": "Level 10 generator hall",
+            "kind": "plant",
+            "ptz": false,
+            "tier": 2
+          },
+          {
+            "id": "A05-C20",
+            "level": 11,
+            "location": "Level 11 lift lobby",
+            "kind": "corridor",
+            "ptz": false,
+            "tier": 3
+          },
+          {
+            "id": "A05-C21",
+            "level": 11,
+            "location": "Level 11 platform 1",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C22",
+            "level": 11,
+            "location": "Level 11 platform 2",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C23",
+            "level": 11,
+            "location": "Level 11 platform 3",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C24",
+            "level": 11,
+            "location": "Level 11 platform 4",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C25",
+            "level": 11,
+            "location": "Level 11 platform 5",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C26",
+            "level": 11,
+            "location": "Level 11 platform 6",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          },
+          {
+            "id": "A05-C27",
+            "level": 11,
+            "location": "Level 11 platform 7",
+            "kind": "platform",
+            "ptz": true,
+            "tier": 3
+          }
+        ]
+      }
+    ],
+    "templates": {
+      "BETA": [
+        {
+          "id": "C01",
+          "level": 0,
+          "location": "Surface gate",
+          "kind": "portal",
+          "ptz": true,
+          "tier": 4
+        },
+        {
+          "id": "C02",
+          "level": 1,
+          "location": "Vehicle portal",
+          "kind": "portal",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C03",
+          "level": 1,
+          "location": "Personnel airlock",
+          "kind": "portal",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C04",
+          "level": 1,
+          "location": "Tram platform",
+          "kind": "platform",
+          "ptz": true,
+          "tier": 4,
+          "when": "tram"
+        },
+        {
+          "id": "C05",
+          "level": 2,
+          "location": "Operations level corridor",
+          "kind": "corridor",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C06",
+          "level": 3,
+          "location": "Dining room",
+          "kind": "assembly",
+          "ptz": true,
+          "tier": 4
+        },
+        {
+          "id": "C07",
+          "level": 3,
+          "location": "Berthing corridor",
+          "kind": "corridor",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C08",
+          "level": 4,
+          "location": "Generator hall",
+          "kind": "plant",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C09",
+          "level": 4,
+          "location": "Air handling room",
+          "kind": "plant",
+          "ptz": false,
+          "tier": 4
+        }
+      ],
+      "GAMMA": [
+        {
+          "id": "C01",
+          "level": 0,
+          "location": "Surface access door",
+          "kind": "portal",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C02",
+          "level": 1,
+          "location": "Entry portal",
+          "kind": "portal",
+          "ptz": true,
+          "tier": 4
+        },
+        {
+          "id": "C03",
+          "level": 1,
+          "location": "Second portal",
+          "kind": "portal",
+          "ptz": false,
+          "tier": 4,
+          "when": "dual-portal"
+        },
+        {
+          "id": "C04",
+          "level": 1,
+          "location": "Tram platform",
+          "kind": "platform",
+          "ptz": true,
+          "tier": 4,
+          "when": "tram"
+        },
+        {
+          "id": "C05",
+          "level": 2,
+          "location": "Shelter hall",
+          "kind": "assembly",
+          "ptz": true,
+          "tier": 4
+        },
+        {
+          "id": "C06",
+          "level": 2,
+          "location": "Bunk room corridor",
+          "kind": "corridor",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C07",
+          "level": 3,
+          "location": "Air handling and scrubber room",
+          "kind": "plant",
+          "ptz": false,
+          "tier": 4
+        },
+        {
+          "id": "C08",
+          "level": 3,
+          "location": "Generator room",
+          "kind": "plant",
+          "ptz": false,
+          "tier": 4
+        }
+      ]
+    }
+  },
+  "hoists": [
+    {
+      "id": "A01-H1",
+      "facility": "ALPHA-01",
+      "name": "Personnel hoist",
+      "kind": "personnel",
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        13
+      ],
+      "speedFpm": 1600,
+      "accelSec": 10,
+      "cagePersons": 60,
+      "payloadLb": 12000
+    },
+    {
+      "id": "A01-H2",
+      "facility": "ALPHA-01",
+      "name": "Vehicle lift",
+      "kind": "vehicle",
+      "levels": [
+        1,
+        2,
+        4,
+        9,
+        13
+      ],
+      "speedFpm": 600,
+      "accelSec": 15,
+      "cagePersons": 30,
+      "payloadLb": 40000
+    },
+    {
+      "id": "A01-H3",
+      "facility": "ALPHA-01",
+      "name": "Emergency egress winder",
+      "kind": "egress",
+      "levels": [
+        1,
+        2
+      ],
+      "speedFpm": 400,
+      "accelSec": 6,
+      "cagePersons": 8,
+      "payloadLb": 2000
+    },
+    {
+      "id": "A02-H1",
+      "facility": "ALPHA-02",
+      "name": "Personnel hoist",
+      "kind": "personnel",
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "speedFpm": 1600,
+      "accelSec": 10,
+      "cagePersons": 60,
+      "payloadLb": 12000
+    },
+    {
+      "id": "A02-H2",
+      "facility": "ALPHA-02",
+      "name": "Freight hoist",
+      "kind": "freight",
+      "levels": [
+        1,
+        2,
+        4,
+        9,
+        10,
+        11
+      ],
+      "speedFpm": 600,
+      "accelSec": 15,
+      "cagePersons": 30,
+      "payloadLb": 40000
+    },
+    {
+      "id": "A02-H3",
+      "facility": "ALPHA-02",
+      "name": "Emergency egress winder",
+      "kind": "egress",
+      "levels": [
+        1,
+        2
+      ],
+      "speedFpm": 400,
+      "accelSec": 6,
+      "cagePersons": 8,
+      "payloadLb": 2000
+    },
+    {
+      "id": "A03-H1",
+      "facility": "ALPHA-03",
+      "name": "Personnel hoist",
+      "kind": "personnel",
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12
+      ],
+      "speedFpm": 1600,
+      "accelSec": 10,
+      "cagePersons": 60,
+      "payloadLb": 12000
+    },
+    {
+      "id": "A03-H2",
+      "facility": "ALPHA-03",
+      "name": "Vehicle lift",
+      "kind": "vehicle",
+      "levels": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        10,
+        12
+      ],
+      "speedFpm": 600,
+      "accelSec": 15,
+      "cagePersons": 30,
+      "payloadLb": 40000
+    },
+    {
+      "id": "A03-H3",
+      "facility": "ALPHA-03",
+      "name": "Emergency egress winder",
+      "kind": "egress",
+      "levels": [
+        1,
+        2
+      ],
+      "speedFpm": 400,
+      "accelSec": 6,
+      "cagePersons": 8,
+      "payloadLb": 2000
+    },
+    {
+      "id": "A04-H1",
+      "facility": "ALPHA-04",
+      "name": "Personnel hoist",
+      "kind": "personnel",
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "speedFpm": 1600,
+      "accelSec": 10,
+      "cagePersons": 60,
+      "payloadLb": 12000
+    },
+    {
+      "id": "A04-H2",
+      "facility": "ALPHA-04",
+      "name": "Vehicle lift",
+      "kind": "vehicle",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        9,
+        10
+      ],
+      "speedFpm": 600,
+      "accelSec": 15,
+      "cagePersons": 30,
+      "payloadLb": 40000
+    },
+    {
+      "id": "A04-H3",
+      "facility": "ALPHA-04",
+      "name": "Emergency egress winder",
+      "kind": "egress",
+      "levels": [
+        1,
+        2
+      ],
+      "speedFpm": 400,
+      "accelSec": 6,
+      "cagePersons": 8,
+      "payloadLb": 2000
+    },
+    {
+      "id": "A05-H1",
+      "facility": "ALPHA-05",
+      "name": "Personnel hoist",
+      "kind": "personnel",
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11
+      ],
+      "speedFpm": 1600,
+      "accelSec": 10,
+      "cagePersons": 60,
+      "payloadLb": 12000
+    },
+    {
+      "id": "A05-H2",
+      "facility": "ALPHA-05",
+      "name": "Freight hoist",
+      "kind": "freight",
+      "levels": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        10,
+        11
+      ],
+      "speedFpm": 600,
+      "accelSec": 15,
+      "cagePersons": 30,
+      "payloadLb": 40000
+    },
+    {
+      "id": "A05-H3",
+      "facility": "ALPHA-05",
+      "name": "Emergency egress winder",
+      "kind": "egress",
+      "levels": [
+        1,
+        2
+      ],
+      "speedFpm": 400,
+      "accelSec": 6,
+      "cagePersons": 8,
+      "payloadLb": 2000
+    }
+  ],
+  "musterPoints": {
+    "sites": [
+      {
+        "facility": "ALPHA-01",
+        "points": [
+          {
+            "id": "A01-MP1",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "capacity": 290,
+            "assigned": 115
+          },
+          {
+            "id": "A01-MP2",
+            "level": 3,
+            "location": "Level 3 berthing lobby",
+            "capacity": 180,
+            "assigned": 72
+          },
+          {
+            "id": "A01-MP3",
+            "level": 13,
+            "location": "Level 13 platforms",
+            "capacity": 150,
+            "assigned": 57
+          },
+          {
+            "id": "A01-MP4",
+            "level": 1,
+            "location": "Shaft collar assembly area",
+            "capacity": 80,
+            "assigned": 29
+          },
+          {
+            "id": "A01-MP5",
+            "level": 0,
+            "location": "Surface muster point (cover staff)",
+            "capacity": 40,
+            "assigned": 14
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-02",
+        "points": [
+          {
+            "id": "A02-MP1",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "capacity": 420,
+            "assigned": 165
+          },
+          {
+            "id": "A02-MP2",
+            "level": 3,
+            "location": "Level 3 berthing lobby",
+            "capacity": 260,
+            "assigned": 103
+          },
+          {
+            "id": "A02-MP3",
+            "level": 11,
+            "location": "Level 11 platforms",
+            "capacity": 210,
+            "assigned": 82
+          },
+          {
+            "id": "A02-MP4",
+            "level": 1,
+            "location": "Adit station assembly area",
+            "capacity": 110,
+            "assigned": 41
+          },
+          {
+            "id": "A02-MP5",
+            "level": 0,
+            "location": "Surface muster point (cover staff)",
+            "capacity": 60,
+            "assigned": 21
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-03",
+        "points": [
+          {
+            "id": "A03-MP1",
+            "level": 3,
+            "location": "Level 3 dining hall",
+            "capacity": 200,
+            "assigned": 79
+          },
+          {
+            "id": "A03-MP2",
+            "level": 4,
+            "location": "Level 4 berthing lobby",
+            "capacity": 130,
+            "assigned": 49
+          },
+          {
+            "id": "A03-MP3",
+            "level": 12,
+            "location": "Level 12 platforms",
+            "capacity": 100,
+            "assigned": 40
+          },
+          {
+            "id": "A03-MP4",
+            "level": 1,
+            "location": "Shaft collar assembly area",
+            "capacity": 50,
+            "assigned": 20
+          },
+          {
+            "id": "A03-MP5",
+            "level": 0,
+            "location": "Surface muster point (cover staff)",
+            "capacity": 30,
+            "assigned": 10
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-04",
+        "points": [
+          {
+            "id": "A04-MP1",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "capacity": 180,
+            "assigned": 70
+          },
+          {
+            "id": "A04-MP2",
+            "level": 3,
+            "location": "Level 3 berthing lobby",
+            "capacity": 110,
+            "assigned": 44
+          },
+          {
+            "id": "A04-MP3",
+            "level": 10,
+            "location": "Level 10 platforms",
+            "capacity": 90,
+            "assigned": 35
+          },
+          {
+            "id": "A04-MP4",
+            "level": 1,
+            "location": "Shaft collar assembly area",
+            "capacity": 50,
+            "assigned": 18
+          },
+          {
+            "id": "A04-MP5",
+            "level": 0,
+            "location": "Surface muster point (cover staff)",
+            "capacity": 30,
+            "assigned": 9
+          }
+        ]
+      },
+      {
+        "facility": "ALPHA-05",
+        "points": [
+          {
+            "id": "A05-MP1",
+            "level": 4,
+            "location": "Level 4 dining hall",
+            "capacity": 350,
+            "assigned": 138
+          },
+          {
+            "id": "A05-MP2",
+            "level": 3,
+            "location": "Level 3 berthing lobby",
+            "capacity": 220,
+            "assigned": 86
+          },
+          {
+            "id": "A05-MP3",
+            "level": 11,
+            "location": "Level 11 platforms",
+            "capacity": 180,
+            "assigned": 69
+          },
+          {
+            "id": "A05-MP4",
+            "level": 1,
+            "location": "Shaft collar assembly area",
+            "capacity": 90,
+            "assigned": 34
+          },
+          {
+            "id": "A05-MP5",
+            "level": 0,
+            "location": "Surface muster point (cover staff)",
+            "capacity": 50,
+            "assigned": 17
+          }
+        ]
+      }
+    ],
+    "templates": {
+      "BETA": [
+        {
+          "id": "MP1",
+          "level": 3,
+          "location": "Dining room",
+          "share": 0.5,
+          "capacityFactor": 2,
+          "minCapacity": 20
+        },
+        {
+          "id": "MP2",
+          "level": 2,
+          "location": "Operations level assembly area",
+          "share": 0.3,
+          "capacityFactor": 2,
+          "minCapacity": 15
+        },
+        {
+          "id": "MP3",
+          "level": 1,
+          "location": "Portal level assembly area",
+          "share": 0.2,
+          "capacityFactor": 2,
+          "minCapacity": 10
+        }
+      ],
+      "GAMMA": [
+        {
+          "id": "MP1",
+          "level": 2,
+          "location": "Shelter hall",
+          "share": 0.75,
+          "capacityFactor": 3,
+          "minCapacity": 10
+        },
+        {
+          "id": "MP2",
+          "level": 1,
+          "location": "Entry level assembly area",
+          "share": 0.25,
+          "capacityFactor": 3,
+          "minCapacity": 5
+        }
+      ]
+    }
+  }
+}

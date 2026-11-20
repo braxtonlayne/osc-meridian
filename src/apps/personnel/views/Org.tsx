@@ -1,5 +1,5 @@
 /** Organisation chart (@graphics/org) with a root selector and a detail pane for the selected box. */
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Button, DataTable, PropertyGrid, Select, type Column } from '@design/index';
 import type { StaffLine } from '@core/canon-types';
 import { OrgChart } from '@graphics/org';
@@ -8,15 +8,18 @@ import { dirPreset, orgPreset } from '../state';
 import { rxPlain } from '@core/rx';
 import { CellView, Figure, RxText, usePer } from '../ui';
 import { buildRow } from '../directory';
+import { useCanonT2 } from '../acct';
+import { t2RosterNames } from '@core/canon-release';
 
 type Sel = { kind: 'person'; pn: string } | { kind: 'unit'; id: string } | null;
 
 function PersonDetail({ pn }: { pn: string }) {
   const per = usePer();
+  const t2 = useCanonT2(per.services);
   const p = personByPn.get(pn);
   if (!p) return <p class="per-note">No directory entry is held for {pn}.</p>;
   const held = per.services.session.compartments.value;
-  const r = buildRow(p, { holds: (c) => held.includes(c), sponsorable: SPONSORABLE, compartmentIds: canon.compartments.map((c) => c.id), divisionName });
+  const r = buildRow(p, { holds: (c) => held.includes(c), sponsorable: SPONSORABLE, compartmentIds: canon.compartments.map((c) => c.id), divisionName, t2 });
   return (
     <>
       <PropertyGrid
@@ -144,6 +147,9 @@ function UnitDetail({ id }: { id: string }) {
 export function OrgView() {
   const per = usePer();
   const tier = per.services.session.tier.value;
+  // T2 session: the CANON-T2 roster names (the deputy's own among them) are released to the chart.
+  const t2 = useCanonT2(per.services);
+  const releasedNames = useMemo(() => t2RosterNames(t2), [t2]);
   const [root, setRoot] = useState<string>(() => orgPreset.peek() ?? 'COUNCIL');
   const [sel, setSel] = useState<Sel>(null);
   useEffect(() => {
@@ -167,6 +173,7 @@ export function OrgView() {
           <OrgChart
             root={root}
             sessionTier={tier}
+            releasedNames={releasedNames}
             onSelectPerson={(pn) => setSel({ kind: 'person', pn })}
             onSelectUnit={(id) => setSel({ kind: 'unit', id })}
           />

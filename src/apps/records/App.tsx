@@ -10,7 +10,7 @@ import type { ComponentChildren } from 'preact';
 import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
 import { load as loadStore, save as saveStore } from '@core/persist';
 import {
   Button,
@@ -46,6 +46,7 @@ import { EMPTY_SEARCH, PAGE_SIZE, SearchView, filteredHits, type Hit, type Searc
 import { DocView, withheldCount } from './DocView';
 import { ticketTerms, withOwnAccess } from '../shared/access-log';
 import { APP_NAME, MATCHERS, canon, markingLabel, markingRank } from './shared';
+import { heldByAccount } from './acct';
 
 const HOME = '/records';
 const SAVED_KEY = 'records.savedQueries';
@@ -87,9 +88,9 @@ export default function App({ win, route }: AppProps) {
   const delivered = services.mail.delivered.value;
   const heldByDocNo = (d: string): RouteEntry | undefined => {
     const r = services.docs.byDocNo(d);
-    return r && services.mail.isHeld(r.route) ? r : undefined;
+    return r && services.mail.isHeld(r.route) && heldByAccount(services, r) ? r : undefined;
   };
-  const routes = useMemo(() => services.docs.all().filter((r) => services.mail.isHeld(r.route)), [delivered]);
+  const routes = useMemo(() => services.docs.all().filter((r) => services.mail.isHeld(r.route) && heldByAccount(services, r)), [delivered]);
   const recent = useMemo(() => {
     const seen = new Set<string>();
     const out: RouteEntry[] = [];
@@ -98,7 +99,7 @@ export default function App({ win, route }: AppProps) {
       if (e.kind !== 'doc.read' || seen.has(e.subject)) continue;
       seen.add(e.subject);
       const r = services.docs.byDocNo(e.subject);
-      if (r) out.push(r);
+      if (r && heldByAccount(services, r)) out.push(r);
     }
     return out;
   }, [auditEntries]);
@@ -242,8 +243,8 @@ export default function App({ win, route }: AppProps) {
   const shownDoc = useMemo(() => {
     if (!doc) return null;
     const terms = ticketTerms(doc, doc, services.docs.byDocNo, TOP);
-    const operator = `${services.session.operatorId.value} (${canon.operator.pn})`;
-    return withOwnAccess(doc, { entries: auditEntries, terms, workstation: WORKSTATION_ID, operator });
+    const operator = `${services.session.operatorId.value} (${services.account.def.value.pn})`;
+    return withOwnAccess(doc, { entries: auditEntries, terms, workstation: workstationId(), operator });
   }, [doc, auditEntries]);
 
   const screenMarking: MarkingId = route
@@ -330,7 +331,7 @@ export default function App({ win, route }: AppProps) {
     services
       .search(query)
       .then((res) => {
-        let hits: Hit[] = res.map((h) => ({
+        let hits: Hit[] = res.filter((h) => heldByAccount(services, h.route)).map((h) => ({
           route: h.route,
           score: h.score,
           snippet: h.snippet,

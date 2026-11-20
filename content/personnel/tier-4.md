@@ -1,6 +1,7 @@
 ---
 id: personnel-tier-4
 route: /personnel/tier/4
+t4: true
 app: personnel
 family: personnel
 template: record

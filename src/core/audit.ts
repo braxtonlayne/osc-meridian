@@ -8,11 +8,16 @@ import type { ReadonlySignal } from '@preact/signals';
 import type { AuditEntry, AuditKind } from './contracts';
 import { load, save } from './persist';
 import { inWorldIso, operatorId } from './session';
+import { activeDef } from './accounts';
 
-/** Workstation identifier printed in audit entries for this terminal. */
-export const WORKSTATION_ID = 'A03-5-114';
-/** Print queue serving this workstation's area (site + level). */
-export const PRINT_QUEUE = 'PRN-A03-5';
+/** Workstation the active account's credential is issued on (canon accounts[].workstation). */
+export function workstationId(): string {
+  return activeDef.peek().workstation;
+}
+/** Print queue serving the active account's workstation group (canon accounts[].printQueue). */
+export function printQueueId(): string {
+  return activeDef.peek().printQueue;
+}
 export const MAX_ENTRIES = 2000;
 
 const _entries = signal<AuditEntry[]>([]);
@@ -36,7 +41,7 @@ function phrase(kind: AuditKind, subject: string): string {
     case 'redaction.hover':
       return `${op} examined withheld material in ${subject}. Withholding notice was displayed; no release was made.`;
     case 'print':
-      return `${op} sent ${subject} to print queue ${PRINT_QUEUE}. Cover sheet and distribution stamp applied. Operator is accountable for the printed copy.`;
+      return `${op} sent ${subject} to print queue ${printQueueId()}. Cover sheet and distribution stamp applied. Operator is accountable for the printed copy.`;
     case 'form.submit':
       return `${op} submitted ${subject} for routing.`;
     case 'mail.read':
@@ -50,9 +55,9 @@ function phrase(kind: AuditKind, subject: string): string {
     case 'clearance.grant':
       return `Access ${subject} recorded against ${op.toLowerCase()} following briefing.`;
     case 'login':
-      return `${op} authenticated at workstation ${WORKSTATION_ID}. Token present in reader 0.`;
+      return `${op} authenticated at workstation ${workstationId()}. Token present in reader 0.`;
     case 'logout':
-      return `${op} logged off workstation ${WORKSTATION_ID}.`;
+      return `${op} logged off workstation ${workstationId()}.`;
     case 'timeout':
       return `Session for ${op.toLowerCase()} locked by the workstation after fifteen minutes without input. Open work was retained.`;
     case 'system':

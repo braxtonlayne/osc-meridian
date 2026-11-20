@@ -17,8 +17,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { DocJson, RouteEntry } from '../src/core/contracts';
+import type { AppId, DocJson, RouteEntry } from '../src/core/contracts';
 import { escapeHtml, formatDate, joinBase, normalizeBase } from './content/util.ts';
+import { APP_HOME_TEXT } from './content/app-homes.ts';
 
 export const STATIC_MARKER = '<!--MERIDIAN:STATIC-->';
 /** What an unfilled message slot prints as in static HTML. */
@@ -105,26 +106,50 @@ export interface AppHome {
   homeRoute: string;
 }
 
-/** App ids, titles and home routes, read from the app registry source (src/apps/index.ts). */
+/**
+ * App ids, titles and home routes, read from the app registry source (src/apps/index.ts, APPS).
+ * Each `{ id: '...', ... load: ... }` entry is read field by field, so key order and quoting
+ * style do not matter.
+ */
 export function readAppHomes(src = join(root, 'src', 'apps', 'index.ts')): AppHome[] {
   const text = readFileSync(src, 'utf8');
   const out: AppHome[] = [];
-  for (const m of text.matchAll(/\{\s*id:\s*'([a-z]+)',\s*title:\s*'([^']+)',[^}]*?homeRoute:\s*'([^']+)'/g)) {
-    out.push({ id: m[1]!, title: m[2]!, homeRoute: m[3]! });
+  const field = (chunk: string, k: string) => new RegExp(`\\b${k}:\\s*(['"\`])((?:(?!\\1).)+)\\1`).exec(chunk)?.[2];
+  for (const m of text.matchAll(/\{\s*id:\s*(['"])([a-z0-9-]+)\1([\s\S]*?)\bload\s*:/g)) {
+    const chunk = m[3]!;
+    const title = field(chunk, 'title');
+    const homeRoute = field(chunk, 'homeRoute');
+    if (title && homeRoute && !out.some((a) => a.id === m[2])) out.push({ id: m[2]!, title, homeRoute });
   }
   if (!out.length) throw new Error(`no app definitions found in ${src}`);
   return out;
 }
 
+/** A document rendered in full on an app home page. */
+export interface HomeDoc {
+  doc: DocJson;
+  label: string;
+}
+
 /**
  * Static landing page for an app home route with no document of its own: the app's index
  * document when one exists (template "index"), then a register of the app's documents.
+ * Pass-two set pieces (APP_HOME_TEXT) also get their in-world description up front and the full
+ * static text of their own document routes (`fullDocs`) after the register, so the no-JS page
+ * says what the panel is and the procedure it is built to.
  */
-export function appHomeHtml(app: AppHome, routes: RouteEntry[], base: string, indexDoc?: { doc: DocJson; label: string }): string {
+export function appHomeHtml(
+  app: AppHome,
+  routes: RouteEntry[],
+  base: string,
+  indexDoc?: HomeDoc,
+  extra?: { description?: string[]; fullDocs?: HomeDoc[] },
+): string {
   const docs = routes.filter((r) => r.app === app.id).sort((a, b) => a.docNo.localeCompare(b.docNo));
   const parts = [`<article class="static-doc static-app-home" data-app="${app.id}">`];
   parts.push(`<header class="static-doc-header"><h1 class="static-doc-title">${escapeHtml(app.title)}</h1></header>`);
   parts.push('<div class="static-doc-body">');
+  for (const p of extra?.description ?? []) parts.push(`<p class="static-app-description">${escapeHtml(p)}</p>`);
   if (indexDoc) parts.push(staticDocument(indexDoc.doc, indexDoc.label));
   if (docs.length) {
     parts.push(`<p>${docs.length} document${docs.length === 1 ? '' : 's'} held in ${escapeHtml(app.title)}.</p>`);
@@ -139,7 +164,17 @@ export function appHomeHtml(app: AppHome, routes: RouteEntry[], base: string, in
     parts.push(`<p>${escapeHtml(app.title)} runs only inside a signed-in workstation session. It holds no filed documents.</p>`);
   }
   parts.push('</div></article>');
+  // Full documents follow as sibling articles (static-doc articles never nest).
+  for (const d of extra?.fullDocs ?? []) parts.push(staticDocument(d.doc, d.label));
   return parts.join('\n');
+}
+
+/** Documents of an app shown in full on its static home page (its own routes, not messages). */
+export function homeDocs(appId: string, routes: RouteEntry[], limit = 6): RouteEntry[] {
+  return routes
+    .filter((r) => r.app === appId && r.family !== 'mail' && r.template !== 'index')
+    .sort((a, b) => a.docNo.localeCompare(b.docNo))
+    .slice(0, limit);
 }
 
 export const NOT_FOUND_NOTE =
@@ -176,16 +211,25 @@ function main(): void {
   // App homes without a document at their route.
   const taken = new Set(routes.map((r) => r.route));
   let homes = 0;
-  for (const app of readAppHomes()) {
+  const apps = readAppHomes();
+  const missing = Object.keys(APP_HOME_TEXT).filter((id) => !apps.some((a) => a.id === id));
+  if (missing.length) console.warn(`[prerender] not in src/apps/index.ts APPS, so no home page: ${missing.join(', ')}`);
+  const homeDoc = (r: RouteEntry): HomeDoc => ({ doc: loadDoc(r.id), label: labels.get(r.marking) ?? r.marking });
+  for (const app of apps) {
     if (taken.has(app.homeRoute)) continue;
     const idx = routes.find((r) => r.app === app.id && r.template === 'index');
-    const indexDoc = idx ? { doc: loadDoc(idx.id), label: labels.get(idx.marking) ?? idx.marking } : undefined;
+    const indexDoc = idx ? homeDoc(idx) : undefined;
     const count = routes.filter((r) => r.app === app.id).length;
-    const page = setHead(
-      template,
-      `${app.title} · MERIDIAN`,
-      count ? `${app.title}: register of ${count} documents.` : `${app.title}: workstation application.`,
-    ).replace(STATIC_MARKER, () => appHomeHtml(app, routes, base, indexDoc));
+    const text = APP_HOME_TEXT[app.id as AppId];
+    const extra = text ? { description: text.description, fullDocs: homeDocs(app.id, routes).map(homeDoc) } : undefined;
+    const description = count
+      ? `${app.title}: register of ${count} document${count === 1 ? '' : 's'}.`
+      : text
+        ? `${app.title}: ${text.description[0]!}`
+        : `${app.title}: workstation application.`;
+    const page = setHead(template, `${app.title} · MERIDIAN`, description).replace(STATIC_MARKER, () =>
+      appHomeHtml(app, routes, base, indexDoc, extra),
+    );
     const outDir = join(dist, ...app.homeRoute.split('/').filter(Boolean));
     mkdirSync(outDir, { recursive: true });
     writeFileSync(join(outDir, 'index.html'), page);

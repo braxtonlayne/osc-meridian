@@ -107,7 +107,8 @@ describe('content pipeline', () => {
 
   it('writes release files per key and never a tier-1 key or tier-1 text', () => {
     expect(Object.keys(r.releases).sort()).toEqual(['KESTREL', 'KESTREL+T2', 'T2']);
-    expect(Object.keys(r.releases.T2!).sort()).toEqual(['dir-0001-1', 'dir-0001-5', 'dir-0001-8']);
+    // (F2) the tier-1 roster row's role is withheld too, so the canon table adds one T1 cell before the last T2 one.
+    expect(Object.keys(r.releases.T2!).sort()).toEqual(['dir-0001-1', 'dir-0001-5', 'dir-0001-9']);
     expect(r.releases.KESTREL).toEqual({ 'dir-0001-2': 'Heron Gate' });
     expect(r.releases['KESTREL+T2']).toEqual({ 'dir-0001-6': 'Inner Kestrel Note' });
     // the outer T2 block carries the inner compartment bar, not its text

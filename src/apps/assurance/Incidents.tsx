@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import type { AuditEntry, DocJson, RouteEntry } from '@core/contracts';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
 import { Button, DataTable, GroupBox, PropertyGrid, Select, Tabs, formatOscDate, type Column } from '@design/index';
 import { EmptyState } from '@graphics/states';
 import { accessRecord, actionLabel, auditDate, auditRef, auditTime, normalizeFields, ticketFields, ticketSubject, WORKLOG_HEADING, type TicketFields } from './logic';
@@ -147,8 +147,8 @@ function TicketBody({ entry, onBack, onRefuseEdit }: { entry: RouteEntry; onBack
   // The ticket's access log, with this operator's own recorded access appended in the log's columns.
   const ticketState: DocState = useMemo(() => {
     if (!doc) return state;
-    const operator = `${services.session.operatorId.value} (${canon.operator.pn})`;
-    return { status: 'ready', doc: withOwnAccess(doc, { entries: all, terms, workstation: WORKSTATION_ID, operator }) };
+    const operator = `${services.session.operatorId.value} (${services.account.def.value.pn})`;
+    return { status: 'ready', doc: withOwnAccess(doc, { entries: all, terms, workstation: workstationId(), operator }) };
   }, [doc, all, terms]);
 
   const lines: [string, string | undefined, boolean?][] = [
@@ -238,7 +238,7 @@ function AccessRecord({ entries, ticket, terms }: { entries: AuditEntry[]; ticke
     { key: 'ref', header: 'Audit reference', width: 136, mono: true, render: (e) => auditRef(e) },
     { key: 'date', header: 'Date', width: 90, mono: true, render: (e) => auditDate(e.at) },
     { key: 'time', header: 'Time', width: 120, mono: true, render: (e) => auditTime(e.at) },
-    { key: 'ws', header: 'Workstation', width: 110, mono: true, render: () => WORKSTATION_ID },
+    { key: 'ws', header: 'Workstation', width: 110, mono: true, render: () => workstationId() },
     { key: 'op', header: 'Operator', width: 90, mono: true, render: () => services.session.operatorId.value },
     { key: 'act', header: 'Action', width: 150, render: (e) => actionLabel(e) },
     { key: 'subj', header: 'Item', width: 120, mono: true, render: (e) => e.subject },
@@ -256,7 +256,7 @@ function AccessRecord({ entries, ticket, terms }: { entries: AuditEntry[]; ticke
         rowKey={(e) => String(e.seq)}
         sortRows={false}
         dense
-        empty={<EmptyState title="No access recorded from this workstation" body={`No access to ${ticket} or the items it concerns has been recorded from ${WORKSTATION_ID}.`} icon="tray" />}
+        empty={<EmptyState title="No access recorded from this workstation" body={`No access to ${ticket} or the items it concerns has been recorded from ${workstationId()}.`} icon="tray" />}
       />
     </div>
   );

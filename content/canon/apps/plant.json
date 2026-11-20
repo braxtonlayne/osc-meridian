@@ -1,0 +1,444 @@
+{
+  "panel": {
+    "panelNo": "PNL-LR-0612-T",
+    "panelRev": "C",
+    "keyNo": "K-0612",
+    "trainerRoom": "Level 6 classroom 6-12",
+    "procedureDocNo": "OSC-RSV-SIM-01",
+    "cardDocNo": "OSC-RSV-SIM-02",
+    "simulatorRelease": "4.2"
+  },
+  "model": {
+    "betaEff": 0.0065,
+    "lambdaPerS": 0.08,
+    "genTimeS": 0.001,
+    "sourcePerS": 0.00004,
+    "minPower": 1e-8,
+    "maxPower": 5,
+    "stepS": 0.02,
+    "maxCatchUpS": 1,
+    "excessPcm": 1800,
+    "alphaModeratorPcmPerC": -30,
+    "alphaFuelPcmPerC": -2.5,
+    "noLoadTempC": 280,
+    "feedTempC": 220,
+    "fuelDeltaTFullPowerC": 320,
+    "fuelTauS": 6,
+    "coolantHeatupCPerS": 1.5,
+    "decayHeatFraction": 0.065,
+    "decayTauS": 90,
+    "naturalCirculation": 0.05,
+    "removalFlowForFull": 0.6,
+    "dumpDeadbandC": 2,
+    "dumpGainPerC": 0.05,
+    "dumpCapacity": 0.4,
+    "pressureNominalMPa": 15.2,
+    "pressurePerC": 0.12,
+    "pumpSpinUpS": 4,
+    "pumpCoastdownS": 6,
+    "promptStepLimit": 0.2
+  },
+  "rods": {
+    "steps": 228,
+    "speedStepsPerS": 4,
+    "scramInsertS": 2.5,
+    "banks": [
+      {
+        "id": "SD",
+        "label": "SHUTDOWN BANK",
+        "worthPcm": 3000
+      },
+      {
+        "id": "CB",
+        "label": "CONTROL BANK",
+        "worthPcm": 2600
+      }
+    ]
+  },
+  "trips": {
+    "fluxHighRunPct": 110,
+    "fluxHighStartupPct": 25,
+    "startupRateDpm": 4,
+    "startupRateBypassPct": 5,
+    "pressureHighMPa": 16.4,
+    "pressureLowMPa": 13.8,
+    "pressureLowPermissivePct": 10,
+    "coolantTempHighC": 296,
+    "flowLowFraction": 0.8,
+    "flowLowPermissivePct": 40,
+    "turbineTripPermissivePct": 40
+  },
+  "alarms": {
+    "fluxHighPct": 103,
+    "startupRateDpm": 1,
+    "pressureHighMPa": 15.9,
+    "pressureLowMPa": 14.4,
+    "coolantTempHighC": 290,
+    "flowLowFraction": 0.9,
+    "fluxHighStartupPct": 20
+  },
+  "electrical": {
+    "syncMinPct": 8,
+    "syncMaxPct": 30,
+    "loadRampPerS": 0.01
+  },
+  "limits": {
+    "holdS": 10,
+    "defaultLimitPct": 100
+  },
+  "meters": {
+    "powerMaxPct": 120,
+    "pressureMinMPa": 12,
+    "pressureMaxMPa": 18,
+    "tempMinC": 200,
+    "tempMaxC": 340,
+    "flowMaxPct": 110,
+    "sumMinDpm": -1,
+    "sumMaxDpm": 5
+  },
+  "initialConditions": [
+    {
+      "id": "IC-1",
+      "label": "HOT SHUTDOWN",
+      "powerFraction": 0
+    },
+    {
+      "id": "IC-2",
+      "label": "HOT STANDBY, CRITICAL",
+      "powerFraction": 0.000001
+    },
+    {
+      "id": "IC-3",
+      "label": "CARRYING STATION LOAD",
+      "powerFraction": -1
+    }
+  ],
+  "trainer": {
+    "id": "TRN-1",
+    "designation": "Part-task trainer, generic regional core",
+    "thermalMWt": 20,
+    "electricMWe": 6,
+    "stationLoadFraction": 0.62,
+    "essKV": 0.48
+  },
+  "history": {
+    "maxScrams": 60,
+    "trendSeconds": 600,
+    "trendSampleS": 1,
+    "checkpointS": 1,
+    "leaseS": 4,
+    "liveHistorySpanS": 7200,
+    "liveHistoryStepS": 60
+  },
+  "live": {
+    "intervalMs": 2000,
+    "zoneBands": [
+      {
+        "minLon": -85.5,
+        "offsetH": -4,
+        "label": "EDT"
+      },
+      {
+        "minLon": -101,
+        "offsetH": -5,
+        "label": "CDT"
+      },
+      {
+        "minLon": -114,
+        "offsetH": -6,
+        "label": "MDT"
+      },
+      {
+        "minLon": -180,
+        "offsetH": -7,
+        "label": "PDT"
+      }
+    ]
+  },
+  "qualification": {
+    "qualifiedAccounts": [],
+    "authority": "Reactor Operations Section, Logistics & Reserves",
+    "watchBillRef": "OSC-RSV-SIM-01 para 2.3"
+  },
+  "mail": {
+    "simTrip": "msg-08-05731",
+    "outsideLimits": "msg-08-05732",
+    "liveAttempt": "msg-08-05733",
+    "liveAttemptCommand": "msg-08-05734",
+    "simTripTier4": "msg-08-05735",
+    "repeatedTrips": "msg-08-05736",
+    "repeatedTripsCount": 3
+  },
+  "events": [
+    {
+      "unit": "RX-A01",
+      "date": "2007-10-02",
+      "timeZ": "0410",
+      "kind": "SHUTDOWN",
+      "planned": true,
+      "entry": "Planned shutdown for the annual containment and seal leak-rate test. Manual trip from 5% rated thermal power per procedure.",
+      "ref": "RX-SP-310",
+      "by": "DMW"
+    },
+    {
+      "unit": "RX-A01",
+      "date": "2007-10-04",
+      "timeZ": "1850",
+      "kind": "STARTUP",
+      "planned": true,
+      "entry": "Leak-rate test satisfactory. Unit critical 1850Z, generator synchronised 2112Z.",
+      "ref": "RX-SP-310",
+      "by": "DMW"
+    },
+    {
+      "unit": "RX-A01",
+      "date": "2008-04-22",
+      "timeZ": "0900",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test, four channels. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "KLT"
+    },
+    {
+      "unit": "RX-A01",
+      "date": "2008-05-06",
+      "timeZ": "1300",
+      "kind": "LOAD",
+      "planned": true,
+      "entry": "Station load raised on return of the Level 4 chiller to service. Unit steady within its band.",
+      "ref": "FE-08-0388",
+      "by": "KLT"
+    },
+    {
+      "unit": "RX-A02",
+      "date": "2008-04-14",
+      "timeZ": "0800",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel check. Satisfactory.",
+      "ref": "RX-SP-102",
+      "by": "JPA"
+    },
+    {
+      "unit": "RX-A02",
+      "date": "2008-05-09",
+      "timeZ": "1500",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Quarterly turbine overspeed trip test. Trip within limits. Diesel sets 1 and 2 carried the essential buses for 41 minutes. Satisfactory.",
+      "ref": "RX-SP-204",
+      "by": "JPA"
+    },
+    {
+      "unit": "RX-A03",
+      "date": "2008-03-04",
+      "timeZ": "1400",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Quarterly turbine overspeed trip test. Satisfactory.",
+      "ref": "RX-SP-204",
+      "by": "RNH"
+    },
+    {
+      "unit": "RX-A03",
+      "date": "2008-03-19",
+      "timeZ": "1420",
+      "kind": "MAINTENANCE",
+      "planned": false,
+      "entry": "Main feedwater pump B removed from service, outboard seal leakage above limit. Power reduced to the limiting condition. Pump isolated and tagged out.",
+      "ref": "FE-08-0417",
+      "by": "RNH"
+    },
+    {
+      "unit": "RX-A03",
+      "date": "2008-04-15",
+      "timeZ": "1000",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test and channel check. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "RNH"
+    },
+    {
+      "unit": "RX-A03",
+      "date": "2008-05-09",
+      "timeZ": "1400",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Emergency feedwater auto-start test, abbreviated. Satisfactory.",
+      "ref": "RX-SP-206A",
+      "by": "RNH"
+    },
+    {
+      "unit": "RX-A04",
+      "date": "2008-04-10",
+      "timeZ": "1100",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "SBK"
+    },
+    {
+      "unit": "RX-A04",
+      "date": "2008-04-29",
+      "timeZ": "0215",
+      "kind": "MAINTENANCE",
+      "planned": false,
+      "entry": "Air-cooled condenser fan 3 bearing noise noted on the watch round. Fan kept in service and placed on the watch list.",
+      "ref": "FE-08-0398",
+      "by": "SBK"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2007-03-23",
+      "timeZ": "0905",
+      "kind": "LOAD",
+      "planned": true,
+      "entry": "Rail traction feeder 52-B3 carried the booked acceptance run, segment 04. Demand within the schedule.",
+      "ref": "TO booking 07-0323",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2007-03-30",
+      "timeZ": "0640",
+      "kind": "TRIP",
+      "planned": false,
+      "entry": "Unplanned reactor trip. Turbine trip on load rejection after rail traction feeder 52-B3 opened on overcurrent. No traction movement booked. Unit returned to power 1415Z.",
+      "ref": "FE-07-0233",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-03-25",
+      "timeZ": "1300",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Quarterly turbine overspeed trip test and emergency feedwater flow test. Satisfactory.",
+      "ref": "RX-SP-204",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-04-08",
+      "timeZ": "1000",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-04-08",
+      "timeZ": "2210",
+      "kind": "TRANSIENT",
+      "planned": false,
+      "entry": "Feeder 52-B3 traction demand step of 0.6 MW, 2210Z to 0038Z. Unit followed load. No traction movement on the schedule. Logged for engineering.",
+      "ref": "none",
+      "by": "MTC"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-05-06",
+      "timeZ": "1500",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Diesel set 1 loaded run. Satisfactory.",
+      "ref": "RX-SP-207",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-05-08",
+      "timeZ": "0900",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel check. Satisfactory.",
+      "ref": "RX-SP-102",
+      "by": "VH"
+    },
+    {
+      "unit": "RX-A05",
+      "date": "2008-05-13",
+      "timeZ": "2131",
+      "kind": "TRANSIENT",
+      "planned": false,
+      "entry": "Feeder 52-B3 traction demand step of 0.6 MW, 2131Z to 2358Z. Unit followed load. No traction movement on the schedule. Logged for engineering, second occasion.",
+      "ref": "none",
+      "by": "MTC"
+    },
+    {
+      "unit": "RX-B03",
+      "date": "2008-04-30",
+      "timeZ": "1000",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "EGO"
+    },
+    {
+      "unit": "RX-B03",
+      "date": "2008-05-02",
+      "timeZ": "1600",
+      "kind": "LOAD",
+      "planned": true,
+      "entry": "Laboratory containment load transferred to essential bus E-A at the site's request.",
+      "ref": "FE-08-0405",
+      "by": "EGO"
+    },
+    {
+      "unit": "RX-B08",
+      "date": "2008-04-28",
+      "timeZ": "0600",
+      "kind": "SHUTDOWN",
+      "planned": true,
+      "entry": "Planned shutdown for the refuelling outage. Manual trip from 10% rated thermal power. Station transferred to diesel and surface supply.",
+      "ref": "LR-08-0121",
+      "by": "TRF"
+    },
+    {
+      "unit": "RX-B08",
+      "date": "2008-05-07",
+      "timeZ": "1930",
+      "kind": "MAINTENANCE",
+      "planned": true,
+      "entry": "Core module exchange complete. Startup testing programme begun.",
+      "ref": "LR-08-0121",
+      "by": "TRF"
+    },
+    {
+      "unit": "RX-B08",
+      "date": "2008-05-16",
+      "timeZ": "1110",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Startup testing: approach to criticality held at the source range for channel recalibration. Station remains on diesel and surface supply.",
+      "ref": "LR-08-0151",
+      "by": "TRF"
+    },
+    {
+      "unit": "RX-B09",
+      "date": "2008-04-17",
+      "timeZ": "1000",
+      "kind": "SURVEILLANCE",
+      "planned": true,
+      "entry": "Protection channel functional test. Satisfactory.",
+      "ref": "RX-SP-101",
+      "by": "ACM"
+    },
+    {
+      "unit": "RX-B09",
+      "date": "2008-05-12",
+      "timeZ": "1400",
+      "kind": "TEST",
+      "planned": true,
+      "entry": "Diesel set 2 loaded run. Satisfactory.",
+      "ref": "RX-SP-207",
+      "by": "ACM"
+    }
+  ]
+}

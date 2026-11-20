@@ -11,7 +11,21 @@ export const TEMPLATES = [
 export const APP_IDS = [
   'registry', 'transit', 'personnel', 'records', 'mail', 'ledger',
   'reserves', 'assurance', 'directives', 'forms', 'terminal', 'system',
+  // pass two set pieces (docs/SPEC-2.md §3)
+  'strike', 'isolate', 'drill', 'cctv', 'plant', 'doors',
+  'dispatch', 'hoist', 'environ', 'pa', 'muster', 'patch',
 ] as const;
+/** Pass-two accounts (contracts AccountId). content/variants/<accountId>/<id>.md. */
+export const ACCOUNT_IDS = ['analyst', 'lifesupport', 'deputy', 'auditor'] as const;
+export type AccountIdLit = (typeof ACCOUNT_IDS)[number];
+/**
+ * Release keys written into public/data/releases/ by canon-merge, not by this pipeline
+ * (CANON-T2: encoded tier-2 canon values; src/core/canon-release.ts). The content build leaves
+ * their files in place and verify-dist accepts them as known keys.
+ */
+export const CANON_RELEASE_KEYS = ['CANON-T2'] as const;
+/** Folder (directly under content/) holding account variants; never a document family. */
+export const VARIANTS_DIR = 'variants';
 
 /** A located build problem. Collected and reported together. */
 export interface Problem {

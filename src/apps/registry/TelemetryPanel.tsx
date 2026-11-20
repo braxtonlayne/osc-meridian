@@ -55,6 +55,13 @@ function sourceRow(r: Reading, p: PanelProps) {
   return <ReadoutRow tag="EP-100" label="Power source" value={r.power.source} status={status} word={status === 'OFFLINE' ? 'UNIT SHUT DOWN' : 'NORMAL'} />;
 }
 
+/** "2 OPEN, 1 CYCLING" */
+function portalWords(r: Reading): string {
+  const open = r.seal.portals.filter((x) => x.state === 'VENTED').length;
+  const moving = r.seal.portals.filter((x) => x.state === 'CYCLING').length;
+  return [open ? `${open} OPEN` : '', moving ? `${moving} CYCLING` : ''].filter(Boolean).join(', ');
+}
+
 /** Compact readouts for the dossier side panel. */
 export function TelemetrySummary(p: PanelProps) {
   const r = p.t.latest;
@@ -71,9 +78,9 @@ export function TelemetrySummary(p: PanelProps) {
       <ReadoutRow
         tag="ZS-401"
         label="Portal seals"
-        value={sealed ? 'ALL SEALED' : `${r.seal.portals.filter((x) => x.state !== 'SEALED').length} CYCLING`}
+        value={sealed ? 'ALL SEALED' : portalWords(r)}
         status={sealed ? 'NOMINAL' : 'DEGRADED'}
-        word={sealed ? 'SEALED' : 'CYCLING'}
+        word={sealed ? 'SEALED' : r.seal.portals.some((x) => x.state === 'CYCLING') ? 'CYCLING' : 'OPEN'}
       />
     </div>
   );

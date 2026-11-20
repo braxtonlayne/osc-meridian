@@ -17,7 +17,7 @@
 
 export type ClassId = 'ALPHA' | 'BETA' | 'GAMMA' | 'DELTA';
 export type UnitStatus = 'NOMINAL' | 'DEGRADED' | 'FAULT' | 'OFFLINE';
-export type PortalState = 'SEALED' | 'CYCLING';
+export type PortalState = 'SEALED' | 'CYCLING' | 'VENTED';
 
 export interface SiteSeed {
   id: string;

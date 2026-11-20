@@ -12,6 +12,7 @@ import * as session from '@core/session';
 import {
   Dialog,
   MenuBar,
+  RadioGroup,
   StatusBar,
   Toolbar,
   ToolbarButton,
@@ -22,7 +23,9 @@ import {
 } from '@design/index';
 import { RefusalState } from '@shell/adapters';
 import { Ctx, type SysCtx } from './ctx';
-import { HOME, PAGES, highestMarking, kbArticles, viewFor, type ViewId } from './logic';
+import { HOME, PAGES, highestMarking, kbArticles, viewFor, visibleTo, type ResetScope, type ViewId } from './logic';
+import { reinitialise } from './reset';
+import { Credentials } from './views/Credentials';
 import { HelpDesk } from './views/HelpDesk';
 import { KbArticle } from './views/KbArticle';
 import { Glossary } from './views/Glossary';
@@ -44,6 +47,7 @@ const VIEW_TITLES: Record<ViewId, string> = {
   calendar: 'Facility Calendar',
   about: 'About This Terminal',
   colophon: 'Colophon',
+  credentials: 'Issued Credentials',
 };
 
 function accessKey(r: RouteEntry): string | null {
@@ -79,7 +83,22 @@ export default function App({ win, route }: AppProps) {
   }, []);
 
   const all = services.docs.all();
-  const articles = useMemo(() => kbArticles(all), [all.length]);
+  const account = services.account.def.value;
+  const visible = (r: RouteEntry) => visibleTo(r, account);
+  const articles = useMemo(() => kbArticles(all).filter(visible), [all.length, account.id]);
+  const [reset, setReset] = useState<ResetScope | null>(null);
+  const [resetBusy, setResetBusy] = useState(false);
+
+  const doReset = (scope: ResetScope) => {
+    const op = services.session.operatorId.peek();
+    const what = scope === 'profile' ? `the local profile of operator ${op}` : 'every local profile on this workstation and the shared plant record';
+    services.audit.log('control', 'system:reset', `Operator ${op} reinitialised ${what} at workstation ${account.workstation} (System Tools).`, { scope, account: account.id });
+    const carry = services.audit.entries.peek().at(-1);
+    setResetBusy(true);
+    win.setBusy(true);
+    setMsg('Reinitialising local profile. The workstation restarts when it is done.');
+    void reinitialise(scope, account.id, scope === 'profile' ? carry : undefined).finally(() => location.reload());
+  };
   const entry: RouteEntry | null = local ? null : route;
   const path = local ?? route?.route ?? HOME;
   const view = viewFor(path);
@@ -89,6 +108,11 @@ export default function App({ win, route }: AppProps) {
   useEffect(() => setLocal(null), [route?.route]);
 
   const entryFor = (p: string) => services.docs.byRoute(p);
+  /** System pages this account may open (Tier 4: only record copies released to it, plus pages with no record copy). */
+  const pages = PAGES.filter((p) => {
+    const e = entryFor(p.path);
+    return !e || visible(e);
+  });
 
   const go = (p: string, record = true) => {
     if (p === path) return;
@@ -221,6 +245,9 @@ export default function App({ win, route }: AppProps) {
         { separator: true },
         { label: '&Print record copy', shortcut: 'Ctrl+P', onSelect: print },
         { separator: true },
+        { label: 'Issued &credentials', onSelect: () => go('/system/credentials') },
+        { label: '&Reinitialise local profile...', onSelect: () => setReset('profile') },
+        { separator: true },
         { label: '&Close', shortcut: 'Alt+W', onSelect: () => win.close() },
       ],
     },
@@ -237,7 +264,7 @@ export default function App({ win, route }: AppProps) {
         { label: '&Navigation pane', checked: nav, onSelect: () => setNav(!nav) },
         { separator: true },
         { label: 'Help &Desk', checked: view === 'home' || view === 'kb', radio: true, onSelect: () => go(HOME) },
-        ...PAGES.slice(0, 4).map((p) => pageItem(p)),
+        ...pages.slice(0, 4).map((p) => pageItem(p)),
       ],
     },
     {
@@ -270,10 +297,10 @@ export default function App({ win, route }: AppProps) {
       meta: `(${articles.length})`,
       children: articles.map((a) => ({ id: a.route, label: `${a.docNo} ${a.title}` })),
     },
-    ...PAGES.map((p) => ({ id: p.path, label: entryFor(p.path)?.title ?? p.label })),
+    ...pages.map((p) => ({ id: p.path, label: entryFor(p.path)?.title ?? p.label })),
   ];
 
-  const ctx: SysCtx = { services, navTo: (p) => go(p), say: setMsg, entryFor, narrow };
+  const ctx: SysCtx = { services, navTo: (p) => go(p), say: setMsg, entryFor, narrow, visible };
 
   const panes = [
     { id: 'msg', content: msg, fill: true, label: 'Message' },
@@ -302,6 +329,7 @@ export default function App({ win, route }: AppProps) {
   else if (view === 'settings') body = <Settings entry={entry} />;
   else if (view === 'monitor') body = <Monitor entry={entry} />;
   else if (view === 'calendar') body = <Calendar entry={entry} />;
+  else if (view === 'credentials') body = <Credentials onReset={() => setReset('profile')} />;
   else if (entry) body = <DocPane entry={entry} plain={view === 'colophon'} />;
   else body = <NotHeld view={view} />;
 
@@ -317,7 +345,7 @@ export default function App({ win, route }: AppProps) {
           <ToolbarButton label="Print" title="Print record copy (Ctrl+P)" onClick={print} />
           <ToolbarSeparator />
           <span class="sys-tb-pages">
-            {PAGES.slice(0, 4).map((p) => (
+            {pages.slice(0, 4).map((p) => (
               <ToolbarButton key={p.path} label={p.short} title={p.label} pressed={view === p.view} onClick={() => go(p.path)} />
             ))}
           </span>
@@ -334,7 +362,8 @@ export default function App({ win, route }: AppProps) {
               />
             </nav>
           )}
-          <main class="sys-body" aria-label={title}>
+          {/* Focusable so the scrolling page can be read with the keyboard (axe scrollable-region-focusable). */}
+          <main class="sys-body" aria-label={title} tabIndex={0}>
             {body}
           </main>
         </div>
@@ -349,6 +378,36 @@ export default function App({ win, route }: AppProps) {
           buttons={[{ label: 'OK', value: 'ok', isDefault: true, isCancel: true }]}
         >
           <p>{refusal?.text}</p>
+        </Dialog>
+        <Dialog
+          open={reset !== null}
+          title="Reinitialise local profile"
+          kind="warning"
+          reference="KB-0019"
+          onClose={(v) => {
+            const scope = reset;
+            setReset(null);
+            if (v === 'yes' && scope && !resetBusy) doReset(scope);
+          }}
+          buttons={[
+            { label: '&Reinitialise', value: 'yes' },
+            { label: 'Cancel', value: 'no', isDefault: true, isCancel: true },
+          ]}
+        >
+          <p>
+            Reinitialising clears the local profile held at this workstation: message traffic, receipts and drafts, window layout, access determinations recorded since issue
+            and the audit trail. Workstation settings are kept. The workstation restarts at the lock screen.
+          </p>
+          <RadioGroup
+            legend="Profiles to reinitialise"
+            name="sys-reset-scope"
+            value={reset ?? 'profile'}
+            options={[
+              { value: 'profile', label: `This profile only (${services.session.operatorId.value})` },
+              { value: 'all', label: 'Every profile on this workstation, and the shared plant record' },
+            ]}
+            onChange={(v) => setReset(v as ResetScope)}
+          />
         </Dialog>
       </div>
     </Ctx.Provider>

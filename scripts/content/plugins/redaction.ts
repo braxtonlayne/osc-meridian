@@ -90,7 +90,7 @@ export function remarkRedaction(ctx: CompileContext) {
     const ids = new Map<MdNode, string>();
     let n = 0;
     const number = (node: MdNode) => {
-      if (isRx(node)) ids.set(node, `${ctx.docId}-${++n}`);
+      if (isRx(node)) ids.set(node, `${ctx.rxPrefix ?? ctx.docId}-${++n}`);
       for (const c of node.children ?? []) number(c);
     };
     number(tree);

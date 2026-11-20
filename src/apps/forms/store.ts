@@ -22,6 +22,8 @@ export interface StoredReceipt {
   routing: string[];
   /** Entries as submitted: [ref, label, value]. */
   entries: [string, string, string][];
+  /** Pass two: ids of the `form.routed` traces posted to approving accounts. */
+  routed?: string[];
 }
 
 export interface Draft {

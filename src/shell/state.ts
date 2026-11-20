@@ -3,7 +3,9 @@ import { signal } from '@preact/signals';
 import * as audit from '@core/audit';
 import * as session from '@core/session';
 import { replacePath } from '@core/router';
-import { openRoute } from '@core/services';
+import { openRoute, switchAccount } from '@core/services';
+import { activeId } from '@core/accounts';
+import type { AccountId } from '@core/contracts';
 import { activeWin, removeWindow, windows } from './wm';
 import { focusInto, focusTaskbar } from './focus';
 import { menu } from './Menu';
@@ -19,6 +21,17 @@ export const runOpen = signal(false);
 export const searchOpen = signal(false);
 /** Path requested by the URL at boot; opened after first sign-in. */
 export const pendingPath = signal<string | null>(null);
+/** This page load followed an account switch: no self-test. */
+export const bootSkipped = signal(false);
+
+/**
+ * Lock-screen sign-in with a chosen card. The active account signs in (or unlocks)
+ * here; another account means a switch: log off, reload into its namespace, sign in.
+ */
+export function signInAs(id: AccountId): void {
+  if (id === activeId.peek()) doLogin();
+  else void switchAccount(id, true);
+}
 
 export function doLogin(): void {
   const first = !session.signedIn.peek();

@@ -107,8 +107,9 @@ export function StatusBar({ panes, live = true }: StatusBarProps) {
           key={p.id}
           class={cx('statusbar__pane', p.fill && 'statusbar__pane--fill', p.mono && 'statusbar__pane--mono')}
           style={p.width !== undefined ? { width: typeof p.width === 'number' ? `${p.width}px` : p.width, flex: 'none' } : undefined}
-          aria-label={p.label}
         >
+          {/* A plain div may not carry aria-label (axe aria-prohibited-attr): the pane's name is read as text. */}
+          {p.label ? <span class="sr-only">{p.label}: </span> : null}
           {p.content}
         </div>
       ))}

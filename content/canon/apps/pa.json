@@ -1,0 +1,150 @@
+{
+  "system": {
+    "name": "Emergency Broadcast and Public Address",
+    "controller": "PAC-2 zone controller",
+    "consoleNo": "PAC-2",
+    "procedureDocNo": "OSC-DIR-0458",
+    "libraryDocNo": "KB-0057",
+    "logRetentionDays": 42,
+    "queueLapseSec": 600,
+    "logLimit": 300
+  },
+  "priorities": [
+    { "level": 1, "name": "LIFE SAFETY", "note": "Pre-empts every other call. Site command authority only." },
+    { "level": 2, "name": "EMERGENCY", "note": "Pre-empts operational, routine and test calls. Seal drill and network messages." },
+    { "level": 3, "name": "OPERATIONAL", "note": "Pre-empts routine and test calls." },
+    { "level": 4, "name": "ROUTINE", "note": "Waits for the zone; lapses if not carried within the queue limit." },
+    { "level": 5, "name": "TEST", "note": "Tone tests. Carried only when the zone is free." }
+  ],
+  "tones": [
+    { "id": "PRE", "name": "Pre-announcement chime", "steps": [{ "cue": "chime", "ms": 1400 }] },
+    { "id": "ALERT", "name": "Alert tone, alternating", "steps": [{ "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }] },
+    { "id": "EVAC", "name": "Muster tone, continuous alternating", "steps": [{ "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }] },
+    { "id": "SEAL", "name": "Seal tone, chime and alternating", "steps": [{ "cue": "chime", "ms": 1400 }, { "cue": "tone", "ms": 1600 }, { "cue": "tone", "ms": 1600 }] },
+    { "id": "CLEAR", "name": "All-clear, double chime", "steps": [{ "cue": "chime", "ms": 1400 }, { "cue": "chime", "ms": 1400 }] }
+  ],
+  "messages": [
+    {
+      "no": "01", "title": "Muster, all personnel", "priority": 1, "pre": "EVAC", "post": null, "durationSec": 22, "repeat": 2,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention all personnel. Attention all personnel. Proceed now to your assigned muster point by the nearest stairway. Do not use the hoists or lifts. Take your badge. Report to the muster warden and remain at the muster point until released."
+    },
+    {
+      "no": "02", "title": "Smoke reported, leave the zone", "priority": 1, "pre": "ALERT", "post": null, "durationSec": 18, "repeat": 2,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention. Smoke has been reported in this zone. Leave the zone by the nearest marked exit and close doors behind you. Do not stop to collect belongings. Report to the muster warden at your assigned muster point."
+    },
+    {
+      "no": "03", "title": "Air handling to filtered mode", "priority": 2, "pre": "ALERT", "post": null, "durationSec": 20, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention all personnel. Air handling is changing over to filtered mode. Remain on your level. Keep doors closed. You may notice a change in pressure and in supply air noise. This is expected. Do not adjust room controls."
+    },
+    {
+      "no": "05", "title": "Medical response team", "priority": 2, "pre": "PRE", "post": null, "durationSec": 12, "repeat": 2,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Medical response team. Medical response team. Report to the clinic for your location. Medical response team to the clinic."
+    },
+    {
+      "no": "11", "title": "Air handling maintenance in this zone", "priority": 4, "pre": "PRE", "post": null, "durationSec": 16, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention please. Air handling maintenance is in progress in this zone. Supply air will be reduced for about forty minutes. Please leave doors as you find them and do not adjust room thermostats. Thank you."
+    },
+    {
+      "no": "12", "title": "Domestic water interruption", "priority": 4, "pre": "PRE", "post": null, "durationSec": 14, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention please. Domestic water to this zone will be shut off shortly for planned work. Drinking water is available at the dining level. Please do not run taps while the supply is off. Thank you."
+    },
+    {
+      "no": "14", "title": "Dining hall service times changed", "priority": 4, "pre": "PRE", "post": null, "durationSec": 12, "repeat": 1,
+      "classes": ["ALPHA", "BETA"], "use": "operator",
+      "text": "Attention please. Today's dining hall service times have changed. The revised times are posted at the servery and on the notice board at the lift lobby. Thank you."
+    },
+    {
+      "no": "15", "title": "Personnel hoist out of service", "priority": 3, "pre": "PRE", "post": null, "durationSec": 14, "repeat": 1,
+      "classes": ["ALPHA"], "use": "operator",
+      "text": "Attention please. The personnel hoist is out of service until further notice. Use the freight hoist by arrangement with the hoist operator, or the stairways. Do not use the egress winder except in an emergency."
+    },
+    {
+      "no": "16", "title": "Badge found, security desk", "priority": 4, "pre": "PRE", "post": null, "durationSec": 10, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention please. A personnel badge has been handed in at the security desk. If you have mislaid your badge, collect it from the desk in person. Thank you."
+    },
+    {
+      "no": "22", "title": "Standby generator run on load", "priority": 3, "pre": "PRE", "post": null, "durationSec": 16, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "operator",
+      "text": "Attention please. The standby generator will be run on load for its scheduled test. Lighting may dip briefly at changeover and again at the end of the test. Equipment on protected supplies is not affected."
+    },
+    {
+      "no": "31", "title": "Seal drill, doors closing", "priority": 2, "pre": "SEAL", "post": null, "durationSec": 20, "repeat": 2,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "drill",
+      "text": "Seal drill. Seal drill. This is a drill. Portal and blast doors are closing. Clear all doorways. Go to your muster point and report to the muster warden. This is a drill."
+    },
+    {
+      "no": "32", "title": "Seal drill, site sealed", "priority": 2, "pre": "PRE", "post": null, "durationSec": 14, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "drill",
+      "text": "This is a drill. The site is sealed. Remain at your muster point. Wardens, report your count. This is a drill."
+    },
+    {
+      "no": "33", "title": "Seal drill, stand down", "priority": 3, "pre": "PRE", "post": "CLEAR", "durationSec": 12, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "drill",
+      "text": "The seal drill is ended. Stand down. Return to your normal duties. Doors will be restored to normal positions by the door controller."
+    },
+    {
+      "no": "34", "title": "Seal drill, cancelled", "priority": 3, "pre": "PRE", "post": "CLEAR", "durationSec": 12, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "drill",
+      "text": "The seal drill is cancelled. Stand down. Return to your normal duties. Do not open doors that remain closed; the door controller will restore them."
+    },
+    {
+      "no": "35", "title": "Inter-site communications interrupted", "priority": 2, "pre": "ALERT", "post": null, "durationSec": 18, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "isolation",
+      "text": "Attention all personnel. Communications with other sites are interrupted. Remain at your post. Messages for other sites will be held until communications are restored. Do not call the switchboard to report the interruption."
+    },
+    {
+      "no": "36", "title": "Inter-site communications restored", "priority": 3, "pre": "PRE", "post": "CLEAR", "durationSec": 10, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "isolation",
+      "text": "Attention please. Communications with other sites are restored. Held messages will be delivered in order of precedence."
+    },
+    {
+      "no": "40", "title": null, "priority": 2, "pre": null, "post": null, "durationSec": 47, "repeat": 1,
+      "classes": ["ALPHA"], "use": "withheld",
+      "text": null
+    },
+    {
+      "no": "90", "title": "Weekly tone test", "priority": 5, "pre": "PRE", "post": "CLEAR", "durationSec": 8, "repeat": 1,
+      "classes": ["ALPHA", "BETA", "GAMMA"], "use": "test",
+      "text": "This is a test of the public address system. No action is required. This is a test."
+    }
+  ],
+  "withheld": {
+    "no": "40",
+    "carriedFrom": "Transit Control console 2, Network Control, ALPHA-01",
+    "auth": "TO",
+    "ref": "TO-PA-0040"
+  },
+  "testWindow": { "weekday": 1, "startZ": "1600", "endZ": "1630", "label": "Mondays 1600Z to 1630Z" },
+  "speakers": { "ALPHA": 24, "BETA": 14, "GAMMA": 8 },
+  "zonesPerRack": 4,
+  "unassignedZones": [
+    { "site": "ALPHA-02", "zone": "00", "rack": 4, "speakers": 18 },
+    { "site": "ALPHA-05", "zone": "00", "rack": 5, "speakers": 18 }
+  ],
+  "divisionZones": [
+    { "id": "A03-RD", "site": "ALPHA-03", "division": "RD", "levels": [5, 6, 7], "name": "Records Division, Levels 5 to 7" },
+    { "id": "A01-OIA", "site": "ALPHA-01", "division": "OIA", "levels": [6], "name": "Office of Internal Assurance, Level 6" },
+    { "id": "A02-FE", "site": "ALPHA-02", "division": "FE", "levels": [2, 10], "name": "Facilities Engineering, Levels 2 and 10" }
+  ],
+  "networkKey": { "keyNo": "NC-1", "heldBy": "Network Control, ALPHA-01" },
+  "history": [
+    { "id": "PA-0414-0003", "date": "2008-04-14", "time": "1600", "site": "ALPHA-03", "zones": ["A03-ALL"], "msg": "90", "by": "CMS/ALPHA-03", "status": "COMPLETE" },
+    { "id": "PA-0408-0001", "date": "2008-04-08", "time": "0312", "site": "ALPHA-05", "zones": ["A05-Z00"], "msg": "40", "by": "TC/ALPHA-01", "status": "COMPLETE" },
+    { "id": "PA-0505-0011", "date": "2008-05-05", "time": "1428", "site": "ALPHA-03", "zones": ["A03-Z06"], "msg": "11", "by": "FE/ALPHA-03", "status": "COMPLETE" },
+    { "id": "PA-0505-0014", "date": "2008-05-05", "time": "1600", "site": "GAMMA-08", "zones": ["G08-ALL"], "msg": "90", "by": "FE/GAMMA-08", "status": "COMPLETE" },
+    { "id": "PA-0509-0006", "date": "2008-05-09", "time": "1912", "site": "GAMMA-08", "zones": ["G08-Z04"], "msg": "22", "by": "FE/GAMMA-08", "status": "COMPLETE" },
+    { "id": "PA-0512-0002", "date": "2008-05-12", "time": "1130", "site": "ALPHA-02", "zones": ["A02-Z05"], "msg": "14", "by": "CMD/ALPHA-02", "status": "COMPLETE" },
+    { "id": "PA-0512-0009", "date": "2008-05-12", "time": "1600", "site": "ALPHA-02", "zones": ["A02-ALL"], "msg": "90", "by": "CMS/ALPHA-02", "status": "COMPLETE" },
+    { "id": "PA-0512-0010", "date": "2008-05-12", "time": "1600", "site": "GAMMA-08", "zones": ["G08-ALL"], "msg": "90", "by": "FE/GAMMA-08", "status": "COMPLETE" },
+    { "id": "PA-0512-0012", "date": "2008-05-12", "time": "1611", "site": "ALPHA-03", "zones": ["A03-ALL"], "msg": "90", "by": "CMS/ALPHA-03", "status": "LAPSED" },
+    { "id": "PA-0513-0007", "date": "2008-05-13", "time": "2104", "site": "ALPHA-02", "zones": ["A02-Z00", "A05-Z00"], "msg": "40", "by": "TC/ALPHA-01", "status": "COMPLETE" },
+    { "id": "PA-0516-0004", "date": "2008-05-16", "time": "0845", "site": "GAMMA-08", "zones": ["G08-Z03"], "msg": "12", "by": "FE/GAMMA-08", "status": "COMPLETE" }
+  ]
+}

@@ -15,10 +15,11 @@ import { IN_WORLD_DATE_ISO } from '@core/session';
 import type { Canon, CompartmentId, Marking, MarkingId } from '@core/canon-types';
 import type { DocJson, RouteEntry } from '@core/contracts';
 import { BASE as PIPELINE_BASE, asset as pipelineAsset } from '@core/base';
-import { createDocs, onRoutesRebuilt } from '@core/docs';
+import { createDocs, onRoutesRebuilt, readableByTier4 } from '@core/docs';
+import { activeDef, activeId } from '@core/accounts';
 import type { DocsService } from '@core/docs';
 import { Seal as GSeal, setSealCanon } from '@graphics/seal';
-import { Icon as GIcon } from '@graphics/icons';
+import { Icon as GIcon, isIconId } from '@graphics/icons';
 import type { IconId } from '@graphics/icons';
 import { ClassificationBanner as GBanner, MarkingStrip as GStrip, registerMarkings } from '@graphics/banners';
 import { AccessCard as GAccessCard, SmartToken as GSmartToken, DesktopWatermark as GWatermark } from '@graphics/lock';
@@ -109,7 +110,7 @@ let docsSvc: DocsService | null = null;
 
 /** Pipeline docs service (routes bundled from .generated/routes.json). */
 export function docsService(satisfies: (key: string) => boolean): DocsService {
-  docsSvc ??= createDocs({ satisfies });
+  docsSvc ??= createDocs({ satisfies, account: () => activeId.value, closedSite: () => (activeDef.peek().tier === 4 ? activeDef.peek().site : null) });
   return docsSvc;
 }
 
@@ -149,7 +150,14 @@ export async function searchRoutes(q: string, routes: RouteEntry[]): Promise<Sea
   searchFn ??= import('@core/search')
     .then((m) => {
       const byRoute = new Map(routes.map((r) => [r.route, r]));
-      return m.createSearch({ satisfies: () => true, byRoute: (r) => byRoute.get(r) });
+      const account = activeId.peek();
+      return m.createSearch({
+        satisfies: () => true,
+        byRoute: (r) => byRoute.get(r),
+        account: () => account,
+        all: () => routes,
+        visible: account === 'lifesupport' ? readableByTier4 : undefined,
+      });
     })
     .catch(() => null);
   const fn = await searchFn;
@@ -182,8 +190,9 @@ function substringSearch(q: string, routes: RouteEntry[]): SearchHit[] {
 
 export const Seal = GSeal as ComponentType<{ size: number; variant: 'full' | 'mono' | 'tiny'; title?: string }>;
 
+/** Unknown ids (an icon not drawn yet) fall back to the generic System Tools icon. */
 export function Icon({ id, size = 16 }: { id: string; size?: 16 | 32 }) {
-  return h(GIcon, { id: id as IconId, size });
+  return h(GIcon, { id: isIconId(id) ? id : ('system' as IconId), size });
 }
 
 /** @graphics/banners takes a Marking object; the shell tracks MarkingIds. */

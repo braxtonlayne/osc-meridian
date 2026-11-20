@@ -1,0 +1,66 @@
+/* Preview gallery layout only (dev page, not shipped). Tokens only. */
+body {
+  margin: 0;
+  background: var(--ws-bg);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  color: var(--text-1);
+}
+.ck-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  width: 1280px;
+}
+.ck {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 14px 14px;
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+  box-shadow:
+    inset 1px 1px 0 var(--chrome-hi),
+    inset -1px -1px 0 var(--chrome-shadow);
+}
+.ck__h {
+  margin: 0;
+  font: var(--fw-semibold) var(--fs-sm) / var(--lh-sm) var(--font-ui);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--chrome-shadow);
+  box-shadow: 0 1px 0 var(--chrome-hi);
+  padding-bottom: 3px;
+}
+.ck__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 18px;
+}
+.ck__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.ck__note {
+  font: var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  color: var(--text-2);
+}
+/* Freeze the annunciator flash at a known phase for screenshots. */
+.ck-phase-on .pk-tile.is-unack,
+.ck-phase-on .pk-tile.is-ringback {
+  animation-play-state: paused !important;
+  animation-delay: -0.25s !important;
+}
+.ck-phase-off .pk-tile.is-unack {
+  animation-play-state: paused !important;
+  animation-delay: -0.75s !important;
+}
+.ck-phase-off .pk-tile.is-ringback {
+  animation-play-state: paused !important;
+  animation-delay: -1.5s !important;
+}

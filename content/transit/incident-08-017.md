@@ -57,7 +57,7 @@ C.A.
 
 ## Closure
 
-14 MAY 2008 1520Z (1120 EDT). Attributable to possession 08-044, no further action. Not reportable under :x[OSC-DIR-0378]. Advised dispatcher of DIR-0519 (:x[OSC-DIR-0519]).
+14 MAY 2008 1520Z (1120 EDT). Attributable to possession 08-044, no further action. Not reportable under :x[OSC-DIR-0378]. Advised dispatcher of :x[OSC-DIR-0519].
 
 D. Harker, Director, Transit Operations.
 

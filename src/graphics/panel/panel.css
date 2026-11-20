@@ -1,0 +1,793 @@
+/*
+ * @graphics/panel: control-panel hardware kit.
+ * 2008 switchgear and control-room hardware as drawn by a contractor's HMI package:
+ * flat fills, 1px bevels, engraved plates in capitals. No glow, gradients, glass or bloom.
+ * Colours only through design tokens (src/design/tokens.css), mixed with color-mix where a
+ * lens or window needs an unlit tint. All selectors are prefixed .pk- .
+ */
+
+/* ------------------------------------------------------------ base */
+.pk-ctl {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  vertical-align: top;
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  color: var(--text-1);
+}
+.pk-ctl svg {
+  display: block;
+  overflow: visible;
+}
+.pk-hit {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  line-height: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+.pk-hit[hidden] {
+  display: none;
+}
+.pk-hit:focus {
+  outline: none;
+}
+.pk-hit:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 2px;
+}
+.pk-hit[aria-disabled='true'],
+.is-disabled .pk-hit {
+  cursor: not-allowed;
+}
+.pk-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.pk-tag {
+  font: 9px/11px var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+}
+.pk-state-word {
+  font: var(--fw-semibold) var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.pk-caption {
+  font: var(--fs-xs) / var(--lh-xs) var(--font-ui);
+  color: var(--text-2);
+}
+
+/* SVG paint classes */
+.pk-nofill {
+  fill: none;
+}
+.pk-f-face {
+  fill: var(--chrome-face);
+}
+.pk-f-dark {
+  fill: var(--chrome-dark);
+}
+.pk-f-ink {
+  fill: var(--text-1);
+}
+.pk-f-bezel {
+  fill: var(--toner);
+}
+.pk-f-nut {
+  fill: var(--chrome-shadow);
+}
+.pk-f-lever {
+  fill: var(--chrome-hi);
+}
+.pk-f-collar {
+  fill: var(--chrome-shadow);
+}
+.pk-f-hinge {
+  fill: var(--chrome-shadow);
+}
+.pk-f-cover {
+  fill: color-mix(in srgb, var(--chrome-face) 55%, var(--chrome-shadow));
+}
+.pk-f-coverunder {
+  fill: color-mix(in srgb, var(--chrome-shadow) 65%, var(--chrome-dark));
+}
+.pk-f-hazard {
+  fill: var(--st-degraded);
+}
+.pk-f-hazard2 {
+  fill: var(--toner);
+}
+.pk-f-act {
+  fill: var(--st-fault);
+}
+.pk-f-knobbase {
+  fill: var(--chrome-dark);
+}
+.pk-f-knob {
+  fill: var(--toner);
+}
+.pk-f-index {
+  fill: var(--surface);
+}
+.pk-f-cyl {
+  fill: var(--chrome-shadow);
+}
+.pk-f-keymetal {
+  fill: color-mix(in srgb, var(--chrome-hi) 55%, var(--chrome-shadow));
+}
+.pk-s-hi {
+  stroke: var(--chrome-hi);
+  stroke-width: 1;
+}
+.pk-s-sh {
+  stroke: var(--chrome-shadow);
+  stroke-width: 1;
+}
+.pk-s-outer {
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.pk-s-dark {
+  stroke: var(--chrome-dark);
+  stroke-width: 1;
+}
+.pk-s-ink {
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.pk-s-coverhi {
+  stroke: var(--chrome-hi);
+  stroke-width: 1;
+}
+.pk-s-knobhi {
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.pk-s-acthi {
+  stroke: color-mix(in srgb, var(--st-fault) 50%, var(--surface));
+  stroke-width: 1.5;
+}
+.pk-s-actsh {
+  stroke: color-mix(in srgb, var(--st-fault) 45%, var(--toner));
+  stroke-width: 1.5;
+}
+.pk-hair {
+  stroke-width: 0.75;
+}
+.pk-screw__head {
+  fill: var(--chrome-face);
+  stroke: var(--chrome-outer);
+  stroke-width: 1;
+}
+.pk-screw__slot {
+  stroke: var(--chrome-dark);
+  stroke-width: 1.2;
+}
+.pk-screwmark {
+  display: block;
+  flex: none;
+}
+.pk-engrave {
+  font-family: var(--font-ui);
+  font-size: 8px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.1em;
+  fill: var(--text-1);
+}
+.pk-legend {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  fill: var(--text-1);
+}
+.pk-keyno {
+  font-family: var(--font-mono);
+  font-size: 5.5px;
+  fill: var(--text-1);
+}
+
+/* ------------------------------------------------------------ lenses and caps */
+.pk-lens--red {
+  --pk-lens: var(--st-fault);
+  --pk-lens-ink: var(--surface);
+}
+.pk-lens--green {
+  --pk-lens: var(--st-nominal);
+  --pk-lens-ink: var(--surface);
+}
+.pk-lens--amber {
+  --pk-lens: var(--st-degraded);
+  --pk-lens-ink: var(--text-1);
+}
+.pk-lens--white {
+  --pk-lens: var(--surface);
+  --pk-lens-ink: var(--text-1);
+}
+.pk-lens--blue {
+  --pk-lens: var(--title-active-bg);
+  --pk-lens-ink: var(--surface);
+}
+.pk-lens--black {
+  --pk-lens: var(--toner);
+  --pk-lens-ink: var(--chrome-hi);
+}
+.pk-lens--grey {
+  --pk-lens: var(--chrome-shadow);
+  --pk-lens-ink: var(--text-1);
+}
+.pk-ctl.is-lit,
+.pk-ctl.is-cap {
+  --pk-cap: var(--pk-lens);
+  --pk-ink: var(--pk-lens-ink);
+}
+/* Unlit lens: the lens colour greyed into the bezel, legend barely legible, as on the part. */
+.pk-ctl.is-dark {
+  --pk-cap: color-mix(in srgb, var(--pk-lens) 32%, var(--chrome-shadow));
+  --pk-ink: color-mix(in srgb, var(--text-1) 55%, var(--pk-cap));
+}
+.pk-cap,
+.pk-lens {
+  fill: var(--pk-cap);
+}
+.pk-cap-ink {
+  fill: var(--pk-ink);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.05em;
+}
+.pk-s-caphi {
+  stroke: color-mix(in srgb, var(--pk-cap) 45%, var(--surface));
+  stroke-width: 1;
+}
+.pk-s-capsh {
+  stroke: color-mix(in srgb, var(--pk-cap) 45%, var(--toner));
+  stroke-width: 1;
+}
+
+/* ------------------------------------------------------------ plate */
+.pk-plate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 2px 7px;
+  border: 1px solid var(--chrome-outer);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+.pk-plate__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pk-plate__line {
+  display: block;
+  white-space: nowrap;
+}
+.pk-plate--left {
+  justify-content: flex-start;
+  text-align: left;
+}
+.pk-plate--sm {
+  padding: 1px 5px;
+  font-size: var(--fs-xs);
+  line-height: 12px;
+  letter-spacing: 0.06em;
+}
+.pk-plate--md {
+  font-size: var(--fs-sm);
+  line-height: 13px;
+}
+.pk-plate--lg {
+  padding: 3px 10px;
+  font-size: var(--fs-md);
+  line-height: 16px;
+  letter-spacing: 0.1em;
+}
+.pk-plate--light {
+  background: var(--surface);
+  color: var(--text-1);
+  box-shadow: inset -1px -1px 0 var(--row-rule);
+}
+.pk-plate--dark {
+  background: var(--toner);
+  color: var(--chrome-hi);
+  border-color: var(--chrome-dark);
+}
+.pk-plate--warning {
+  /* Lightened amber: black engraving at about 6.6:1 (plain amber is 4.0:1). */
+  background: color-mix(in srgb, var(--st-degraded) 70%, var(--surface));
+  color: var(--text-1);
+  border-color: var(--toner);
+}
+.pk-plate--danger {
+  background: var(--st-fault);
+  color: var(--surface);
+  border-color: var(--toner);
+}
+.pk-plate--screws {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+/* ------------------------------------------------------------ lamp, pushbutton, toggle */
+.pk-lamp {
+  min-width: 56px;
+}
+/* Lit hot spot (filament glare) and, on small lamps, a darker unlit lens: on/off contrast at 22px. */
+.pk-lamp__hot {
+  fill: color-mix(in srgb, var(--pk-lens) 25%, var(--surface));
+}
+.pk-lamp--sm.is-dark {
+  --pk-cap: color-mix(in srgb, var(--pk-lens) 22%, var(--toner));
+}
+.pk-lamp--sm.is-lit .pk-lens {
+  stroke: color-mix(in srgb, var(--pk-lens) 60%, var(--surface));
+  stroke-width: 1.5;
+}
+.pk-pb.is-disabled .pk-cap-ink {
+  fill: color-mix(in srgb, var(--pk-ink) 45%, var(--pk-cap));
+}
+.pk-toggle__legend {
+  font: var(--fw-semibold) var(--fs-xs) / 12px var(--font-ui);
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.pk-toggle__legend.is-active {
+  font-weight: var(--fw-bold);
+  color: var(--text-1);
+}
+.pk-rotary__pos {
+  cursor: pointer;
+}
+.is-disabled .pk-rotary__pos {
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------ guarded switch */
+.pk-guard {
+  gap: 6px;
+}
+.pk-guard__unit {
+  position: relative;
+}
+.pk-guard__coverbtn {
+  position: absolute;
+  left: 30px;
+  top: 40px;
+  width: 90px;
+  height: 105px;
+}
+.pk-guard__coverbtn.is-up {
+  top: 8px;
+  height: 44px;
+}
+.pk-guard__act {
+  position: absolute;
+  left: 49px;
+  top: 66px;
+  width: 52px;
+  height: 52px;
+}
+.pk-hold {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pk-hold__bar {
+  display: flex;
+  gap: 2px;
+  box-sizing: border-box;
+  height: 14px;
+  padding: 2px;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  box-shadow: inset 1px 1px 0 var(--chrome-outer);
+}
+.pk-hold__seg {
+  flex: 1;
+}
+.pk-hold__seg.is-on {
+  background: var(--title-active-bg);
+}
+.pk-hold__read {
+  display: flex;
+  justify-content: space-between;
+  font: var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  color: var(--text-2);
+}
+
+/* ------------------------------------------------------------ annunciator */
+.pk-ann {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: var(--font-ui);
+}
+.pk-ann__grid {
+  display: grid;
+  gap: 2px;
+  padding: 2px;
+  background: var(--chrome-dark);
+  border: 1px solid var(--toner);
+  box-shadow: 1px 1px 0 var(--chrome-hi);
+}
+.pk-ann__btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pk-ann__count {
+  font: var(--fw-semibold) var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+}
+.pk-tile {
+  --pk-lit-bg: var(--st-fault);
+  --pk-lit-fg: var(--surface);
+  --pk-inv-fg: var(--st-fault);
+  --pk-inv-border: var(--st-fault);
+  /* Unlit legends stay readable (WCAG AA, about 5:1): a light window with --text-2 legend. */
+  --pk-unlit-bg: color-mix(in srgb, var(--chrome-face) 88%, var(--chrome-shadow));
+  --pk-unlit-fg: var(--text-2);
+  --pk-dim-bg: color-mix(in srgb, var(--pk-lit-bg) 38%, var(--pk-unlit-bg));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 44px;
+  margin: 0;
+  padding: 2px 4px;
+  border: 2px solid transparent;
+  background: var(--pk-unlit-bg);
+  color: var(--pk-unlit-fg);
+  font: var(--fw-semibold) var(--fs-xs) / 12px var(--font-ui);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: default;
+}
+.pk-tile--warning {
+  /* Amber lens lightened so the black legend reaches AA (about 6.6:1; plain amber is 4.0:1). */
+  --pk-lit-bg: color-mix(in srgb, var(--st-degraded) 70%, var(--surface));
+  --pk-lit-fg: var(--text-1);
+  --pk-inv-fg: var(--text-1);
+  --pk-inv-border: var(--st-degraded);
+}
+.pk-tile--status {
+  --pk-lit-bg: var(--surface);
+  --pk-lit-fg: var(--text-1);
+  --pk-inv-fg: var(--text-1);
+  --pk-inv-border: var(--text-1);
+}
+.pk-tile.is-unack,
+.pk-tile.is-ringback {
+  cursor: pointer;
+}
+.pk-tile__line {
+  display: block;
+  white-space: nowrap;
+}
+.pk-tile:focus {
+  outline: none;
+}
+.pk-tile:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: -5px;
+}
+.pk-tile.is-ack {
+  background: var(--pk-lit-bg);
+  color: var(--pk-lit-fg);
+}
+.pk-tile.is-unack {
+  background: var(--pk-lit-bg);
+  color: var(--pk-lit-fg);
+  animation: pk-flash 1s steps(1, end) infinite;
+}
+.pk-tile.is-ringback {
+  background: var(--pk-dim-bg);
+  color: var(--text-1);
+  animation: pk-ring 2s steps(1, end) infinite;
+}
+@keyframes pk-flash {
+  0% {
+    background: var(--pk-lit-bg);
+    color: var(--pk-lit-fg);
+  }
+  50% {
+    background: var(--pk-unlit-bg);
+    color: var(--pk-unlit-fg);
+  }
+}
+@keyframes pk-ring {
+  0% {
+    background: var(--pk-dim-bg);
+    color: var(--text-1);
+  }
+  50% {
+    background: var(--pk-unlit-bg);
+    color: var(--pk-unlit-fg);
+  }
+}
+/* Reduced motion: no flashing. Unacknowledged = static inverse; ringback = dim with a dashed border. */
+.pk-rm .pk-tile.is-unack {
+  animation: none;
+  background: var(--surface);
+  color: var(--pk-inv-fg);
+  border: 4px solid var(--pk-inv-border);
+}
+.pk-rm .pk-tile.is-ringback {
+  animation: none;
+  background: var(--pk-dim-bg);
+  color: var(--text-1);
+  border: 2px dashed var(--pk-inv-border);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pk-ann:not(.pk-motion) .pk-tile.is-unack {
+    animation: none;
+    background: var(--surface);
+    color: var(--pk-inv-fg);
+    border: 4px solid var(--pk-inv-border);
+  }
+  .pk-ann:not(.pk-motion) .pk-tile.is-ringback {
+    animation: none;
+    background: var(--pk-dim-bg);
+    color: var(--text-1);
+    border: 2px dashed var(--pk-inv-border);
+  }
+}
+[data-motion='reduced'] .pk-tile.is-unack {
+  animation: none;
+  background: var(--surface);
+  color: var(--pk-inv-fg);
+  border: 4px solid var(--pk-inv-border);
+}
+[data-motion='reduced'] .pk-tile.is-ringback {
+  animation: none;
+  background: var(--pk-dim-bg);
+  color: var(--text-1);
+  border: 2px dashed var(--pk-inv-border);
+}
+/* Lamp test overrides every sequence state. */
+.pk-ann.is-test .pk-tile:not(.is-spare) {
+  animation: none;
+  background: var(--pk-lit-bg);
+  color: var(--pk-lit-fg);
+  border-color: transparent;
+}
+.pk-tile.is-spare {
+  background: var(--pk-unlit-bg);
+}
+
+/* ------------------------------------------------------------ meters */
+.pk-f-meterbezel {
+  fill: var(--toner);
+}
+.pk-f-scale {
+  fill: var(--surface);
+}
+.pk-f-needle {
+  fill: var(--text-1);
+}
+.pk-s-needle {
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  stroke-linecap: square;
+}
+.pk-scale-t {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  fill: var(--text-1);
+}
+.pk-scale-unit {
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+}
+.pk-scale-tag {
+  font-size: 7.5px;
+  fill: var(--text-2);
+}
+.pk-zone--warn {
+  fill: var(--st-degraded);
+}
+.pk-zone--alarm {
+  fill: var(--st-fault);
+}
+.pk-zonearc {
+  stroke-width: 3;
+}
+.pk-zonearc--warn {
+  stroke: var(--st-degraded);
+}
+.pk-zonearc--alarm {
+  stroke: var(--st-fault);
+}
+.pk-f-seg-on {
+  fill: var(--text-1);
+}
+.pk-f-seg-off {
+  fill: color-mix(in srgb, var(--text-1) 8%, var(--surface));
+}
+.pk-barmeter__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.pk-readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding-top: 7px;
+}
+.pk-field {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 52px;
+  padding: 1px 4px;
+  background: var(--surface);
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+  font: var(--fw-semibold) 12px/14px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-1);
+}
+.pk-unit {
+  font: var(--fs-xs) / var(--lh-xs) var(--font-mono);
+  color: var(--text-2);
+}
+
+/* seven-segment */
+.pk-seg--lcd {
+  --pk-seg-win: color-mix(in srgb, var(--paper) 82%, var(--chrome-shadow));
+  --pk-seg-on: var(--text-1);
+  --pk-seg-off: color-mix(in srgb, var(--text-1) 7%, var(--pk-seg-win));
+}
+.pk-seg--led {
+  --pk-seg-win: var(--toner);
+  --pk-seg-on: color-mix(in srgb, var(--st-degraded) 72%, var(--surface));
+  --pk-seg-off: color-mix(in srgb, var(--st-degraded) 13%, var(--toner));
+}
+.pk-f-segwin {
+  fill: var(--pk-seg-win);
+}
+.pk-segon {
+  fill: var(--pk-seg-on);
+}
+.pk-segoff {
+  fill: var(--pk-seg-off);
+}
+.pk-seg__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+/* ------------------------------------------------------------ panel frame */
+.pk-panel {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 14px 24px 24px;
+  background: var(--chrome-face);
+  border: 1px solid var(--chrome-outer);
+  box-shadow:
+    inset 1px 1px 0 var(--chrome-hi),
+    inset -1px -1px 0 var(--chrome-shadow);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  color: var(--text-1);
+}
+.pk-panel__screw {
+  position: absolute;
+}
+.pk-panel__screw--tl {
+  left: 6px;
+  top: 6px;
+}
+.pk-panel__screw--tr {
+  right: 6px;
+  top: 6px;
+}
+.pk-panel__screw--bl {
+  left: 6px;
+  bottom: 6px;
+}
+.pk-panel__screw--br {
+  right: 6px;
+  bottom: 6px;
+}
+.pk-panel__title {
+  display: flex;
+  justify-content: center;
+}
+.pk-panel__no {
+  position: absolute;
+  right: 24px;
+  bottom: 6px;
+  font: 9px/11px var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+}
+.pk-section {
+  position: relative;
+  padding: 18px 10px 10px;
+  border: 1px solid var(--chrome-shadow);
+  box-shadow:
+    inset 1px 1px 0 var(--chrome-hi),
+    1px 1px 0 var(--chrome-hi);
+}
+.pk-section__cap {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  display: flex;
+}
+
+/* ------------------------------------------------------------ mimic */
+.pk-mimic-svg {
+  display: block;
+  border: 1px solid;
+  border-color: var(--chrome-shadow) var(--chrome-hi) var(--chrome-hi) var(--chrome-shadow);
+}
+.pk-f-mimicbg {
+  fill: var(--paper);
+}
+.pk-mimic__line {
+  stroke: var(--text-1);
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+.pk-mimic--dead .pk-mimic__line {
+  stroke: var(--chrome-shadow);
+}
+.pk-mimic__chev {
+  stroke: var(--text-1);
+}
+.pk-mimic__node {
+  fill: var(--text-1);
+}
+.pk-mimic__boxrect {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.pk-mimic__box.is-on .pk-mimic__boxrect {
+  fill: var(--text-1);
+}
+.pk-mimic__boxt {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  fill: var(--text-1);
+}
+.pk-mimic__box.is-on .pk-mimic__boxt {
+  fill: var(--surface);
+}
+
+/* Actuator focus sits on the black ring round the cap, so the dots are drawn light. */
+.pk-guard__act:focus-visible {
+  outline: 2px dotted var(--chrome-hi);
+  outline-offset: -4px;
+  border-radius: 50%;
+}

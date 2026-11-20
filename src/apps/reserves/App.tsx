@@ -52,6 +52,7 @@ import type { WoState } from './WorkOrderView';
 import { buildRegister, htmlToParts } from './workorders';
 import type { WorkOrder } from './workorders';
 import './reserves.css';
+import { T4Home, t4Refused } from './acct';
 
 type Mode = 'page' | 'wo';
 
@@ -91,7 +92,14 @@ function MarkingStrip({ marking }: { marking: MarkingId }) {
   return m ? <GMarkingStrip marking={m} /> : null;
 }
 
-export default function App({ win, route }: AppProps) {
+export default function App(props: AppProps) {
+  const services = useServices();
+  const entry = props.route ?? services.docs.byRoute('/reserves') ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Reserves" docNo={entry?.docNo ?? 'OSC-RSV-IDX'} />;
+  return <ReservesApp {...props} />;
+}
+
+function ReservesApp({ win, route }: AppProps) {
   const services = useServices();
   const operator = services.session.operatorId.value;
   // Reading these subscribes the window to clearance changes (briefings, acting tier).

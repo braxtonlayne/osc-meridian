@@ -1,0 +1,31 @@
+# Wave 2C integration notes (collected from wave 2B reports)
+
+- muster: `mail.deliver` traces can't carry slots; add `slots` to Trace (data → slots) in core traces delivery. msg-08-04774 is currently written without slots.
+- CT1 per-account mail: trigger shapes `trace`, `docRead`, `app`, `plant`, `mailTo` are not supported by the mail runtime yet; wire per docs/narrative-2/accounts.md (login mail + timed fallbacks; login mail renumbered by I2 into 04341–04477, triggered mail keeps lifesupport 06105–06106, deputy 06206–06209, auditor 06306–06308; mapping in accounts.md).
+- verify-dist slot-token failure: dist/mail/index.html prints raw `{bay} {testId} {circuit} {callId} {unit}` from content/mail/plant/msg-08-05731..05736, content/mail/patch/msg-08-04931..04936, content/mail/drill/msg-08-05303 (slots in title/summary). Fix: keep slots out of title/summary, or have prerender render undeclared slots as ________.
+- startNarrative currently runs for analyst only; other accounts need their own login mail/rules.
+- deputy divisionId 'CMD' should display as "Facility Command" (X2 handling).
+- pa: shell needs distinct all-clear and evac tone cues (new SoundCue values or a tone-pattern API); a global reconcile hook so pa's automatic broadcasts (`autoBroadcasts`/`appendRequests` in src/apps/pa/model.ts) are logged with no pa window open (generalise: each plant app may export a headless `reconcile(services)` the shell runs on shared-state change).
+- pa: isolation owner should put wall-clock ms on initiations (IsolationState initiations have ISO `at` only).
+- Check doc-number collisions across all wave-2B apps (each agent picked its own DIR/KB/MSG numbers).
+- drill: add `drill-register` to the CONTRACTS shared-key registry; DrillStateExt (v:1, plan, tickedAt) supersedes the core DrillState shape: readers derive state from plan + tickedAt. A shell-side headless ticker for drill (same hook as pa reconcile) keeps the key fresh with the coordinator closed.
+- drill: schematic should export its transform constants (drill's PortalMarks duplicates them).
+- doors test seeds a drill without v:1; align with DrillStateExt.
+- isolate: `active` is not cleared by time; every reader (shell isolation.tsx, taskbar, lock notice, transit/dispatch, patch, pa, cctv, doors…) must use `isolatedAt(state, now)` from src/apps/isolate (clearsAt honoured). IsolateState superset (restorations, seal, withdrawn).
+- isolate: RC certificate `form.routed` traces to deputy; isolate applies matching `form.decided`. Make sure X2's Forms queue shows/decides them consistently (single decision path).
+- isolate: panel scrolls at default window size: enlarge defaultSize in src/apps/index.ts.
+- Level 5 permanent until "Reinitialise local profile (all)" in System Tools.
+- X2: call `applyDecisions(services)` (src/apps/forms/decisions.ts) headlessly on sign-in / on `trace` arrival, not only when Forms or Mail opens.
+- X2: taskbar mail count must include unread trace messages (mail/finding/form.decided).
+- X2: Mail bracketed local time is always EDT; should be site-local per account (GAMMA-08 / ALPHA-01 / ALPHA-02 time zones from canon).
+- X2: org-chart graphic still bars the deputy's own name for the deputy (T2 values not passed to @graphics/org).
+- strike: deputy can't model ALPHA-02 (client canon has no ALPHA-02 position). If the position is T2-withheld, include lat/lon in CANON-T2 and have strike read it for T2 sessions; otherwise decide whether each account's home-site position is releasable to that account.
+- strike: shell toast shows message titles raw (slot tokens unfilled): toast must apply slots.
+- doors: drill reaction runs only with a doors window open → headless reconcile hook (same as pa/drill). Handheld layout and isolation hub-down state unchecked.
+- plant: a hand-made isolation state "rebooted the shell": shell isolation reader must validate/tolerate partial or malformed shared values (never crash on bad stored state). Check every shared-key reader for defensive parsing.
+- plant: doors uses `{ref}` in message titles: same raw-slot toast/index issue; sweep all new mail titles/summaries for slot tokens.
+- hoist: depth3d should export its section transform (hoist copies it, pinned by a test). Hoist doesn't read doors portal state. Small panel lamps hard to tell on/off in screenshots: review @graphics/panel Lamp contrast at small sizes.
+- cctv: add `cctv` to the CONTRACTS shared-key registry (also `drill-register`). cctv depends on muster `unknownBadges`, hoist `sumpVanes`/unit shape, dispatch runState; timetabled trains are not drawn on platform cameras. Seg04 train on A02-C24 only unit-tested.
+- patch: core `ringback` SoundCue; shell taskbar should read `patch.links` ("A|B" → UP/DEGRADED/DOWN, isolation applied separately) for hub link states.
+- dispatch: needs `clearedAt` on IsolationState (or isolate's restorations) so latched holds release when no desk is open; doors could open A02-BD9/A05-BD8 for SEG 04 key position 3 moves; mid-run reload relocks session (check it's only dev HMR, not production).
+- environ: drill must fill sites['GAMMA-08'] acknowledged/sealed/status; DIR-0128 needs t4 or lifesupport variant; optional muster/cctv hooks in docs/narrative-2/environ.md.

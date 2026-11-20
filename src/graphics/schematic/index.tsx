@@ -145,14 +145,16 @@ interface Geometry {
 
 const HEAD_H = 16;
 /** At or below this width the legend moves under the board (it would cover the track); transit passes 600 as its narrow minimum. */
-const LEGEND_BELOW_W = 640;
+export const LEGEND_BELOW_W = 640;
 /** Band reserved for the one-column legend: up to six rows of 13px plus its title. */
-const LEGEND_BAND_H = 6 * 13 + 22 + 8;
+export const LEGEND_BAND_H = 6 * 13 + 22 + 8;
 
-const pathD = (pts: readonly Pt[]) =>
-  pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
-
-function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
+/**
+ * Layout-to-pixel transform of a LineDiagram drawn at width x height: scale `s`, offset
+ * (`ox`, `oy`), whether the legend sits below, compact sizing, and the ALPHA hub box size.
+ * Overlays drawn over a LineDiagram (drill PortalMarks) use this to stay registered with it.
+ */
+export function schematicTransform(width: number, height: number) {
   const L = SCHEMATIC_LAYOUT;
   const legendBelow = width <= LEGEND_BELOW_W;
   const boardH = legendBelow ? Math.max(40, height - LEGEND_BAND_H) : height;
@@ -160,6 +162,17 @@ function buildGeometry(width: number, height: number, blockCounts?: Readonly<Rec
   const ox = Math.round((width - L.width * s) / 2);
   const oy = Math.round((boardH - L.height * s) / 2);
   const compact = s < 0.8;
+  const alphaW = compact ? Math.max(42, 96 * s) : Math.round(96 * s);
+  const alphaH = compact ? 17 : Math.round(36 * s);
+  return { s, ox, oy, legendBelow, compact, alphaW, alphaH };
+}
+
+const pathD = (pts: readonly Pt[]) =>
+  pts.map((p, i) => `${i ? 'L' : 'M'}${Math.round(p[0] * 2) / 2} ${Math.round(p[1] * 2) / 2}`).join('');
+
+function buildGeometry(width: number, height: number, blockCounts?: Readonly<Record<string, number>>): Geometry {
+  const L = SCHEMATIC_LAYOUT;
+  const { s, ox, oy, legendBelow, compact } = schematicTransform(width, height);
   const sz: Sizes = compact
     ? { compact, s, railO: 4, railI: 2, tram: 1, tramOcc: 3, dark: 1, ch: 4.8, alphaW: Math.max(42, 96 * s), alphaH: 17, beta: 9, gamma: 5 }
     : { compact, s, railO: 8, railI: 4, tram: 2, tramOcc: 4, dark: 2, ch: 5.4, alphaW: Math.round(96 * s), alphaH: Math.round(36 * s), beta: 11, gamma: 7 };
@@ -260,16 +273,16 @@ function Block({ rail, state, nirs, d, hatch }: { rail: boolean; state: Occupanc
   return <path class={nirs ? 'sc-tr sc-nirs' : 'sc-tr'} d={d} />;
 }
 
-function PBox({ x, y }: { x: number; y: number }) {
+/** Possession box; `part` draws the box (inside the link button) or its letter (in the text layer). */
+function PBox({ x, y, part }: { x: number; y: number; part: 'box' | 'text' }) {
   const cx = Math.round(x);
   const cy = Math.round(y);
-  return (
-    <g>
-      <rect class="sc-box" x={cx - 5.5} y={cy - 5.5} width={11} height={11} />
-      <text class="sc-mono-b" x={cx} y={cy + 3} text-anchor="middle">
-        P
-      </text>
-    </g>
+  return part === 'box' ? (
+    <rect class="sc-box" x={cx - 5.5} y={cy - 5.5} width={11} height={11} />
+  ) : (
+    <text class="sc-mono-b" x={cx} y={cy + 3} text-anchor="middle">
+      P
+    </text>
   );
 }
 
@@ -327,69 +340,65 @@ function LinkView({ g, sz, occ, selected, hatch, onSelect }: LinkProps) {
     ? { x: tx - 2.5, y: ty - 2.5, w: tagW + 5, h: tagH + 5 + (link.notInService ? 11 : 0) }
     : { x: Math.round(g.mid.x) - 7.5, y: Math.round(g.mid.y) - 7.5, w: 15, h: 15 };
 
+  const pboxes = (part: 'box' | 'text') =>
+    allPoss ? <PBox x={g.mid.x} y={g.mid.y} part={part} /> : g.blocks.map((b, i) => (states[i] === 'POSSESSION' ? <PBox key={b.key} x={b.mid.x} y={b.mid.y} part={part} /> : null));
+
+  // The button carries the drawing; its lettering sits in a sibling layer (aria-hidden, no pointer
+  // events), so the button's own text never disagrees with its accessible name (WCAG 2.5.3).
   return (
-    <g
-      class="sc-link"
-      role="button"
-      tabindex={0}
-      aria-label={label}
-      aria-pressed={selected}
-      data-link={link.key}
-      {...act}
-    >
-      <path class="sc-hit" d={g.d} />
-      {selected && <path class="sc-sel" d={g.d} />}
-      {g.blocks.map((b, i) => (
-        <Block key={b.key} rail={rail} state={states[i]!} nirs={link.notInService} d={b.d} hatch={hatch} />
-      ))}
-      {g.ticks && <path class="sc-tick" d={g.ticks} />}
-      {rail &&
-        full &&
-        g.blocks.map((b) => {
-          const [nx, ny] = tagNormal(b.mid.ux, b.mid.uy, link.flip);
-          const w = b.no.length * 4.8;
-          const dd = sz.railO / 2 + 4 + (Math.abs(nx) * w) / 2 + Math.abs(ny) * 4;
-          return (
-            <text key={b.key} class="sc-blockno" x={Math.round(b.mid.x - nx * dd)} y={Math.round(b.mid.y - ny * dd) + 3} text-anchor="middle">
-              {b.no}
-            </text>
-          );
-        })}
-      {allPoss ? (
-        <PBox x={g.mid.x} y={g.mid.y} />
-      ) : (
-        g.blocks.map((b, i) => (states[i] === 'POSSESSION' ? <PBox key={b.key} x={b.mid.x} y={b.mid.y} /> : null))
-      )}
-      {hasTag && (
-        <g class={selected ? 'sc-tag-sel' : undefined}>
-          <rect class="sc-tagbg" x={tx - 2} y={ty - 1} width={tagW + 4} height={tagH + 2} />
-          {noW > 0 && (
-            <>
-              <rect class="sc-box" x={xNo + 0.5} y={ty + 0.5} width={noW - 1} height={tagH - 1} />
-              <text class="sc-mono-b" x={xNo + noW / 2} y={ty + tagH - 3} text-anchor="middle">
-                {link.key}
+    <g class="sc-linkset">
+      <g class="sc-link" role="button" tabindex={0} aria-label={label} aria-pressed={selected} data-link={link.key} {...act}>
+        <path class="sc-hit" d={g.d} />
+        {selected && <path class="sc-sel" d={g.d} />}
+        {g.blocks.map((b, i) => (
+          <Block key={b.key} rail={rail} state={states[i]!} nirs={link.notInService} d={b.d} hatch={hatch} />
+        ))}
+        {g.ticks && <path class="sc-tick" d={g.ticks} />}
+        {pboxes('box')}
+        {hasTag && (
+          <g class={selected ? 'sc-tag-sel' : undefined}>
+            <rect class="sc-tagbg" x={tx - 2} y={ty - 1} width={tagW + 4} height={tagH + 2} />
+            {noW > 0 && <rect class="sc-box" x={xNo + 0.5} y={ty + 0.5} width={noW - 1} height={tagH - 1} />}
+            {showSq && <rect class={`sc-sq sc-sq-${worst}`} x={xSq + 0.5} y={ty + (tagH - sq) / 2 + 0.5} width={sq - 1} height={sq - 1} />}
+          </g>
+        )}
+        <rect class="sc-focus" x={fr.x} y={fr.y} width={fr.w} height={fr.h} />
+      </g>
+      <g class={selected ? 'sc-linktext sc-tag-sel' : 'sc-linktext'} aria-hidden="true">
+        {rail &&
+          full &&
+          g.blocks.map((b) => {
+            const [nx, ny] = tagNormal(b.mid.ux, b.mid.uy, link.flip);
+            const w = b.no.length * 4.8;
+            const dd = sz.railO / 2 + 4 + (Math.abs(nx) * w) / 2 + Math.abs(ny) * 4;
+            return (
+              <text key={b.key} class="sc-blockno" x={Math.round(b.mid.x - nx * dd)} y={Math.round(b.mid.y - ny * dd) + 3} text-anchor="middle">
+                {b.no}
               </text>
-            </>
-          )}
-          {mileW > 0 && (
-            <text class={rail ? 'sc-mono sc-tagtext' : 'sc-mono-s sc-tagtext'} x={xMile} y={ty + tagH - (rail ? 3 : 2)}>
-              {mileText}
-            </text>
-          )}
-          {showSq && <rect class={`sc-sq sc-sq-${worst}`} x={xSq + 0.5} y={ty + (tagH - sq) / 2 + 0.5} width={sq - 1} height={sq - 1} />}
-          {word && (
-            <text class="sc-mono sc-tagtext" x={xWord} y={ty + tagH - 3}>
-              {word}
-            </text>
-          )}
-        </g>
-      )}
-      {link.notInService && (
-        <text class="sc-caps sc-halo" x={tx} y={ty + tagH + 10}>
-          NOT IN REVENUE SERVICE
-        </text>
-      )}
-      <rect class="sc-focus" x={fr.x} y={fr.y} width={fr.w} height={fr.h} />
+            );
+          })}
+        {pboxes('text')}
+        {hasTag && noW > 0 && (
+          <text class="sc-mono-b" x={xNo + noW / 2} y={ty + tagH - 3} text-anchor="middle">
+            {link.key}
+          </text>
+        )}
+        {hasTag && mileW > 0 && (
+          <text class={rail ? 'sc-mono sc-tagtext' : 'sc-mono-s sc-tagtext'} x={xMile} y={ty + tagH - (rail ? 3 : 2)}>
+            {mileText}
+          </text>
+        )}
+        {hasTag && word && (
+          <text class="sc-mono sc-tagtext" x={xWord} y={ty + tagH - 3}>
+            {word}
+          </text>
+        )}
+        {link.notInService && (
+          <text class="sc-caps sc-halo" x={tx} y={ty + tagH + 10}>
+            NOT IN REVENUE SERVICE
+          </text>
+        )}
+      </g>
     </g>
   );
 }
@@ -416,10 +425,15 @@ function NodeView({ n, sz, selected, onSelect }: { n: NodeGeom; sz: Sizes; selec
     const x0 = x - Math.round(w / 2);
     const y0 = y - Math.round(h / 2);
     const hub = node.hubOf.map((id) => (SCHEMATIC_LAYOUT.networkNames[id] ?? id).replace(/\s*network$/i, '').toUpperCase()).join(', ');
+    // Lettering in an aria-hidden layer beside the button (WCAG 2.5.3; see LinkView).
     return (
-      <g {...common} {...act} aria-label={`${node.id}, rail hub${hub ? `, ${hub} tram network` : ''}`}>
-        <rect class="sc-alpha" x={x0 + 0.5} y={y0 + 0.5} width={w - 1} height={h - 1} />
-        {full && <rect class="sc-alpha-in" x={x0 + 2.5} y={y0 + 2.5} width={w - 5} height={h - 5} />}
+      <g class="sc-nodeset">
+        <g {...common} {...act} aria-label={`${node.id}, rail hub${hub ? `, ${hub} tram network` : ''}`}>
+          <rect class="sc-alpha" x={x0 + 0.5} y={y0 + 0.5} width={w - 1} height={h - 1} />
+          {full && <rect class="sc-alpha-in" x={x0 + 2.5} y={y0 + 2.5} width={w - 5} height={h - 5} />}
+          <rect class="sc-focus" x={x0 - 2.5} y={y0 - 2.5} width={w + 5} height={h + 5} />
+        </g>
+        <g class={selected ? 'sc-nodetext sc-node-sel' : 'sc-nodetext'} aria-hidden="true" onClick={() => onSelect(node.id)}>
         <text class="sc-mono-b sc-on-alpha" x={x} y={full && hub ? y - 2 : y + 3} text-anchor="middle" style={full ? { fontSize: '10px' } : undefined}>
           {full ? node.id : node.id.replace('ALPHA', 'A')}
         </text>
@@ -428,7 +442,7 @@ function NodeView({ n, sz, selected, onSelect }: { n: NodeGeom; sz: Sizes; selec
             {hub}
           </text>
         )}
-        <rect class="sc-focus" x={x0 - 2.5} y={y0 - 2.5} width={w + 5} height={h + 5} />
+        </g>
       </g>
     );
   }
@@ -466,6 +480,7 @@ function NodeView({ n, sz, selected, onSelect }: { n: NodeGeom; sz: Sizes; selec
       break;
   }
   return (
+    <g class="sc-nodeset">
     <g {...common} {...act} aria-label={`${node.id}${place ? `, ${place}` : ''}`}>
       <rect class="sc-nodehit" x={x - 10} y={y - 10} width={20} height={20} />
       {beta ? (
@@ -474,6 +489,9 @@ function NodeView({ n, sz, selected, onSelect }: { n: NodeGeom; sz: Sizes; selec
         <rect class="sc-gamma" x={Math.round(x - half)} y={Math.round(y - half)} width={sym} height={sym} />
       )}
       {selected && <rect class="sc-selring" x={x - half - 4} y={y - half - 4} width={sym + 8} height={sym + 8} />}
+      <rect class="sc-focus" x={x - half - 3.5} y={y - half - 3.5} width={Math.ceil(sym) + 7} height={Math.ceil(sym) + 7} />
+    </g>
+    <g class="sc-nodetext" aria-hidden="true" onClick={() => onSelect(node.id)}>
       <text class={beta ? 'sc-mono-b sc-halo' : 'sc-mono sc-halo'} x={lx} y={ly1} text-anchor={anchor}>
         {id}
       </text>
@@ -482,7 +500,7 @@ function NodeView({ n, sz, selected, onSelect }: { n: NodeGeom; sz: Sizes; selec
           {place}
         </text>
       )}
-      <rect class="sc-focus" x={x - half - 3.5} y={y - half - 3.5} width={Math.ceil(sym) + 7} height={Math.ceil(sym) + 7} />
+    </g>
     </g>
   );
 }
@@ -531,7 +549,10 @@ function Legend({ g, hatch, showTram }: { g: Geometry; hatch: string; showTram: 
         <>
           {line('sc-ro', y)}
           <path class="sc-ri sc-hatch" style={{ stroke: `url(#${hatch})` }} d={`M0 ${y}H${lane}`} />
-          <PBox x={lane / 2} y={y} />
+          <g>
+            <PBox x={lane / 2} y={y} part="box" />
+            <PBox x={lane / 2} y={y} part="text" />
+          </g>
         </>
       ),
     },

@@ -3,7 +3,7 @@ import type { ClassId } from '@core/canon-types';
 import { Checkbox, DataTable, TextField, type Column, type SortState } from '@design/index';
 import { MarkerGlyph } from '@graphics/map';
 import { CLASS_IDS, isOpen, sortKey, totals, type RegRow, type RowFilter } from './model';
-import { CellView, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
+import { CellView, HOME_SITE, canon, className, fmt, fmtMonth, type RxAudit } from './shared';
 
 export interface RegisterProps {
   rows: RegRow[];
@@ -116,7 +116,7 @@ export function RegisterTable({ rows, selected, onSelect, onOpen, sort, onSort, 
       onSortChange={onSort}
       dense
       footer={footer}
-      rowClass={(r) => (r.id === canon.operator.site ? 'reg-row-home' : undefined)}
+      rowClass={(r) => (r.id === HOME_SITE ? 'reg-row-home' : undefined)}
       empty={<span class="reg-note">No installation matches the filter.</span>}
     />
   );

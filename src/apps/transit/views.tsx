@@ -13,6 +13,7 @@ import { SEG04_LABEL } from '@sim/seg04';
 import { blockId, diagramBlockCounts, envReading, incNo, stamp, type BoardState, type LogEntry, type Movement, type MoveStatus, type PossessionState, type SimLink, type SimModel, type TrainState } from '@sim/transit-model';
 import { durText, hhmmZ, isoDateText } from '@sim/time';
 import type { TimetableDoc } from './board';
+import { hasRx } from '@core/rx';
 
 export type Snapshot = BoardState;
 
@@ -45,12 +46,15 @@ export function runningText(min: number | null): string {
 }
 
 export function linkTitle(l: SimLink): string {
-  return l.kind === 'RAIL' ? `Segment ${l.key}, ${l.a} to ${l.b}` : `Tram link ${l.a} to ${l.b} ${l.label}`;
+  return l.kind === 'RAIL' ? `Segment ${l.key}, ${l.a} to ${l.b}` : `Tram link ${l.a} to ${l.b}${hasRx(l.label) ? '' : ` ${l.label}`}`;
 }
 
 export function statusWord(l: SimLink, s: Snapshot | null): { status: 'NOMINAL' | 'DEGRADED' | 'FAULT' | 'OFFLINE'; word: string } {
   if (!l.inService) return { status: 'OFFLINE', word: 'NOT IN REVENUE SERVICE' };
   if (s?.possessions.some((p) => p.status === 'IN FORCE' && p.link === l.key)) return { status: 'DEGRADED', word: 'POSSESSION' };
+  // Network holds (shared plant state): isolation stands trains where they are; a seal drill holds them at the sealing portals.
+  if (s?.holds?.isolation) return { status: 'FAULT', word: 'HELD: ISOLATION' };
+  if (s?.holds?.drill) return { status: 'DEGRADED', word: 'HELD: SEAL DRILL' };
   return { status: 'NOMINAL', word: 'IN REVENUE SERVICE' };
 }
 
@@ -161,7 +165,7 @@ function LinkDetail({ link, state, model, tt }: { link: SimLink } & Pick<Diagram
       <PropertyGrid
         caption={link.kind === 'RAIL' ? `SEGMENT ${link.key}` : 'TRAM LINK'}
         rows={[
-          { label: 'Between', value: `${link.a} and ${link.b}${link.kind === 'TRAM' ? ` ${link.label}` : ''}` },
+          { label: 'Between', value: `${link.a} and ${link.b}${link.kind === 'TRAM' && !hasRx(link.label) ? ` ${link.label}` : ''}` },
           { label: 'Length (engineering)', value: `${link.miles.toLocaleString('en-US')} mi`, mono: true },
           { label: 'Running time (booked)', value: durText(link.bookedHours * 60), mono: true },
           { label: 'Line speed', value: unbooked ? '--' : `${link.speedMph} mph`, mono: true },
@@ -212,7 +216,7 @@ export function MovementTable({ model, trains, narrow }: { model: SimModel; trai
     { key: 'block', header: 'Block', mono: true },
     { key: 'speed', header: 'Speed', align: 'right', mono: true, render: (t) => (t.speed === null ? '--' : `${t.speed} mph`), sortValue: (t) => t.speed ?? -1 },
     { key: 'exp', header: 'Expected arr.', mono: true, render: (t) => (t.unbooked ? '--' : stamp(model, t.expArrMs, t.to)), sortValue: (t) => t.expArrMs || 0 },
-    { key: 'running', header: 'Running', render: (t) => runningText(t.runningMin), sortValue: (t) => t.runningMin ?? -999 },
+    { key: 'running', header: 'Running', render: (t) => (t.held ? 'HELD' : t.dispatched && !t.unbooked ? 'Dispatched' : runningText(t.runningMin)), sortValue: (t) => t.runningMin ?? -999 },
   ];
   const used = narrow ? cols.filter((c) => ['label', 'dir', 'block', 'running'].includes(c.key)) : cols;
   return <DataTable columns={used} rows={trains} rowKey={(t) => t.id} label="Consists on the line" dense empty={<p class="tr-note">No consists on this section of line.</p>} />;

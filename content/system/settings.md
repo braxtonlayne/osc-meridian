@@ -1,6 +1,7 @@
 ---
 id: system-settings
 route: /system/settings
+t4: true
 app: system
 family: system
 template: record

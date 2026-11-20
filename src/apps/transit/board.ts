@@ -2,12 +2,13 @@
  * Transit Control: worker connection, timetable extraction and the segment 04 watch record.
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { DocJson, Services } from '@core/contracts';
+import type { DocJson, DrillState, IsolationState, Services } from '@core/contracts';
 import { IN_WORLD_DATE_ISO, phase } from '@core/session';
-import { routes } from '@core/services';
-import { reportTransitBoard, seg04, seg04WatchData, seg04WatchDetail, WORKSTATION } from '@narrative/engine';
+import { routes, useServices } from '@core/services';
+import { reportTransitBoard, seg04, seg04WatchData, seg04WatchDetail } from '@narrative/engine';
+import { workstationId } from '@core/audit';
 import type { Seg04Window } from '@sim/seg04';
-import type { BoardState, Timetable } from '@sim/transit-model';
+import type { BoardState, DispatchInput, Timetable } from '@sim/transit-model';
 import { parseBlockSheet, parseTimetable, withBlockSheets, type BlockSheet, type SimModel } from '@sim/transit-model';
 import { setInWorldDate } from '@sim/time';
 import { canonModel, createSim, EMPTY_CONFIG, type SimConfig } from '@sim/transit-sim';
@@ -134,10 +135,15 @@ export function logBaseFrom(services: Services): { serial: number; day: number }
 }
 
 /** Board snapshots from the simulation worker (main-thread fallback if workers are unavailable). */
-export function useBoard(cfg: Omit<SimConfig, 'seg04'>): BoardState | null {
+export function useBoard(cfg: Omit<SimConfig, 'seg04' | 'dispatch' | 'plant'>): BoardState | null {
   const [state, setState] = useState<BoardState | null>(null);
   const port = useRef<{ send(c: Partial<SimConfig>): void; stop(): void } | null>(null);
   const win = seg04.value;
+  // Pass two: dispatched trains, isolation and seal drill are global plant state (shared store).
+  const shared = useServices().shared;
+  const dispatch = shared.get<DispatchInput[]>('dispatch', []).value;
+  const isolation = shared.get<IsolationState | null>('isolation', null).value;
+  const drill = shared.get<DrillState | null>('drill', null).value;
 
   useEffect(() => {
     let worker: Worker | null;
@@ -191,6 +197,10 @@ export function useBoard(cfg: Omit<SimConfig, 'seg04'>): BoardState | null {
     port.current?.send({ seg04: win ? { start: win.start, end: win.end } : null });
   }, [win?.start, win?.end]);
 
+  useEffect(() => {
+    port.current?.send({ dispatch: dispatch ?? [], plant: { isolation: isolation ?? null, drill: drill ?? null } });
+  }, [dispatch, isolation, drill]);
+
   return state;
 }
 
@@ -226,7 +236,7 @@ function flush(services: Services, w: Seg04Window): void {
   services.audit.log(
     'transit.watch',
     'SEG04',
-    seg04WatchDetail(services.session.operatorId.peek(), WORKSTATION, view, rec.from, rec.to),
+    seg04WatchDetail(services.session.operatorId.peek(), workstationId(), view, rec.from, rec.to),
     seg04WatchData(view, rec.from, rec.to),
   );
 }

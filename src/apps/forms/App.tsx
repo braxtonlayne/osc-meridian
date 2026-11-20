@@ -6,11 +6,12 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import canonJson from '@canon';
 import type { Canon, MarkingId } from '@core/canon-types';
-import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
+import type { AccountDef, AppProps, DocJson, RouteEntry } from '@core/contracts';
 import { useServices } from '@core/services';
 import { formatInWorldDate, siteLocal, zulu } from '@core/session';
 import { isRx } from '@core/rx';
-import { WORKSTATION } from '@narrative/engine';
+import { readableByTier4 } from '@core/docs';
+import { workstationId } from '@core/audit';
 import {
   Button,
   ButtonRow,
@@ -68,10 +69,12 @@ import {
 } from './model';
 import { FieldGrid, fieldDomId, type DirectoryEntry } from './Fields';
 import { addReceipt, countFor, drafts, dropDraft, loadStore, receipts, saveDraft, type StoredReceipt } from './store';
+import { approversFor, decisionLine, decisionOnReceipt, routedTrace, serialOffset } from './routing';
+import { applyDecisions } from './decisions';
+import { ActionQueue, pendingCount } from './Queue';
 import './forms-app.css';
 
 const canon = canonJson as unknown as Canon;
-const op = canon.operator;
 const PN_RE = pnRegex(canon.personnelNumberFormat.pattern);
 const markingOf = (id: MarkingId) => canon.markings.find((m) => m.id === id);
 const markingLabel = (id: MarkingId) => markingOf(id)?.label ?? id;
@@ -83,6 +86,7 @@ const OWN_NAME_FIELDS = new Set(['name', 'declarantName', 'applicantName', 'requ
 
 /** Tab to open on arrival, set by the catalogue before it navigates its window. */
 const pendingTab = new Map<string, Tab>();
+type CatTab = 'catalogue' | 'receipts' | 'queue';
 
 type Tab = 'form' | 'instructions' | 'receipt';
 
@@ -100,15 +104,15 @@ function enteredAtNow(): string {
   return `${formatInWorldDate(now)} ${zulu(now)} (${siteLocal(now)})`;
 }
 
-function particulars(tier: number, probationDay: number): Record<string, string> {
-  const probation = probationDay <= 90 ? 'YES' : '';
+function particulars(op: AccountDef, tier: number, probationDay: number): Record<string, string> {
+  const probation = op.probationStart && probationDay <= 90 ? 'YES' : '';
   return {
     'operator.pn': op.pn,
     'operator.site': op.site,
-    'operator.supervisorPn': op.supervisorPn,
-    'operator.workstation': WORKSTATION,
+    'operator.supervisorPn': op.supervisorPn ?? '',
+    'operator.workstation': workstationId(),
     'operator.tier': String(tier),
-    'operator.probationStart': op.probationStart,
+    'operator.probationStart': op.probationStart ?? '',
     'operator.onProbation': probation,
     'operator.name': op.displayName,
     'operator.operatorId': op.operatorId,
@@ -124,6 +128,9 @@ export default function App(props: AppProps) {
   const services = useServices();
   const { route, win } = props;
   useEffect(() => void loadStore(), []);
+  // Decisions returned on forms this account filed (an approved F-126 reads it in).
+  const mine = services.traces.mine.value;
+  useEffect(() => void applyDecisions(services), [mine]);
 
   if (route && route.access) {
     const key = route.access.compartment ? `${route.access.compartment}+T${route.access.tier}` : `T${route.access.tier}`;
@@ -157,12 +164,25 @@ function Refused({ route, win }: { route: RouteEntry; win: AppProps['win'] }) {
 
 function Catalogue({ win }: AppProps) {
   const services = useServices();
-  const all = useMemo(() => services.docs.all().filter((r) => r.app === 'forms'), []);
+  const acct = services.account.id.value;
+  const tier4 = services.session.tier.value === 4;
+  // Tier 4 is issued only the forms marked for it (or written for it): DIR-0301.
+  const all = useMemo(() => services.docs.all().filter((r) => r.app === 'forms' && (!tier4 || readableByTier4(r) || !!r.variants?.includes(acct))), [tier4, acct]);
   const [filter, setFilter] = useState('');
   const [sel, setSel] = useState<string | null>(all[0]?.id ?? null);
-  const [tab, setTab] = useState<'catalogue' | 'receipts'>('catalogue');
+  const me = services.account.def.value;
+  const approver = me.approves.length > 0;
+  const traces = services.traces.all.value;
+  const pending = approver ? pendingCount(me.id, traces) : 0;
+  // An approver with forms awaiting decision opens on the action queue.
+  const [tab, setTab] = useState<CatTab>(() => (pending > 0 ? 'queue' : 'catalogue'));
   const [selReceipt, setSelReceipt] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const dispOf = (r: StoredReceipt): string => {
+    if (r.disposition !== 'ACCEPTED') return 'RETURNED';
+    const d = r.receiptNo ? decisionOnReceipt(r.receiptNo, me.id, traces) : undefined;
+    return d ? (d.data?.decision === 'approved' ? 'APPROVED' : 'NOT APPROVED') : 'ROUTED';
+  };
   const q = filter.trim().toLowerCase();
   const rows = all.filter((r) => !q || `${r.docNo} ${r.title} ${r.summary} ${r.originator}`.toLowerCase().includes(q));
   const selected = all.find((r) => r.id === sel) ?? null;
@@ -205,6 +225,7 @@ function Catalogue({ win }: AppProps) {
       items: [
         { label: 'Forms &catalogue', checked: tab === 'catalogue', radio: true, onSelect: () => setTab('catalogue') },
         { label: '&Receipts held', checked: tab === 'receipts', radio: true, onSelect: () => setTab('receipts') },
+        ...(approver ? [{ label: `Action &queue (${pending} pending)`, checked: tab === 'queue', radio: true, onSelect: () => setTab('queue') }] : []),
         { separator: true },
         { label: 'Clear &filter', onSelect: () => setFilter('') },
       ],
@@ -230,7 +251,7 @@ function Catalogue({ win }: AppProps) {
     { key: 'form', header: 'Form', mono: true, width: 90, sortValue: (r) => r.formNo },
     { key: 'title', header: 'Title', sortValue: (r) => r.title, render: (r) => r.title },
     { key: 'at', header: 'Entered', width: 170, mono: true, sortValue: (r) => r.enteredAt, render: (r) => r.enteredAt },
-    { key: 'disp', header: 'Disposition', width: 110, sortValue: (r) => r.disposition, render: (r) => (r.disposition === 'ACCEPTED' ? 'ROUTED' : 'RETURNED') },
+    { key: 'disp', header: 'Disposition', width: 110, sortValue: dispOf, render: dispOf },
   ];
 
   return (
@@ -255,13 +276,16 @@ function Catalogue({ win }: AppProps) {
           label="Forms Center"
           panel="flush"
           active={tab}
-          onChange={(t) => setTab(t as 'catalogue' | 'receipts')}
+          onChange={(t) => setTab(t as CatTab)}
           tabs={[
             { id: 'catalogue', label: 'C&atalogue' },
             { id: 'receipts', label: `&Receipts (${rcpts.length})` },
+            ...(approver ? [{ id: 'queue', label: `Action &queue (${pending})` }] : []),
           ]}
         >
-          {tab === 'catalogue' ? (
+          {tab === 'queue' && approver ? (
+            <ActionQueue win={win} />
+          ) : tab === 'catalogue' ? (
             <div class="fx-split">
               <div class="fx-split__list">
                 <DataTable
@@ -276,7 +300,13 @@ function Catalogue({ win }: AppProps) {
                   onActivate={(r) => open(r)}
                   defaultSort={{ key: 'docNo', dir: 'asc' }}
                   dense
-                  empty={<EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />}
+                  empty={
+                    all.length === 0 ? (
+                      <EmptyState title="No forms on issue" body="No form on the catalogue is issued to Tier 4 operators (DIR-0301)." icon="folder" />
+                    ) : (
+                      <EmptyState title="No form matches" body={`No form on issue matches "${filter}".`} icon="search" />
+                    )
+                  }
                 />
               </div>
               <div class="fx-split__detail">
@@ -330,10 +360,24 @@ function Catalogue({ win }: AppProps) {
       </div>
       <StatusBar
         panes={[
-          { id: 'msg', fill: true, content: tab === 'catalogue' ? (selected ? `${selected.docNo} ${selected.title}` : 'Select a form.') : curReceipt ? `Receipt ${curReceipt.receiptNo ?? 'not issued'}` : 'Receipts held at this workstation.' },
+          {
+            id: 'msg',
+            fill: true,
+            content:
+              tab === 'queue'
+                ? `Forms routed to the ${me.roleTitle} for decision.`
+                : tab === 'catalogue'
+                  ? selected
+                    ? `${selected.docNo} ${selected.title}`
+                    : 'Select a form.'
+                  : curReceipt
+                    ? `Receipt ${curReceipt.receiptNo ?? 'not issued'}`
+                    : 'Receipts held at this workstation.',
+          },
           { id: 'count', width: 130, content: `${rows.length} of ${all.length} forms` },
           { id: 'rc', width: 100, content: `${rcpts.length} receipts` },
-          { id: 'ws', width: 110, mono: true, content: `WS ${WORKSTATION}` },
+          ...(approver ? [{ id: 'q', width: 110, content: `${pending} pending` }] : []),
+          { id: 'ws', width: 110, mono: true, content: `WS ${workstationId()}` },
         ]}
       />
       <Dialog open={notice !== null} title="Forms Center" kind="info" onClose={() => setNotice(null)}>
@@ -377,7 +421,8 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
   const probationDay = services.session.probationDay.value;
   const flags = services.session.flags.value;
   void services.session.compartments.value; // re-render on grants (option visibility)
-  const parts = useMemo(() => particulars(tier, probationDay), [tier, probationDay]);
+  const op = services.account.def.value;
+  const parts = useMemo(() => particulars(op, tier, probationDay), [op, tier, probationDay]);
   const spec = useMemo<FormSpec | null>(() => (doc ? parseFormSpec(doc.frontmatter, { docNo: doc.docNo, title: doc.title }) : null), [doc]);
 
   const fresh = (s: FormSpec): Values => {
@@ -427,7 +472,8 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
       pnPattern: PN_RE,
       knownPn: (pn) => pn === op.pn || canon.roster.some((p) => p.pn === pn),
       knownDocNo: (d) => !!services.docs.byDocNo(d),
-      facilities: canon.facilities.map((f) => f.id),
+      // Tier 4 closed world: the operator's own site is the only facility offered or accepted.
+      facilities: tier === 4 ? [op.site] : canon.facilities.map((f) => f.id),
     }),
     [tier, services.session.compartments.value],
   );
@@ -512,7 +558,7 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
         justification: Object.values(flat).join(' '),
         held,
         holders: holdersOf(canon.roster, comp),
-        supervisorPn: op.supervisorPn,
+        supervisorPn: op.supervisorPn ?? '',
         interimReview: !!services.session.flags.peek().interimReview,
       });
       if (id) {
@@ -523,7 +569,9 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
       }
     }
 
-    const receiptNo = issueReceipt ? receiptNumber(spec.submit.receiptPrefix, receiptSerial(spec.formNo, countFor(spec.formNo)), spec.submit.receiptFormat) : null;
+    const receiptNo = issueReceipt
+      ? receiptNumber(spec.submit.receiptPrefix, receiptSerial(spec.formNo, countFor(spec.formNo) + serialOffset(op.id)), spec.submit.receiptFormat)
+      : null;
     const disposition = reason ? 'RETURNED' : 'ACCEPTED';
     if (!reason) {
       if (spec.submit.approvalNote) notes.push(spec.submit.approvalNote);
@@ -577,6 +625,18 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
           ? spec.submit.responses.find((r) => r.id === id)?.text
           : `Referred for review by the OIA compartment registry.${spec.processing ? ` ${spec.processing}` : ''}`;
         if (text) receipt.notes = [text, ...receipt.notes];
+      }
+      // Pass two: a form within another account's approval authority enters its action queue.
+      if (disposition === 'ACCEPTED' && receiptNo && !granted) {
+        const routed = approversFor(spec.formNo, op.id, services.account.all()).map((a) => {
+          const t = services.traces.post(
+            routedTrace({ formNo: spec.formNo, title: spec.title, route: route.route, receiptNo, enteredAt: receipt.enteredAt, fields: flat, entries, filer: op }, a.id),
+          );
+          // The registry does not tell the applicant who the certifying officer is (msg-08-04341 para 4).
+          receipt.notes = [...receipt.notes, `Routed by the OIA compartment registry to a certifying officer for decision (routed item ${t.id}). The decision is returned to you in the registry's name.`];
+          return t.id;
+        });
+        if (routed.length) receipt.routed = routed;
       }
       addReceipt(receipt);
       dropDraft(route.id);
@@ -785,9 +845,9 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
                     readOnly={submitted}
                     idPrefix={idPrefix}
                     satisfies={services.clearance.satisfies}
-                    facilityOptions={FACILITY_OPTIONS}
+                    facilityOptions={tier === 4 ? FACILITY_OPTIONS.filter((o) => o.value === op.site) : FACILITY_OPTIONS}
                     signer={{ name: op.displayName, date: formatInWorldDate(), seed: 7 }}
-                    lookupPn={lookupPn}
+                    lookupPn={(pn) => lookupPn(op, pn)}
                     lookupDoc={(d) => {
                       const r = services.docs.byDocNo(d);
                       return r ? { docNo: r.docNo, title: r.title } : undefined;
@@ -857,7 +917,7 @@ function originatorLine(originator: string): string {
   return d ? `${d.name.toUpperCase()}${site ? `, ${site}` : ''}` : originator;
 }
 
-function lookupPn(pn: string): DirectoryEntry | undefined {
+function lookupPn(op: AccountDef, pn: string): DirectoryEntry | undefined {
   if (pn === op.pn) return { pn, name: op.displayName, role: 'Operator of this workstation', site: op.site };
   const p = canon.roster.find((r) => r.pn === pn);
   return p ? { pn, name: p.name, role: p.role, site: p.site } : undefined;
@@ -896,6 +956,7 @@ function ReceiptView({ r, focusHead }: { r: StoredReceipt; focusHead?: { current
     // After the confirm dialog has handed focus back.
     requestAnimationFrame(() => headRef.current?.focus());
   }, [r]);
+  const decided = r.disposition === 'ACCEPTED' && r.receiptNo ? decisionOnReceipt(r.receiptNo, services.account.id.value, services.traces.all.value) : undefined;
   return (
     <div class="fx-receipt">
       <div class={r.disposition === 'ACCEPTED' ? 'fx-disp' : 'fx-disp fx-disp--returned'}>
@@ -909,6 +970,15 @@ function ReceiptView({ r, focusHead }: { r: StoredReceipt; focusHead?: { current
           </p>
         ))}
       </div>
+      {decided && (
+        <div class={decided.data?.decision === 'approved' ? 'fx-disp fx-decision' : 'fx-disp fx-disp--returned fx-decision'}>
+          <h3 class="fx-disp__head">{decided.data?.decision === 'approved' ? 'DECISION: APPROVED' : 'DECISION: NOT APPROVED'}</h3>
+          <p>{decisionLine(decided)}</p>
+          <p class="fx-disp__note fx-mono">
+            Returned {formatOscDate(decided.at.slice(0, 10))} as routed item {decided.id}.
+          </p>
+        </div>
+      )}
       {r.disposition === 'ACCEPTED' && r.receiptNo ? (
         <ReceiptSlip receiptNo={r.receiptNo} formNo={r.formNo} title={r.title} submittedAt={r.enteredAt} routing={r.routing} submittedBy={services.session.operatorId.peek()} />
       ) : (

@@ -17,9 +17,11 @@
  * segment sheet's running time and the speed basis disagree. The board shows the difference.
  */
 import type { CalendarEvent, FacilityId, NetworkId, RailSegment, TramNetwork } from '@core/canon-types';
+import type { DrillState, IsolationState } from '@core/contracts';
 import { seg04LogLine } from '@narrative/seg04';
+import { isolatedAt, latestInitiation } from '@apps/isolate/state';
 import { SEG04_LABEL, SEG04_NO, seg04BlockId, seg04Phase, type Seg04Window } from './seg04';
-import { hash32, hhmmLocal, hhmmZ, inWorldDateIso, inWorldDay, inWorldWeekday, parseZ, rng, utcDayStart, zAndLocal, zoneForState, type Zone } from './time';
+import { hash32, hhmmLocal, hhmmZ, inWorldDateIso, inWorldDay, inWorldWeekday, parseZ, rng, utcDayStart, zAndLocal, zoneForSite, zoneForState, type Zone } from './time';
 
 /* ------------------------------------------------------------------ model */
 
@@ -163,7 +165,7 @@ export function buildModel(input: ModelInput): SimModel {
     });
   }
   const zones: Record<string, Zone> = {};
-  for (const [id, st] of Object.entries(input.states)) zones[id] = zoneForState(st);
+  for (const [id, st] of Object.entries(input.states)) zones[id] = zoneForSite(id, st);
   return { links, byKey: Object.fromEntries(links.map((l) => [l.key, l])), railSpeed, tramSpeed, zones };
 }
 
@@ -345,7 +347,7 @@ function linkKeyFor(model: SimModel, x: string, y: string): string | null {
 
 /* ---------------------------------------------------------------- movements */
 
-export type MoveStatus = 'BOOKED' | 'RUNNING' | 'ARRIVED' | 'CANCELLED';
+export type MoveStatus = 'BOOKED' | 'RUNNING' | 'ARRIVED' | 'CANCELLED' | 'HELD';
 
 export interface Movement {
   /** Path id + day, unique. */
@@ -508,6 +510,10 @@ export interface TrainState {
   unbooked: boolean;
   /** Consist identity suppressed on the drawn board (Transit Control instruction). */
   suppressed: boolean;
+  /** Brought to a stand (network isolation, seal drill, dispatcher's hold). */
+  held?: boolean;
+  /** Entered from a dispatcher workstation (shared key `dispatch`), not a timetable path. */
+  dispatched?: boolean;
 }
 
 export interface LogEntry {
@@ -537,6 +543,8 @@ export interface BoardState {
   log: LogEntry[];
   possessions: PossessionState[];
   seg04: { active: boolean; lit: number[]; start: number; end: number } | null;
+  /** Network-wide holds in force (pass two): isolation ref and drill id, or null. */
+  holds: { isolation: string | null; drill: string | null };
 }
 
 export interface BoardOptions {
@@ -548,6 +556,20 @@ export interface BoardOptions {
   logBase: { serial: number; day: number } | null;
   /** Consists that may appear in routine log entries when no timetable is loaded. */
   places: string[];
+  /** Pass two: trains entered at a dispatcher workstation (shared key `dispatch`). */
+  dispatch?: readonly DispatchInput[];
+  /** Pass two: network isolation and seal drill (shared keys `isolation`, `drill`). */
+  plant?: PlantInput;
+  /** Label drawn for a movement under Transit Control instruction (consist identity suppressed). */
+  suppressedLabel?: string;
+}
+
+/** A dispatch record as the board reads it (src/apps/dispatch/types.ts DispatchRecord). */
+export interface DispatchInput extends RunRecord {
+  id: string;
+  consist: string;
+  instruction?: string;
+  withdrawn?: boolean;
 }
 
 export function boardState(model: SimModel, now: number, opt: BoardOptions): BoardState {
@@ -563,10 +585,29 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
 
   for (const l of model.links) if (!l.inService) occupancy[l.key] = 'DARK';
 
+  const plant = opt.plant ?? NO_PLANT;
+  const iso = isolationNow(plant, now);
+  const drill = drillNow(plant);
+  /**
+   * Instant a booked movement was brought to a stand, or null: isolation holds trains where they stand;
+   * a drill holds departures at the platform, and a train already on the line when the drill was ordered
+   * runs on to the sealing portal at its far end and is held at the home signal outside it.
+   */
+  const heldAt = (m: Movement): number | null => {
+    if (iso && m.depMs <= now && iso.at < m.expArrMs) return Math.max(iso.at, m.depMs);
+    if (drill && m.depMs >= drill.at && m.depMs <= now) return m.depMs;
+    if (drill && m.depMs < drill.at && drill.at < m.expArrMs) {
+      const atPortal = m.depMs + (m.expArrMs - m.depMs) * DRILL_PORTAL_FRACTION;
+      return atPortal <= now ? Math.max(atPortal, drill.at) : null;
+    }
+    return null;
+  };
   for (const m of [...movesPrev, ...movesToday]) {
-    if (m.cancelled || now < m.depMs || now >= m.expArrMs) continue;
+    const h = m.cancelled ? null : heldAt(m);
+    if (m.cancelled || now < m.depMs || (h === null && now >= m.expArrMs)) continue;
+    if (h !== null && h <= m.depMs) continue; // held at the platform: not on the line
     const link = model.byKey[m.link]!;
-    const f = (now - m.depMs) / (m.expArrMs - m.depMs);
+    const f = ((h ?? now) - m.depMs) / (m.expArrMs - m.depMs);
     const towardB = m.from === link.a;
     const pos = towardB ? f : 1 - f;
     const n = blockAt(link, pos);
@@ -587,10 +628,45 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
       depMs: m.depMs,
       bookedArrMs: m.bookedArrMs,
       expArrMs: m.expArrMs,
-      speed: link.speedMph,
-      runningMin: Math.round((m.expArrMs - m.bookedArrMs) / 60_000),
+      speed: h !== null ? 0 : link.speedMph,
+      runningMin: h !== null ? null : Math.round((m.expArrMs - m.bookedArrMs) / 60_000),
       unbooked: false,
       suppressed: false,
+      held: h !== null,
+    });
+  }
+
+  for (const r of opt.dispatch ?? []) {
+    if (r.withdrawn) continue;
+    const st = runState(model, r, plant, now);
+    if (!st.onLink) continue;
+    const link = model.byKey[st.onLink.link]!;
+    const n = blockAt(link, st.onLink.pos);
+    const id = blockId(link, n);
+    blocks[id] = 'OCCUPIED';
+    occupancy[`${link.key}#${drawnBlockOf(link, n)}`] = 'OCCUPIED';
+    const leg = st.legs[st.leg]!;
+    const suppressed = !!r.instruction;
+    trains.push({
+      id: `DSP:${r.ref}`,
+      kind: link.kind,
+      link: link.key,
+      pos: st.onLink.pos,
+      dir: st.onLink.dir,
+      label: suppressed ? (opt.suppressedLabel ?? SEG04_LABEL) : r.consist,
+      from: st.onLink.from,
+      to: st.onLink.to,
+      block: id,
+      pathId: suppressed ? 'UNBOOKED' : r.ref,
+      depMs: r.clock.at + (leg.start - r.clock.elapsed) / (r.timeScale ?? 1),
+      bookedArrMs: NaN,
+      expArrMs: st.etaMs ?? NaN,
+      speed: st.status === 'held' ? 0 : link.speedMph,
+      runningMin: null,
+      unbooked: suppressed,
+      suppressed,
+      held: st.status === 'held',
+      dispatched: true,
     });
   }
 
@@ -657,10 +733,14 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
     trains,
     blocks,
     occupancy,
-    movements: movesToday.map((m) => ({ ...m, status: statusOf(m, now) })),
+    movements: movesToday.map((m) => {
+      const h = m.cancelled ? null : heldAt(m);
+      return { ...m, status: h !== null ? ('HELD' as const) : statusOf(m, now) };
+    }),
     log,
     possessions,
     seg04,
+    holds: { isolation: iso?.ref ?? null, drill: drill?.ref ?? null },
   };
 }
 
@@ -776,4 +856,320 @@ export function envReading(blockKey: string, now: number, state: BlockState): En
     airflow: Math.round((5.8 + (h % 5) * 0.2 + slow * 0.1 - occ * 0.6) * 10) / 10,
     state,
   };
+}
+
+/* ------------------------------------------------- dispatched trains (pass two) */
+
+/** Network isolation and seal drill as they bear on train movement (shared plant state). */
+export interface PlantInput {
+  isolation: IsolationState | null;
+  drill: DrillState | null;
+}
+
+export const NO_PLANT: PlantInput = { isolation: null, drill: null };
+
+/**
+ * Wall-clock ms of an in-world ISO time (pinned date, real time of day): the most recent
+ * real instant at or before `now` (plus a minute of slack) with that UTC time of day.
+ */
+export function wallOfInWorld(iso: string, now: number): number {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return now;
+  const tod = d.getUTCHours() * 3600_000 + d.getUTCMinutes() * 60_000 + d.getUTCSeconds() * 1000 + d.getUTCMilliseconds();
+  let t = utcDayStart(now) + tod;
+  if (t > now + 60_000) t -= 86400_000;
+  return t;
+}
+
+/** The current isolation, if the network is isolated now: ref and wall-clock start. */
+export function isolationNow(plant: PlantInput, now: number): { ref: string; at: number } | null {
+  const s = plant.isolation;
+  if (!isolatedAt(s, now)) return null;
+  const last = latestInitiation(s);
+  return { ref: last?.ref ?? 'ISOLATION', at: last ? (typeof last.ms === 'number' ? last.ms : wallOfInWorld(last.at, now)) : now };
+}
+
+/** Fraction of a run at which a train meets the home signal outside a sealed portal (seal drill hold). */
+export const DRILL_PORTAL_FRACTION = 0.97;
+
+/** The current seal drill, if it holds trains now (propagating or sealed). */
+export function drillNow(plant: PlantInput): { ref: string; at: number } | null {
+  const d = plant.drill;
+  if (!d || (d.phase !== 'propagating' && d.phase !== 'sealed')) return null;
+  return { ref: d.id, at: d.orderedAt };
+}
+
+/** The link joining two facilities, if there is one. */
+export function linkBetween(model: SimModel, x: string, y: string): SimLink | null {
+  for (const l of model.links) if ((l.a === x && l.b === y) || (l.a === y && l.b === x)) return l;
+  return null;
+}
+
+export function runMsOf(link: SimLink): number {
+  return runMs(link);
+}
+
+export interface RunLeg {
+  link: string;
+  kind: LinkKind;
+  from: FacilityId;
+  to: FacilityId;
+  /** Offsets in run time (ms) from the start of the run. */
+  start: number;
+  end: number;
+}
+
+/** Legs of a route (consecutive facility ids), with dwell between them. Null if two nodes are not joined. */
+export function runLegs(model: SimModel, route: readonly string[], dwellMs: number): RunLeg[] | null {
+  const out: RunLeg[] = [];
+  let t = 0;
+  for (let i = 0; i + 1 < route.length; i++) {
+    const link = linkBetween(model, route[i]!, route[i + 1]!);
+    if (!link) return null;
+    if (i > 0) t += dwellMs;
+    const ms = runMs(link);
+    out.push({ link: link.key, kind: link.kind, from: route[i] as FacilityId, to: route[i + 1] as FacilityId, start: t, end: t + ms });
+    t += ms;
+  }
+  return out;
+}
+
+/** The fields of a dispatch record the run model reads (src/apps/dispatch/types.ts). */
+export interface RunRecord {
+  ref: string;
+  route: string[];
+  departAt: number;
+  status: 'scheduled' | 'running' | 'held' | 'arrived' | 'cancelled';
+  dwellMs: number;
+  clock: { at: number; elapsed: number };
+  holds: { ref: string; kind: 'isolation' | 'drill' | 'manual'; at: number }[];
+  released: string[];
+  endNode?: string;
+  timeScale?: number;
+}
+
+export interface HoldSource {
+  ref: string;
+  kind: 'isolation' | 'drill' | 'manual';
+  /** Wall-clock ms ordered. */
+  at: number;
+  /** The cause still stands (isolation in force, drill not stood down). Manual holds always stand. */
+  active: boolean;
+}
+
+/** Holds bearing on a record: latched by the desk plus those derived live from plant state, less released ones. */
+export function holdSources(rec: RunRecord, plant: PlantInput, now: number): HoldSource[] {
+  const iso = isolationNow(plant, now);
+  const dr = drillNow(plant);
+  const out = new Map<string, HoldSource>();
+  const activeOf = (h: { ref: string; kind: HoldSource['kind'] }) => (h.kind === 'manual' ? true : h.kind === 'isolation' ? iso?.ref === h.ref : dr?.ref === h.ref);
+  for (const h of rec.holds) out.set(h.ref, { ...h, active: activeOf(h) });
+  if (iso && !out.has(iso.ref)) out.set(iso.ref, { ref: iso.ref, kind: 'isolation', at: iso.at, active: true });
+  if (dr && !out.has(dr.ref)) out.set(dr.ref, { ref: dr.ref, kind: 'drill', at: dr.at, active: true });
+  return [...out.values()].filter((h) => !rec.released.includes(h.ref));
+}
+
+export type RunStatus = RunRecord['status'];
+
+export interface RunState {
+  status: RunStatus;
+  /** Run time made good, ms. */
+  elapsed: number;
+  total: number;
+  legs: RunLeg[];
+  /** Index of the leg the train is on (or about to start, or last finished). */
+  leg: number;
+  /** On a link: key, position from the canon a end, direction. */
+  onLink: { link: string; kind: LinkKind; pos: number; dir: 1 | -1; from: FacilityId; to: FacilityId } | null;
+  /** At a platform (origin, intermediate dwell, destination, where cancelled). */
+  atNode: string | null;
+  /** Holds that have brought the train to a stand. */
+  heldBy: HoldSource[];
+  /** Holds that will stop it at the next platform. */
+  pending: HoldSource[];
+  /** Expected arrival, wall ms (null while held or cancelled). */
+  etaMs: number | null;
+}
+
+/** Where a dispatched train is and what holds it. Pure: the same record, plant and instant give the same answer everywhere. */
+export function runState(model: SimModel, rec: RunRecord, plant: PlantInput, now: number): RunState {
+  const legs = runLegs(model, rec.route, rec.dwellMs) ?? [];
+  const total = legs.length ? legs[legs.length - 1]!.end : 0;
+  const scale = rec.timeScale ?? 1;
+  const raw = (t: number) => Math.min(total, rec.clock.elapsed + Math.max(0, t - rec.clock.at) * scale);
+  const nextPlatform = (e: number) => {
+    for (const l of legs) if (e > l.start && e < l.end) return l.end;
+    return e;
+  };
+  const rawNow = raw(now);
+  const heldBy: HoldSource[] = [];
+  const pending: HoldSource[] = [];
+  let elapsed = rawNow;
+  if (rec.status !== 'cancelled' && rawNow < total) {
+    for (const h of holdSources(rec, plant, now)) {
+      if (h.at < rec.clock.at && !h.active) continue;
+      const s = Math.max(h.at, rec.clock.at);
+      if (s > now) continue;
+      const f = h.kind === 'isolation' ? raw(s) : nextPlatform(raw(s));
+      if (f >= total) continue;
+      if (f <= rawNow) {
+        heldBy.push(h);
+        elapsed = Math.min(elapsed, f);
+      } else pending.push(h);
+    }
+  }
+  let leg = 0;
+  let onLink: RunState['onLink'] = null;
+  let atNode: string | null = legs.length ? null : (rec.route[0] ?? null);
+  for (let i = 0; i < legs.length; i++) {
+    const l = legs[i]!;
+    leg = i;
+    if (elapsed <= l.start) {
+      atNode = l.from;
+      break;
+    }
+    if (elapsed < l.end) {
+      const link = model.byKey[l.link]!;
+      const f = (elapsed - l.start) / (l.end - l.start);
+      const towardB = l.from === link.a;
+      onLink = { link: l.link, kind: link.kind, pos: towardB ? f : 1 - f, dir: towardB ? 1 : -1, from: l.from, to: l.to };
+      break;
+    }
+    atNode = l.to;
+  }
+  let status: RunStatus;
+  if (rec.status === 'cancelled') {
+    status = 'cancelled';
+    onLink = null;
+    atNode = rec.endNode ?? atNode;
+  } else if (elapsed >= total && total > 0) status = 'arrived';
+  else if (heldBy.length) status = 'held';
+  else if (now < rec.clock.at && rec.clock.elapsed === 0) status = 'scheduled';
+  else status = 'running';
+  const etaMs = status === 'running' || status === 'scheduled' ? Math.max(now, rec.clock.at) + (total - elapsed) / scale : null;
+  return { status, elapsed, total, legs, leg, onLink, atNode, heldBy, pending, etaMs };
+}
+
+/* --------------------------------------------------------------- route checks */
+
+/** A movement's use of one link over a time window, for conflict checks. */
+export interface Occupation {
+  link: string;
+  from: FacilityId;
+  start: number;
+  end: number;
+  /** Path and consist, as a refusal names it. */
+  label: string;
+  source: 'timetable' | 'dispatch';
+}
+
+export interface Conflict {
+  kind: 'possession' | 'opposing' | 'headway';
+  link: string;
+  /** What it conflicts with: path or consist label, or possession id. */
+  with: string;
+  /** Wall ms at which the conflict begins. */
+  at: number;
+}
+
+export interface WorkingRules {
+  headwayBlocks: { rail: number; tram: number };
+  tramLoopMinMiles: number;
+  loopTolerance: number;
+}
+
+/** Booked movements (not cancelled) and dispatched legs that still have line to run, as link occupations. */
+export function occupations(model: SimModel, moves: readonly Movement[], recs: readonly (RunRecord & { consist?: string })[], plant: PlantInput, now: number, except?: string): Occupation[] {
+  const out: Occupation[] = [];
+  for (const m of moves) {
+    if (m.cancelled || m.expArrMs <= now) continue;
+    out.push({ link: m.link, from: m.from, start: m.depMs, end: m.expArrMs, label: m.consist ? `${m.pathId} (${m.consist})` : m.pathId, source: 'timetable' });
+  }
+  for (const r of recs) {
+    if (r.ref === except) continue;
+    const st = runState(model, r, plant, now);
+    if (st.status === 'cancelled' || st.status === 'arrived') continue;
+    const scale = r.timeScale ?? 1;
+    const base = Math.max(now, r.clock.at);
+    for (const l of st.legs) {
+      if (l.end <= st.elapsed) continue;
+      const inSection = l.start < st.elapsed;
+      const start = inSection ? now : base + (l.start - st.elapsed) / scale;
+      const end = st.status === 'held' && inSection ? Number.POSITIVE_INFINITY : base + (l.end - st.elapsed) / scale;
+      out.push({ link: l.link, from: l.from, start, end, label: r.consist ?? r.ref, source: 'dispatch' });
+    }
+  }
+  return out;
+}
+
+/** Conflicts for a route departing at `departAt`: possessions, opposing movements on single-line tram links, headway. */
+export function routeConflicts(model: SimModel, legs: readonly RunLeg[], departAt: number, occ: readonly Occupation[], possessions: readonly PossessionSpec[], rules: WorkingRules, scale = 1): Conflict[] {
+  const out: Conflict[] = [];
+  for (const l of legs) {
+    const link = model.byKey[l.link];
+    if (!link) continue;
+    const ds = departAt + l.start / scale;
+    const de = departAt + l.end / scale;
+    for (const p of possessions) {
+      if (p.link !== l.link || p.fromMs === null || p.toMs === null) continue;
+      if (ds < p.toMs && de > p.fromMs) out.push({ kind: 'possession', link: l.link, with: p.id, at: Math.max(ds, p.fromMs) });
+    }
+    const sep = (link.kind === 'RAIL' ? rules.headwayBlocks.rail : rules.headwayBlocks.tram) * ((de - ds) / link.blocks);
+    for (const o of occ) {
+      if (o.link !== l.link) continue;
+      if (o.from === l.from) {
+        if (Math.abs(o.start - ds) < sep) out.push({ kind: 'headway', link: l.link, with: o.label, at: Math.max(ds, o.start) });
+      } else if (link.kind === 'TRAM' && ds < o.end && de > o.start) {
+        if (link.miles > rules.tramLoopMinMiles && Number.isFinite(o.end)) {
+          const od = o.end - o.start;
+          const dd = de - ds;
+          const t = (1 + o.start / od + ds / dd) / (1 / od + 1 / dd);
+          const meet = (t - ds) / dd;
+          if (Math.abs(meet - 0.5) <= rules.loopTolerance) continue;
+        }
+        out.push({ kind: 'opposing', link: l.link, with: o.label, at: Math.max(ds, o.start) });
+      }
+    }
+  }
+  return out;
+}
+
+/** Booked movements from the previous UTC day to `days` days ahead (conflict checks look past midnight). */
+export function movementsAround(model: SimModel, tt: Timetable | null, now: number, possessions: readonly PossessionSpec[], days = 1): Movement[] {
+  if (!tt) return [];
+  const today = utcDayStart(now);
+  const wd = inWorldWeekday(now);
+  const out: Movement[] = [];
+  for (let d = -1; d <= days; d++) out.push(...expandDay(model, tt, today + d * 86400_000, (wd + 7 + d) % 7, possessions));
+  return out;
+}
+
+/** Shortest route between two facilities over one system, by engineering miles, avoiding links `avoid` rejects (default: not in service). */
+export function shortestRoute(model: SimModel, from: string, to: string, system: LinkKind, avoid: (l: SimLink) => boolean = (l) => !l.inService): string[] | null {
+  const dist = new Map<string, number>([[from, 0]]);
+  const prev = new Map<string, string>();
+  const open = new Set<string>([from]);
+  const done = new Set<string>();
+  while (open.size) {
+    let u: string | null = null;
+    for (const x of open) if (u === null || dist.get(x)! < dist.get(u)!) u = x;
+    open.delete(u!);
+    done.add(u!);
+    if (u === to) break;
+    for (const l of model.links) {
+      if (l.kind !== system || avoid(l)) continue;
+      const v = l.a === u ? l.b : l.b === u ? l.a : null;
+      if (!v || done.has(v)) continue;
+      const d = dist.get(u!)! + l.miles;
+      if (d < (dist.get(v) ?? Infinity)) {
+        dist.set(v, d);
+        prev.set(v, u!);
+        open.add(v);
+      }
+    }
+  }
+  if (!dist.has(to) || from === to) return null;
+  const path = [to];
+  while (path[0] !== from) path.unshift(prev.get(path[0]!)!);
+  return path;
 }

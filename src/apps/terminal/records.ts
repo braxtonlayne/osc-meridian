@@ -4,10 +4,19 @@
  * answers from. Figures shown alongside these come from canon at run time.
  */
 
-/** Host identity. The workstation is the visitor's accredited seat (docs/NARRATIVE.md §0). */
-export const HOST = 'A03RD1';
-export const HOST_TITLE = 'MERIDIAN RECORDS HOST';
-export const WORKSTATION = 'A03-5-114';
+import { workstationId } from '@core/audit';
+import { activeDef } from '@core/accounts';
+
+/**
+ * A Tier 4 credential is connected to its own site's host, never to the ALPHA-03 records host
+ * (closed world, SPEC-2 §1): the host name is the workstation's site prefix (G08-3-002 -> G08SV1).
+ */
+const closed = activeDef.peek().tier === 4;
+
+/** Host identity. The workstation is the active credential's own seat (canon accounts[].workstation). */
+export const HOST = closed ? `${activeDef.peek().workstation.slice(0, 3)}SV1` : 'A03RD1';
+export const HOST_TITLE = closed ? 'MERIDIAN SITE HOST' : 'MERIDIAN RECORDS HOST';
+export const workstation = (): string => workstationId();
 export const PROMPT = `${HOST}> `;
 
 export interface HelpLine {
@@ -19,6 +28,7 @@ export interface HelpLine {
 export const HELP_LINES: HelpLine[] = [
   { cmd: 'help', text: 'This list' },
   { cmd: 'whoami', text: 'Operator, tier, compartments, workstation' },
+  { cmd: 'accounts', text: 'Credentials issued on this workstation' },
   { cmd: 'sites', text: 'Facility list' },
   { cmd: 'site <id>', text: 'Facility status (site ALPHA-03)' },
   { cmd: 'rail status', text: 'Inter-hub rail segment status' },
@@ -37,7 +47,7 @@ export const HELP_LINES: HelpLine[] = [
 
 /** Command words offered by tab completion: the documented set only. */
 export const DOCUMENTED = [
-  'help', 'whoami', 'sites', 'site', 'rail', 'find', 'lookup', 'open', 'mail', 'audit', 'clearance', 'date', 'history', 'clear', 'man', 'logout',
+  'help', 'whoami', 'accounts', 'sites', 'site', 'rail', 'find', 'lookup', 'open', 'mail', 'audit', 'clearance', 'date', 'history', 'clear', 'man', 'logout',
 ] as const;
 
 /** Division utilities answered by the host but not listed by HELP or MAN. */
@@ -46,6 +56,12 @@ export const DIVISION_UTILITIES = ['wo', 'trace', 'strength', 'consist', 'copies
 export const MAN: Record<string, string[]> = {
   help: ['HELP', '  Lists the commands available to this operator.', '  Reference KB-0026.'],
   whoami: ['WHOAMI', '  Prints the operator identity, effective tier, compartments held,', '  site, workstation and probation day.'],
+  accounts: [
+    'ACCOUNTS',
+    '  Lists the operator credentials issued on this workstation: operator id,',
+    '  post, tier and site. The credential in use is marked *. Credentials are',
+    '  presented at the lock screen (Directory > Log off, then choose the card).',
+  ],
   sites: ['SITES', '  Lists the facilities on the MERIDIAN register with class, designation,', '  posted staff and surge berthing. Long output is paged.'],
   site: [
     'SITE <id>',
@@ -58,7 +74,14 @@ export const MAN: Record<string, string[]> = {
   lookup: ['LOOKUP <docno>', '  Prints the register entry for a document: title, marking, originator,', '  revision, date and access requirement. Does not display the document.'],
   open: ['OPEN <docno>', '  Displays a document in the application that owns it. A route', '  (/directives/dir-0412) is also accepted. Access is determined on display.'],
   mail: ['MAIL', '  Prints the number of unread messages.', 'MAIL OPEN', '  Starts Message Traffic.'],
-  audit: ['AUDIT TAIL [n]', '  Prints the last n entries (default 10, maximum 50) of the audit trail', '  for this operator. Reference OSC-DIR-0412 para 8.'],
+  audit: [
+    'AUDIT TAIL [n]',
+    '  Prints the last n entries (default 10, maximum 50) of the audit trail',
+    '  for this operator. Reference OSC-DIR-0412 para 8.',
+    'AUDIT TAIL [n] --operator <id>',
+    '  Office of Internal Assurance auditors only: the trail of another',
+    '  operator on this workstation (operator id or credential), read-only.',
+  ],
   clearance: [
     'CLEARANCE',
     '  Prints the access determination for this operator.',

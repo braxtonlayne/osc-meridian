@@ -14,16 +14,17 @@ import { MenuBar, StatusBar, Toolbar, ToolbarButton, ToolbarSeparator, ToolbarSp
 import type { MenuBarMenu } from '@design/index';
 import { RefusalState } from '@graphics/states';
 import { loadTableRows, type ReleasedCell } from '../shared/released';
-import { COMPARTMENT_MARKING, CUSTODY_DOCNO, DIRECTORY_DOCNO, complete, formatConsist, formatFind, run, stamp, zulu } from './host';
+import { COMPARTMENT_MARKING, CUSTODY_DOCNO, DIRECTORY_DOCNO, complete, divisionLabel, formatAuditOther, formatConsist, formatFind, run, stamp, tier4Visible, zulu } from './host';
 import type { Effect, HostContext } from './host';
-import { HOST, HOST_TITLE, PROMPT, WORKSTATION } from './records';
+import { HOST, HOST_TITLE, PROMPT, workstation } from './records';
 import { mountConsole } from './console';
 import type { ConsoleHandle, ConsoleMode } from './console';
 import './terminal.css';
 
 const canon = canonJson as unknown as Canon;
 const BASE_MARKING: MarkingId = 'TSSCI-OSC';
-const LAST_KEY = 'meridian:terminal:last';
+/** Last host session, per credential (inside the account namespace, so a profile reset clears it). */
+const lastKey = (account: string) => `meridian:acct:${account}:terminal:last`;
 const PREFS_KEY = 'meridian:terminal:prefs';
 const RS_ROUTE = '/transit/rolling-stock';
 
@@ -150,20 +151,26 @@ export default function App({ win, route }: AppProps) {
     docRows: (no: string) => docRows.current.get(no),
     satisfies: services.clearance.satisfies,
     appTitle: (id) => appById(id)?.title ?? id,
+    account: services.account.def.peek(),
+    accounts: services.account.all(),
+    delivered: services.mail.delivered.peek(),
   });
 
   const banner = (): string[] => {
     const d = new Date();
-    const last = readLocal<string | null>(LAST_KEY, null);
-    writeLocal(LAST_KEY, stamp(d));
-    const div = canon.divisions.find((x) => x.id === canon.operator.divisionId);
+    const key = lastKey(services.account.id.peek());
+    const last = readLocal<string | null>(key, null);
+    writeLocal(key, stamp(d));
+    const acct = services.account.def.peek();
+    // Tier 4: the host does not name its site or division to the operator (a Tier 4 notice names no other facility).
+    const where = acct.tier === 4 ? `${canon.meta.agency}` : `${canon.meta.agency}, ${canon.operator.site} ${divisionLabel(canon, canon.operator.divisionId)}`.trimEnd();
     return [
       `${HOST_TITLE} ${HOST}    ${canon.meta.environment} ${canon.meta.release}`,
-      `${canon.meta.agency}, ${canon.operator.site} ${div ? div.name : ''}`.trimEnd(),
+      where,
       'Use of this host is recorded. Reference OSC-DIR-0301.',
       '',
-      last ? `Last session ${last} from WS ${WORKSTATION}.` : `No previous session for this operator on ${HOST}.`,
-      `${services.session.operatorId.peek()} connected from WS ${WORKSTATION} at ${stamp(d)}.`,
+      last ? `Last session ${last} from WS ${workstation()}.` : `No previous session for this operator on ${HOST}.`,
+      `${services.session.operatorId.peek()} connected from WS ${workstation()} at ${stamp(d)}.`,
       'Type HELP for commands.',
       '',
     ];
@@ -204,8 +211,26 @@ export default function App({ win, route }: AppProps) {
           c.setBusy(true);
           void services
             .search(e.q)
-            .then((hits) => formatFind(e.q, hits, c.cols))
+            .then((hits) => {
+              const vis = { account: services.account.def.peek(), delivered: services.mail.delivered.peek() };
+              return formatFind(e.q, hits.filter((h) => tier4Visible(h.route, vis)), c.cols);
+            })
             .catch(() => [`FIND: the MERIDIAN index is not available to ${HOST} at present.`])
+            .then((lines) => {
+              c.setBusy(false);
+              c.write(lines, () => c.prompt());
+            });
+          break;
+        }
+        case 'auditOther': {
+          pending = true;
+          c.setBusy(true);
+          void services.account
+            .readAudit(e.account)
+            .then(
+              (entries) => formatAuditOther(entries, e.operatorId, e.n, c.cols, new Date()),
+              () => formatAuditOther(null, e.operatorId, e.n, c.cols, new Date()),
+            )
             .then((lines) => {
               c.setBusy(false);
               c.write(lines, () => c.prompt());
@@ -266,7 +291,14 @@ export default function App({ win, route }: AppProps) {
       PROMPT,
       {
         onLine: (l) => onLineRef.current(l),
-        onComplete: (l) => complete(l, { routes: services.docs.all(), canon, isHeld: (d: string) => services.mail.isHeld(d) }),
+        onComplete: (l) =>
+          complete(l, {
+            routes: services.docs.all(),
+            canon,
+            isHeld: (d: string) => services.mail.isHeld(d),
+            account: services.account.def.peek(),
+            delivered: services.mail.delivered.peek(),
+          }),
         onReconnect: () => handle && connect(handle),
         onMode: (m) => setMode(m),
         onResize: (cols, rows) => setSize(`${cols}x${rows}`),
@@ -370,6 +402,7 @@ export default function App({ win, route }: AppProps) {
     }
   };
 
+  const homeSite = services.account.def.value.site;
   const menus: MenuBarMenu[] = [
     {
       label: '&Session',
@@ -407,8 +440,9 @@ export default function App({ win, route }: AppProps) {
         { label: '&Help', onSelect: typed('help') },
         { label: '&Who am I', onSelect: typed('whoami') },
         { label: '&Sites', onSelect: typed('sites') },
-        { label: 'Site &ALPHA-03', onSelect: typed('site ALPHA-03') },
+        { label: `Site &${homeSite}`, onSelect: typed(`site ${homeSite}`) },
         { label: '&Rail status', onSelect: typed('rail status') },
+        { label: 'Issued &credentials', onSelect: typed('accounts') },
         { label: '&Mail', onSelect: typed('mail') },
         { label: 'Au&dit tail', onSelect: typed('audit tail') },
         { label: 'C&learance', onSelect: typed('clearance') },
@@ -468,7 +502,7 @@ export default function App({ win, route }: AppProps) {
             ? []
             : [
                 { id: 'op', content: `${services.session.operatorId.value}  ${tierLabel}`, mono: true, width: 190, label: 'Operator' },
-                { id: 'ws', content: `WS ${WORKSTATION}`, mono: true, width: 96, label: 'Workstation' },
+                { id: 'ws', content: `WS ${workstation()}`, mono: true, width: 96, label: 'Workstation' },
                 { id: 'size', content: size || '--', mono: true, width: 60, label: 'Columns by rows' },
               ]),
           { id: 'cmd', content: `CMD ${count}`, mono: true, width: 64, label: 'Commands entered' },

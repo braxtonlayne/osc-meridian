@@ -20,6 +20,8 @@ import {
 import type { Clock, DocTable, GeneRecord, GeneRelease, SeedRecord } from './catalogue';
 import { canon, fmtN } from './data';
 import { Bar, CanonText, useRsv } from './parts';
+import { revealItem, useCanonT2 } from './acct';
+import { useServices } from '@core/services';
 
 export interface BrowserState {
   page: number;
@@ -188,7 +190,9 @@ export function GeneBrowser({
   release: GeneRelease;
 }) {
   const { satisfies, narrow } = useRsv();
-  const item = canon.reserves.items.find((i) => i.id === 'MED-GENETIC');
+  const t2 = useCanonT2(useServices());
+  const raw = canon.reserves.items.find((i) => i.id === 'MED-GENETIC');
+  const item = raw ? revealItem(raw, t2) : undefined;
   const total = releasedTotal;
   const clock = useMemo(() => (total !== null ? linearClock(total, GENE_TIMELINE) : browseClock(BROWSE_PER_DAY, GENE_TIMELINE)), [total]);
   const rows = useMemo(

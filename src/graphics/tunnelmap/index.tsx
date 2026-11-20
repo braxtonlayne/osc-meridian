@@ -649,7 +649,7 @@ export function TunnelMap({ width, height, layer, highlight, onSelect }: TunnelM
                 class={`tm-hit${onSelect ? ' tm-hit--select' : ''}`}
                 d={g.d}
                 data-hit={id}
-                tabIndex={0}
+                tabindex={0}
                 role={onSelect ? 'button' : 'img'}
                 aria-label={ariaFor(g.link)}
                 onPointerEnter={() => setHover(id)}

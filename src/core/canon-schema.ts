@@ -8,6 +8,7 @@
  */
 import { z } from 'zod';
 import type { Canon, FacilityId, RxString } from './canon-types';
+import type { AccountId, AppId } from './contracts';
 
 export const DATE_CEILING = '2008-05-31';
 
@@ -248,6 +249,159 @@ const threat = z.strictObject({ id: z.string(), label: z.string(), response: z.s
 /** Personnel number: P-<tier at issue>-<intake year 01..08>-<serial>, e.g. P-3-06-1147. */
 export const PN_RE = /^P-[1-4]-(0[1-8])-\d{4}$/;
 
+// ---- Pass two (extended-c) ----
+
+/** Every AppId (src/core/contracts.ts). Kept here so scripts can validate without importing UI code. */
+export const APP_IDS = [
+  'registry', 'transit', 'personnel', 'records', 'mail', 'ledger', 'reserves', 'assurance', 'directives', 'forms', 'terminal', 'system',
+  'strike', 'isolate', 'drill', 'cctv', 'plant', 'doors', 'dispatch', 'hoist', 'environ', 'pa', 'muster', 'patch',
+] as const satisfies readonly AppId[];
+// Compile-time guard: every AppId is listed.
+const _allApps = (id: AppId): (typeof APP_IDS)[number] => id;
+void _allApps;
+export const ACCOUNT_IDS = ['analyst', 'lifesupport', 'deputy', 'auditor'] as const satisfies readonly AccountId[];
+/** Operator id on the access card: OPR-<class letter><site no>-<pn serial>. */
+export const OPERATOR_ID_RE = /^OPR-[ABGD]\d{2}-\d{4}$/;
+/** Facility-command accounts whose roster entry has no division carry this division id. */
+export const COMMAND_DIVISION_ID = 'CMD';
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const pos = num.positive();
+
+export const accountDefSchema = z.strictObject({
+  id: z.enum(ACCOUNT_IDS),
+  operatorId: z.string().regex(OPERATOR_ID_RE),
+  passphrase: z.string().regex(/^[a-z]+( [a-z]+){3}$/),
+  pn: z.string().regex(PN_RE),
+  displayName: z.string().min(1),
+  roleTitle: z.string().min(1),
+  tier: tierNo,
+  site: facilityId,
+  divisionId: z.string().min(1),
+  compartments: z.array(compartmentId),
+  probationStart: isoDate.nullable(),
+  email: z.string().regex(/^[a-z0-9.]+@[a-z0-9.]+\.mer$/),
+  supervisorPn: z.string().regex(PN_RE).nullable(),
+  approves: z.array(z.string().regex(/^OSC-F-\d{3}$/)),
+  auditReader: z.boolean(),
+  desktop: z.array(z.enum(APP_IDS)).min(1),
+  /** Workstation the card is issued on, at the account's own site: "<A03>-<group>-<seat>". */
+  workstation: z.string().regex(/^[ABGD]\d{2}-\d-\d{3}$/),
+  /** Print queue serving that workstation's group: "PRN-<A03>-<group>". */
+  printQueue: z.string().regex(/^PRN-[ABGD]\d{2}-\d$/),
+});
+
+const hardeningClassId = z.enum(['H1', 'H2', 'H3', 'H4']);
+export const survivabilitySchema = z.strictObject({
+  model: z.strictObject({
+    id: z.string().min(1),
+    title: z.string().min(1),
+    revision: int.positive(),
+    date: isoDate,
+    originator: z.string().min(1),
+    marking: markingId,
+    disclaimer: z.string().min(1),
+    method: z.array(z.string().min(1)).min(1),
+  }),
+  classes: z
+    .array(z.strictObject({ id: hardeningClassId, name: z.string().min(1), description: z.string().min(1), ratedPsi: pos, depthCoupling: num.nonnegative() }))
+    .length(4),
+  gammaPlanningDepthFt: pos,
+  conditions: z
+    .array(z.strictObject({ id: z.enum(['OPERATIONAL', 'DEGRADED', 'ISOLATED', 'NOT ASSURED']), maxRatio: pos.nullable(), text: z.string().min(1) }))
+    .length(4),
+  contours: z.array(z.strictObject({ psi: pos, rangeCoeffMi: pos })).min(2),
+  yieldsKt: z.array(pos).min(1),
+  facilities: z.array(z.strictObject({ facility: facilityId, hardeningClass: hardeningClassId })),
+  notModelled: z.strictObject({ classId: z.literal('DELTA'), text: z.string().min(1) }),
+});
+
+const drillClassId = z.enum(['ALPHA', 'BETA', 'GAMMA']);
+export const sealDrillSchema = z.strictObject({
+  timeScale: pos,
+  origin: facilityId,
+  classes: z.array(z.strictObject({ classId: drillClassId, ackMin: pos, doorCycleMin: pos, sealMin: pos })).length(3),
+  relay: z.strictObject({ hubHopMin: pos, tramHopMin: pos, unlinkedMin: pos }),
+  rules: z.array(z.string().min(1)).min(1),
+  excluded: z.strictObject({ classId: z.literal('DELTA'), text: z.string().min(1) }),
+  sequence: z.array(
+    z.strictObject({
+      facility: facilityId,
+      network: networkId.nullable(),
+      via: facilityId.nullable(),
+      relay: z.enum(['origin', 'rail', 'tram', 'voice']),
+      hop: nonNegInt,
+      offsetMin: num.nonnegative(),
+    }),
+  ),
+});
+
+const plantLevel = z.strictObject({ n: nonNegInt, name: z.string().min(1) });
+const doorDef = z.strictObject({
+  id: z.string().regex(/^[ABG]\d{2}-[A-Z]{2}\d+(-[OI])?$/),
+  level: nonNegInt,
+  location: z.string().min(1),
+  kind: z.enum(['portal', 'blast', 'airlock']),
+  normal: z.enum(['open', 'closed']),
+  cycleSec: pos,
+  ratedPsi: pos.nullable(),
+  sealsOnDrill: z.boolean(),
+  tier: tierNo,
+});
+const airlockDef = z.strictObject({
+  id: z.string().regex(/^[ABG]\d{2}-AL\d+$/),
+  level: nonNegInt,
+  location: z.string().min(1),
+  outer: z.string(),
+  inner: z.string(),
+  cycleSec: pos,
+  deconSec: pos.nullable(),
+  tier: tierNo,
+});
+const siteSource = z.enum(['detailed', 'template']);
+const cameraDef = z.strictObject({
+  id: z.string().regex(/^[ABG]\d{2}-C\d{2}$/),
+  level: nonNegInt,
+  location: z.string().min(1),
+  kind: z.enum(['corridor', 'portal', 'platform', 'vault', 'hoist', 'plant', 'assembly']),
+  ptz: z.boolean(),
+  tier: tierNo,
+});
+const hoist = z.strictObject({
+  id: z.string().regex(/^A\d{2}-H\d$/),
+  facility: facilityId,
+  name: z.string().min(1),
+  kind: z.enum(['personnel', 'vehicle', 'freight', 'egress']),
+  levels: z.array(nonNegInt).min(2),
+  speedFpm: pos,
+  accelSec: num.nonnegative(),
+  cagePersons: int.positive(),
+  payloadLb: pos,
+  stops: z.array(z.strictObject({ level: nonNegInt, depthFt: num.nonnegative() })),
+  travelFt: pos,
+});
+const musterPoint = z.strictObject({
+  id: z.string().regex(/^[ABG]\d{2}-MP\d+$/),
+  level: nonNegInt,
+  location: z.string().min(1),
+  capacity: int.positive(),
+  assigned: nonNegInt,
+});
+
+/** canon.apps: one entry per content/canon/apps/<appId>.json (validated by the app's own schema). */
+export const canonAppsSchema = z.partialRecord(z.enum(APP_IDS), z.unknown());
+
+export const extendedCShape = {
+  accounts: z.array(accountDefSchema),
+  survivability: survivabilitySchema,
+  sealDrill: sealDrillSchema,
+  templateLevels: z.strictObject({ BETA: z.array(plantLevel).min(1), GAMMA: z.array(plantLevel).min(1) }),
+  doors: z.array(z.strictObject({ facility: facilityId, source: siteSource, doors: z.array(doorDef), airlocks: z.array(airlockDef) })),
+  cameras: z.array(z.strictObject({ facility: facilityId, source: siteSource, cameras: z.array(cameraDef) })),
+  hoists: z.array(hoist),
+  musterPoints: z.array(z.strictObject({ facility: facilityId, source: siteSource, points: z.array(musterPoint).min(1) })),
+};
+
 export const canonSchema = z.strictObject({
   meta: z.strictObject({
     environment: z.string(),
@@ -412,7 +566,12 @@ export const canonSchema = z.strictObject({
     supervisorPn: z.string().regex(PN_RE),
     email: z.string(),
   }),
+  ...extendedCShape,
+  apps: canonAppsSchema,
 });
+
+/** Keys that come from extended-c.json (absent when canon is merged without it). */
+export const EXTENDED_C_KEYS = Object.keys(extendedCShape) as (keyof typeof extendedCShape)[];
 
 export type CanonParsed = z.infer<typeof canonSchema>;
 
@@ -613,5 +772,177 @@ export function canonCrossChecks(c: Canon, opts: CrossCheckOptions): string[] {
   };
   walk(c, '');
 
+  if (Array.isArray(c.accounts)) errs.push(...extendedCChecks(c));
+
+  return errs;
+}
+
+/** Landing depth of a facility level: the level floor (topFt + heightFt). */
+export const landingDepthFt = (l: { topFt: number; heightFt: number }): number => l.topFt + l.heightFt;
+
+/** Cross-checks for the extended-c keys (accounts and plant data). */
+export function extendedCChecks(c: Canon): string[] {
+  const errs: string[] = [];
+  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+  const plantSites = c.facilities.filter((f) => f.class !== 'DELTA');
+  const plantIds = plantSites.map((f) => f.id).sort();
+  const fac = new Map(c.facilities.map((f) => [f.id as string, f]));
+  const roster = new Map(c.roster.map((p) => [p.pn, p]));
+  const sameSet = (label: string, got: string[]) => {
+    const g = [...got].sort();
+    if (g.length !== new Set(g).size) errs.push(`${label}: duplicate facility`);
+    if (JSON.stringify([...new Set(g)]) !== JSON.stringify(plantIds)) errs.push(`${label}: must cover every non-DELTA facility exactly once`);
+  };
+  /** Level exists at the site (ALPHA: facility levels; BETA/GAMMA: template levels); returns its tier for ALPHA. */
+  const levelOf = (site: string, n: number, label: string): { tier: number } | null => {
+    const f = fac.get(site);
+    if (!f) return (errs.push(`${label}: unknown facility ${site}`), null);
+    if (f.class === 'ALPHA') {
+      const l = (f.levels ?? []).find((x) => x.n === n);
+      if (!l) errs.push(`${label}: ${site} has no level ${n}`);
+      return l ?? null;
+    }
+    if (f.class === 'BETA' || f.class === 'GAMMA') {
+      if (!c.templateLevels[f.class].some((x) => x.n === n)) errs.push(`${label}: ${f.class} template has no level ${n}`);
+      return null;
+    }
+    errs.push(`${label}: DELTA sites carry no plant records`);
+    return null;
+  };
+
+  // Accounts.
+  const ids = c.accounts.map((a) => a.id);
+  if (JSON.stringify([...ids].sort()) !== JSON.stringify([...ACCOUNT_IDS].sort())) errs.push(`accounts: expected exactly ${ACCOUNT_IDS.join(', ')}`);
+  const restrictedNames = c.roster.filter((p) => p.tier <= 2).flatMap((p) => [p.name, p.name.split(' ').pop()!]);
+  const seenOp = new Set<string>();
+  const seenMail = new Set<string>();
+  for (const a of c.accounts) {
+    const at = `accounts.${a.id}`;
+    if (seenOp.has(a.operatorId)) errs.push(`${at}: duplicate operatorId`);
+    if (seenMail.has(a.email)) errs.push(`${at}: duplicate email`);
+    seenOp.add(a.operatorId);
+    seenMail.add(a.email);
+    const f = fac.get(a.site);
+    const site2 = f ? `${f.class[0]}${f.id.slice(-2)}` : '';
+    if (a.operatorId !== `OPR-${site2}-${a.pn.slice(-4)}`) errs.push(`${at}: operatorId ${a.operatorId} must be OPR-${site2}-${a.pn.slice(-4)}`);
+    if (!a.workstation.startsWith(`${site2}-`)) errs.push(`${at}: workstation ${a.workstation} must be at the account's site (${site2})`);
+    if (a.printQueue !== `PRN-${a.workstation.slice(0, 5)}`) errs.push(`${at}: printQueue must be PRN-${a.workstation.slice(0, 5)}`);
+    for (const s of [a.displayName, a.roleTitle, a.email, a.passphrase])
+      for (const n of restrictedNames) if (s.toLowerCase().includes(n.toLowerCase())) errs.push(`${at}: client field contains restricted name "${n}"`);
+    if (a.supervisorPn && !roster.has(a.supervisorPn)) errs.push(`${at}: supervisor ${a.supervisorPn} not in roster`);
+    if (new Set(a.desktop).size !== a.desktop.length) errs.push(`${at}: desktop lists an app twice`);
+    if (a.id === 'analyst') {
+      const o = c.operator;
+      const mirror: [string, unknown, unknown][] = [
+        ['operatorId', a.operatorId, o.operatorId], ['passphrase', a.passphrase, o.passphrase], ['pn', a.pn, o.pn],
+        ['displayName', a.displayName, o.displayName], ['tier', a.tier, o.tier], ['site', a.site, o.site], ['divisionId', a.divisionId, o.divisionId],
+        ['compartments', JSON.stringify(a.compartments), JSON.stringify(o.compartments)], ['probationStart', a.probationStart, o.probationStart],
+        ['supervisorPn', a.supervisorPn, o.supervisorPn], ['email', a.email, o.email],
+      ];
+      for (const [k, x, y] of mirror) if (x !== y) errs.push(`${at}.${k}: must mirror operator.${k}`);
+      continue;
+    }
+    const p = roster.get(a.pn);
+    if (!p) {
+      errs.push(`${at}: pn ${a.pn} not in roster`);
+      continue;
+    }
+    if (p.tier !== a.tier) errs.push(`${at}: tier ${a.tier} != roster tier ${p.tier}`);
+    if (p.site !== a.site) errs.push(`${at}: site ${a.site} != roster site ${p.site}`);
+    if ((p.divisionId ?? COMMAND_DIVISION_ID) !== a.divisionId) errs.push(`${at}: divisionId ${a.divisionId} != roster ${p.divisionId ?? COMMAND_DIVISION_ID}`);
+    if (a.divisionId !== COMMAND_DIVISION_ID && !c.divisions.some((d) => d.id === a.divisionId)) errs.push(`${at}: unknown division ${a.divisionId}`);
+    if (p.tier > 2 && p.email !== a.email) errs.push(`${at}: email must be the roster address ${p.email}`);
+  }
+
+  // Survivability.
+  const sv = c.survivability;
+  sameSet('survivability.facilities', sv.facilities.map((x) => x.facility));
+  if (new Set(sv.classes.map((k) => k.id)).size !== 4) errs.push('survivability.classes: ids must be H1..H4');
+  for (let i = 1; i < sv.contours.length; i++) {
+    const a = sv.contours[i - 1]!;
+    const b = sv.contours[i]!;
+    if (!(b.psi > a.psi && b.rangeCoeffMi < a.rangeCoeffMi)) errs.push(`survivability.contours: must ascend in psi and descend in range (${a.psi} -> ${b.psi})`);
+  }
+  sv.conditions.forEach((k, i) => {
+    const last = i === sv.conditions.length - 1;
+    if (last !== (k.maxRatio === null)) errs.push('survivability.conditions: only the last condition has maxRatio null');
+    if (i > 0 && k.maxRatio !== null && k.maxRatio <= (sv.conditions[i - 1]!.maxRatio ?? Infinity)) errs.push('survivability.conditions: maxRatio must ascend');
+  });
+
+  // Seal drill.
+  const sd = c.sealDrill;
+  for (const k of sd.classes) if (k.sealMin < k.ackMin + k.doorCycleMin) errs.push(`sealDrill ${k.classId}: sealMin ${k.sealMin} < ack + door cycle`);
+  sameSet('sealDrill.sequence', sd.sequence.map((s) => s.facility));
+  if (sd.sequence[0]?.facility !== sd.origin || sd.sequence[0]?.offsetMin !== 0) errs.push('sealDrill.sequence: must start at the origin at minute 0');
+  for (let i = 1; i < sd.sequence.length; i++) if (sd.sequence[i]!.offsetMin < sd.sequence[i - 1]!.offsetMin) errs.push('sealDrill.sequence: offsets must not decrease');
+
+  // Doors.
+  sameSet('doors', c.doors.map((s) => s.facility));
+  const doorIds = new Set<string>();
+  for (const s of c.doors) {
+    const f = fac.get(s.facility);
+    const byId = new Map(s.doors.map((d) => [d.id, d]));
+    for (const d of s.doors) {
+      if (doorIds.has(d.id)) errs.push(`doors: duplicate id ${d.id}`);
+      doorIds.add(d.id);
+      const l = levelOf(s.facility, d.level, `door ${d.id}`);
+      if (l && l.tier !== d.tier) errs.push(`door ${d.id}: tier ${d.tier} != level tier ${l.tier}`);
+    }
+    for (const a of s.airlocks) {
+      levelOf(s.facility, a.level, `airlock ${a.id}`);
+      for (const k of [a.outer, a.inner]) {
+        const d = byId.get(k);
+        if (!d || d.kind !== 'airlock' || d.level !== a.level) errs.push(`airlock ${a.id}: ${k} is not an airlock door on level ${a.level}`);
+      }
+    }
+    if (!s.doors.some((d) => d.kind === 'blast' && d.level === 1)) errs.push(`doors ${s.facility}: no blast door at the portal level`);
+    const drill = sd.classes.find((k) => k.classId === f?.class);
+    const slowest = Math.max(0, ...s.doors.filter((d) => d.sealsOnDrill).map((d) => d.cycleSec));
+    if (drill && slowest > drill.doorCycleMin * 60) errs.push(`doors ${s.facility}: a door cycles in ${slowest}s, over the class door cycle`);
+  }
+
+  // Cameras.
+  sameSet('cameras', c.cameras.map((s) => s.facility));
+  const camIds = new Set<string>();
+  for (const s of c.cameras)
+    for (const k of s.cameras) {
+      if (camIds.has(k.id)) errs.push(`cameras: duplicate id ${k.id}`);
+      camIds.add(k.id);
+      const l = levelOf(s.facility, k.level, `camera ${k.id}`);
+      if (l && l.tier !== k.tier) errs.push(`camera ${k.id}: tier ${k.tier} != level tier ${l.tier}`);
+    }
+
+  // Hoists.
+  for (const h of c.hoists) {
+    const f = fac.get(h.facility);
+    if (!f || f.class !== 'ALPHA') {
+      errs.push(`hoist ${h.id}: hoists are ALPHA only`);
+      continue;
+    }
+    const levels = h.levels.map((n) => (f.levels ?? []).find((l) => l.n === n));
+    if (levels.some((l) => !l)) errs.push(`hoist ${h.id}: serves a level ${f.id} does not have`);
+    for (let i = 1; i < h.levels.length; i++) if (h.levels[i]! <= h.levels[i - 1]!) errs.push(`hoist ${h.id}: levels must ascend`);
+    const want = levels.filter(Boolean).map((l) => ({ level: l!.n, depthFt: landingDepthFt(l!) }));
+    if (JSON.stringify(want) !== JSON.stringify(h.stops)) errs.push(`hoist ${h.id}: stops do not match level depths`);
+    const travel = want.length ? want[want.length - 1]!.depthFt - want[0]!.depthFt : 0;
+    if (h.travelFt !== travel) errs.push(`hoist ${h.id}: travelFt ${h.travelFt} != ${travel}`);
+    if (f.depthFt !== null && want.some((s) => s.depthFt > f.depthFt!)) errs.push(`hoist ${h.id}: a landing is below the facility depth ${f.depthFt}`);
+  }
+  for (const f of plantSites.filter((x) => x.class === 'ALPHA')) if (!c.hoists.some((h) => h.facility === f.id)) errs.push(`hoists: ${f.id} has none`);
+
+  // Muster points.
+  sameSet('musterPoints', c.musterPoints.map((s) => s.facility));
+  for (const s of c.musterPoints) {
+    const f = fac.get(s.facility);
+    const staff = f?.staff ?? 0;
+    for (const p of s.points) {
+      levelOf(s.facility, p.level, `muster ${p.id}`);
+      if (p.assigned > p.capacity) errs.push(`muster ${p.id}: ${p.assigned} assigned over capacity ${p.capacity}`);
+    }
+    const assigned = sum(s.points.map((p) => p.assigned));
+    const cap = sum(s.points.map((p) => p.capacity));
+    if (assigned !== staff) errs.push(`muster ${s.facility}: assigned ${assigned} != posted staff ${staff}`);
+    if (cap < staff) errs.push(`muster ${s.facility}: capacity ${cap} < posted staff ${staff}`);
+  }
   return errs;
 }

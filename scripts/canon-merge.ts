@@ -3,6 +3,12 @@
  *   content/canon/source.json      (canon extractor; facts from the lore source)
  *   content/canon/extended-a.json  (canon extender A; optional)
  *   content/canon/extended-b.json  (canon extender B; optional)
+ *   content/canon/extended-c.json  (pass two: accounts, roster additions and shared plant data; optional)
+ *   content/canon/apps/<appId>.json (pass two: per-app fragments -> canon.apps[appId], validated
+ *                                   by src/core/canon-apps/<appId>.ts `schema` when present)
+ *
+ * It also writes the CANON-T2 release (public/data/releases/<hash>.json): the Tier 2 values the
+ * client canon withholds, encoded with the release codec (docs/canon/extended-c.md).
  *
  * Run: npx tsx scripts/canon-merge.ts   (also `npm run canon`)
  *
@@ -21,11 +27,18 @@
  *  - It also writes content/canon/canon.client.json, the sanitised copy the browser imports
  *    through '@canon' (docs/CANON.md, "Client canon"; sentinels in src/core/rx.ts).
  */
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import type { Bearing, Canon, Facility, RxString } from '../src/core/canon-types';
-import { canonCrossChecks, canonSchema, clientCanonSchema } from '../src/core/canon-schema';
+import type {
+  AirlockDef, Bearing, Canon, DoorDef, Facility, FacilityId, HardeningClassId, Hoist, MusterPoint, RxString, SealDrill, SealDrillStep, SiteCameras,
+  SiteDoors, SiteMuster, CameraDef, Survivability,
+} from '../src/core/canon-types';
+import { APP_IDS, EXTENDED_C_KEYS, canonCrossChecks, canonSchema, clientCanonSchema, landingDepthFt } from '../src/core/canon-schema';
+import { encodeRelease, releaseFileName } from '../src/core/release-codec';
+import { CANON_T2_KEY } from '../src/core/canon-release';
+import { readRedactionCorpus, type RedactionCorpus } from './content/redaction-corpus.ts';
+import { resolvePath } from './content/canon.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const CANON_DIR = resolve(ROOT, 'content/canon');
@@ -157,6 +170,10 @@ export interface MergeInputs {
   source: JsonObj;
   extendedA: JsonObj | null;
   extendedB: JsonObj | null;
+  /** extended-c.json (pass two: accounts and shared plant data); optional. */
+  extendedC?: JsonObj | null;
+  /** content/canon/apps/<appId>.json fragments by appId; optional. */
+  apps?: Record<string, Json>;
 }
 
 export interface MergeResult {
@@ -173,7 +190,56 @@ function readJson(p: string): JsonObj | null {
 export function loadInputs(dir = CANON_DIR): MergeInputs {
   const source = readJson(resolve(dir, 'source.json'));
   if (!source) throw new Error(`missing ${resolve(dir, 'source.json')}`);
-  return { source, extendedA: readJson(resolve(dir, 'extended-a.json')), extendedB: readJson(resolve(dir, 'extended-b.json')) };
+  return {
+    source,
+    extendedA: readJson(resolve(dir, 'extended-a.json')),
+    extendedB: readJson(resolve(dir, 'extended-b.json')),
+    extendedC: readJson(resolve(dir, 'extended-c.json')),
+    apps: loadAppFragments(resolve(dir, 'apps')),
+  };
+}
+
+/** content/canon/apps/<appId>.json, keyed by file name (sorted, so canon.json is stable). */
+export function loadAppFragments(appsDir: string): Record<string, Json> {
+  const out: Record<string, Json> = {};
+  if (!existsSync(appsDir)) return out;
+  for (const name of readdirSync(appsDir).filter((n) => n.endsWith('.json')).sort()) {
+    out[basename(name, '.json')] = JSON.parse(readFileSync(resolve(appsDir, name), 'utf8')) as Json;
+  }
+  return out;
+}
+
+/** Directory of the optional per-app schemas (src/core/canon-apps/<appId>.ts, export `schema`). */
+export const CANON_APPS_SCHEMA_DIR = resolve(ROOT, 'src/core/canon-apps');
+
+/**
+ * Validates each app fragment against its app's Zod `schema`, when the app has one.
+ * Returns error strings (empty = pass). Async: schemas are TypeScript modules loaded on demand.
+ */
+export async function validateAppFragments(apps: Record<string, unknown>, schemaDir = CANON_APPS_SCHEMA_DIR): Promise<{ errors: string[]; unchecked: string[] }> {
+  const errors: string[] = [];
+  const unchecked: string[] = [];
+  for (const [id, data] of Object.entries(apps)) {
+    if (!(APP_IDS as readonly string[]).includes(id)) {
+      errors.push(`apps/${id}.json: "${id}" is not an AppId`);
+      continue;
+    }
+    const file = resolve(schemaDir, `${id}.ts`);
+    if (!existsSync(file)) {
+      unchecked.push(id);
+      continue;
+    }
+    // Node (tsx) needs a file URL on Windows; vitest's module runner takes the plain path.
+    const spec = process.env.VITEST ? file.replace(/\\/g, '/') : pathToFileURL(file).href;
+    const mod = (await import(/* @vite-ignore */ spec)) as { schema?: { safeParse(v: unknown): { success: boolean; error?: { issues: { path: PropertyKey[]; message: string }[] } } } };
+    if (!mod.schema || typeof mod.schema.safeParse !== 'function') {
+      errors.push(`src/core/canon-apps/${id}.ts: no exported Zod \`schema\``);
+      continue;
+    }
+    const r = mod.schema.safeParse(data);
+    if (!r.success) for (const issue of r.error?.issues ?? []) errors.push(`apps/${id}.json: ${issue.path.map(String).join('.')}: ${issue.message}`);
+  }
+  return { errors, unchecked };
 }
 
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
@@ -243,6 +309,20 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
     f.lon = p.lon;
   }
 
+  // extended-c (pass two): roster additions merge like any canon key; the plant data is
+  // expanded here (templates -> per-site records, computed drill order and hoist travel).
+  if (inputs.extendedC) {
+    const ext = inputs.extendedC;
+    const own = new Set<string>([...EXTENDED_C_KEYS]);
+    const rest: JsonObj = {};
+    for (const [k, v] of Object.entries(ext)) if (!own.has(k)) rest[k] = v;
+    merged = mergeTopLevel(merged, rest, 'extended-c', canonKeys, warnings);
+    Object.assign(merged, expandExtendedC(merged as unknown as Canon, ext as unknown as ExtendedCInput) as unknown as JsonObj);
+  } else {
+    warnings.push('extended-c.json not found: accounts and plant data are absent');
+  }
+  merged.apps = (inputs.apps ?? {}) as JsonObj;
+
   // Headline derivations.
   const c = merged as unknown as Canon;
 
@@ -298,8 +378,9 @@ export function buildCanon(inputs: MergeInputs): MergeResult {
     }
   }
 
-  // Structural validation.
-  const parsed = canonSchema.safeParse(c);
+  // Structural validation (without extended-c the pass-two keys are not required).
+  const schema = inputs.extendedC ? canonSchema : canonSchema.omit(Object.fromEntries(EXTENDED_C_KEYS.map((k) => [k, true])) as { [K in (typeof EXTENDED_C_KEYS)[number]]: true });
+  const parsed = schema.safeParse(c);
   if (!parsed.success) {
     for (const issue of parsed.error.issues) errors.push(`schema: ${issue.path.join('.')}: ${issue.message}`);
     return { canon: c, warnings, errors };
@@ -328,6 +409,227 @@ function mergeTopLevel(merged: JsonObj, ext: JsonObj, label: string, canonKeys: 
     out[k] = deepMerge(out[k] as Json, v, k, warnings);
   }
   return out;
+}
+
+// ---------------------------------------------------------------------------------------
+// extended-c expansion (docs/canon/extended-c.md). ALPHA plant records are listed in full in
+// extended-c.json; BETA and GAMMA records are generated from class templates, in facility
+// order, with no randomness, so every build gives the same ids and figures.
+// ---------------------------------------------------------------------------------------
+
+type TemplateWhen = 'tram' | 'dual-portal' | 'single-portal';
+interface DoorTemplate extends Omit<DoorDef, 'ratedPsi'> {
+  rated: number | 'class' | null;
+  when?: TemplateWhen;
+}
+interface AirlockTemplate extends Omit<AirlockDef, 'outer' | 'inner'> {
+  doorCycleSec: number;
+  when?: TemplateWhen;
+}
+interface CameraTemplate extends CameraDef {
+  when?: TemplateWhen;
+}
+interface MusterTemplate {
+  id: string;
+  level: number;
+  location: string;
+  share: number;
+  capacityFactor: number;
+  minCapacity: number;
+}
+type TemplateClass = 'BETA' | 'GAMMA';
+export interface ExtendedCInput {
+  accounts: Canon['accounts'];
+  survivability: Survivability;
+  sealDrill: Omit<SealDrill, 'sequence'>;
+  templateLevels: Canon['templateLevels'];
+  doors: { sites: Omit<SiteDoors, 'source'>[]; templates: Record<TemplateClass, { doors: DoorTemplate[]; airlocks: AirlockTemplate[] }> };
+  cameras: { sites: Omit<SiteCameras, 'source'>[]; templates: Record<TemplateClass, CameraTemplate[]> };
+  hoists: Omit<Hoist, 'stops' | 'travelFt'>[];
+  musterPoints: { sites: Omit<SiteMuster, 'source'>[]; templates: Record<TemplateClass, MusterTemplate[]> };
+}
+
+/** Record id prefix for a facility: ALPHA-01 -> A01, GAMMA-08 -> G08. */
+export const plantPrefix = (id: string): string => `${id[0]}${id.slice(-2)}`;
+
+/** Split `total` by `shares` (largest remainder; ties to the earlier entry). Sums exactly to total. */
+export function apportion(total: number, shares: number[]): number[] {
+  const s = shares.reduce((a, b) => a + b, 0);
+  const raw = shares.map((x) => (x / s) * total);
+  const out = raw.map(Math.floor);
+  const left = total - out.reduce((a, b) => a + b, 0);
+  const order = raw.map((r, i) => [r - Math.floor(r), i] as const).sort((a, b) => b[0] - a[0] || a[1] - b[1]);
+  for (let k = 0; k < left; k++) out[order[k]![1]]!++;
+  return out;
+}
+
+/**
+ * Seal drill order of receipt: ALPHA hubs by rail segments in revenue service from the origin,
+ * then each hub's tram network (shortest relay time, BETA before GAMMA on ties), then sites
+ * with no tram link by voice circuit, one interval apart, in designation order.
+ */
+export function sealDrillSequence(c: Pick<Canon, 'facilities' | 'railSegments' | 'tramNetworks'>, d: Omit<SealDrill, 'sequence'>): SealDrillStep[] {
+  const fac = new Map(c.facilities.map((f) => [f.id as string, f]));
+  const plant = c.facilities.filter((f) => f.class !== 'DELTA');
+  const step = new Map<string, SealDrillStep>();
+  const mk = (id: string, via: string | null, relay: SealDrillStep['relay'], hop: number, offsetMin: number): SealDrillStep => ({
+    facility: id as FacilityId,
+    network: fac.get(id)?.network ?? null,
+    via: via as FacilityId | null,
+    relay,
+    hop,
+    offsetMin,
+  });
+  step.set(d.origin, mk(d.origin, null, 'origin', 0, 0));
+  // Rail: breadth-first over segments in revenue service (neighbours in id order).
+  const queue = [d.origin as string];
+  while (queue.length) {
+    const at = queue.shift()!;
+    const here = step.get(at)!;
+    const next = c.railSegments
+      .filter((s) => s.status === 'IN REVENUE SERVICE' && (s.a === at || s.b === at))
+      .map((s) => (s.a === at ? s.b : s.a))
+      .sort();
+    for (const n of next) {
+      if (step.has(n)) continue;
+      step.set(n, mk(n, at, 'rail', here.hop + 1, here.offsetMin + d.relay.hubHopMin));
+      queue.push(n);
+    }
+  }
+  // Tram: shortest relay time from any hub already ordered (undirected links).
+  const adj = new Map<string, string[]>();
+  for (const n of c.tramNetworks)
+    for (const l of n.links) {
+      adj.set(l.from, [...(adj.get(l.from) ?? []), l.to]);
+      adj.set(l.to, [...(adj.get(l.to) ?? []), l.from]);
+    }
+  const rank = (id: string) => ['ALPHA', 'BETA', 'GAMMA'].indexOf(fac.get(id)?.class ?? '');
+  const open = [...step.keys()];
+  const done = new Set<string>();
+  while (open.length) {
+    open.sort((a, b) => step.get(a)!.offsetMin - step.get(b)!.offsetMin || rank(a) - rank(b) || a.localeCompare(b));
+    const at = open.shift()!;
+    if (done.has(at)) continue;
+    done.add(at);
+    const here = step.get(at)!;
+    for (const n of [...(adj.get(at) ?? [])].sort()) {
+      if (fac.get(n)?.class === 'ALPHA' || fac.get(n)?.class === 'DELTA') continue;
+      const off = here.offsetMin + d.relay.tramHopMin;
+      const prev = step.get(n);
+      if (prev && (prev.offsetMin < off || (prev.offsetMin === off && (prev.via ?? '') <= at))) continue;
+      step.set(n, mk(n, at, 'tram', here.hop + 1, off));
+      open.push(n);
+    }
+  }
+  // Voice: everything not reached.
+  let last = Math.max(...[...step.values()].map((s) => s.offsetMin));
+  for (const f of [...plant].sort((a, b) => a.id.localeCompare(b.id))) {
+    if (step.has(f.id)) continue;
+    last += d.relay.unlinkedMin;
+    step.set(f.id, mk(f.id, d.origin, 'voice', 1, last));
+  }
+  return [...step.values()]
+    .filter((s) => fac.get(s.facility)?.class !== 'DELTA')
+    .sort((a, b) => a.offsetMin - b.offsetMin || rank(a.facility) - rank(b.facility) || a.facility.localeCompare(b.facility));
+}
+
+/** Expand the extended-c input into the canon keys (see ExtendedCInput). */
+export function expandExtendedC(c: Canon, x: ExtendedCInput): Pick<Canon, (typeof EXTENDED_C_KEYS)[number]> {
+  const plant = c.facilities.filter((f) => f.class !== 'DELTA');
+  const tram = new Set(c.tramNetworks.flatMap((n) => n.links.flatMap((l) => [l.from, l.to] as string[])));
+  const hcOf = new Map(x.survivability.facilities.map((e) => [e.facility as string, e.hardeningClass]));
+  const rated = new Map(x.survivability.classes.map((k) => [k.id, k.ratedPsi]));
+  const applies = (id: string, when?: TemplateWhen): boolean => {
+    if (!when) return true;
+    if (when === 'tram') return tram.has(id);
+    const hc = hcOf.get(id) as HardeningClassId | undefined;
+    return when === 'single-portal' ? hc === 'H4' : hc !== 'H4';
+  };
+  const order = (a: { facility: string }, b: { facility: string }) =>
+    c.facilities.findIndex((f) => f.id === a.facility) - c.facilities.findIndex((f) => f.id === b.facility);
+
+  const doors: SiteDoors[] = [];
+  const cameras: SiteCameras[] = [];
+  const musterPoints: SiteMuster[] = [];
+  for (const f of plant) {
+    const P = plantPrefix(f.id);
+    if (f.class === 'ALPHA') {
+      const d = x.doors.sites.find((s) => s.facility === f.id);
+      if (d) doors.push({ facility: f.id, source: 'detailed', doors: d.doors, airlocks: d.airlocks });
+      const k = x.cameras.sites.find((s) => s.facility === f.id);
+      if (k) cameras.push({ facility: f.id, source: 'detailed', cameras: k.cameras });
+      const m = x.musterPoints.sites.find((s) => s.facility === f.id);
+      if (m) musterPoints.push({ facility: f.id, source: 'detailed', points: m.points });
+      continue;
+    }
+    const cls = f.class as TemplateClass;
+    const dt = x.doors.templates[cls];
+    const siteDoors: DoorDef[] = dt.doors
+      .filter((t) => applies(f.id, t.when))
+      .map(({ rated: r, when: _w, ...t }) => ({
+        ...t,
+        id: `${P}-${t.id}`,
+        ratedPsi: r === 'class' ? (rated.get(hcOf.get(f.id) as HardeningClassId) ?? null) : r,
+      }));
+    const airlocks: AirlockDef[] = [];
+    for (const { doorCycleSec, when, ...t } of dt.airlocks) {
+      if (!applies(f.id, when)) continue;
+      const id = `${P}-${t.id}`;
+      for (const side of ['O', 'I'] as const)
+        siteDoors.push({
+          id: `${id}-${side}`,
+          level: t.level,
+          location: `${t.location}, ${side === 'O' ? 'outer' : 'inner'} door`,
+          kind: 'airlock',
+          normal: 'closed',
+          cycleSec: doorCycleSec,
+          ratedPsi: null,
+          sealsOnDrill: true,
+          tier: t.tier,
+        });
+      airlocks.push({ ...t, id, outer: `${id}-O`, inner: `${id}-I` });
+    }
+    siteDoors.sort((a, b) => a.level - b.level);
+    doors.push({ facility: f.id, source: 'template', doors: siteDoors, airlocks });
+    cameras.push({
+      facility: f.id,
+      source: 'template',
+      cameras: x.cameras.templates[cls].filter((t) => applies(f.id, t.when)).map(({ when: _w, ...t }) => ({ ...t, id: `${P}-${t.id}` })),
+    });
+    const mt = x.musterPoints.templates[cls];
+    const assigned = apportion(f.staff ?? 0, mt.map((t) => t.share));
+    musterPoints.push({
+      facility: f.id,
+      source: 'template',
+      points: mt.map((t, i): MusterPoint => ({
+        id: `${P}-${t.id}`,
+        level: t.level,
+        location: t.location,
+        capacity: Math.max(t.minCapacity, Math.ceil((assigned[i]! * t.capacityFactor) / 5) * 5),
+        assigned: assigned[i]!,
+      })),
+    });
+  }
+
+  const hoists: Hoist[] = x.hoists.map((h) => {
+    const f = c.facilities.find((ff) => ff.id === h.facility);
+    const stops = h.levels.flatMap((n) => {
+      const l = f?.levels?.find((ll) => ll.n === n);
+      return l ? [{ level: n, depthFt: landingDepthFt(l) }] : [];
+    });
+    return { ...h, stops, travelFt: stops.length ? stops[stops.length - 1]!.depthFt - stops[0]!.depthFt : 0 };
+  });
+
+  return {
+    accounts: x.accounts,
+    survivability: x.survivability,
+    sealDrill: { ...x.sealDrill, sequence: sealDrillSequence(c, x.sealDrill) },
+    templateLevels: x.templateLevels,
+    doors: doors.sort(order),
+    cameras: cameras.sort(order),
+    hoists,
+    musterPoints: musterPoints.sort(order),
+  };
 }
 
 /** Tunnel links whose stated length is shorter than the great-circle distance between endpoints. */
@@ -375,7 +677,23 @@ export interface ClientCanonResult {
 /** Withheld strings shorter than this are not searched for inside other fields. */
 const SCRUB_MIN = 8;
 
-export function buildClientCanon(canon: Canon): ClientCanonResult {
+/**
+ * Content corpus for the client canon (F2): tier-1 and compartment text the Markdown withholds.
+ * Read once per process from content/ (an empty corpus when content/ is absent).
+ */
+let corpusCache: RedactionCorpus | undefined;
+export function contentCorpus(): RedactionCorpus {
+  corpusCache ??= existsSync(resolve(ROOT, 'content')) ? readRedactionCorpus(resolve(ROOT, 'content')) : { restricted: [], publicElsewhere: 0, paths: [] };
+  return corpusCache;
+}
+
+/**
+ * Build the client canon. `corpus` (default: none, for fixtures) adds the content rule: a canon
+ * value that a document prints only inside a tier-1 or compartment redaction (`:r[:c[path]]`)
+ * is withheld under that key, and any tier-1 or compartment-withheld text fragment that a
+ * document copies as a literal is replaced by a sentinel wherever it occurs in the client canon.
+ */
+export function buildClientCanon(canon: Canon, corpus?: RedactionCorpus): ClientCanonResult {
   const c = structuredClone(canon);
   const withheld: ClientCanonResult['withheld'] = [];
   const scrubKeys = new Map<string, string>(); // original text -> sentinel
@@ -411,6 +729,10 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     // Tier 1 rows keep pn and role only (seat roles are public on the Council composition
     // page). Tier 2 notes stay: the personnel directory shows them at baseline.
     if (p.tier === 1) {
+      // Tier 1 rows carry nothing in clear (personnel/directory.md redacts every cell at tier 1).
+      // shipClientCanon drops them from the shipped file; the pn stays here so the pipeline can
+      // pair rows with the full canon.
+      p.role = rx(`roster.${p.pn}.role`, key, p.role);
       p.notes = rx(`roster.${p.pn}.notes`, key, p.notes);
       p.site = rx(`roster.${p.pn}.site`, key, p.site, false);
       if (p.rank) p.rank = rx(`roster.${p.pn}.rank`, key, p.rank, false);
@@ -534,6 +856,45 @@ export function buildClientCanon(canon: Canon): ClientCanonResult {
     if (t.protocol.titleWithheld) t.protocol.title = `[[RX:T1:${18 + (fnv1a(t.protocol.designation) % 24)}]]`;
   }
 
+  // Tram link labels name the far site's city: SEXTANT unless that site is released (own,
+  // adjacent, RELEASED_SITES) or a GAMMA site (metro areas are open). transit/net-*.md redact them.
+  const classOf = new Map(c.facilities.map((f) => [f.id as string, f.class as string]));
+  for (const n of c.tramNetworks ?? []) {
+    for (const l of n.links ?? []) {
+      if (near.has(l.to) || released.has(l.to) || classOf.get(l.to) === 'GAMMA' || !l.label) continue;
+      l.label = rx(`tramNetworks.${n.id}.links.${l.from}>${l.to}.label`, DELTA_LOCATION_KEY, l.label, false);
+    }
+  }
+
+  // Content rule (F2): canon values documents print only inside tier-1/compartment redactions.
+  for (const { path, key } of corpus?.paths ?? []) {
+    const cut = path.lastIndexOf('.');
+    if (cut < 0) continue;
+    const parent = resolvePath(c as unknown as Record<string, unknown>, path.slice(0, cut));
+    const field = path.slice(cut + 1);
+    if (!parent.found || !parent.value || typeof parent.value !== 'object' || Array.isArray(parent.value)) continue;
+    const o = parent.value as Record<string, unknown>;
+    const v = o[field];
+    // Free text only: ids, facility designations and status words (no space) are structure the
+    // apps run on, and roster rows follow the tier rules above.
+    if (typeof v === 'string' && /\s/.test(v) && !path.startsWith('roster.')) {
+      if (/^\[\[RX:[A-Z0-9+]+:\d+\]\]$/.test(v)) continue;
+      // A value that carries a tier-1 fragment (ALPHA-02's function ends in a tier-1 sentence) is
+      // tier 1 as a whole, so no release (documents or canon) ever carries that sentence.
+      const t1 = corpus?.restricted.some((r) => r.key === 'T1' && v.includes(r.text));
+      // Only this field: the same words may be printed in clear elsewhere (ALPHA-01's terrain is
+      // part of its released location line), which documents already show at baseline.
+      o[field] = rx(path, t1 ? 'T1' : key, v, false);
+    }
+  }
+  // Literal copies: tier-1/compartment text a document withholds, longest first.
+  for (const r of corpus?.restricted ?? []) {
+    if (!scrubKeys.has(r.text)) {
+      scrubKeys.set(r.text, `[[RX:${r.key}:${r.text.length}]]`);
+      withheld.push({ path: `content:${r.file}`, key: r.key, text: r.text, scrub: true });
+    }
+  }
+
   // Scrub pass: a withheld string quoted anywhere else (notes, glossary, cover text) is
   // replaced by the same sentinel. Longest first, so a name inside an address is not split.
   const scrubbed: string[] = [];
@@ -576,14 +937,73 @@ export function adjacentSites(c: Pick<Canon, 'railSegments' | 'tramNetworks'>, h
   return out;
 }
 
+// ---------------------------------------------------------------------------------------
+// CANON-T2 release (docs/canon/extended-c.md, "Restricted values"). Every value the client
+// canon withholds under key T2, as { "<dot path>": "<value>" }, encoded with the release codec
+// under key CANON-T2 and written to public/data/releases/<releaseFileName('CANON-T2')>.json.
+// src/core/canon-release.ts loads it for a session that satisfies T2. Tier 1 values and
+// compartment-keyed values (SEXTANT, HOLLOW, ...) are never written.
+// ---------------------------------------------------------------------------------------
+
+export const RELEASES_DIR = resolve(ROOT, 'public/data/releases');
+
+export function buildCanonT2(canon: Canon, corpus?: RedactionCorpus): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const w of buildClientCanon(canon, corpus).withheld) if (w.key === 'T2') out[w.path] = w.text;
+  // Numbers the client canon nulls under T2: GAMMA depth of record, tier 2 reserve values.
+  for (const f of canon.facilities) if (f.class === 'GAMMA' && typeof f.depthFt === 'number') out[`facilities.${f.id}.depthFt`] = String(f.depthFt);
+  for (const it of canon.reserves.items) if (it.tier === 2 && it.value !== null) out[`reserves.${it.id}.value`] = String(it.value);
+  // Accounts whose holder's name is Tier 2: the name and personal address, by account id.
+  for (const a of canon.accounts ?? []) {
+    if (a.tier !== 2) continue;
+    const p = canon.roster.find((x) => x.pn === a.pn);
+    if (!p) continue;
+    out[`accounts.${a.id}.name`] = p.name;
+    out[`accounts.${a.id}.rosterEmail`] = p.email;
+  }
+  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
+}
+
+/** Path of the CANON-T2 release file under a releases directory. */
+export const canonT2File = (dir = RELEASES_DIR): string => resolve(dir, `${releaseFileName(CANON_T2_KEY)}.json`);
+
+/** Write the encoded CANON-T2 release; returns the file path. */
+export function writeCanonT2Release(canon: Canon, dir = RELEASES_DIR, corpus?: RedactionCorpus): string {
+  mkdirSync(dir, { recursive: true });
+  const file = canonT2File(dir);
+  writeFileSync(file, JSON.stringify(encodeRelease(CANON_T2_KEY, buildCanonT2(canon, corpus))));
+  return file;
+}
+
+/**
+ * The client canon as shipped: tier-1 roster rows are dropped entirely (every cell is withheld,
+ * and their personnel numbers are tier-1 too). Build scripts keep the full-length roster from
+ * buildClientCanon so rows pair with the full canon by index.
+ */
+export function shipClientCanon(client: Canon): Canon {
+  return { ...client, roster: client.roster.filter((p) => p.tier !== 1) };
+}
+
+/**
+ * content/canon/canon.shell.json: the parts of the shipped client canon that the shell and core
+ * need at boot (meta for the in-world clock, accounts for the lock screen). Same values, so it
+ * withholds exactly what the client canon withholds.
+ */
+export function shellCanon(client: Canon): Pick<Canon, 'meta' | 'accounts'> {
+  return { meta: client.meta, accounts: client.accounts };
+}
+
 /** JSON with stable formatting (schema key order is already applied by Zod parse). */
 export function serialize(c: Canon): string {
   return JSON.stringify(c, null, 2) + '\n';
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const inputs = loadInputs();
   const { canon, warnings, errors } = buildCanon(inputs);
+  const apps = await validateAppFragments(canon.apps ?? {});
+  errors.push(...apps.errors);
+  if (apps.unchecked.length) warnings.push(`apps without a schema in src/core/canon-apps (not validated): ${apps.unchecked.join(', ')}`);
   for (const w of warnings) console.warn(`canon-merge: warning: ${w}`);
   if (errors.length) {
     for (const e of errors) console.error(`canon-merge: error: ${e}`);
@@ -593,7 +1013,10 @@ function main(): void {
   const out = resolve(CANON_DIR, 'canon.json');
   writeFileSync(out, serialize(canon));
 
-  const { client, withheld, scrubbed } = buildClientCanon(canon);
+  const corpus = contentCorpus();
+  const built = buildClientCanon(canon, corpus);
+  const { withheld, scrubbed } = built;
+  const client = shipClientCanon(built.client);
   const cp = clientCanonSchema.safeParse(client);
   if (!cp.success) {
     for (const issue of cp.error.issues) console.error(`canon-merge: error: client schema: ${issue.path.join('.')}: ${issue.message}`);
@@ -609,7 +1032,14 @@ function main(): void {
   }
   const clientOut = resolve(CANON_DIR, 'canon.client.json');
   writeFileSync(clientOut, clientText);
+  // The shell's own slice of the client canon (F2, shell budget): the boot path imports only
+  // this, so the full client canon stays in the app chunks that need it.
+  const shellOut = resolve(CANON_DIR, 'canon.shell.json');
+  writeFileSync(shellOut, JSON.stringify(shellCanon(client), null, 2) + '\n');
+  console.log(`canon-merge: content corpus: ${corpus.restricted.length} tier-1/compartment fragments, ${corpus.paths.length} redacted canon paths (${corpus.publicElsewhere} fragments public elsewhere)`);
   console.log(`canon-merge: wrote ${clientOut} (${withheld.length} values withheld${scrubbed.length ? `; scrubbed from ${scrubbed.join(', ')}` : ''})`);
+  const t2 = writeCanonT2Release(canon, undefined, corpus);
+  console.log(`canon-merge: wrote ${t2} (${CANON_T2_KEY}, ${Object.keys(buildCanonT2(canon, corpus)).length} values)`);
 
   // Info only: stated tunnel lengths come from the lore source (docs/canon/inconsistencies.md item 16).
   const short = tunnelShorterThanCrowFlies(canon);
@@ -623,4 +1053,8 @@ function main(): void {
 }
 
 const invoked = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : '';
-if (invoked === import.meta.url) main();
+if (invoked === import.meta.url)
+  main().catch((e: unknown) => {
+    console.error(`canon-merge: ${(e as Error).stack ?? String(e)}`);
+    process.exit(1);
+  });

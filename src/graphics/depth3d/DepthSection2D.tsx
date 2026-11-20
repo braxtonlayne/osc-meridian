@@ -5,7 +5,7 @@
  */
 import type { JSX } from 'preact';
 import './depth3d.css';
-import { PLAN, buildSiteModel, fmtFt, isWithheld, spreadLabels, tickLabelStep, titleBlock } from './model';
+import { PLAN, buildSiteModel, fmtFt, isWithheld, spreadLabels, tickLabelStep, titleBlock, type SiteModel } from './model';
 
 export interface DepthSection2DProps {
   facilityId: string;
@@ -16,27 +16,42 @@ export interface DepthSection2DProps {
   /** Drawing size in px; the SVG scales to its container width. */
   width?: number;
   height?: number;
+  /**
+   * Depth printed beside each level: its top (default; dossiers and the depth register) or its floor,
+   * which is the landing depth a hoist serves (canon hoists stops), so the hoist console reads one figure.
+   */
+  levelDepth?: 'top' | 'floor';
 }
 
 const px = (n: number): number => Math.round(n) + 0.5;
 
-export function DepthSection2D({ facilityId, tier, selected = null, onSelectLevel, width = 760, height = 640 }: DepthSection2DProps): JSX.Element {
-  const m = buildSiteModel(facilityId);
-  if (!m) {
-    return <p class="d3v-none">No depth section is held for {facilityId}.</p>;
-  }
-  const gL = 68;
+/** Left gutter (depth scale) and top / bottom padding of the elevation drawing, px. */
+export const SECTION_GUTTER_L = 68;
+export const SECTION_PAD_T = 14;
+export const SECTION_PAD_B = 58;
+
+/**
+ * The elevation's model-to-pixel transform for a drawing of `width` x `height` (margins, fit,
+ * centring). Overlays drawn over a DepthSection2D (hoist ShaftElevation) use this to register.
+ */
+export function sectionTransform(m: SiteModel, width: number, height: number): { X: (x: number) => number; Y: (y: number) => number; s: number; gL: number; gR: number; availW: number; availH: number } {
+  const gL = SECTION_GUTTER_L;
   const gR = Math.min(256, Math.round(width * 0.36));
-  const padT = 14;
-  const padB = 58;
   const availW = Math.max(60, width - gL - gR);
-  const availH = Math.max(60, height - padT - padB);
+  const availH = Math.max(60, height - SECTION_PAD_T - SECTION_PAD_B);
   const b = m.bounds;
   const s = Math.min(availH / (b.y1 - b.y0), availW / (b.x1 - b.x0));
   const cx = (b.x0 + b.x1) / 2;
   const cy = (b.y0 + b.y1) / 2;
-  const X = (x: number): number => gL + availW / 2 + (x - cx) * s;
-  const Y = (y: number): number => padT + availH / 2 - (y - cy) * s;
+  return { X: (x) => gL + availW / 2 + (x - cx) * s, Y: (y) => SECTION_PAD_T + availH / 2 - (y - cy) * s, s, gL, gR, availW, availH };
+}
+
+export function DepthSection2D({ facilityId, tier, selected = null, onSelectLevel, width = 760, height = 640, levelDepth = 'top' }: DepthSection2DProps): JSX.Element {
+  const m = buildSiteModel(facilityId);
+  if (!m) {
+    return <p class="d3v-none">No depth section is held for {facilityId}.</p>;
+  }
+  const { X, Y, s, gR } = sectionTransform(m, width, height);
   const rect = (bx: { x0: number; x1: number; y0: number; y1: number }): { x: number; y: number; width: number; height: number } => {
     const x = px(X(bx.x0));
     const y = px(Y(bx.y1));
@@ -141,7 +156,7 @@ export function DepthSection2D({ facilityId, tier, selected = null, onSelectLeve
             <text x={labelX} y={ly + 3.5}>
               <tspan class="d3v2-mono">{String(l.n).padStart(2, '0')}</tspan>
               <tspan class="d3v2-mono" x={labelX + 50} text-anchor="end">
-                {fmtFt(l.topFt)}
+                {fmtFt(levelDepth === 'floor' ? l.topFt + l.heightFt : l.topFt)}
               </tspan>
               {!withheld && <tspan x={labelX + 58}>{name}</tspan>}
             </text>

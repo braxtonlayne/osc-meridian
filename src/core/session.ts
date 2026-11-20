@@ -7,11 +7,16 @@
  *     source of truth shared with content, mail, the calendar and the graphics.
  *     Example: real 19 NOV 2026 14:30 local -> in-world 19 MAY 2008 14:30, and the
  *     same date on any other real day.
- *   - Site-local time for ALPHA-03 is US Eastern. Because the in-world date is
- *     always in May (daylight time), site-local is always UTC-4 and labelled EDT,
- *     whatever the visitor's real season.
+ *   - Site-local time is the signed-in account's site: US zone of the facility's anchor
+ *     state in canon (ALPHA-03 Kentucky and ALPHA-01 Virginia: EDT, UTC-4; GAMMA-08
+ *     Texas: CDT, UTC-5). ALPHA-02's anchor is withheld in the client canon, so its zone
+ *     is the documented one for the deputy's account (MDT, UTC-6; docs/narrative-2/accounts.md).
+ *     The in-world date is always in May, so the label is always the daylight-time one,
+ *     whatever the visitor's real season. Default before sign-in: EDT.
  *
  * PROBATION DAY RULE:
+ *   Accounts not on probation (AccountDef.probationStart null) have probationDay 0;
+ *   the shell then hides the day count.
  *   probationDay = (in-world date - canon.operator.probationStart) in whole days + 1,
  *   clamped to 1..90 (the probationary transfer is 90 days). With the canonical
  *   start of 14 APR 2008 and the fixed date 19 MAY 2008 this yields day 36.
@@ -19,8 +24,10 @@
 import { computed, signal } from '@preact/signals';
 import type { CompartmentId, TierNo } from './canon-types';
 import { load, save } from './persist';
-// Named JSON import: Vite bundles only the meta object, not the whole client canon.
-import { meta as canonMeta } from '@canon';
+// The shell slice of the client canon (canon-merge writes content/canon/canon.shell.json): a
+// named import from '@canon' still pulls the whole client canon into the shell chunk graph.
+import shellCanon from '../../content/canon/canon.shell.json';
+const canonMeta = shellCanon.meta;
 
 /** The in-world date, ISO ("2008-05-19"), from canon. */
 export const IN_WORLD_DATE_ISO: string = canonMeta.inWorldDate;
@@ -55,13 +62,21 @@ export function zulu(now: Date = new Date()): string {
   return `${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}Z`;
 }
 
-/** Site-local (ALPHA-03, Eastern Daylight, UTC-4) "1030 EDT". */
-export function siteLocal(now: Date = new Date()): string {
-  const h = (now.getUTCHours() + 24 - 4) % 24;
-  return `${pad2(h)}${pad2(now.getUTCMinutes())} EDT`;
+/** Site-local zone of the signed-in account (see the rule above). */
+export interface SiteZone {
+  abbr: string;
+  offsetH: number;
+}
+export const siteZone = signal<SiteZone>({ abbr: 'EDT', offsetH: -4 });
+
+/** Site-local "1030 EDT" in the account's site zone (or `zone`). */
+export function siteLocal(now: Date = new Date(), zone: SiteZone = siteZone.peek()): string {
+  const h = (((now.getUTCHours() + zone.offsetH) % 24) + 24) % 24;
+  return `${pad2(h)}${pad2(now.getUTCMinutes())} ${zone.abbr}`;
 }
 
-export function probationDayFor(probationStartIso: string, now: Date = new Date()): number {
+export function probationDayFor(probationStartIso: string | null, now: Date = new Date()): number {
+  if (probationStartIso == null) return 0;
   const start = Date.parse(probationStartIso + 'T00:00:00Z');
   if (Number.isNaN(start)) return 1;
   const days = Math.floor((inWorldDate(now).getTime() - start) / 86400000) + 1;
@@ -81,7 +96,9 @@ export const baseTier = signal<TierNo>(3);
 export const site = signal('ALPHA-03');
 export const divisionId = signal('RD');
 export const displayName = signal('');
-export const probationStart = signal('2008-04-14');
+export const probationStart = signal<string | null>('2008-04-14');
+/** Role line for the session panel (AccountDef.roleTitle). */
+export const roleTitle = signal('');
 export const compartments = signal<CompartmentId[]>([]);
 export const actingTier2 = signal(false);
 export const flags = signal<Record<string, boolean>>({});
@@ -108,10 +125,12 @@ export async function initSession(op: {
   site: string;
   divisionId: string;
   displayName: string;
-  probationStart: string;
+  probationStart: string | null;
   compartments: CompartmentId[];
+  roleTitle?: string;
 }): Promise<void> {
   operatorId.value = op.operatorId;
+  roleTitle.value = op.roleTitle ?? '';
   baseTier.value = op.tier;
   site.value = op.site;
   divisionId.value = op.divisionId;

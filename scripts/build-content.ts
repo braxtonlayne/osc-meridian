@@ -70,6 +70,8 @@ try {
   console.log(
     `[content]${dryRun ? ' DRY RUN (nothing written)' : ''}${lenient ? ' LENIENT' : ''}${only ? ` scope ${only}` : ''} ` +
       `${r.routes.length} routes (${[...fam].map(([f, n]) => `${f} ${n}`).join(', ') || 'none'}); ` +
+      `variants ${r.variants.length}${Object.keys(r.accountSearch).length ? ` (search@ ${Object.keys(r.accountSearch).join(', ')})` : ''}; ` +
+      `t4 ${r.routes.filter((e) => e.t4).length}; ` +
       `releases ${keys.join(' ') || 'none'}; ${r.figures.length} drift rules; ` +
       `manifest ${manifestDocNos ? `${manifestDocNos.size} docNos` : 'none'}; base ${base}; ${Date.now() - t0} ms`,
   );

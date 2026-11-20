@@ -189,7 +189,7 @@ export function BudgetSankey({
 
   const nodeProps = (ref: NodeRef, label: string, extra: SVGAttributes<SVGGElement> = {}): SVGAttributes<SVGGElement> => ({
     role: 'button',
-    tabIndex: 0,
+    tabindex: 0,
     'aria-label': label,
     onMouseEnter: () => setTip({ ref }),
     onFocus: () => setTip({ ref }),
@@ -570,7 +570,7 @@ function HBars({
           const interactive: SVGAttributes<SVGGElement> = onSelect
             ? {
                 role: 'button',
-                tabIndex: 0,
+                tabindex: 0,
                 class: 'lg-click',
                 onClick: () => onSelect(r.id),
                 onKeyDown: onKeyActivate(() => onSelect(r.id)),
@@ -732,7 +732,7 @@ export function FiscalYearChart({ width, height, highlight = null, onSelect, leg
           const interactive: SVGAttributes<SVGGElement> = onSelect
             ? {
                 role: 'button',
-                tabIndex: 0,
+                tabindex: 0,
                 class: 'lg-click',
                 onClick: () => onSelect(r.fy),
                 onKeyDown: onKeyActivate(() => onSelect(r.fy)),

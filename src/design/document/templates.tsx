@@ -79,6 +79,12 @@ function resolveRef(ctx: TemplateCtx, ref: string): ComponentChildren {
   );
 }
 
+/** Body paragraphs already carry their own "1." markers. */
+function handNumbered(html: string | undefined): boolean {
+  const first = html ? /<p>([\s\S]*?)<\/p>/.exec(html) : null;
+  return !!first && /^\s*(?:<[^>]+>\s*)*1\.\s/.test(first[1]!);
+}
+
 /* ---------------- memo ---------------- */
 
 function memo(ctx: TemplateCtx): TemplateParts {
@@ -92,7 +98,9 @@ function memo(ctx: TemplateCtx): TemplateParts {
   const s = sig(fm, 'signature');
   const atts = strs(fm, 'attachments');
   const cc = strs(fm, 'cc');
-  const numbered = fm.numbered !== false;
+  // Paragraphs are numbered by the sheet unless the author numbered them by hand ("1. Passes."),
+  // which would read "1. 1. Passes.".
+  const numbered = fm.numbered !== false && !handNumbered(doc.html);
   return {
     bodyClass: numbered ? 'doc-body--numbered' : undefined,
     head: (
@@ -255,7 +263,7 @@ function cable(ctx: TemplateCtx): TemplateParts {
     </div>
   );
   return {
-    bodyClass: 'doc-body--cable',
+    bodyClass: handNumbered(doc.html) ? 'doc-body--cable doc-body--cable-hand' : 'doc-body--cable',
     head: (
       <div class="cbl-head">
         <div class="cbl-mark">{ctx.markingLabel}</div>

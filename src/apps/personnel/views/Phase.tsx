@@ -17,8 +17,8 @@ export function CumulativeTable({ current }: { current?: number }) {
     { key: 'years', header: 'Years', width: 84, mono: true },
     { key: 'title', header: 'Title', render: (p) => p.title },
     { key: 'status', header: 'Status', width: 112, sortValue: (p) => p.status, render: (p) => <StatusLight status={STATUS[p.status]} word={p.status} /> },
-    { key: 'rec', header: 'Recruited', align: 'right', mono: true, sortValue: (p) => p.recruited ?? -1, render: (p) => (p.recruited === null ? '' : fmt(p.recruited)) },
-    { key: 'cum', header: 'Cumulative or target', align: 'right', mono: true, sortValue: (p) => level(p) ?? -1, render: (p) => (level(p) === null ? '' : `${fmt(level(p)!)}${p.cumulative === null ? ' (target)' : ''}`) },
+    { key: 'rec', header: 'Recruited', width: 96, align: 'right', mono: true, sortValue: (p) => p.recruited ?? -1, render: (p) => (p.recruited === null ? '' : fmt(p.recruited)) },
+    { key: 'cum', header: 'Cumulative or target', width: 170, wrap: true, align: 'right', mono: true, sortValue: (p) => level(p) ?? -1, render: (p) => (level(p) === null ? '' : `${fmt(level(p)!)}${p.cumulative === null ? ' (target)' : ''}`) },
     {
       key: 'bar',
       header: 'Strength',

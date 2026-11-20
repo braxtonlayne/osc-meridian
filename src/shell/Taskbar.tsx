@@ -3,9 +3,10 @@
  * (ALPHA hub links, mail, print queue, session timer) and the clock.
  */
 import { signal } from '@preact/signals';
+import { closeWorldText } from '@core/closed-world';
 import { useEffect, useRef } from 'preact/hooks';
 import type { AppId } from '@core/contracts';
-import { APPS } from '@apps/index';
+import { APPS, OFFICE_APP_IDS, PLANT_APP_IDS, appById } from '@apps/index';
 import { printQueue, recent, services, handheldActive } from '@core/services';
 import * as session from '@core/session';
 import { Icon, canonNow } from './adapters';
@@ -15,13 +16,14 @@ import { MenuList, openMenu, SEP } from './Menu';
 import type { MenuItem } from './Menu';
 import { runOpen, searchOpen, doLock, doLogoff } from './state';
 import { seg04 } from '@narrative/seg04';
+import { isolatedAt, isolation, latestInitiation } from './isolation';
 
 export const directoryOpen = signal(false);
 const trayPopup = signal<'links' | 'session' | null>(null);
 
 /* ------------------------------------------------------------ hub links */
 
-export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED' | 'BUSY';
+export type LinkState = 'LOCAL' | 'NOMINAL' | 'DEGRADED' | 'BUSY' | 'DOWN';
 
 /** Hub at the far end of segment 04 (the narrative movement runs ALPHA-05 to ALPHA-03). */
 const SEG04_HUB = 'ALPHA-05';
@@ -32,27 +34,62 @@ const SEG04_HUB = 'ALPHA-05';
  * per hub; during re-key the link is reported DEGRADED. Otherwise NOMINAL.
  * While the segment 04 movement is running (narrative engine, start..end) the
  * ALPHA-05 link reports BUSY: the hub is carrying the unbooked movement's traffic.
+ * While the network is isolated (shared key `isolation`) every remote hub is DOWN. Otherwise a
+ * direct hub route that the patch panel reports DOWN or DEGRADED (shared key `patch`, `links`,
+ * keyed "A|B" sorted; patching and test faults only) shows that state and note.
  */
+interface PatchLink {
+  state?: unknown;
+  note?: unknown;
+}
+const patchShared = services.shared.get<{ links?: Record<string, PatchLink> } | null>('patch', null);
+
 export function hubLinks(now: number): { id: string; state: LinkState; note: string }[] {
   const minute = new Date(now).getUTCMinutes();
   const ev = seg04.value;
   const segActive = !!ev && now >= ev.start && now <= ev.end;
+  const iso = isolation.value;
+  const isolated = isolatedAt(iso, now);
+  const isoRef = latestInitiation(iso)?.ref;
+  const plinks = patchShared.value?.links;
+  const patched = (id: string): PatchLink | undefined => {
+    const l = plinks && typeof plinks === 'object' ? plinks[[session.site.value, id].sort().join('|')] : undefined;
+    return l && typeof l === 'object' ? l : undefined;
+  };
   const hubs = canonNow()
     .facilities.filter((f) => f.class === 'ALPHA')
     .map((f) => f.id)
     .sort();
   return hubs.map((id, i) => {
     if (id === session.site.value) return { id, state: 'LOCAL' as const, note: 'This site' };
+    if (isolated) return { id, state: 'DOWN' as const, note: `Hub circuit down; network isolated${isoRef ? ` by manual initiate ${isoRef}` : ''}` };
+    const p = patched(id);
+    const pnote = typeof p?.note === 'string' && p.note ? p.note : null;
+    if (p?.state === 'DOWN') return { id, state: 'DOWN' as const, note: pnote ?? 'Hub circuit down; data bearer out of service' };
     if (segActive && id === SEG04_HUB) return { id, state: 'BUSY' as const, note: 'Link saturated; segment 04 movement traffic. Controlled mail queued' };
     const start = (i * 13 + 7) % 60;
     const inRekey = (minute - start + 60) % 60 < 3;
+    if (p?.state === 'DEGRADED') return { id, state: 'DEGRADED' as const, note: pnote ?? 'Circuit fault on the route; traffic queued' };
     return inRekey
       ? { id, state: 'DEGRADED' as const, note: 'QKD re-key in progress; traffic queued' }
       : { id, state: 'NOMINAL' as const, note: 'Link up; key current' };
   });
 }
 
-const stClass = (s: LinkState) => (s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
+/**
+ * Tier 4 closed world (SPEC-2 §1): the operator's tray shows one network link (the worst of the hub
+ * links), not the hubs by name.
+ */
+export function closedLinks(links: { id: string; state: LinkState; note: string }[]): { id: string; state: LinkState; note: string }[] {
+  const rank: Record<string, number> = { DOWN: 3, DEGRADED: 2, BUSY: 1, NOMINAL: 0, LOCAL: -1 };
+  const remote = links.filter((l) => l.state !== 'LOCAL');
+  const worst = remote.reduce<(typeof links)[number] | null>((w, l) => (!w || (rank[l.state] ?? 0) > (rank[w.state] ?? 0) ? l : w), null);
+  if (!worst) return [];
+  const note = worst.state === 'NOMINAL' ? 'Link up; key current' : closeWorldText(worst.note, session.site.value);
+  return [{ id: 'NETWORK', state: worst.state, note }];
+}
+
+const stClass = (s: LinkState) => (s === 'DOWN' ? 'st-fault' : s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
 
 /* --------------------------------------------------------------- clock */
 
@@ -67,10 +104,12 @@ export function sessionElapsed(now: number): string {
   return `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
 }
 
+const ZONE_NAMES: Record<string, string> = { EDT: 'Eastern', CDT: 'Central', MDT: 'Mountain', MST: 'Mountain', PDT: 'Pacific' };
+
 function Clock() {
   const now = new Date(session.tick.value);
   return (
-    <div class="tray-clock" title={`In-world date ${session.formatInWorldDate(now)}. Site-local time is ALPHA-03 (Eastern).`}>
+    <div class="tray-clock" title={`In-world date ${session.formatInWorldDate(now)}. Site-local time is ${session.site.value} (${ZONE_NAMES[session.siteZone.value.abbr] ?? session.siteZone.value.abbr}).`}>
       <span class="mono">{session.zulu(now)}</span>
       <span class="mono tray-clock-local">({session.siteLocal(now)})</span>
       <span class="tray-clock-date">{session.formatInWorldDate(now)}</span>
@@ -85,7 +124,8 @@ export function SessionPanel() {
   const comps = session.compartments.value;
   const tier = session.tier.value;
   const acting = session.actingTier2.value;
-  const div = c.divisions.find((d) => d.id === session.divisionId.value)?.name ?? session.divisionId.value;
+  // CMD (a facility's command section) is not a canon division.
+  const div = c.divisions.find((d) => d.id === session.divisionId.value)?.name ?? (session.divisionId.value === 'CMD' ? 'Facility Command' : session.divisionId.value);
   return (
     <table class="session-panel">
       <tbody>
@@ -97,8 +137,12 @@ export function SessionPanel() {
           <th scope="row">Tier</th>
           <td>
             Tier {tier}
-            {acting ? ' (acting)' : ' (probationary analyst)'}
+            {acting ? ' (acting)' : ''}
           </td>
+        </tr>
+        <tr>
+          <th scope="row">Role</th>
+          <td>{session.roleTitle.value}</td>
         </tr>
         <tr>
           <th scope="row">Compartments</th>
@@ -110,12 +154,14 @@ export function SessionPanel() {
             {session.site.value}, {div}
           </td>
         </tr>
-        <tr>
-          <th scope="row">Probation</th>
-          <td>
-            Day {session.probationDay.value} of {session.PROBATION_LENGTH_DAYS}
-          </td>
-        </tr>
+        {session.probationStart.value != null && (
+          <tr>
+            <th scope="row">Probation</th>
+            <td>
+              Day {session.probationDay.value} of {session.PROBATION_LENGTH_DAYS}
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );
@@ -147,7 +193,13 @@ export function DirectoryMenu() {
     return () => window.removeEventListener('pointerdown', down, true);
   }, []);
 
-  const appItems: MenuItem[] = APPS.map((a) => ({ label: a.title, action: () => services.openApp(a.id as AppId) }));
+  const items = (ids: readonly AppId[]): MenuItem[] =>
+    ids.flatMap((id) => {
+      const a = appById(id);
+      return a ? [{ label: a.title, action: () => services.openApp(a.id) }] : [];
+    });
+  const appItems = items(OFFICE_APP_IDS);
+  const plantItems = items(PLANT_APP_IDS);
   // App home routes are already listed (Applications, and the shortcuts above), so recent
   // documents show documents only.
   const recents = recent.value.filter((p) => !APPS.some((a) => a.homeRoute === p)).slice(0, 6);
@@ -189,6 +241,10 @@ export function DirectoryMenu() {
         <div class="dir-col">
           <div class="dir-col-h">Applications</div>
           <MenuList items={appItems} label="Applications" onDone={close} />
+        </div>
+        <div class="dir-col">
+          <div class="dir-col-h">Plant and Operations</div>
+          <MenuList items={plantItems} label="Plant and Operations" onDone={close} autoFocus={false} />
         </div>
         <div class="dir-col">
           <div class="dir-col-h">Documents and recent</div>
@@ -256,7 +312,7 @@ function TaskButton({ w }: { w: Win }) {
 
 function Tray() {
   const now = session.tick.value;
-  const links = hubLinks(now);
+  const links = session.tier.value === 4 ? closedLinks(hubLinks(now)) : hubLinks(now);
   const unread = services.mail.unread.value;
   const pq = printQueue.value;
   const pop = trayPopup.value;
@@ -283,8 +339,8 @@ function Tray() {
       <button
         type="button"
         class="tray-item tray-links"
-        title={`Hub links: ${linkSummary}`}
-        aria-label={`Hub links: ${linkSummary}`}
+        title={`${session.tier.value === 4 ? 'Network link' : 'Hub links'}: ${linkSummary}`}
+        aria-label={`${session.tier.value === 4 ? 'Network link' : 'Hub links'}: ${linkSummary}`}
         aria-expanded={pop === 'links'}
         onClick={() => (trayPopup.value = pop === 'links' ? null : 'links')}
       >
@@ -310,7 +366,7 @@ function Tray() {
       <Clock />
       {pop === 'links' && (
         <div class="tray-pop" role="dialog" aria-label="Hub link state">
-          <div class="tray-pop-h">Hub links from {session.site.value}</div>
+          <div class="tray-pop-h">{session.tier.value === 4 ? 'Network link' : 'Hub links'} from {session.site.value}</div>
           <table class="tray-table">
             <tbody>
               {links.map((l) => (

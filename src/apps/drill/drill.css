@@ -1,0 +1,301 @@
+/* Seal Drill Coordinator. Tokens only; unlayered. */
+.sd-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+}
+.sd-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  border-top: 1px solid var(--chrome-shadow);
+  border-bottom: 1px solid var(--chrome-hi);
+}
+.sd-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+.sd-side {
+  flex: 0 0 368px;
+  min-height: 0;
+  overflow: auto;
+  border-left: 1px solid var(--chrome-shadow);
+  background: var(--chrome-face);
+  padding: var(--sp-2);
+}
+.sd-root.is-narrow .sd-body {
+  flex-direction: column;
+  overflow: auto;
+}
+.sd-root.is-narrow .sd-main {
+  flex: 0 0 auto;
+  min-height: 380px;
+}
+.sd-root.is-narrow .sd-side {
+  flex: 0 0 auto;
+  border-left: 0;
+  border-top: 1px solid var(--chrome-shadow);
+  overflow: visible;
+}
+.sd-side .pk-frame,
+.sd-sitepanel .pk-frame {
+  max-width: 100%;
+}
+.sd-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.sd-note {
+  color: var(--text-2);
+  margin: var(--sp-2);
+}
+.sd-pad {
+  padding: var(--sp-3);
+}
+.sd-caption {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin: var(--sp-1) 0;
+}
+.sd-sel {
+  margin-top: var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  padding: var(--sp-2);
+}
+.sd-notes {
+  margin: var(--sp-2) 0 0;
+  padding-left: 16px;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+
+/* map */
+.sd-mapwrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+}
+.sd-key {
+  position: absolute;
+  right: var(--sp-2);
+  bottom: var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--chrome-outer);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-xs);
+  line-height: 16px;
+  color: var(--text-1);
+}
+.sd-key-title {
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.sd-key-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.sd-key-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: var(--sp-3);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+/* line diagram */
+.sd-mimic {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sd-mimic-board {
+  flex: 1 1 auto;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+}
+.sd-mimic-foot {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--chrome-shadow);
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--chrome-face);
+}
+.sd-voice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-1);
+}
+.sd-voice .sd-caption {
+  margin: 0;
+}
+.sd-voice-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: var(--fs-xs) var(--font-ui);
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  padding: 1px 6px;
+  color: var(--text-1);
+}
+.sd-voice-site.is-sel {
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+.sd-voice-site:focus-visible {
+  outline: 1px dotted var(--focus-ring);
+  outline-offset: 1px;
+}
+
+/* timeline */
+.sd-timeline {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sd-tl-head {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-4);
+  justify-content: space-between;
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  border-bottom: 1px solid var(--row-rule);
+  background: var(--chrome-face);
+}
+.sd-tl-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.sd-sw {
+  display: inline-block;
+  width: 14px;
+  height: 8px;
+  margin-left: 6px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+.sd-sw--wait {
+  background: var(--surface);
+  border: 1px solid var(--text-2);
+}
+.sd-sw--doors {
+  background: var(--title-inactive-bg);
+  border: 1px solid var(--chrome-outer);
+}
+.sd-sw--checks {
+  background: var(--title-active-bg);
+}
+.sd-sw--held {
+  background: var(--chrome-face);
+  border: 1px dashed var(--text-2);
+}
+.sd-sw--by {
+  width: 1px;
+  height: 12px;
+  border-left: 1px dashed var(--text-3);
+}
+.sd-tl-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* log */
+.sd-logwrap,
+.sd-log,
+.sd-register {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sd-cable {
+  font-family: var(--font-typed);
+  font-size: var(--fs-sm);
+}
+.sd-linebar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--chrome-face);
+  border-top: 1px solid var(--chrome-shadow);
+  font-size: var(--fs-xs);
+}
+
+/* documents */
+.sd-doc {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* site panel (Tier 4) */
+.sd-sitepanel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-3);
+  background: var(--chrome-face);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: flex-start;
+}
+.sd-sitenote {
+  flex: 1 1 260px;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  padding: var(--sp-2) var(--sp-3);
+}
+.sd-sitenote p {
+  margin: 0 0 var(--sp-2);
+}
+
+/* order dialog */
+.sd-dlg-p {
+  margin: 0 0 var(--sp-2);
+  max-width: 460px;
+}
+.sd-dlg-warn {
+  font-weight: var(--fw-bold);
+}
+
+/* The viewer's own command on the drill map (square outline; positions held under SEXTANT are noted in the key instead). */
+.sd-own {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 2;
+}

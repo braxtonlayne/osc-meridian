@@ -23,6 +23,7 @@ import { logBaseFrom, TIMETABLE_DOCNO, useBoard, useBoardReport, useSeg04Watch, 
 import { GeoView } from './geo';
 import { Tunnel3DView } from './tunnel3d';
 import { Detail, DiagramView, EnvironmentView, LogView, MovementTable, MovementsView, PossessionView, TimetableView, useSize, type Snapshot } from './views';
+import { T4Home, t4Refused } from './acct';
 import './transit.css';
 
 const canon = canonJson as unknown as Canon;
@@ -62,7 +63,18 @@ function accessKey(r: RouteEntry): string | null {
   return r.access.compartment ? `${r.access.compartment}+T${r.access.tier}` : `T${r.access.tier}`;
 }
 
-export default function App({ win, route }: AppProps) {
+/**
+ * Tier 4 closed world (SPEC-2 §1): the Network Control board shows every hub, site and segment, so a
+ * Tier 4 session gets the in-world refusal instead (pages marked for Tier 4 still open).
+ */
+export default function App(props: AppProps) {
+  const services = useServices();
+  const entry = props.route ?? services.docs.byDocNo(TIMETABLE_DOCNO) ?? null;
+  if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Transit Control" docNo={entry?.docNo ?? TIMETABLE_DOCNO} />;
+  return <TransitApp {...props} />;
+}
+
+function TransitApp({ win, route }: AppProps) {
   const services = useServices();
   const rootRef = useRef<HTMLDivElement>(null);
   const [rootSize, setRootSize] = useState(0);
@@ -319,6 +331,9 @@ export default function App({ win, route }: AppProps) {
           { id: 'watch', content: watch ? `${watch.watch}: ${watch.dispatcher}` : 'Watch not recorded', label: 'Dispatcher on watch' },
           { id: 'consists', content: `Consists ${state?.trains.length ?? 0}`, mono: true },
           { id: 'blocks', content: `Blocks not clear ${notClear}`, mono: true },
+          ...(state?.holds.isolation || state?.holds.drill
+            ? [{ id: 'holds', content: state.holds.isolation ? `Movements held: isolation ${state.holds.isolation}` : `Departures held: seal drill ${state.holds.drill}`, label: 'Network holds' }]
+            : []),
           { id: 'tt', content: tt ? `${tt.timetable.source} rev ${tt.revision}` : 'No timetable', mono: true },
         ]}
       />

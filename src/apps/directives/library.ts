@@ -5,6 +5,13 @@
 import { computed, signal } from '@preact/signals';
 import type { DocJson, RouteEntry, Services } from '@core/contracts';
 import { buildGraph, rowFromEntry, serialOf, statusOf, type DirRow } from './model';
+import { readableByTier4 } from '@core/docs';
+
+/** Tier 4 sees only directives marked for it or written for it (docs/SPEC-2.md §1). */
+function tier4Readable(services: Services, r: RouteEntry): boolean {
+  if (services.session.tier.peek() !== 4) return true;
+  return readableByTier4(r) || !!r.variants?.includes(services.account.id.peek());
+}
 
 const docs = signal<Record<string, DocJson>>({});
 const failed = signal<string[]>([]);
@@ -15,7 +22,7 @@ let started = false;
 function directiveEntries(services: Services): RouteEntry[] {
   return services.docs
     .all()
-    .filter((r) => r.app === 'directives' && r.template === 'directive')
+    .filter((r) => r.app === 'directives' && r.template === 'directive' && tier4Readable(services, r))
     .sort((a, b) => serialOf(a.docNo) - serialOf(b.docNo) || a.docNo.localeCompare(b.docNo));
 }
 

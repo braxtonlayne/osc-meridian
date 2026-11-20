@@ -1,14 +1,18 @@
 /**
- * Lock screen. The visitor is issued an operator ID and passphrase on a
- * temporary access card and types them. Any input is accepted. Nothing typed is
+ * Lock screen. The visitor is offered the issued access cards (one per account,
+ * docs/SPEC-2.md §1), picks one, and types its operator ID and passphrase
+ * (any input is accepted). Nothing typed is
  * transmitted; nothing typed is stored (the operator ID field is not even kept).
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AccessCard, ClassificationBanner, Seal, SmartToken, canonNow, loadDoc, markingById } from './adapters';
-import { formatInWorldDate, lockReason, signedIn } from '@core/session';
+import { formatInWorldDate, lockReason, operatorId, signedIn } from '@core/session';
 import { services } from '@core/services';
 import { toUrl } from '@core/router';
+import { activeId, allAccounts, cardNo } from '@core/accounts';
+import type { AccountDef, AccountId } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
+import { isolation, reviewNotice } from './isolation';
 
 const COLOPHON_ROUTE = '/system/colophon';
 const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -19,11 +23,63 @@ function formatIsoDate(iso: string): string {
   return y && m && d ? `${d} ${MON[Number(m) - 1] ?? ''} ${y}` : iso;
 }
 
-export function Lock({ onLogin }: { onLogin: () => void }) {
+
+/** Card chooser: the four issued cards as a radio group (arrow keys move, Space/Enter select). */
+function CardChooser({ list, selected, onSelect }: { list: AccountDef[]; selected: AccountId; onSelect: (id: AccountId) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const onKey = (e: KeyboardEvent) => {
+    const i = list.findIndex((a) => a.id === selected);
+    let next: number;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % list.length;
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + list.length) % list.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = list.length - 1;
+    else return;
+    e.preventDefault();
+    const a = list[next];
+    if (!a) return;
+    onSelect(a.id);
+    ref.current?.querySelectorAll<HTMLElement>('[role="radio"]')[next]?.focus();
+  };
+  return (
+    <>
+      <p class="lock-cards-h" id="lock-cards-h">
+        Issued cards. Select the card you are signing in with; each card signs in at its own workstation.
+      </p>
+      <div class="lock-cards" role="radiogroup" aria-labelledby="lock-cards-h" ref={ref} onKeyDown={onKey}>
+        {list.map((a) => {
+          const on = a.id === selected;
+          return (
+            <button
+              key={a.id}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              tabIndex={on ? 0 : -1}
+              class="lock-cardopt"
+              data-account={a.id}
+              onClick={() => onSelect(a.id)}
+            >
+              <span class="lock-cardopt-mark" aria-hidden="true" />
+              <span class="lock-cardopt-id">{a.operatorId}</span>
+              <span class="lock-cardopt-role">
+                Tier {a.tier} &middot; {a.roleTitle}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+export function Lock({ onLogin }: { onLogin: (id: AccountId) => void }) {
   const c = canonNow();
-  const op = c.operator;
+  const list = allAccounts();
+  const current = activeId.value;
   const top = [...c.markings].sort((a, b) => b.rank - a.rank)[0];
   const accredited: MarkingId = top?.id ?? 'UMBRA-EO';
+  const [sel, setSel] = useState<AccountId>(current);
   const [opId, setOpId] = useState('');
   const [pass, setPass] = useState('');
   const [phase, setPhase] = useState<'idle' | 'checking'>('idle');
@@ -31,10 +87,20 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
   const idRef = useRef<HTMLInputElement>(null);
   const reason = lockReason.value;
   const resumed = signedIn.value;
+  const review = reviewNotice(isolation.value);
+  const op = list.find((a) => a.id === sel) ?? list[0]!;
+  const switching = op.id !== current;
 
   useEffect(() => {
     idRef.current?.focus();
   }, []);
+
+  const choose = (id: AccountId) => {
+    if (id === sel) return;
+    setSel(id);
+    setOpId('');
+    setPass('');
+  };
 
   const submit = (e: Event) => {
     e.preventDefault();
@@ -44,7 +110,7 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
     setTimeout(() => {
       setPhase('idle');
       setPass('');
-      onLogin();
+      onLogin(op.id);
     }, 260);
   };
 
@@ -63,18 +129,27 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
                 {c.meta.environment}, release {c.meta.release}
               </div>
               <div class="lock-ws">
-                Workstation A03-5-114 &middot; {op.site} &middot; {formatInWorldDate()}
+                Workstation {op.workstation} &middot; {op.site} &middot; {formatInWorldDate()}
               </div>
             </div>
           </div>
 
+          {review && (
+            <div class="lock-review" role="note">
+              <span class="st-sq st-fault" aria-hidden="true" />
+              <span>{review}</span>
+            </div>
+          )}
+
           {resumed && (
             <div class="lock-status" role="status">
-              {reason === 'timeout'
-                ? 'This workstation was locked after fifteen minutes without input. Your open work has been retained. Sign in to resume.'
-                : reason === 'logoff'
-                  ? 'You have logged off. Open windows were closed. Sign in to begin a new session.'
-                  : 'This workstation is locked. Your open work has been retained. Sign in to resume.'}
+              {switching
+                ? `Signing in with another card logs off operator ${operatorId.value}. Open windows will be closed.`
+                : reason === 'timeout'
+                  ? 'This workstation was locked after fifteen minutes without input. Your open work has been retained. Sign in to resume.'
+                  : reason === 'logoff'
+                    ? 'You have logged off. Open windows were closed. Sign in to begin a new session.'
+                    : 'This workstation is locked. Your open work has been retained. Sign in to resume.'}
             </div>
           )}
 
@@ -100,15 +175,17 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
 
             <section class="lock-signin" aria-labelledby="lock-signin-h">
               <h2 id="lock-signin-h">Sign in</h2>
+              {list.length > 1 && <CardChooser list={list} selected={op.id} onSelect={choose} />}
               <AccessCard
                 operatorId={op.operatorId}
                 passphrase={op.passphrase}
                 site={`${op.site} / ${division.toUpperCase()}`}
                 tier={op.tier}
                 displayName={op.displayName}
-                issued={formatIsoDate(op.probationStart)}
+                issued={op.probationStart ? formatIsoDate(op.probationStart) : formatInWorldDate()}
                 expires="31 MAY 2008"
-                cardNo={`TAC-${op.site.replace('ALPHA-', 'A')}-${op.pn.replace(/\D/g, '').slice(-4)}`}
+                cardNo={cardNo(op)}
+                issuer={`${division.toUpperCase()} · SECURITY OFFICE`}
               />
               <p class="lock-card-note">
                 Temporary access card issued by {division}, {op.site}. Type the operator ID and passphrase exactly as printed.
@@ -139,7 +216,7 @@ export function Lock({ onLogin }: { onLogin: () => void }) {
                 </div>
                 <div class="lock-actions">
                   <button type="submit" class="sh-btn sh-btn-default" disabled={phase === 'checking'}>
-                    {phase === 'checking' ? 'Verifying...' : resumed ? 'Unlock' : 'Sign in'}
+                    {phase === 'checking' ? 'Verifying...' : resumed && !switching ? 'Unlock' : 'Sign in'}
                   </button>
                 </div>
               </form>
@@ -201,7 +278,9 @@ function Colophon({ onClose }: { onClose: () => void }) {
             <>
               <p>
                 <strong>This is a work of fiction.</strong> MERIDIAN, the Office of Strategic Continuity, its facilities, staff,
-                documents and figures are invented. No real agency, programme or person is depicted.
+                documents and figures are invented. Some real public figures, agencies, companies and events are named. They
+                appear only as the public record has them, or in invented background roles. Nothing here is a claim about real
+                people.
               </p>
               <p>
                 The site is static. It makes no network requests to anyone, collects nothing, and asks for no real credentials. The

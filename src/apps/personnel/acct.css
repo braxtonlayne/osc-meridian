@@ -1,0 +1,16 @@
+/* Tier 4 home refusal (acct.tsx). Tokens only. */
+.t4-home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+}
+.t4-home__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-4, 16px);
+}

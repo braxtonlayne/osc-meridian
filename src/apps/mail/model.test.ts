@@ -75,6 +75,12 @@ describe('headers', () => {
     const login = readHeaders(entry, doc({ message: { from: 'a@b.mer', to: [], sent: '141200Z APR 08', arrival: { type: 'login' } } }), { at: '2008-05-22T09:15:00.000Z' });
     expect(login.sent).toBe('141200Z APR 08');
   });
+  it('dates event mail with no arrival rule at its delivery, never before the triggering event', () => {
+    const d = doc({ message: { from: 'plant.eng@g08.fe.mer', to: ['d.voss@g08.fe.mer'], sent: '191230Z MAY 08' } });
+    expect(readHeaders(entry, d, { at: '2008-05-19T21:38:00.000Z', slots: { date: '19 MAY 2008' } }).sent).toBe('192138Z MAY 08');
+    // Login mail (no slots) keeps its own earlier DTG.
+    expect(readHeaders(entry, d, { at: '2008-05-19T21:38:00.000Z' }).sent).toBe('191230Z MAY 08');
+  });
   it('lifts the header block and fills slots for DocumentView', () => {
     const d = doc({ message: { from: 'x@a.mer', to: ['y@b.mer'], slots: ['docNo', 'time'], arrival: { type: 'audit' } } });
     const delivery = { at: '2008-05-21T10:00:00.000Z', slots: { docNo: 'OSC-2008-Q2' } };
@@ -161,5 +167,16 @@ describe('reply and forward', () => {
     const q = quoteBody({ from: 'a@b.mer', to: ['c@d.mer'], cc: [], sent: '201436Z MAY 08', subject: 'S', docNo: 'MSG-08-1', text: 'one\ntwo' });
     expect(q).toContain('-----Original Message-----');
     expect(q).toContain('> one\n> two');
+  });
+});
+
+describe('address slots', () => {
+  it('addresses a site report from the site in its delivery slots', () => {
+    const d = doc({ message: { from: 'bms@{sitemail}.sfc.mer', to: ['duty.officer@{sitemail}.cmd.mer'], slots: ['site'], arrival: { type: 'audit' } } });
+    const delivery = { at: '2008-05-21T10:00:00.000Z', slots: { site: 'GAMMA-08' } };
+    const h = readHeaders(entry, d, delivery);
+    expect(h.from).toBe('bms@g08.sfc.mer');
+    expect(h.to).toEqual(['duty.officer@g08.cmd.mer']);
+    expect(forView(d, h, delivery).frontmatter.from).toBe('bms@g08.sfc.mer');
   });
 });

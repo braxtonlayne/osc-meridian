@@ -1,0 +1,197 @@
+/*
+ * @graphics/patch: jack field and line quality strip chart. Same register as @graphics/panel
+ * (flat fills, 1px bevels, engraved capitals). Tokens only. Selectors prefixed .pt- .
+ */
+  .pt-field {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    user-select: none;
+    touch-action: none;
+  }
+  .pt-field:focus {
+    outline: none;
+  }
+  .pt-field:focus-visible {
+    outline: 1px dotted var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .pt-bay {
+    fill: var(--chrome-face);
+    stroke: var(--chrome-outer);
+  }
+  .pt-strip-bg {
+    fill: color-mix(in srgb, var(--chrome-face) 82%, var(--chrome-shadow));
+    stroke: var(--chrome-shadow);
+    stroke-width: 1;
+  }
+  .pt-title {
+    font: var(--fw-bold) 10px var(--font-ui);
+    letter-spacing: 0.06em;
+    fill: var(--text-1);
+  }
+  .pt-engr {
+    font: var(--fw-semibold) 8px var(--font-ui);
+    letter-spacing: 0.05em;
+    fill: var(--text-2);
+  }
+  .pt-desig {
+    fill: var(--paper);
+    stroke: var(--chrome-shadow);
+    stroke-width: 1;
+  }
+  .pt-desig__t {
+    font: var(--fw-semibold) 8.5px var(--font-mono);
+    fill: var(--text-1);
+  }
+  .pt-desig__t2 {
+    font: 7.5px var(--font-mono);
+    fill: var(--text-2);
+    letter-spacing: 0.02em;
+  }
+  .pt-desig__rx {
+    fill: var(--redact);
+  }
+  .pt-pencil {
+    font: italic 8px var(--font-doc);
+    fill: var(--text-2);
+  }
+  .pt-lamp {
+    stroke: var(--chrome-outer);
+    stroke-width: 1;
+  }
+  .pt-lamp--idle {
+    fill: color-mix(in srgb, var(--st-degraded) 22%, var(--chrome-shadow));
+  }
+  .pt-lamp--busy {
+    fill: var(--st-degraded);
+  }
+  .pt-lamp--test {
+    fill: var(--surface);
+  }
+  .pt-lamp--dark {
+    fill: var(--chrome-dark);
+  }
+  .pt-normal {
+    stroke: var(--text-3);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+  }
+  .pt-jack {
+    cursor: pointer;
+  }
+  .pt-jack.is-inert {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+  .pt-jack__ring {
+    fill: var(--chrome-shadow);
+    stroke: var(--chrome-outer);
+    stroke-width: 1;
+  }
+  .pt-jack__hole {
+    fill: var(--toner);
+  }
+  .pt-jack__sel {
+    fill: none;
+    stroke: var(--select-bg);
+    stroke-width: 2;
+  }
+  .pt-jack__focus {
+    display: none;
+    fill: none;
+    stroke: var(--focus-ring);
+    stroke-width: 1;
+    stroke-dasharray: 1 2;
+  }
+  .pt-field:focus-visible .pt-jack.is-focus .pt-jack__focus {
+    display: inline;
+  }
+  .pt-plug {
+    fill: var(--toner);
+    stroke: var(--chrome-outer);
+  }
+  .pt-plug--test,
+  .pt-plug--call,
+  .pt-plug--monitor,
+  .pt-plug--loop {
+    fill: var(--chrome-dark);
+  }
+  .pt-cord__line {
+    fill: none;
+    stroke: var(--toner);
+    stroke-width: 3;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+  .pt-cord--test .pt-cord__line,
+  .pt-cord--call .pt-cord__line,
+  .pt-cord--loop .pt-cord__line {
+    stroke: var(--chrome-dark);
+    stroke-width: 2.5;
+  }
+  .pt-cord--monitor .pt-cord__line {
+    stroke: var(--chrome-dark);
+    stroke-width: 2;
+    stroke-dasharray: 5 3;
+  }
+  .pt-cord.is-selected .pt-cord__line {
+    stroke: var(--select-bg);
+  }
+  .pt-cord__hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 12;
+    cursor: pointer;
+    pointer-events: stroke;
+  }
+  .pt-cord__drag {
+    fill: none;
+    stroke: var(--toner);
+    stroke-width: 2;
+    stroke-dasharray: 4 3;
+    pointer-events: none;
+  }
+  .pt-cord__tag {
+    fill: var(--paper);
+    stroke: var(--text-1);
+  }
+  .pt-cord__tagt {
+    font: var(--fw-bold) 7.5px var(--font-mono);
+    fill: var(--text-1);
+    pointer-events: none;
+  }
+
+  /* Trend */
+  .pt-trend {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  .pt-trend__paper {
+    fill: var(--surface);
+    stroke: var(--chrome-shadow);
+  }
+  .pt-trend__grid {
+    stroke: var(--row-rule);
+    stroke-width: 1;
+  }
+  .pt-trend__ax {
+    font: 8.5px var(--font-mono);
+    fill: var(--text-2);
+  }
+  .pt-trend__warn {
+    stroke: var(--text-2);
+    stroke-dasharray: 4 3;
+  }
+  .pt-trend__limit {
+    stroke: var(--text-1);
+  }
+  .pt-trend__ink {
+    fill: none;
+    stroke: var(--title-active-bg);
+    stroke-width: 1.5;
+  }
+  .pt-trend__dot {
+    fill: var(--title-active-bg);
+  }

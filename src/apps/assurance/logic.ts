@@ -3,6 +3,7 @@
  * No DOM, no services: everything here is unit-tested in logic.test.ts.
  */
 import type { AuditEntry, AuditKind, RouteEntry } from '@core/contracts';
+import { siteZone, type SiteZone } from '@core/session';
 import type { Contractor, Facility, Marking, MarkingId } from '@core/canon-types';
 
 /* ------------------------------------------------------------- markings */
@@ -33,13 +34,13 @@ export function auditRef(e: Pick<AuditEntry, 'at' | 'seq'>): string {
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-/** "1430Z (1030 EDT)". Site-local for ALPHA-03 in May is always UTC-4 (see src/core/session.ts). */
-export function auditTime(at: string): string {
+/** "1430Z (1030 EDT)": Zulu with the session site's local time (src/core/session.ts siteZone). */
+export function auditTime(at: string, zone: SiteZone = siteZone.peek()): string {
   const d = new Date(at);
   if (Number.isNaN(d.getTime())) return '';
   const h = d.getUTCHours();
   const m = d.getUTCMinutes();
-  return `${pad(h)}${pad(m)}Z (${pad((h + 20) % 24)}${pad(m)} EDT)`;
+  return `${pad(h)}${pad(m)}Z (${pad((h + 24 + zone.offsetH) % 24)}${pad(m)} ${zone.abbr})`;
 }
 
 /** "19 MAY 2008" */
@@ -77,6 +78,8 @@ export const ACTION_LABELS: Record<AuditKind, string> = {
   logout: 'LOGGED OFF',
   timeout: 'SESSION LOCKED',
   system: 'SYSTEM NOTICE',
+  control: 'CONTROL OPERATED',
+  trace: 'ROUTED ITEM RECEIVED',
 };
 
 /** Filter groups offered in the activity view. */
@@ -312,4 +315,56 @@ export function contractorStats(register: readonly Pick<Contractor, 'id' | 'site
     overLimit: over,
     sitesCovered: covered.size,
   };
+}
+
+/* ------------------------------------------------------- audit review (pass two) */
+
+/** Audit kinds offered in the audit review filter, in the order the office lists them. */
+export const REVIEW_KINDS: AuditKind[] = [
+  'doc.read', 'redaction.hover', 'window.open', 'search', 'terminal.cmd', 'print', 'form.submit',
+  'mail.read', 'mail.send', 'clearance.grant', 'transit.watch', 'control', 'trace', 'system',
+  'login', 'logout', 'timeout', 'window.close',
+];
+
+export interface TrailFilter {
+  /** An AuditKind, 'refusals', or 'all'. */
+  kind: string;
+  /** In-world day "2008-05-19", or 'all'. */
+  date: string;
+  text: string;
+}
+
+/** In-world days present in a trail, oldest first ("2008-05-19"). */
+export function trailDates(entries: readonly Pick<AuditEntry, 'at'>[]): string[] {
+  return [...new Set(entries.map((e) => e.at.slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort();
+}
+
+/** Entries of another operator's trail matching the review filter, newest first. */
+export function filterTrail(entries: readonly AuditEntry[], f: TrailFilter): AuditEntry[] {
+  const q = f.text.trim().toUpperCase();
+  return entries
+    .filter((e) => f.kind === 'all' || (f.kind === 'refusals' ? isRefusal(e) : e.kind === f.kind))
+    .filter((e) => f.date === 'all' || e.at.slice(0, 10) === f.date)
+    .filter((e) => !q || `${e.subject} ${e.detail} ${actionLabel(e)} ${auditRef(e)}`.toUpperCase().includes(q))
+    .slice()
+    .reverse();
+}
+
+/** Categories under which the office records an audit finding. */
+export const FINDING_CATEGORIES: { id: string; label: string }[] = [
+  { id: 'need-to-know', label: 'Access outside need to know' },
+  { id: 'withheld', label: 'Repeated examination of withheld material' },
+  { id: 'refusals', label: 'Repeated refused requests' },
+  { id: 'reproduction', label: 'Reproduction not accounted for' },
+  { id: 'traffic', label: 'Message traffic outside the chain of command' },
+  { id: 'controls', label: 'Plant control operated without authority' },
+  { id: 'procedure', label: 'Procedural irregularity' },
+];
+
+/**
+ * Audit finding reference: OIA-AF-YY-NNN. Findings are numbered apart from incident tickets
+ * (OIA-YY-NNN) so the series never collides with a ticket; serial from 101, one per finding.
+ */
+export function findingRef(existing: number, yy = '08'): string {
+  return `OIA-AF-${yy}-${String(101 + Math.max(0, existing)).padStart(3, '0')}`;
 }

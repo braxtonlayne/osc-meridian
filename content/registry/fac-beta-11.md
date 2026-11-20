@@ -89,7 +89,7 @@ The graded road from the state highway was closed by snow from 04 JAN to 11 MAR 
 
 ## 7. Document tab
 
-Site survey and geotechnical characterisation for BETA-11 began during the Winter Games security operation (:c[realEvents.RE-02.dateText]) and finished the following spring. Survey vehicles and drilling crews worked under the security infrastructure survey programme then running across the region for the Winter Games, and were not distinguished from it. The survey was funded under line item LI-018:
+Site survey and geotechnical characterisation for BETA-11 began during the Winter Games security operation (:c[realEvents.RE-02.dateText]) and finished the following spring. Survey vehicles and drilling crews worked under their own contractor markings alongside the security infrastructure surveys then running across the region for the Winter Games, and were not distinguished from them by observers. No agency running those surveys engaged or knew of the crews. The survey was funded under line item LI-018:
 
 | Line item | Title | Account |
 |---|---|---|

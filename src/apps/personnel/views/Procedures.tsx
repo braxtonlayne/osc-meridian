@@ -33,12 +33,14 @@ export function VettingPanel() {
 
 export function TransferPanel() {
   const { services } = usePer();
-  const op = canon.operator;
+  // The operator signed in (pass two: any issued account), not the pass-one visitor.
+  const op = services.account.def.value;
   const rule = canon.security.personnel.compartmentation;
   const period = probationPeriodDays(rule);
   const day = services.session.probationDay.value;
-  const st = period ? probationStatus(op.probationStart, period, day) : null;
-  const sup = personByPn.get(op.supervisorPn);
+  const st = period && op.probationStart ? probationStatus(op.probationStart, period, day) : null;
+  const division = op.divisionId === 'CMD' ? 'Facility Command' : divisionName(op.divisionId);
+  const sup = op.supervisorPn ? personByPn.get(op.supervisorPn) : undefined;
   const events = canon.calendar.filter((e) => /probation/i.test(e.title) && e.tier >= services.session.tier.value);
   return (
     <div class="per-view">
@@ -49,9 +51,11 @@ export function TransferPanel() {
           rows={[
             { label: 'Operator', value: services.session.operatorId.value, mono: true },
             { label: 'Personnel number', value: op.pn, mono: true },
-            { label: 'Posted to', value: `${op.site}, ${divisionName(op.divisionId)}` },
-            { label: 'Supervisor of record', value: sup ? <><span class="per-mono">{sup.pn}</span>, <RxText s={sup.role} /></> : op.supervisorPn },
-            { label: 'Probation began', value: formatOscDate(op.probationStart), mono: true },
+            { label: 'Posted to', value: `${op.site}, ${division}` },
+            { label: 'Supervisor of record', value: sup ? <><span class="per-mono">{sup.pn}</span>, <RxText s={sup.role} /></> : (op.supervisorPn ?? 'None recorded') },
+            op.probationStart
+              ? { label: 'Probation began', value: formatOscDate(op.probationStart), mono: true }
+              : { label: 'Probation', value: 'Not in a probationary period' },
             { label: 'Period', value: period ? `${fmt(period)} days` : 'Not stated', mono: true },
             ...(st
               ? [

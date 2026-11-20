@@ -24,7 +24,7 @@ The directory is compiled by the Personnel Number Register, Personnel & Vetting,
 
 Names and mail addresses of Tier 1 and Tier 2 personnel are withheld below their tier. The personnel number, role and site remain shown so that a request requiring a named officer can be routed. Mail is addressed as described in :x[OSC-DIR-0447]; a withheld address may be reached through the command section of the site shown.
 
-Remarks show the compartments a person holds where they may sponsor a request on OSC-F-126 (:x[OSC-F-126]; :x[OSC-DIR-0412] para 4(b)). A sponsor is identified on the form by personnel number. Personnel in the first 90 days of a probationary transfer are carried under their supervisor of record and are not entered separately until the final review (:x[OSC-DIR-0247]).
+Remarks show the compartments a person holds where they may sponsor a request on :x[OSC-F-126] (:x[OSC-DIR-0412] para 4(b)). A sponsor is identified on the form by personnel number. Personnel in the first 90 days of a probationary transfer are carried under their supervisor of record and are not entered separately until the final review (:x[OSC-DIR-0247]).
 
 ## Posted personnel
 

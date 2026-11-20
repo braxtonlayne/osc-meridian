@@ -571,6 +571,9 @@
   .doc-body--cable > p::before {
     content: counter(para) '. ';
   }
+  .doc-body--cable-hand > p::before {
+    content: none;
+  }
   .doc-body--cable a {
     color: inherit;
   }

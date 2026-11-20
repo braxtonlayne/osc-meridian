@@ -7,6 +7,7 @@ import { buildRow, filterRows, sortKey, type DirFilter, type DirRow } from '../d
 import { dirPreset, orgPreset } from '../state';
 import { CellView, RxText, usePer } from '../ui';
 import { loadTableRows, type ReleasedCell } from '../../shared/released';
+import { useCanonT2 } from '../acct';
 
 /** The registered directory document; its release carries the HOLLOW fields. */
 const DIRECTORY_DOCNO = 'OSC-PER-DIR';
@@ -23,6 +24,7 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
   const { services } = per;
   const held = services.session.compartments.value;
   const acting = services.session.actingTier2.value;
+  const t2 = useCanonT2(services);
   // Released directory fields come from the directory document as loaded with this
   // session's releases (the client canon carries only sentinels for them).
   const [released, setReleased] = useState<Map<string, ReleasedCell[]>>(() => new Map());
@@ -51,9 +53,10 @@ export function DirectoryView({ onReady }: { onReady?: (h: DirectoryHandle) => v
           compartmentIds: canon.compartments.map((c) => c.id),
           divisionName,
           released,
+          t2,
         }),
       ),
-    [held.join(','), released],
+    [held.join(','), released, t2],
   );
   const shown = useMemo(() => filterRows(rows, filter), [rows, filter]);
 

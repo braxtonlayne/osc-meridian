@@ -181,7 +181,17 @@ export interface RegRow {
   reactor: Cell<boolean>;
 }
 
-export function buildRows(canon: Canon, viewer: Viewer): RegRow[] {
+/**
+ * Depth of record. GAMMA depths are null in the client canon (Tier 2); a session holding T2
+ * reads them from the CANON-T2 release (`facilities.<id>.depthFt`).
+ */
+export function depthOf(f: Facility, t2?: Readonly<Record<string, string>> | null): number | null {
+  if (f.depthFt != null) return f.depthFt;
+  const n = Number(t2?.[`facilities.${f.id}.depthFt`] ?? NaN);
+  return Number.isFinite(n) ? n : null;
+}
+
+export function buildRows(canon: Canon, viewer: Viewer, t2?: Readonly<Record<string, string>> | null): RegRow[] {
   return canon.facilities.map((f) => ({
     id: f.id,
     f,
@@ -191,7 +201,7 @@ export function buildRows(canon: Canon, viewer: Viewer): RegRow[] {
     cover: cell(f, 'cover', f.coverIdentity, viewer),
     fn: cell(f, 'function', f.function, viewer),
     network: cell(f, 'network', networkName(canon, f.network), viewer),
-    depth: cell(f, 'depth', f.depthFt, viewer),
+    depth: cell(f, 'depth', depthOf(f, t2), viewer),
     capacity: figureCell(f, 'capacity', f.capacity, viewer),
     staff: figureCell(f, 'staff', f.staff, viewer),
     completed: cell(f, 'completed', f.completed, viewer),

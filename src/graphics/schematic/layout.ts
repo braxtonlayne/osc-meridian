@@ -8,6 +8,7 @@
  */
 import { railSegments as canonRail, tramNetworks as canonTram } from '@canon';
 import type { FacilityId, NetworkId, RailSegment, TramLink, TramNetwork } from '../../core/canon-types';
+import { hasRx } from '../../core/rx';
 
 const RAIL = canonRail as unknown as RailSegment[];
 const TRAM = canonTram as unknown as TramNetwork[];
@@ -233,7 +234,7 @@ function buildLinks(): SchematicLink[] {
 
 function buildNodes(links: SchematicLink[]): SchematicNode[] {
   const place = new Map<string, string>();
-  for (const net of TRAM) for (const l of net.links) if (!place.has(l.to)) place.set(l.to, l.label);
+  for (const net of TRAM) for (const l of net.links) if (!place.has(l.to)) place.set(l.to, hasRx(l.label) ? '' : l.label); // withheld city: no place line
   const nets = new Map<string, Set<NetworkId>>();
   const seen: string[] = [];
   for (const l of links) {

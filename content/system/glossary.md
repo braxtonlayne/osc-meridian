@@ -1,6 +1,7 @@
 ---
 id: system-glossary
 route: /system/glossary
+t4: true
 app: system
 family: system
 template: help

@@ -23,6 +23,19 @@
  *     lines); see isAuthoredName.
  *  8. any prerendered page prints a raw `{identifier}` message-slot token in its static text or
  *     <title> (prerender replaces declared slots with an in-world blank).
+ *  9. account variants (data/docs/@<account>/<id>.json, pass two): known account; same route,
+ *     docNo, app and family as the base route, which lists the account in `variants` (and every
+ *     listed variant exists); headline drift on the variant text; only declared message slots;
+ *     every href and xref resolves in dist/. search@<account>.json exists exactly for accounts
+ *     with variants. Rules 2, 3, 6 and 7 already cover variant JSON and the account indexes
+ *     (they scan every dist file; variant files count as baseline document files).
+ * 10. every app in src/apps/index.ts (APPS) has a static home page, with no headline drift.
+ * 11. (F2) no tier-1 or compartment-withheld text in any JS/worker chunk (dist .js/.mjs) or in
+ *     content/canon/canon.client.json: the full-canon values buildClientCanon withholds under T1 or
+ *     a compartment (rule 7's corpus), plus every fragment content Markdown withholds at tier 1 or
+ *     behind a compartment (scripts/content/redaction-corpus.ts), in clear, JSON-, quote- and
+ *     unicode-escaped forms.
+ * 12. (F2) the initial shell (index.html entry script plus its modulepreloads) is < 180 KB gzip.
  * dist directory: $MERIDIAN_DIST or --dist <dir> (default dist/).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -30,9 +43,13 @@ import { dirname, extname, join, relative, resolve, sep, posix } from 'node:path
 import { fileURLToPath } from 'node:url';
 import type { DocJson, RouteEntry } from '../src/core/contracts';
 import { checkDrift, type FigureRule } from './content/figures.ts';
-import { escapeHtml, isTier1Key, normalizeBase } from './content/util.ts';
+import { APP_HOME_TEXT } from './content/app-homes.ts';
+import { ACCOUNT_IDS, CANON_RELEASE_KEYS, escapeHtml, isTier1Key, normalizeBase, type AccountIdLit } from './content/util.ts';
+import { readAppHomes } from './prerender.ts';
 import { decodeRelease, isEncodedRelease, releaseFileName } from '../src/core/release-codec';
 import { deriveRestrictions, type Withheld } from './content/client-canon.ts';
+import { readRedactionCorpus, type RestrictedText } from './content/redaction-corpus.ts';
+import { gzipSync } from 'node:zlib';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** $MERIDIAN_DIST or --dist <dir> (default dist/), so a scratch build can be checked. */
@@ -282,7 +299,31 @@ export function isAuthoredName(n: { path: string; key: string }): boolean {
 export function isDocFile(f: string, distRoot: string = dist): boolean {
   const p = relative(distRoot, f).split(sep).join('/');
   if (p.startsWith('..')) return false;
-  return /^data\/docs\/[^/]+\.json$/.test(p) || p === 'data/search.json' || /\.html$/.test(p);
+  return /^data\/docs\/(?:@[a-z]+\/)?[^/]+\.json$/.test(p) || /^data\/search(?:@[a-z]+)?\.json$/.test(p) || /\.html$/.test(p);
+}
+
+/**
+ * Account variant rules (pass two): a variant file data/docs/@<account>/<id>.json must belong to a
+ * known account, replace an existing base route with the same route/docNo/app/family, and be
+ * listed in that route's `variants`; every listed variant must exist. Returns problem messages.
+ */
+export function checkVariantDoc(account: string, doc: DocJson, base: RouteEntry | undefined): string[] {
+  const out: string[] = [];
+  if (!(ACCOUNT_IDS as readonly string[]).includes(account)) out.push(`unknown account "${account}"`);
+  if (!base) return [...out, `no base route with id "${doc.id}"`];
+  for (const k of ['route', 'docNo', 'app', 'family'] as const) {
+    if (doc[k] !== base[k]) out.push(`${k} "${doc[k]}" differs from the base "${base[k]}"`);
+  }
+  if (!base.variants?.includes(account as AccountIdLit)) out.push(`base route ${base.route} does not list "${account}" in variants`);
+  return out;
+}
+
+/** `{token}`s in a document's text that are not declared message slots. */
+export function undeclaredSlotTokens(doc: DocJson): string[] {
+  const msg = doc.frontmatter?.message as { slots?: unknown } | undefined;
+  const declared = new Set(Array.isArray(msg?.slots) ? msg.slots.map((s) => `{${String(s)}}`) : []);
+  const text = `${doc.title} ${doc.summary} ${htmlToText(doc.html)}`;
+  return [...new Set([...text.matchAll(SLOT_TOKEN_RE)].map((m) => m[0]))].filter((t) => !declared.has(t));
 }
 
 export function findWithheld(text: string, needles: Needle[]): { index: number; path: string; key: string }[] {
@@ -297,6 +338,39 @@ export function findWithheld(text: string, needles: Needle[]): { index: number; 
     }
   }
   return out;
+}
+
+/** Forms a string can take inside a bundled JS chunk or a JSON file. */
+export function bundleForms(text: string): string[] {
+  const json = JSON.stringify(text).slice(1, -1);
+  const uEsc = json.replace(/[\u0080-￿]/g, (ch) => `\\u${ch.charCodeAt(0).toString(16).padStart(4, '0')}`);
+  const sq = (s: string) => s.replace(/'/g, "\\'");
+  return [...new Set([text, json, sq(json), uEsc, sq(uEsc)])];
+}
+
+const isRestrictedBundleKey = (k: string): boolean => isTier1Key(k) || /^[A-Z]{3,}(\+T\d)?$/.test(k);
+
+/**
+ * Rule 11 needles: full-canon values withheld under tier 1 or a compartment (rule 7's corpus,
+ * same exemptions) plus the content corpus fragments. Tier 2 values stay under rule 7.
+ */
+export function bundleNeedles(canonNeedles: Needle[], corpus: RestrictedText[]): Needle[] {
+  const out: Needle[] = canonNeedles
+    .filter((n) => isRestrictedBundleKey(n.key))
+    .map((n) => ({ ...n, forms: [...new Set(n.forms.flatMap(bundleForms))] }));
+  for (const r of corpus) out.push({ path: `content/${r.file}`, key: r.key, forms: bundleForms(r.text) });
+  return out;
+}
+
+/** Initial shell budget (SPEC budgets), gzip -9 over the entry script and its modulepreloads. */
+export const SHELL_BUDGET_GZ = 180 * 1024;
+
+/** The entry script and every modulepreload that index.html loads before any interaction. */
+export function shellFiles(indexHtml: string): string[] {
+  const out: string[] = [];
+  for (const m of indexHtml.matchAll(/<script[^>]*type="module"[^>]*src="([^"]+)"/g)) out.push(m[1]!);
+  for (const m of indexHtml.matchAll(/<link[^>]*rel="modulepreload"[^>]*href="([^"]+)"/g)) out.push(m[1]!);
+  return [...new Set(out)];
 }
 
 function inferBase(): string {
@@ -367,32 +441,100 @@ function main(): number {
     }
     return v;
   };
+  /** Problem with one href/src, or null if it resolves (or is not an internal link). */
+  const linkProblem = (rawAttr: string, pageUrl: string): string | null => {
+    const raw = rawAttr.replace(/&amp;/g, '&');
+    if (!raw || /^(#|mailto:|data:|javascript:|blob:|https?:)/i.test(raw)) return null;
+    let path = raw.split('#')[0]!.split('?')[0]!;
+    if (!path) return null;
+    try {
+      path = decodeURIComponent(path);
+    } catch {
+      return `undecodable href ${raw}`;
+    }
+    let distPath: string;
+    if (path.startsWith('/')) {
+      if (!path.startsWith(base) && `${path}/` !== base) return `${raw} is outside base ${base}`;
+      distPath = path.slice(base.length - 1) || '/';
+    } else {
+      distPath = posix.join(posix.dirname(pageUrl), path);
+    }
+    return resolves(distPath) ? null : `${raw} does not resolve in dist/`;
+  };
   for (const f of distFiles.filter((x) => x.endsWith('.html'))) {
     const html = readFileSync(f, 'utf8');
     const pageUrl = `/${rel(f).replace(/^dist\//, '')}`;
     for (const m of html.matchAll(/\s(?:href|src)="([^"]*)"/g)) {
-      const raw = m[1]!.replace(/&amp;/g, '&');
-      if (!raw || /^(#|mailto:|data:|javascript:|blob:|https?:)/i.test(raw)) continue;
-      let path = raw.split('#')[0]!.split('?')[0]!;
-      if (!path) continue;
-      try {
-        path = decodeURIComponent(path);
-      } catch {
-        fail('links', `${rel(f)}:${lineAt(html, m.index ?? 0)} undecodable href ${raw}`);
-        continue;
-      }
-      let distPath: string;
-      if (path.startsWith('/')) {
-        if (!path.startsWith(base) && `${path}/` !== base) {
-          fail('links', `${rel(f)}:${lineAt(html, m.index ?? 0)} ${raw} is outside base ${base}`);
-          continue;
-        }
-        distPath = path.slice(base.length - 1) || '/';
-      } else {
-        distPath = posix.join(posix.dirname(pageUrl), path);
-      }
-      if (!resolves(distPath)) fail('links', `${rel(f)}:${lineAt(html, m.index ?? 0)} ${raw} does not resolve in dist/`);
+      const p = linkProblem(m[1]!, pageUrl);
+      if (p) fail('links', `${rel(f)}:${lineAt(html, m.index ?? 0)} ${p}`);
     }
+  }
+
+  // 9. account variants (pass two): same rules as base documents, plus base agreement
+  const routeById = new Map(routes.map((r) => [r.id, r]));
+  const variantDocs: { account: string; file: string; doc: DocJson }[] = [];
+  const docsRoot = join(dist, 'data', 'docs');
+  for (const ent of existsSync(docsRoot) ? readdirSync(docsRoot, { withFileTypes: true }) : []) {
+    if (!ent.isDirectory()) continue;
+    if (!ent.name.startsWith('@')) {
+      fail('variants', `data/docs/${ent.name}/ is not an account variant folder (@<account>)`);
+      continue;
+    }
+    for (const f of walk(join(docsRoot, ent.name)).filter((x) => x.endsWith('.json'))) {
+      try {
+        variantDocs.push({ account: ent.name.slice(1), file: f, doc: JSON.parse(readFileSync(f, 'utf8')) as DocJson });
+      } catch {
+        fail('variants', `${rel(f)} is not JSON`);
+      }
+    }
+  }
+  const variantRules: FigureRule[] = existsSync(join(root, '.generated', 'canon-figures.json'))
+    ? JSON.parse(readFileSync(join(root, '.generated', 'canon-figures.json'), 'utf8'))
+    : [];
+  for (const { account, file, doc } of variantDocs) {
+    const where = rel(file);
+    if (`${doc.id}.json` !== file.split(/[\\/]/).pop()) fail('variants', `${where}: file name does not match id "${doc.id}"`);
+    for (const p of checkVariantDoc(account, doc, routeById.get(doc.id))) fail('variants', `${where}: ${p}`);
+    // drift with the canon figure, exactly as on prerendered pages
+    for (const p of checkDrift(htmlToText(`${escapeHtml(doc.title)} ${doc.html}`), variantRules)) fail('drift', `${where}: ${p.message}`);
+    // slots: only declared message slots may appear (the shell fills them at delivery)
+    const tokens = undeclaredSlotTokens(doc);
+    if (tokens.length) fail('slot-token', `${where} prints undeclared slot token(s) ${tokens.join(' ')}`);
+    // links inside the variant body and its xref list resolve like the prerendered pages
+    for (const m of doc.html.matchAll(/\s(?:href|src)="([^"]*)"/g)) {
+      const p = linkProblem(m[1]!, doc.route);
+      if (p) fail('links', `${where}: ${p}`);
+    }
+    for (const x of doc.xrefs ?? []) if (!resolves(x.route)) fail('links', `${where}: xref ${x.docNo} -> ${x.route} does not resolve in dist/`);
+  }
+  const variantAccounts = new Set(variantDocs.map((v) => v.account));
+  for (const r of routes) {
+    for (const a of r.variants ?? []) {
+      if (!variantDocs.some((v) => v.account === a && v.doc.id === r.id)) fail('variants', `${r.route} lists variant "${a}" but data/docs/@${a}/${r.id}.json is missing`);
+    }
+  }
+  const dataDir = join(dist, 'data');
+  const accountIndexes = existsSync(dataDir) ? readdirSync(dataDir).filter((n) => /^search@.+\.json$/.test(n)) : [];
+  for (const n of accountIndexes) {
+    const a = n.slice('search@'.length, -'.json'.length);
+    if (!variantAccounts.has(a)) fail('variants', `data/${n}: account "${a}" has no variants (it should use data/search.json)`);
+  }
+  for (const a of variantAccounts) if (!accountIndexes.includes(`search@${a}.json`)) fail('variants', `account "${a}" has variants but no data/search@${a}.json`);
+  console.log(`[variants] ${variantDocs.length} variant document(s); account indexes ${accountIndexes.join(', ') || 'none'}`);
+
+  // 10. every registered app has a static home page (its own document or the prerendered home)
+  for (const app of readAppHomes()) {
+    const home = join(dist, ...app.homeRoute.split('/').filter(Boolean), 'index.html');
+    if (!existsSync(home)) {
+      fail('app-home', `${app.id}: no dist${app.homeRoute}/index.html`);
+      continue;
+    }
+    // Set-piece homes carry prose and full document text: check it (register rows are titles and
+    // dates, not claims, so they are left out; the documents themselves are checked at their routes).
+    if (!(app.id in APP_HOME_TEXT)) continue;
+    const page = readFileSync(home, 'utf8').replace(/<table class="static-app-register">[\s\S]*?<\/table>/g, ' ');
+    const text = [...page.matchAll(/<article class="static-doc[\s\S]*?<\/article>/g)].map((m) => htmlToText(m[0])).join(' ');
+    for (const p of checkDrift(text, variantRules)) fail('drift', `${app.homeRoute} (app home): ${p.message}`);
   }
 
   // 8. unfilled message slots in static text
@@ -414,7 +556,8 @@ function main(): number {
 
   // 6. tier-1 never ships
   const t1Ids = new Set<string>();
-  const knownKeys = new Set<string>();
+  // canon-merge's encoded canon release (CANON-T2) shares the releases folder and codec
+  const knownKeys = new Set<string>(CANON_RELEASE_KEYS);
   const docsDir = join(dist, 'data', 'docs');
   for (const f of walk(docsDir).filter((x) => x.endsWith('.json'))) {
     const d = JSON.parse(readFileSync(f, 'utf8')) as DocJson;
@@ -437,9 +580,10 @@ function main(): number {
 
   // 7. values withheld from the client canon never reach baseline output
   const canonPath = join(root, 'content', 'canon', 'canon.json');
+  const corpus = readRedactionCorpus(join(root, 'content'));
   if (existsSync(canonPath)) {
     const fullCanon = JSON.parse(readFileSync(canonPath, 'utf8')) as { budget?: { departments?: string[] } };
-    const r = deriveRestrictions(fullCanon as Record<string, unknown>);
+    const r = deriveRestrictions(fullCanon as Record<string, unknown>, corpus);
     const needles = withheldNeedles(r?.withheld ?? [], r?.client, fullCanon.budget?.departments ?? []);
     const releasesDir = join(dist, 'data', 'releases');
     for (const f of distFiles) {
@@ -461,6 +605,46 @@ function main(): number {
       }
     }
   }
+
+  // 11. no tier-1 / compartment text in JS chunks, workers or the client canon
+  if (existsSync(canonPath)) {
+    const fullCanon = JSON.parse(readFileSync(canonPath, 'utf8')) as { budget?: { departments?: string[] } };
+    const r = deriveRestrictions(fullCanon as Record<string, unknown>, corpus);
+    const needles = bundleNeedles(withheldNeedles(r?.withheld ?? [], r?.client, fullCanon.budget?.departments ?? []), corpus.restricted);
+    const clientPath = join(root, 'content', 'canon', 'canon.client.json');
+    const targets = [...distFiles.filter((f) => /\.(?:js|mjs)$/i.test(f)), ...(existsSync(clientPath) ? [clientPath] : [])];
+    let hits = 0;
+    for (const f of targets) {
+      const text = readFileSync(f, 'utf8');
+      for (const hit of findWithheld(text, needles)) {
+        hits++;
+        fail('bundle-leak', `${rel(f)}:${lineAt(text, hit.index)} contains ${hit.key} text from ${hit.path}`);
+      }
+    }
+    console.log(`[bundle-leak] ${needles.length} tier-1/compartment needles (${corpus.restricted.length} from content) over ${targets.length} JS/worker chunks + client canon: ${hits} hit(s)`);
+  }
+
+  // 12. initial shell budget
+  const indexPath = join(dist, 'index.html');
+  if (existsSync(indexPath)) {
+    const files = shellFiles(readFileSync(indexPath, 'utf8'));
+    let total = 0;
+    const parts: string[] = [];
+    for (const url of files) {
+      const local = url.startsWith(base) ? url.slice(base.length) : url.replace(/^\.?\//, '');
+      const abs = join(dist, ...local.split('/'));
+      if (!existsSync(abs)) {
+        fail('shell-budget', `index.html loads ${url}, which is not in dist/`);
+        continue;
+      }
+      const gz = gzipSync(readFileSync(abs), { level: 9 }).length;
+      total += gz;
+      parts.push(`${local.split('/').pop()} ${(gz / 1024).toFixed(1)}`);
+    }
+    console.log(`[shell-budget] initial shell ${(total / 1024).toFixed(1)} KB gz over ${files.length} files (budget < ${SHELL_BUDGET_GZ / 1024} KB): ${parts.join(', ')}`);
+    if (!files.length) fail('shell-budget', 'dist/index.html loads no module script');
+    if (total >= SHELL_BUDGET_GZ) fail('shell-budget', `initial shell is ${(total / 1024).toFixed(1)} KB gz; budget < ${SHELL_BUDGET_GZ / 1024} KB`);
+  } else fail('shell-budget', 'dist/index.html not found');
 
   if (failures.length) {
     const shown = failures.slice(0, 400);

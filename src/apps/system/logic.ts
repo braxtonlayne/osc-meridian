@@ -1,12 +1,13 @@
 /**
  * System Tools: pure helpers (no DOM, no services). Unit-tested in logic.test.ts.
  */
-import type { AuditEntry, RouteEntry } from '@core/contracts';
+import type { AccountDef, AccountId, AuditEntry, RouteEntry } from '@core/contracts';
+import { readableByTier4 } from '@core/docs';
 import type { CalendarEvent, GlossaryTerm, Marking, MarkingId, TierNo } from '@core/canon-types';
 
 /* ------------------------------------------------------------------ views */
 
-export type ViewId = 'home' | 'kb' | 'glossary' | 'settings' | 'monitor' | 'calendar' | 'about' | 'colophon';
+export type ViewId = 'home' | 'kb' | 'glossary' | 'settings' | 'monitor' | 'calendar' | 'about' | 'colophon' | 'credentials';
 
 export const HOME = '/system';
 export const KB_PREFIX = '/system/kb/';
@@ -19,6 +20,7 @@ export const PAGES: { view: Exclude<ViewId, 'home' | 'kb'>; path: string; label:
   { view: 'settings', path: '/system/settings', label: 'Workstation Settings', short: 'Settings' },
   { view: 'about', path: '/system/about', label: 'About This Terminal', short: 'About' },
   { view: 'colophon', path: '/system/colophon', label: 'Colophon', short: 'Colophon' },
+  { view: 'credentials', path: '/system/credentials', label: 'Issued Credentials', short: 'Credentials' },
 ];
 
 export function viewFor(path: string): ViewId {
@@ -179,4 +181,35 @@ export function formatDuration(ms: number): string {
 export function zuluOf(iso: string): string {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? '' : `${pad2(d.getUTCHours())}${pad2(d.getUTCMinutes())}Z`;
+}
+
+/* --------------------------------------------------------------- accounts */
+
+/** Division label for a division id; facility command posts carry CMD, which no division has. */
+export function divisionLabel(id: string, divisions: readonly { id: string; name: string }[]): string {
+  if (id === 'CMD') return 'Facility Command';
+  return divisions.find((d) => d.id === id)?.name ?? id;
+}
+
+/**
+ * Tier 4 rule (docs/SPEC-2.md §1) for System Tools listings: a Tier 4 account lists only documents
+ * marked `t4` or carrying its own variant. Every route is listed at other tiers.
+ */
+export function visibleTo(r: Pick<RouteEntry, 't4' | 'variants'>, account: Pick<AccountDef, 'id' | 'tier'>): boolean {
+  return account.tier !== 4 || readableByTier4(r) || !!r.variants?.includes(account.id);
+}
+
+export type ResetScope = 'profile' | 'all';
+
+export const ACCOUNT_PREFIX = 'meridian:acct:';
+export const SHARED_PREFIX = 'meridian:shared:';
+
+/**
+ * Storage keys a workstation reset clears. `profile`: every key in that account's namespace.
+ * `all`: every account namespace plus the shared plant state. Global keys (settings, the
+ * active-account pointer) and anything outside MERIDIAN's namespaces are never touched.
+ */
+export function resetKeys(keys: readonly string[], scope: ResetScope, account: AccountId): string[] {
+  const mine = `${ACCOUNT_PREFIX}${account}:`;
+  return keys.filter((k) => (scope === 'profile' ? k.startsWith(mine) : k.startsWith(ACCOUNT_PREFIX) || k.startsWith(SHARED_PREFIX)));
 }

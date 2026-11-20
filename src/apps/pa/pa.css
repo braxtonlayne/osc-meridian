@@ -1,0 +1,226 @@
+/* Public address console. Tokens only (src/design/tokens.css). */
+.pa-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--chrome-face);
+  color: var(--text-1);
+  font: var(--fs-base) / var(--lh-base) var(--font-ui);
+  container-type: inline-size;
+}
+.pa-main {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border-top: 1px solid var(--chrome-shadow);
+}
+.pa-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
+  border-top: 1px solid var(--chrome-shadow);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.pa-banner .st-sq {
+  display: inline-block;
+  width: var(--status-sq);
+  height: var(--status-sq);
+  flex: none;
+  background: var(--st-degraded);
+}
+.pa-banner .st-fault {
+  background: var(--st-fault);
+}
+.pa-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.pa-muted {
+  color: var(--text-2);
+}
+.pa-empty,
+.pa-loading {
+  padding: var(--sp-4);
+  color: var(--text-2);
+}
+.pa-refusal {
+  padding: var(--sp-5);
+}
+
+/* ------------------------------------------------------------- console */
+.pa-console {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(280px, 1fr) auto;
+  grid-template-areas:
+    'zones lib panel'
+    'zones chan panel';
+  grid-template-rows: auto 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  min-width: 0;
+}
+.pa-zones {
+  grid-area: zones;
+}
+.pa-library {
+  grid-area: lib;
+}
+.pa-panelwrap {
+  grid-area: panel;
+  min-width: 0;
+}
+.pa-channel {
+  grid-area: chan;
+}
+.pa-console--compact {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'zones' 'lib' 'panel' 'chan';
+  grid-template-rows: none;
+}
+.pa-console--compact .pa-panelwrap {
+  overflow-x: auto;
+}
+.pa-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  border-right-color: var(--chrome-hi);
+  border-bottom-color: var(--chrome-hi);
+  box-shadow: inset 1px 1px 0 var(--chrome-outer);
+}
+.pa-pane__head {
+  padding: 2px var(--sp-3);
+  background: var(--th-bg);
+  border-bottom: 1px solid var(--row-rule);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.pa-pane__tools {
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+}
+.pa-pane__foot {
+  padding: 2px var(--sp-3);
+  border-top: 1px solid var(--row-rule);
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.pa-zonelist {
+  flex: 1;
+  overflow: auto;
+  max-height: 560px;
+  padding: var(--sp-1) 0;
+}
+.pa-console--compact .pa-zonelist {
+  max-height: 220px;
+}
+.pa-zone {
+  padding: 1px var(--sp-3);
+}
+.pa-zone:nth-child(even) {
+  background: var(--zebra);
+}
+.pa-zone--area,
+.pa-zone--division {
+  padding-left: var(--sp-6);
+}
+.pa-zone--division {
+  border-top: 1px solid var(--row-rule);
+}
+.pa-zone__label {
+  font-size: var(--fs-sm);
+}
+.pa-script {
+  border-top: 1px solid var(--row-rule);
+  background: var(--paper);
+  padding: var(--sp-3) var(--sp-4);
+}
+.pa-script__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  border-bottom: 1px solid var(--row-rule);
+  padding-bottom: var(--sp-2);
+}
+.pa-script__text {
+  margin: var(--sp-3) 0;
+  font: var(--fs-typed) / var(--lh-typed) var(--font-typed);
+  max-width: 70ch;
+}
+.pa-script__note {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+
+/* ------------------------------------------------------------------ log */
+.pa-log,
+.pa-zonesview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  min-width: 0;
+}
+.pa-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-3) var(--sp-5);
+}
+.pa-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--sp-3);
+}
+.pa-app--compact .pa-detail {
+  grid-template-columns: minmax(0, 1fr);
+}
+.pa-zonetable {
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--chrome-shadow);
+  align-self: start;
+  width: 100%;
+  font-size: var(--fs-sm);
+}
+.pa-zonetable th {
+  background: var(--th-bg);
+  text-align: left;
+  font-weight: var(--fw-semibold);
+  padding: 2px var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+}
+.pa-zonetable td {
+  padding: 2px var(--sp-3);
+  border-bottom: 1px solid var(--row-rule);
+  vertical-align: top;
+}
+
+/* --------------------------------------------------------------- routes */
+.pa-route {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pa-routebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--chrome-shadow);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}

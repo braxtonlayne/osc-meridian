@@ -1,6 +1,7 @@
 ---
 id: registry-class-gamma
 route: /registry/class/gamma
+t4: true
 app: registry
 family: registry
 template: index
