@@ -90,6 +90,8 @@ export const schema = z.strictObject({
     ringOffS: num,
     maxRings: z.number().int().min(1),
     dialDigits: z.number().int().min(3).max(6),
+    /** Seconds the exchange waits for the next digit before it releases the line (partial dial). */
+    interdigitS: num,
     replyAfterS: num,
     clearAfterS: num,
     busyCadenceS: num,
@@ -99,6 +101,7 @@ export const schema = z.strictObject({
   pencil: z.array(z.strictObject({ site, circuit: z.string().min(1), text: z.string().min(1) })),
   messages: z.strictObject({
     intercept: z.string().min(1),
+    partialDial: z.string().min(1),
     noDialTone: z.string().min(1),
     dead: z.string().min(1),
     noReply: z.string().min(1),

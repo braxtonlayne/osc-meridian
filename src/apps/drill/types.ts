@@ -68,6 +68,7 @@ export type SiteCause =
   | 'acceptance' // seal acceptance not entered: doors cycle, no seal report
   | 'calendar' // a calendar entry in session defers the seal
   | 'order-wire' // acknowledgement carried on an order wire, not the relay circuit
+  | 'attended' // an issued operator account holds the site order position: the order waits for their ACK, standby watch answers late
   | 'cut'; // order not passed: hub circuits down (isolation)
 
 /** One site's timing, in drill minutes from the order. */

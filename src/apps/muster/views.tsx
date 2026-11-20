@@ -231,7 +231,7 @@ export function SiteBoard(p: SitePanelProps) {
           <SegmentDisplay value={n(t?.visitors)} digits={4} label="VISITORS" />
           <SegmentDisplay value={n(t?.unknown)} digits={4} label="NOT ON STRENGTH" variant="led" />
         </PanelSection>
-        <PanelSection title="SWEEP TEAMS">
+        <PanelSection title="SWEEP TEAMS" columns={p.compact ? undefined : 2}>
           <SelectorSwitch positions={sm.points.map((x) => short(x.id))} value={p.sweepSel} onChange={p.onSweepSel} label="ASSEMBLY POINT" tag={`SS-${p.site}-SW`} />
           <PushButton legend={['SEND', 'TEAM']} label="DISPATCH SWEEP" color="amber" onPress={p.onSweep} disabled={p.offline} tag={`PB-${p.site}-SW`} ariaLabel="Dispatch sweep team" />
           <SegmentDisplay value={v ? `${v.activeSweeps}-${cls.sweepTeams}` : `0-${cls.sweepTeams}`} digits={3} label="TEAMS OUT / HELD" size="sm" />

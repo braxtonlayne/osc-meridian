@@ -1,13 +1,14 @@
 /**
- * Issued credentials: the operator cards issued on this workstation (services.account.all()),
+ * Issued credentials: the operator cards held in this card wallet (services.account.all()),
  * with the one in use marked. Signing in with another card logs off and returns to the lock
  * screen with that card selected. Never shows a Tier 2 personal name (the account carries
- * role strings only).
+ * role strings only). Each card signs in at its own site's workstation (canon accounts[].workstation).
+ * A Tier 4 session sees the other cards by operator and designation only: no post, site or
+ * workstation of another facility (closed world, SPEC-2 §1).
  */
 import { useState } from 'preact/hooks';
 import type { AccountDef } from '@core/contracts';
 import canon from '@canon';
-import { WORKSTATION_ID } from '@core/audit';
 import { Button, ButtonRow, DataTable, Dialog, GroupBox, PropertyGrid, StatusLight, type Column } from '@design/index';
 import { useSys } from '../ctx';
 import { divisionLabel } from '../logic';
@@ -21,12 +22,14 @@ export function Credentials({ onReset }: { onReset: () => void }) {
   const [sel, setSel] = useState<string>(me);
   const [confirm, setConfirm] = useState<AccountDef | null>(null);
   const cur = all.find((a) => a.id === sel) ?? all[0];
+  const closed = services.session.tier.value === 4;
+  const hidden = (a: AccountDef) => closed && a.id !== me;
 
   const cols: Column<AccountDef>[] = [
     { key: 'use', header: 'In use', width: 70, render: (a) => (a.id === me ? <StatusLight status="NOMINAL" word="IN USE" /> : '') },
     { key: 'operatorId', header: 'Operator', width: 120, mono: true },
-    { key: 'roleTitle', header: 'Post', wrap: true },
-    ...(narrow
+    closed ? { key: 'displayName', header: 'Card designation', wrap: true } : { key: 'roleTitle', header: 'Post', wrap: true },
+    ...(narrow || closed
       ? []
       : [
           { key: 'tier', header: 'Tier', width: 44, align: 'right' as const, mono: true },
@@ -45,8 +48,8 @@ export function Credentials({ onReset }: { onReset: () => void }) {
   return (
     <div class="sys-pad">
       <p class="sys-note">
-        Operator credentials issued on workstation {WORKSTATION_ID}. Each credential has its own profile on this workstation: desktop, message traffic, receipts and audit
-        trail. A credential is presented at the lock screen (OSC-DIR-0301).
+        Operator credentials held for this session. Each credential signs in at its own workstation and has its own profile there: desktop, message traffic, receipts
+        and audit trail. A credential is presented at the lock screen (OSC-DIR-0301). This session: workstation {services.account.def.value.workstation}.
       </p>
       <DataTable<AccountDef>
         label="Issued credentials"
@@ -64,12 +67,17 @@ export function Credentials({ onReset }: { onReset: () => void }) {
         <GroupBox title={`Credential ${cur.operatorId}`} on="surface">
           <PropertyGrid
             columns={narrow ? 1 : 2}
-            rows={[
+            rows={hidden(cur) ? [
+              { label: 'Operator ID', value: cur.operatorId, mono: true },
+              { label: 'Card designation', value: cur.displayName },
+              { label: 'Other particulars', value: 'Not shown at this access tier (DIR-0301).' },
+            ] : [
               { label: 'Operator ID', value: cur.operatorId, mono: true },
               { label: 'Card designation', value: cur.displayName },
               { label: 'Post', value: cur.roleTitle },
               { label: 'Tier', value: `Tier ${cur.tier}` },
               { label: 'Site', value: cur.site, mono: true },
+              { label: 'Workstation', value: cur.workstation, mono: true },
               { label: 'Division', value: divisionLabel(cur.divisionId, DIVISIONS) },
               { label: 'Mailbox', value: cur.email, mono: true },
               { label: 'Approval authority', value: cur.approves.length ? cur.approves.join(', ') : 'None' },

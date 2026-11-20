@@ -11,7 +11,8 @@ import { computed } from '@preact/signals';
 import type { IsolationState } from '@core/contracts';
 import { shared } from '@core/shared';
 import * as session from '@core/session';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
+import { allAccounts } from '@core/accounts';
 import { ISOLATION_NONE as NONE, clearedAt, isolatedAt, latestInitiation, readIsolation } from '@apps/isolate/state';
 
 export { clearedAt, isolatedAt, latestInitiation, readIsolation };
@@ -55,5 +56,6 @@ export function reviewNotice(s: IsolationState): string | null {
   const v = readIsolation(s);
   if (v.level < 3) return null;
   const last = latestInitiation(v);
-  return `Workstation ${WORKSTATION_ID} is under Internal Assurance review following network isolation${last ? ` ${last.ref}` : ''}. Activity at this workstation is reviewed in full.`;
+  const ws = (last?.operatorId && allAccounts().find((a) => a.operatorId === last.operatorId)?.workstation) || workstationId();
+  return `Workstation ${ws} is under Internal Assurance review following network isolation${last ? ` ${last.ref}` : ''}. Activity at this workstation is reviewed in full.`;
 }

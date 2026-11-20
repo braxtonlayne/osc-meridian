@@ -285,6 +285,10 @@ export const accountDefSchema = z.strictObject({
   approves: z.array(z.string().regex(/^OSC-F-\d{3}$/)),
   auditReader: z.boolean(),
   desktop: z.array(z.enum(APP_IDS)).min(1),
+  /** Workstation the card is issued on, at the account's own site: "<A03>-<group>-<seat>". */
+  workstation: z.string().regex(/^[ABGD]\d{2}-\d-\d{3}$/),
+  /** Print queue serving that workstation's group: "PRN-<A03>-<group>". */
+  printQueue: z.string().regex(/^PRN-[ABGD]\d{2}-\d$/),
 });
 
 const hardeningClassId = z.enum(['H1', 'H2', 'H3', 'H4']);
@@ -821,6 +825,8 @@ export function extendedCChecks(c: Canon): string[] {
     const f = fac.get(a.site);
     const site2 = f ? `${f.class[0]}${f.id.slice(-2)}` : '';
     if (a.operatorId !== `OPR-${site2}-${a.pn.slice(-4)}`) errs.push(`${at}: operatorId ${a.operatorId} must be OPR-${site2}-${a.pn.slice(-4)}`);
+    if (!a.workstation.startsWith(`${site2}-`)) errs.push(`${at}: workstation ${a.workstation} must be at the account's site (${site2})`);
+    if (a.printQueue !== `PRN-${a.workstation.slice(0, 5)}`) errs.push(`${at}: printQueue must be PRN-${a.workstation.slice(0, 5)}`);
     for (const s of [a.displayName, a.roleTitle, a.email, a.passphrase])
       for (const n of restrictedNames) if (s.toLowerCase().includes(n.toLowerCase())) errs.push(`${at}: client field contains restricted name "${n}"`);
     if (a.supervisorPn && !roster.has(a.supervisorPn)) errs.push(`${at}: supervisor ${a.supervisorPn} not in roster`);

@@ -168,3 +168,15 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Narrow window: keep the mimic at a legible scale (labels no smaller than about 9px) and let it
+   scroll sideways in its own box rather than shrinking it to fit the width. */
+@container doors (max-width: 600px) {
+  .dr-mimic .dm-svg {
+    max-width: none;
+    width: 760px;
+  }
+  .dr-mimic {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

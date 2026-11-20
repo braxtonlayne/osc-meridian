@@ -11,7 +11,7 @@ marking: TSSCI-OSC
 originator: CMS/ALPHA-02
 revision: 7
 date: 2008-03-03
-summary: MERIDIAN Workstation Environment release 4.1.7. Build, accreditation, workstation A03-5-114, Service Desk and contractor support, and licence notices.
+summary: MERIDIAN Workstation Environment release 4.1.7. Build, accreditation of this workstation, Service Desk and contractor support, and licence notices.
 xrefs: [OSC-DIR-0301, KB-0001, OSC-ASR-COMM, OSC-SYS-COL]
 recordType: ABOUT THIS TERMINAL
 fields:

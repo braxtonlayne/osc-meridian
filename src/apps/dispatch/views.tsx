@@ -8,6 +8,7 @@ import { Button, ButtonRow, DataTable, StatusLight, type Column, type OperStatus
 import { LineDiagram, type DiagramNetwork } from '@graphics/schematic';
 import { Lamp, Plate } from '@graphics/panel';
 import { hhmmLocal, hhmmZ, zoneForState } from '@sim/time';
+import { formatInWorldDate } from '@core/session';
 import { diagramBlockCounts, runState, stamp, type BoardState, type Movement, type PlantInput, type RunState, type SimModel } from '@sim/transit-model';
 import { DSP, placeText, SEG04 } from './logic';
 import type { DispatchRecord } from './types';
@@ -165,6 +166,8 @@ export function LogView(p: { model: SimModel; recs: DispatchRecord[]; plant: Pla
 
 /* ---------------------------------------------------------------- platform */
 
+const dayOf = (ms: number) => formatInWorldDate(new Date(ms));
+
 interface PlatRow {
   key: string;
   service: string;
@@ -208,7 +211,8 @@ export function PlatformView(p: { model: SimModel; board: BoardState; moves: Mov
   }
   const shown = rows.filter((r) => r.ms <= p.now + 24 * 3_600_000).sort((a, b) => a.ms - b.ms);
   const cols: Column<PlatRow>[] = [
-    { key: 'time', header: 'Time', mono: true, width: 150, render: (r) => stamp(p.model, r.ms, p.site), sortValue: (r) => r.ms },
+    // A service on a later day carries its date, so tomorrow's 0928Z is not read as today's.
+    { key: 'time', header: 'Time', mono: true, width: 190, render: (r) => `${dayOf(r.ms) !== dayOf(p.now) ? `${formatInWorldDate(new Date(r.ms)).slice(0, 6)} ` : ''}${stamp(p.model, r.ms, p.site)}`, sortValue: (r) => r.ms },
     { key: 'dir', header: 'Arr / dep', width: 80, render: (r) => (r.dir === 'ARR' ? 'Arriving' : 'Departing') },
     { key: 'service', header: 'Service', mono: true, width: 100 },
     { key: 'via', header: 'Service to / from', render: (r) => (p.tier4 ? 'Hub service' : r.other) },

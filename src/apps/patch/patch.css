@@ -99,6 +99,13 @@
   grid-template-columns: repeat(3, auto);
   gap: var(--sp-2);
 }
+.pt-keynote {
+  grid-column: 1 / -1;
+  max-width: 18em;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
 .pt-callside {
   display: flex;
   flex-direction: column;

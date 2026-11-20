@@ -3,6 +3,7 @@
  * No DOM, no services: everything here is unit-tested in logic.test.ts.
  */
 import type { AuditEntry, AuditKind, RouteEntry } from '@core/contracts';
+import { siteZone, type SiteZone } from '@core/session';
 import type { Contractor, Facility, Marking, MarkingId } from '@core/canon-types';
 
 /* ------------------------------------------------------------- markings */
@@ -33,13 +34,13 @@ export function auditRef(e: Pick<AuditEntry, 'at' | 'seq'>): string {
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-/** "1430Z (1030 EDT)". Site-local for ALPHA-03 in May is always UTC-4 (see src/core/session.ts). */
-export function auditTime(at: string): string {
+/** "1430Z (1030 EDT)": Zulu with the session site's local time (src/core/session.ts siteZone). */
+export function auditTime(at: string, zone: SiteZone = siteZone.peek()): string {
   const d = new Date(at);
   if (Number.isNaN(d.getTime())) return '';
   const h = d.getUTCHours();
   const m = d.getUTCMinutes();
-  return `${pad(h)}${pad(m)}Z (${pad((h + 20) % 24)}${pad(m)} EDT)`;
+  return `${pad(h)}${pad(m)}Z (${pad((h + 24 + zone.offsetH) % 24)}${pad(m)} ${zone.abbr})`;
 }
 
 /** "19 MAY 2008" */

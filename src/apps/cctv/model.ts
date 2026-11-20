@@ -11,7 +11,7 @@ import type { HoistCanon } from '@core/canon-apps/hoist';
 import type { MusterCanon } from '@core/canon-apps/muster';
 import type { AccountDef, DrillState, IsolationState } from '@core/contracts';
 import { isRx } from '@core/rx';
-import { isolatedAt as isolationAt } from '@apps/isolate/state';
+import { isolatedAt as isolationAt, isolationPeriods } from '@apps/isolate/state';
 import type { DoorRecord, DoorsState } from '@apps/doors/types';
 import type { HoistState, HoistUnit } from '@apps/hoist/types';
 import type { MusterState } from '@apps/muster/types';
@@ -19,7 +19,7 @@ import type { DispatchRecord } from '@apps/dispatch/types';
 import type { DrillStateExt, SitePlan } from '@apps/drill/types';
 import type { Seg04Window } from '@narrative/seg04';
 import { runState, type SimModel } from '@sim/transit-model';
-import { zoneForState, type Zone } from '@sim/time';
+import { zoneForSite, type Zone } from '@sim/time';
 import { buildScene, passagesBetween, passersAt, presetScene, sceneKindFor, type FrameInput, type LightMode, type Scene, type SceneKind, type SceneSpec, type TrainView } from '@graphics/cctv';
 import type { CctvState, PtzRecord, PtzView, RecordGap } from './types';
 
@@ -145,7 +145,7 @@ function buildIndex(): SiteEntry[] {
     }
     const units = [...new Set(cams.map((c) => c.unit))];
     const levels = [...new Set(cams.filter((c) => !c.unassigned).map((c) => c.level))].sort((a, b) => a - b).map((n) => ({ n, label: levelLabelOf(fac, cls, n) }));
-    out.push({ facility: fac, cls, label: f?.codename && !isRx(f.codename) ? `${fac}` : fac, zone: zoneForState(f?.anchor?.state), units, cams, levels });
+    out.push({ facility: fac, cls, label: f?.codename && !isRx(f.codename) ? `${fac}` : fac, zone: zoneForSite(fac, f?.anchor?.state), units, cams, levels });
   }
   return out;
 }
@@ -773,11 +773,13 @@ export function eventsFor(cam: CamEntry, from: number, to: number, p: PlantView,
       had = has;
     }
   }
-  let prev: number | null = null;
-  for (const j of p.cctv.journal) {
-    if (j.k !== 'iso' || j.at < from || j.at > to || j.v === prev) continue;
-    prev = j.v;
-    if (cam.facility !== undefined) out.push({ at: j.at, kind: 'LINK', text: j.v ? 'Hub link lost (network isolation)' : 'Hub link restored' });
+  // Hub link changes at the times the isolation record gives (initiation, restoration), not when a
+  // recorder window happened to notice them.
+  if (cam.facility !== undefined) {
+    for (const per of isolationPeriods(p.isolation, to)) {
+      if (per.from >= from && per.from <= to) out.push({ at: per.from, kind: 'LINK', text: 'Hub link lost (network isolation)' });
+      if (per.to !== null && per.to > per.from && per.to >= from && per.to <= to) out.push({ at: per.to, kind: 'LINK', text: 'Hub link restored' });
+    }
   }
   for (const g of p.cctv.gaps) if (g.camera === cam.id && g.from <= to && g.to >= from) out.push({ at: g.from, kind: 'GAP', text: g.note });
   const ptz = p.cctv.ptz[cam.id];

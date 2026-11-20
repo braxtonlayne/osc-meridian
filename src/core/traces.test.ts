@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSharedStore } from './shared';
 import type { SharedStoreHandle } from './shared';
-import { arrivalDetail, createTraces, processArrivals, traceId } from './traces';
+import { arrivalDetail, createTraces, heldInQueue, processArrivals, traceId } from './traces';
 import type { AccountDef, AccountId, Trace } from './contracts';
 
 const def = (id: AccountId, roleTitle: string, pn: string, tier: 2 | 3 | 4): AccountDef => ({
@@ -21,6 +21,8 @@ const def = (id: AccountId, roleTitle: string, pn: string, tier: 2 | 3 | 4): Acc
   approves: [],
   auditReader: false,
   desktop: [],
+  workstation: 'A03-5-114',
+  printQueue: 'PRN-A03-5',
 });
 const DEFS: Record<AccountId, AccountDef> = {
   analyst: def('analyst', 'Records Analyst, ALPHA-03', 'P-3-06-1147', 3),
@@ -127,8 +129,19 @@ describe('traces', () => {
 
   it('phrases arrivals like the security office', () => {
     const tr: Trace = { id: 'TR-0007', at: '', from: 'deputy', to: 'analyst', kind: 'form.decided', subject: 'F-126-08-0031', data: { receipt: 'F-126-08-0031', decision: 'approved', note: '' } };
-    expect(arrivalDetail(tr, DEFS.deputy, '2-0412')).toBe(
+    // Queue decisions travel in the OIA compartment registry's name (msg-08-04341 para 3-4).
+    expect(arrivalDetail(tr, DEFS.deputy, '2-0412')).toBe('Routed item TR-0007 received from the OIA compartment registry. Decision on F-126-08-0031 returned to this operator.');
+    const cert: Trace = { ...tr, data: { ...tr.data, app: 'isolate' } };
+    expect(arrivalDetail(cert, DEFS.deputy, '2-0412')).toBe(
       'Routed item TR-0007 received from operator 2-0412 (Deputy Commander, ALPHA-02). Decision on F-126-08-0031 returned to this operator.',
     );
+  });
+
+  it('holds cross-site mail queued under an isolation until that isolation clears', () => {
+    const t: Pick<Trace, 'data'> = { data: { queued: 'NI-080519-01' } };
+    expect(heldInQueue(t, 'NI-080519-01')).toBe(true);
+    expect(heldInQueue(t, null)).toBe(false);
+    expect(heldInQueue(t, 'NI-080519-02')).toBe(false);
+    expect(heldInQueue({ data: {} }, 'NI-080519-01')).toBe(false);
   });
 });

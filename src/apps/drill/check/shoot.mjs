@@ -163,7 +163,7 @@ if (!only || only === 'lifesupport') {
 /* ---------------- auditor ---------------- */
 if (!only || only === 'auditor') {
   const A = await open('auditor', { seed: seedMid });
-  await A.press('OIA OBSERVER');
+  await A.press('OIA OBSERVE');
   log('auditor observe:', await A.dlg());
   await A.dismiss();
   await A.shot('observing');

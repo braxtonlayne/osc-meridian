@@ -16,7 +16,7 @@ import type { Canon, CompartmentId, Marking, MarkingId } from '@core/canon-types
 import type { DocJson, RouteEntry } from '@core/contracts';
 import { BASE as PIPELINE_BASE, asset as pipelineAsset } from '@core/base';
 import { createDocs, onRoutesRebuilt, readableByTier4 } from '@core/docs';
-import { activeId } from '@core/accounts';
+import { activeDef, activeId } from '@core/accounts';
 import type { DocsService } from '@core/docs';
 import { Seal as GSeal, setSealCanon } from '@graphics/seal';
 import { Icon as GIcon, isIconId } from '@graphics/icons';
@@ -110,7 +110,7 @@ let docsSvc: DocsService | null = null;
 
 /** Pipeline docs service (routes bundled from .generated/routes.json). */
 export function docsService(satisfies: (key: string) => boolean): DocsService {
-  docsSvc ??= createDocs({ satisfies, account: () => activeId.value });
+  docsSvc ??= createDocs({ satisfies, account: () => activeId.value, closedSite: () => (activeDef.peek().tier === 4 ? activeDef.peek().site : null) });
   return docsSvc;
 }
 

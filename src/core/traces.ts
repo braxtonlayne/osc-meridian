@@ -41,9 +41,17 @@ export function addressedTo(t: Trace, me: AccountId): boolean {
 /** Trace kinds Message Traffic shows as delivered messages (src/apps/mail/traces.ts). */
 export const MAIL_TRACE_KINDS: readonly Trace['kind'][] = ['mail', 'finding', 'form.decided', 'notice'];
 
+/**
+ * A trace Message Traffic shows as a message. A restoration certificate decision (form.decided from
+ * the isolation panel) is not: its outcome reaches the raiser as the panel's own certificate message.
+ */
+export function isMessageTrace(t: Pick<Trace, 'kind' | 'data'>): boolean {
+  return MAIL_TRACE_KINDS.includes(t.kind) && !(t.kind === 'form.decided' && t.data?.app === 'isolate');
+}
+
 /** Traces this account receives as messages: addressed here (or to all), not posted by itself. */
 export function inboundMailTraces(mine: readonly Trace[], me: AccountId): Trace[] {
-  return mine.filter((t) => MAIL_TRACE_KINDS.includes(t.kind) && t.from !== me && addressedTo(t, me));
+  return mine.filter((t) => isMessageTrace(t) && t.from !== me && addressedTo(t, me));
 }
 
 /** In-world message number the transfer system gives a trace: "MSG-08-80007" (series 8xxxx). */
@@ -68,11 +76,23 @@ export function traceSubject(t: Trace): string {
   }
 }
 
-export function createTraces(store: SharedStore, me: () => AccountId, nowIso: () => string): TracesApi {
+/**
+ * Cross-site message traffic sent while the network was isolated carries `data.queued` = the
+ * isolation reference. The message centre holds it until that isolation clears: it is not
+ * delivered (not in `mine`) while `holdRef` (the reference of the isolation now in force, or
+ * null) still names it.
+ */
+export function heldInQueue(t: Pick<Trace, 'data'>, holdRef: string | null): boolean {
+  const q = t.data?.queued;
+  return q !== undefined && holdRef !== null && q === holdRef;
+}
+
+export function createTraces(store: SharedStore, me: () => AccountId, nowIso: () => string, holdRef: () => string | null = () => null): TracesApi {
   const all = store.get<Trace[]>(TRACES_KEY, []);
   const mine = computed(() => {
     const id = me();
-    return all.value.filter((t) => addressedTo(t, id));
+    const hold = holdRef();
+    return all.value.filter((t) => addressedTo(t, id) && !heldInQueue(t, hold));
   });
   return {
     all,
@@ -99,7 +119,9 @@ export function createTraces(store: SharedStore, me: () => AccountId, nowIso: ()
 
 /** "Routed item TR-0007 received from operator 2-0412 (Deputy Commander, ALPHA-02). ..." */
 export function arrivalDetail(t: Trace, from: AccountDef | undefined, opShort: string): string {
-  const who = from ? `operator ${opShort} (${from.roleTitle})` : `operator account ${t.from}`;
+  // Queue decisions travel in the OIA compartment registry's name; the applicant is not told who certified.
+  const viaRegistry = t.kind === 'form.decided' && t.data?.app !== 'isolate';
+  const who = viaRegistry ? 'the OIA compartment registry' : from ? `operator ${opShort} (${from.roleTitle})` : `operator account ${t.from}`;
   const head = `Routed item ${t.id} received from ${who}.`;
   switch (t.kind) {
     case 'form.routed':
@@ -151,7 +173,7 @@ export function processArrivals(mine: readonly Trace[], ctx: ArrivalContext): Tr
       const slots = t.data && Object.keys(t.data).length ? { ...t.data } : undefined;
       if (!(t.seenBy ?? []).includes(ctx.me)) ctx.deliver(t.msgId, { ...(ctx.silent ? { silent: true } : {}), ...(slots ? { slots } : {}) });
       ctx.markSeen(t.id);
-    } else if (!ctx.silent && MAIL_TRACE_KINDS.includes(t.kind)) ctx.announce?.(t);
+    } else if (!ctx.silent && isMessageTrace(t)) ctx.announce?.(t);
   }
   return fresh;
 }

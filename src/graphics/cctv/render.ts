@@ -448,13 +448,28 @@ export function drawOsd(c: CanvasRenderingContext2D, w: number, h: number, osd: 
   c.lineWidth = Math.max(1.5, px / 6);
   const text = (s: string, tx: number, ty: number, align: CanvasTextAlign) => {
     c.textAlign = align;
+    // Backing box, as a DVR character generator draws it, so the caption reads on a bright sky.
+    const tw = c.measureText(s).width;
+    const pad = Math.max(2, Math.round(px * 0.2));
+    const x0 = align === 'right' ? tx - tw : align === 'center' ? tx - tw / 2 : tx;
+    c.fillStyle = grey(0, 0.55);
+    c.fillRect(Math.round(x0 - pad), Math.round(ty - pad / 2), Math.round(tw + pad * 2), Math.round(px + pad));
     c.strokeStyle = grey(14);
     c.strokeText(s, tx, ty);
     c.fillStyle = grey(238);
     c.fillText(s, tx, ty);
   };
   const m = Math.round(px * 0.6);
-  text(osd.title, m, m, 'left');
+  // The character generator has a fixed line: a long camera title is cut to the space left of the tags.
+  const tagW = osd.tags.reduce((mx, t) => Math.max(mx, c.measureText(t).width), 0);
+  const room = w - m * 2 - (osd.tags.length ? tagW + px : 0);
+  const full = c.measureText(osd.title).width;
+  const font = c.font;
+  if (full > room) c.font = `500 ${Math.max(7, Math.floor((px * Math.max(0.7, room / full))))}px "IBM Plex Mono", "Courier New", monospace`;
+  let title = osd.title;
+  while (title.length > 1 && c.measureText(title).width > room) title = title.slice(0, -1);
+  text(title.trimEnd(), m, m, 'left');
+  c.font = font;
   text(osd.stamp, m, h - m - px, 'left');
   osd.tags.forEach((t, i) => text(t, w - m, m + i * (px + 2), 'right'));
   c.restore();

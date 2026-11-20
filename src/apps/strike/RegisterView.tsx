@@ -76,7 +76,7 @@ export function RegisterView(p: RegisterViewProps) {
           <ToolbarButton label="Withdraw..." disabled={!one} onClick={p.onWithdraw} title="Withdraw the selected entry (own entries only)" />
         )}
         <ToolbarLabel>
-          {p.auditor ? `All operators: ${p.entries.length} entries` : `Own entries: ${p.entries.length} of ${p.total} in the register`}
+          {p.auditor ? `All operators: ${p.entries.length} ${p.entries.length === 1 ? 'entry' : 'entries'}` : `Own entries: ${p.entries.length} of ${p.total} in the register`}
         </ToolbarLabel>
       </Toolbar>
       {p.isolatedNote ? <p class="stk-note stk-note--bar">{p.isolatedNote}</p> : null}

@@ -10,7 +10,7 @@ import type { ComponentChildren } from 'preact';
 import type { AppProps, DocJson, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
 import { load as loadStore, save as saveStore } from '@core/persist';
 import {
   Button,
@@ -244,7 +244,7 @@ export default function App({ win, route }: AppProps) {
     if (!doc) return null;
     const terms = ticketTerms(doc, doc, services.docs.byDocNo, TOP);
     const operator = `${services.session.operatorId.value} (${services.account.def.value.pn})`;
-    return withOwnAccess(doc, { entries: auditEntries, terms, workstation: WORKSTATION_ID, operator });
+    return withOwnAccess(doc, { entries: auditEntries, terms, workstation: workstationId(), operator });
   }, [doc, auditEntries]);
 
   const screenMarking: MarkingId = route

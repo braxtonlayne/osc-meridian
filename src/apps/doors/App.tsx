@@ -75,6 +75,12 @@ interface Refusal {
 
 type OverrideAsk = { kind: DoorOverride['kind']; target: string; then?: 'open' | 'bypass' };
 
+/** A non-locking status window: steady on while the condition stands, dark as soon as it clears. */
+function statusPoint(p: AnnPoint, on: boolean): AnnPoint {
+  if (on) return p.seq === 'ack' && p.abnormal ? p : { seq: 'ack', abnormal: true };
+  return p.seq === 'normal' && !p.abnormal ? p : ANN_NORMAL;
+}
+
 export default function App({ win, route }: AppProps) {
   const services = useServices();
   const acct = services.account.def.value;
@@ -93,6 +99,8 @@ export default function App({ win, route }: AppProps) {
   const [logSel, setLogSel] = useState<string | null>(null);
   const [logSite, setLogSite] = useState<string>(rules.logs.includes(acct.site) ? acct.site : rules.logs[0] ?? acct.site);
   const [msg, setMsg] = useState('Ready');
+  /** A door movement the status line is reporting: replaced by the end position once it stops. */
+  const [motion, setMotion] = useState<{ id: string; endsAt: number } | null>(null);
   const [refusal, setRefusal] = useState<Refusal | null>(null);
   const [ask, setAsk] = useState<OverrideAsk | null>(null);
   const [reason, setReason] = useState('');
@@ -125,6 +133,18 @@ export default function App({ win, route }: AppProps) {
     return () => window.clearInterval(t);
   }, [moving, reduced]);
 
+  // The status line reports the end of a commanded movement, from the board's own state.
+  useEffect(() => {
+    if (!motion || now < motion.endsAt) return;
+    const def = doorDef(motion.id);
+    if (def) {
+      const v = doorView(def, state.doors[motion.id], now);
+      if (!v.moving) setMsg(`${motion.id} ${POS_WORD[v.pos]}.`);
+      else return; // still travelling (a later command or the drill extended the stroke)
+    }
+    setMotion(null);
+  }, [motion, now, state]);
+
   /* ------------------------------------------------------------ seal drill */
   useEffect(() => {
     const r = applyDrill(doorsSig.peek(), drill, Date.now());
@@ -145,7 +165,8 @@ export default function App({ win, route }: AppProps) {
       const next = { ...prev };
       for (const t of ALARM_TILES) {
         const p = prev[t.id];
-        const n = annunciatorStep(p, ab[t.id] ? 'abnormal' : 'normal');
+        // Status windows (door in travel) follow the condition and do not lock in; alarms keep the full sequence.
+        const n = t.priority === 'status' ? statusPoint(p, !!ab[t.id]) : annunciatorStep(p, ab[t.id] ? 'abnormal' : 'normal');
         if (n !== p) {
           next[t.id] = n;
           changed = true;
@@ -157,7 +178,7 @@ export default function App({ win, route }: AppProps) {
   }, [ab.held, ab.interlock, ab.portal, ab.override, ab.remote, ab.decon, ab.drill, ab.travel]);
   useEffect(() => {
     // A board brought up on the screen shows every abnormal window unacknowledged.
-    setAnn(Object.fromEntries(ALARM_TILES.map((t) => [t.id, annunciatorStep(ANN_NORMAL, ab[t.id] ? 'abnormal' : 'normal')])) as Record<AlarmId, AnnPoint>);
+    setAnn(Object.fromEntries(ALARM_TILES.map((t) => [t.id, t.priority === 'status' ? statusPoint(ANN_NORMAL, !!ab[t.id]) : annunciatorStep(ANN_NORMAL, ab[t.id] ? 'abnormal' : 'normal')])) as Record<AlarmId, AnnPoint>);
     services.sound.stop('alarm');
   }, [site]);
   useEffect(() => () => services.sound.stop('alarm'), []);
@@ -313,6 +334,7 @@ export default function App({ win, route }: AppProps) {
       { door: id, site: dsite, cmd, from: v.pos, cycleSec: String(def.cycleSec), ...(keepOverride ? { override: keepOverride.ref } : {}) },
     );
     say(`${id} ${cmd === 'open' ? 'opening' : 'closing'}: ${def.cycleSec} s cycle.`);
+    setMotion({ id, endsAt: done });
   };
 
   /* ------------------------------------------------------------ airlock cycle */

@@ -4,7 +4,7 @@ import type { RouteEntry } from '@core/contracts';
 import type { Contractor, CoverCatalogueEntry } from '@core/canon-types';
 import { isRx, rxInfo } from '@core/rx';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
 import { DataTable, GroupBox, PropertyGrid, StatusLight, Tabs, formatNumber, formatOscDate, markingStyle, type Column } from '@design/index';
 import { contractorStats, releasedSites } from './logic';
 import { COUNCIL_RX, CVO_RX, OIA_RX, Withheld, canon, useGridCols } from './shared';
@@ -146,7 +146,7 @@ export function PersonnelSecurityPanel({ onActivity }: { onActivity: () => void 
             ...(services.account.def.value.probationStart
               ? [{ label: 'Probation', value: `Day ${services.session.probationDay.value} (transfer of ${formatOscDate(services.account.def.value.probationStart)})` }]
               : []),
-            { label: 'Workstation', value: WORKSTATION_ID, mono: true },
+            { label: 'Workstation', value: workstationId(), mono: true },
             {
               label: 'Audit trail',
               value: (
@@ -178,7 +178,7 @@ export function CommunicationsPanel() {
         rows={[
           { label: 'Network', value: canon.security.personnel.communications },
           { label: 'Accrediting office', value: cms ? `${cms.name}, ${cms.site}` : '' },
-          { label: 'This workstation', value: `${WORKSTATION_ID} (${services.account.def.value.site}), operator ${services.session.operatorId.value}`, mono: true },
+          { label: 'This workstation', value: `${workstationId()} (${services.account.def.value.site}), operator ${services.session.operatorId.value}`, mono: true },
           { label: 'Inventory handling', value: canon.classificationControl[0]?.text ?? '' },
         ].filter((r) => r.value)}
       />

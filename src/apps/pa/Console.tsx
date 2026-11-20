@@ -1,5 +1,6 @@
 /** Console view: zone selection, message library and script, panel controls, channel queue. */
 import type { AccountDef } from '@core/contracts';
+import { closeWorldText } from '@core/closed-world';
 import type { PaMessage } from '@core/canon-apps/pa';
 import { Checkbox, DataTable, ProgressBar, Select, type Column } from '@design/index';
 import { KeySwitch, Lamp, PanelFrame, PanelSection, Plate, PushButton, SegmentDisplay, SelectorSwitch } from '@graphics/panel';
@@ -122,9 +123,9 @@ export function Console(p: ConsoleProps) {
           </p>
           <div class="pa-script__note">
             {message.use === 'withheld'
-              ? `Carried from ${pa.withheld.carriedFrom} only.`
+              ? `Carried from ${p.account.tier === 4 ? closeWorldText(pa.withheld.carriedFrom, own) : pa.withheld.carriedFrom} only.`
               : message.use === 'operator' || message.use === 'test'
-                ? `Used at ${message.classes.join(', ')} sites. Recorded script; the controller plays the tones and the recording.`
+                ? `${p.account.tier === 4 ? '' : `Used at ${message.classes.join(', ')} sites. `}Recorded script; the controller plays the tones and the recording.`
                 : `Sent by the zone controller itself on a ${message.use === 'drill' ? 'seal drill' : 'network'} event.`}
           </div>
         </div>

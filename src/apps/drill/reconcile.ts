@@ -65,7 +65,8 @@ export function reconcile(services: Services, now: number): void {
   for (const r of services.shared.get<DrillRecord[]>(REGISTER_KEY, []).peek()) {
     const ended = r.phase === 'stand-down' || r.phase === 'aborted';
     const patch: DrillRecord['mailed'] = {};
-    if (r.by === me && r.noReport.length && !r.mailed.noReport) {
+    // Sent once every site has settled (sealed or carried NO REPORT), so the list matches the drill report.
+    if (r.by === me && r.phase !== 'propagating' && r.noReport.length && !r.mailed.noReport) {
       services.mail.deliver(frag.mail.noReport, {
         repeat: true,
         slots: { date: inWorldDateText(now), drill: r.id, sites: r.noReport.join(', '), count: String(r.noReport.length), ordered: zl(r.orderedAt) },
@@ -78,10 +79,10 @@ export function reconcile(services: Services, now: number): void {
     }
     if (ended && !r.mailed.oia) {
       if (r.observer) {
-        if (r.by === me) services.mail.deliver(frag.mail.oiaObserved);
-        else services.traces.post({ to: r.by, kind: 'mail.deliver', msgId: frag.mail.oiaObserved, subject: `OIA observation of seal drill ${r.id}` });
-      } else if (me === 'auditor') services.mail.deliver(frag.mail.oiaUnobserved);
-      else services.traces.post({ to: 'auditor', kind: 'mail.deliver', msgId: frag.mail.oiaUnobserved, subject: `Seal drill ${r.id} held without an OIA observer` });
+        if (r.by === me) services.mail.deliver(frag.mail.oiaObserved, { slots: { date: inWorldDateText(now) } });
+        else services.traces.post({ to: r.by, kind: 'mail.deliver', msgId: frag.mail.oiaObserved, subject: `OIA observation of seal drill ${r.id}`, data: { date: inWorldDateText(now) } });
+      } else if (me === 'auditor') services.mail.deliver(frag.mail.oiaUnobserved, { slots: { date: inWorldDateText(now) } });
+      else services.traces.post({ to: 'auditor', kind: 'mail.deliver', msgId: frag.mail.oiaUnobserved, subject: `Seal drill ${r.id} held without an OIA observer`, data: { date: inWorldDateText(now) } });
       patch.oia = true;
     }
     if (Object.keys(patch).length) {

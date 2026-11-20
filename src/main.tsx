@@ -14,7 +14,7 @@ import './shell/shell.css';
 import { render } from 'preact';
 import { canonNow, docsService, followRouteRebuilds, loadCanon, loadRoutes } from '@shell/adapters';
 import { startReconcile } from '@shell/reconcile';
-import { zoneForState } from '@sim/time';
+import { zoneForSite } from '@sim/time';
 import { initSession, satisfies } from '@core/session';
 import * as session from '@core/session';
 import { initAudit } from '@core/audit';
@@ -22,6 +22,7 @@ import { migrateLegacy, setActiveAccount } from '@core/persist';
 import { initActive, readPointer, takeSwitchNote } from '@core/accounts';
 import { currentPath } from '@core/router';
 import { initStores, setRoutes, startTraceWatch } from '@core/services';
+import { closeRoute } from '@core/closed-world';
 import { initWm } from '@shell/wm';
 import { bootSkipped, doLogin, pendingPath } from '@shell/state';
 import { Shell, setReady } from '@shell/Shell';
@@ -37,9 +38,12 @@ const switchNote = takeSwitchNote(accountId);
 bootSkipped.value = switchNote !== null;
 
 docsService(satisfies);
-setRoutes(loadRoutes());
+// Tier 4 closed world: route entries carry no other facility (originators; closed-world.ts).
+const closedSite = def.tier === 4 ? def.site : null;
+const closeAll = (list: ReturnType<typeof loadRoutes>) => (closedSite ? list.map((r) => closeRoute(r, closedSite)) : list);
+setRoutes(closeAll(loadRoutes()));
 // Dev: a content rebuild rewrites routes.json; re-index in place instead of losing the table.
-if (import.meta.hot) followRouteRebuilds(setRoutes);
+if (import.meta.hot) followRouteRebuilds((next) => setRoutes(closeAll(next)));
 
 const path = currentPath();
 // Keep the fragment (#para-6) so the deep link scrolls to its anchor after sign-in.
@@ -61,7 +65,7 @@ const ready = (async () => {
   // Site-local time follows the account's site (canon anchor state). ALPHA-02's location is
   // withheld, so the deputy's zone is the documented MDT (docs/narrative-2/accounts.md).
   const anchor = canonNow().full?.facilities.find((f) => f.id === def.site)?.anchor?.state;
-  session.siteZone.value = anchor ? zoneForState(anchor) : accountId === 'deputy' ? { abbr: 'MDT', offsetH: -6 } : zoneForState(null);
+  session.siteZone.value = zoneForSite(def.site, anchor);
   await Promise.all([initAudit(), initWm(), initStores()]);
   await startTraceWatch();
   // Per-account narrative: the analyst runs the pass-one engine unchanged; lifesupport, deputy

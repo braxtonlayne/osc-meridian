@@ -11,7 +11,7 @@ import { useServices } from '@core/services';
 import { formatInWorldDate, siteLocal, zulu } from '@core/session';
 import { isRx } from '@core/rx';
 import { readableByTier4 } from '@core/docs';
-import { WORKSTATION } from '@narrative/engine';
+import { workstationId } from '@core/audit';
 import {
   Button,
   ButtonRow,
@@ -110,7 +110,7 @@ function particulars(op: AccountDef, tier: number, probationDay: number): Record
     'operator.pn': op.pn,
     'operator.site': op.site,
     'operator.supervisorPn': op.supervisorPn ?? '',
-    'operator.workstation': WORKSTATION,
+    'operator.workstation': workstationId(),
     'operator.tier': String(tier),
     'operator.probationStart': op.probationStart ?? '',
     'operator.onProbation': probation,
@@ -377,7 +377,7 @@ function Catalogue({ win }: AppProps) {
           { id: 'count', width: 130, content: `${rows.length} of ${all.length} forms` },
           { id: 'rc', width: 100, content: `${rcpts.length} receipts` },
           ...(approver ? [{ id: 'q', width: 110, content: `${pending} pending` }] : []),
-          { id: 'ws', width: 110, mono: true, content: `WS ${WORKSTATION}` },
+          { id: 'ws', width: 110, mono: true, content: `WS ${workstationId()}` },
         ]}
       />
       <Dialog open={notice !== null} title="Forms Center" kind="info" onClose={() => setNotice(null)}>
@@ -472,7 +472,8 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
       pnPattern: PN_RE,
       knownPn: (pn) => pn === op.pn || canon.roster.some((p) => p.pn === pn),
       knownDocNo: (d) => !!services.docs.byDocNo(d),
-      facilities: canon.facilities.map((f) => f.id),
+      // Tier 4 closed world: the operator's own site is the only facility offered or accepted.
+      facilities: tier === 4 ? [op.site] : canon.facilities.map((f) => f.id),
     }),
     [tier, services.session.compartments.value],
   );
@@ -631,7 +632,8 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
           const t = services.traces.post(
             routedTrace({ formNo: spec.formNo, title: spec.title, route: route.route, receiptNo, enteredAt: receipt.enteredAt, fields: flat, entries, filer: op }, a.id),
           );
-          receipt.notes = [...receipt.notes, `Entered in the action queue of the ${a.roleTitle} for decision (routed item ${t.id}).`];
+          // The registry does not tell the applicant who the certifying officer is (msg-08-04341 para 4).
+          receipt.notes = [...receipt.notes, `Routed by the OIA compartment registry to a certifying officer for decision (routed item ${t.id}). The decision is returned to you in the registry's name.`];
           return t.id;
         });
         if (routed.length) receipt.routed = routed;
@@ -843,7 +845,7 @@ function FormWindow({ win, route }: AppProps & { route: RouteEntry }) {
                     readOnly={submitted}
                     idPrefix={idPrefix}
                     satisfies={services.clearance.satisfies}
-                    facilityOptions={FACILITY_OPTIONS}
+                    facilityOptions={tier === 4 ? FACILITY_OPTIONS.filter((o) => o.value === op.site) : FACILITY_OPTIONS}
                     signer={{ name: op.displayName, date: formatInWorldDate(), seed: 7 }}
                     lookupPn={(pn) => lookupPn(op, pn)}
                     lookupDoc={(d) => {

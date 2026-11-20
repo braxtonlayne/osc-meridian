@@ -39,7 +39,9 @@
         "forms",
         "terminal",
         "system"
-      ]
+      ],
+      "workstation": "A03-5-114",
+      "printQueue": "PRN-A03-5"
     },
     {
       "id": "lifesupport",
@@ -68,7 +70,9 @@
         "mail",
         "directives",
         "system"
-      ]
+      ],
+      "workstation": "G08-3-002",
+      "printQueue": "PRN-G08-3"
     },
     {
       "id": "deputy",
@@ -111,7 +115,9 @@
         "mail",
         "directives",
         "system"
-      ]
+      ],
+      "workstation": "A02-7-002",
+      "printQueue": "PRN-A02-7"
     },
     {
       "id": "auditor",
@@ -144,7 +150,9 @@
         "registry",
         "terminal",
         "system"
-      ]
+      ],
+      "workstation": "A01-4-022",
+      "printQueue": "PRN-A01-4"
     }
   ]
 }

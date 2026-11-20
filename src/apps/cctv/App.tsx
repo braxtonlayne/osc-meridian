@@ -208,7 +208,7 @@ export default function App({ win, route }: AppProps) {
           cv.width = res[0];
           cv.height = res[1];
         }
-        const c = cv.getContext('2d');
+        const c = cv.getContext('2d', { willReadFrequently: true });
         if (!c) continue;
         paintTile(c, res[0], res[1], tilesRef.current[i] ?? null, i, t, wall, !!p, p?.speed ?? 1, q);
       }

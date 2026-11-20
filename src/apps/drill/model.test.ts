@@ -149,3 +149,25 @@ describe('seal drill state', () => {
     expect(nextDrillId('SD', DAY, ['SD-08-0519-01', 'SD-08-0519-02', 'SD-07-1015-01'])).toBe('SD-08-0519-03');
   });
 });
+
+describe('attended site order position', () => {
+  it('waits for the operator ACK and answers late by standby watch', () => {
+    const plain = buildPlan({ canon, frag, inWorldIso: DAY, orderedAt: T0600, isolated: false }).find((p) => p.facility === 'GAMMA-08')!;
+    const att = buildPlan({ canon, frag, inWorldIso: DAY, orderedAt: T0600, isolated: false, attended: ['GAMMA-08'] }).find((p) => p.facility === 'GAMMA-08')!;
+    expect(att.causes).toContain('attended');
+    expect(att.ack!).toBeGreaterThan(plain.ack!);
+    expect(att.sealed).not.toBeNull();
+    expect(att.sealed!).toBeLessThanOrEqual(att.deadline);
+  });
+  it('an operator ACK brings the seal back to class time', () => {
+    const now = T0600;
+    const s = createDrill({ canon, frag, inWorldIso: DAY, orderedAt: now, isolated: false, attended: ['GAMMA-08'], id: 'SD-08-0519-01', now, by: 'deputy', secondOfficer: frag.orderPosition.secondOfficers[0]! });
+    const p = s.plan['GAMMA-08']!;
+    expect(s.sites['GAMMA-08']!.acknowledged).toBeNull();
+    const at = wallAt(s, p.receipt + 0.5);
+    const acked = manualAck(s, 'GAMMA-08', at)!;
+    const q = acked.plan['GAMMA-08']!;
+    expect(q.ack).toBeCloseTo(p.receipt + 0.5, 5);
+    expect(q.sealed!).toBeLessThan(p.sealed!);
+  });
+});

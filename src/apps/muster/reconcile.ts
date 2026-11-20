@@ -7,7 +7,7 @@
  */
 import type { DrillState, Services } from '@core/contracts';
 import { formatInWorldDate } from '@core/session';
-import { drillRuns, evaluate, upsertRun } from './model';
+import { drillEndFor, drillRuns, evaluate, upsertRun } from './model';
 import { INPUTS, MC, MUSTER_SITES, TS, permsFor, zuluOf } from './common';
 import { MUSTER_NONE, type MusterRun, type MusterState } from './types';
 
@@ -50,7 +50,7 @@ export function reconcile(services: Services, now: number): void {
   const runs = (services.shared.get<MusterState>(KEY, MUSTER_NONE).peek() ?? MUSTER_NONE).runs;
   for (const run of runs) {
     if (run.closeout || run.notices.includes('unaccounted') || responsible(services, run) !== me) continue;
-    const v = evaluate(run, now, INPUTS, TS);
+    const v = evaluate(run, now, INPUTS, TS, drillEndFor(run, drill, services.shared.get<{ id: string; endedAt?: number | null }[]>('drill-register', []).peek()));
     if (!v || v.closed || !v.reportDue || v.totals.unaccounted === 0) continue;
     let won = false;
     write(services, (s) => {

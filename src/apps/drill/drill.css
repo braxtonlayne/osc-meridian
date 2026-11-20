@@ -291,3 +291,11 @@
 .sd-dlg-warn {
   font-weight: var(--fw-bold);
 }
+
+/* The viewer's own command on the drill map (square outline; positions held under SEXTANT are noted in the key instead). */
+.sd-own {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 2;
+}

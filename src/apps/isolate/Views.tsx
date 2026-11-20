@@ -1,6 +1,7 @@
 /** The isolate app's views: control panel, initiation register, restoration, hub links, site view (Tier 4). */
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { AccountId } from '@core/contracts';
+import { accountById } from '@core/accounts';
 import { Button, ButtonRow, Checkbox, DataTable, GroupBox, PropertyGrid, TextArea, TextField, type Column } from '@design/index';
 import {
   Annunciator,
@@ -127,12 +128,24 @@ export function PanelView(p: PanelProps) {
         </div>
       </div>
 
-      <GroupBox title={s.withdrawn ? 'Control withdrawn from service' : next ? `Before actuation: consequences of initiation ${next.n} (${next.title.toLowerCase()})` : 'Consequences'}>
+      <GroupBox title={s.withdrawn ? 'Control withdrawn from service' : iso && cur ? `Isolation latched: initiation ${cur.n} (${cur.title.toLowerCase()}) in force` : next ? `Before actuation: consequences of initiation ${next.n} (${next.title.toLowerCase()})` : 'Consequences'}>
         {s.withdrawn ? (
           <p class="iso-p">
             The control is withdrawn from service in the actuated position under {cfg.panel.procedureDocNo}. The isolation is held. Restoration is reserved to the Council Secretariat and is not
             made from any workstation. The escalation level is not reduced by any procedure.
           </p>
+        ) : iso && cur ? (
+          <>
+            <ol class="iso-ol">
+              {cur.consequences.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ol>
+            <p class="iso-note">
+              The isolation is latched. A further actuation while the network is isolated has no effect on the circuits and does not raise the escalation level; it is recorded. The consequences of the
+              next initiation apply only once the circuits have been restored. Ref {cfg.panel.procedureDocNo}.
+            </p>
+          </>
         ) : next ? (
           <>
             <ol class="iso-ol">
@@ -228,7 +241,7 @@ export function RegisterView({ s, showArchived, onToggleArchived }: { s: Isolate
     at: i.at,
     operator: i.operatorId ?? operatorOf(i.by),
     role: ACCOUNT_ROLE[i.by] ?? i.by,
-    workstation: 'A03-5-114',
+    workstation: accountById(i.by)?.workstation ?? 'A03-5-114',
     level: i.level ?? n + 1,
     restoration: s.withdrawn && n === s.initiations.length - 1 ? 'Held. Reserved to Council Secretariat' : restorationOf(s.restorations ?? [], i.ref),
     archived: false,

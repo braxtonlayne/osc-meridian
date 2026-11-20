@@ -164,6 +164,7 @@ function QueueDetail({ item, win }: { item: QueueItem; win: WindowHandle }) {
             agencyLine={`${canon.meta.agency.toUpperCase()} · FILED COPY, RECEIPT ${routed.subject}`}
             subtitle={`Entries as filed by operator ${d[META.filer] ?? routed.from}. Read only.`}
             seal={<Seal size={40} variant="mono" />}
+            privacyNote={typeof doc.frontmatter.authority === 'string' ? <><b>AUTHORITY AND USE:</b> {doc.frontmatter.authority}</> : undefined}
           />
           <FieldGrid
             spec={spec}
@@ -173,7 +174,7 @@ function QueueDetail({ item, win }: { item: QueueItem; win: WindowHandle }) {
             idPrefix={`fxq-${routed.id}`}
             satisfies={services.clearance.satisfies}
             facilityOptions={canon.facilities.map((f) => ({ value: f.id, label: f.id }))}
-            signer={{ name: filer?.displayName ?? d[META.filer] ?? routed.from, date: formatInWorldDate(new Date()), seed: 11 }}
+            signer={{ name: d.signature || filer?.displayName || d[META.filer] || routed.from, date: formatInWorldDate(new Date()), seed: 7 }}
             lookupPn={(pn) => {
               const p = canon.roster.find((r) => r.pn === pn);
               if (p) return { pn, name: p.name, role: p.role, site: p.site };

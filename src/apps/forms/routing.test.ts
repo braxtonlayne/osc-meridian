@@ -19,6 +19,8 @@ const acct = (id: AccountDef['id'], approves: string[] = []): AccountDef => ({
   approves,
   auditReader: false,
   desktop: [],
+  workstation: 'A03-5-114',
+  printQueue: 'PRN-A03-5',
 });
 const ACCTS = [acct('analyst'), acct('lifesupport'), acct('deputy', ['OSC-F-126', 'OSC-F-122']), acct('auditor')];
 
@@ -76,7 +78,8 @@ describe('forms routing', () => {
     ]);
     expect(decisionOnReceipt('OSC-F-126/08-00321', 'analyst', [routed, back])?.id).toBe('TR-0003');
     expect(decisionOnReceipt('OSC-F-126/08-00321', 'auditor', [routed, back])).toBeUndefined();
-    expect(decisionLine(back)).toMatch(/^Approved by Deputy Commander, ALPHA-02\. Remarks: Sponsor confirmed\. Read-in to KESTREL/);
+    // The applicant is not told who certified (msg-08-04341 para 4).
+    expect(decisionLine(back)).toMatch(/^Approved by the certifying officer\. Remarks: Sponsor confirmed\. Read-in to KESTREL/);
   });
 
   it('keeps receipt serials apart per account, analyst unchanged', () => {

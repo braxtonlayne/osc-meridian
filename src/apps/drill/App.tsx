@@ -36,7 +36,7 @@ import { Annunciator, GuardedSwitch, KeySwitch, Lamp, PanelFrame, PanelSection, 
 import { RefusalState } from '@graphics/states';
 import { hhmmssZ, hhmmZ, inWorldDateIso, inWorldDateText } from '@sim/time';
 import { createDrill, drillClock, endDrill, evaluate, logLines, manualAck, manualSealed, minuteAt, nextDrillId, summarize, toRecord } from './model';
-import { canon, dtg, frag, PHASE_WORD, SD, STATUS_WORD, zl } from './shared';
+import { canon, dtgSec, frag, PHASE_WORD, SD, STATUS_WORD, zl } from './shared';
 import { DRILL_KEY, REGISTER_KEY, type DrillRecord, type DrillStateExt } from './types';
 import { LogView, MapView, MimicView, registerRows, RegisterView, SiteDetail, TimelineView, type LogRow } from './views';
 import './drill.css';
@@ -208,7 +208,8 @@ export default function App({ win, route }: AppProps) {
     for (const r of register) {
       const ended = r.phase === 'stand-down' || r.phase === 'aborted';
       const patch: DrillRecord['mailed'] = {};
-      if (r.by === me && r.noReport.length && !r.mailed.noReport) {
+      // Sent once every site has settled (sealed or carried NO REPORT), so the list matches the drill report.
+      if (r.by === me && r.phase !== 'propagating' && r.noReport.length && !r.mailed.noReport) {
         services.mail.deliver(frag.mail.noReport, {
           repeat: true,
           slots: { date: inWorldDateText(now), drill: r.id, sites: r.noReport.join(', '), count: String(r.noReport.length), ordered: zl(r.orderedAt) },
@@ -221,10 +222,10 @@ export default function App({ win, route }: AppProps) {
       }
       if (ended && !r.mailed.oia) {
         if (r.observer) {
-          if (r.by === me) services.mail.deliver(frag.mail.oiaObserved);
-          else services.traces.post({ to: r.by, kind: 'mail.deliver', msgId: frag.mail.oiaObserved, subject: `OIA observation of seal drill ${r.id}` });
-        } else if (me === 'auditor') services.mail.deliver(frag.mail.oiaUnobserved);
-        else services.traces.post({ to: 'auditor', kind: 'mail.deliver', msgId: frag.mail.oiaUnobserved, subject: `Seal drill ${r.id} held without an OIA observer` });
+          if (r.by === me) services.mail.deliver(frag.mail.oiaObserved, { slots: { date: inWorldDateText(now) } });
+          else services.traces.post({ to: r.by, kind: 'mail.deliver', msgId: frag.mail.oiaObserved, subject: `OIA observation of seal drill ${r.id}`, data: { date: inWorldDateText(now) } });
+        } else if (me === 'auditor') services.mail.deliver(frag.mail.oiaUnobserved, { slots: { date: inWorldDateText(now) } });
+        else services.traces.post({ to: 'auditor', kind: 'mail.deliver', msgId: frag.mail.oiaUnobserved, subject: `Seal drill ${r.id} held without an OIA observer`, data: { date: inWorldDateText(now) } });
         patch.oia = true;
       }
       if (Object.keys(patch).length) {
@@ -266,7 +267,7 @@ export default function App({ win, route }: AppProps) {
         services.traces.post({ to: 'deputy', kind: 'notice', subject: 'Seal drill order attempted from workstation A03-5-114', data: { text: `Order key attempted at the Seal Drill Coordinator by ${op} (Records Division, ALPHA-03). Refused: key not issued.` } });
       }
     } else if (canObserve) {
-      refuse('Order seal drill', 'OIA observes seal drills and does not order them. Use OIA OBSERVER to enter an observation against a drill once it is ordered.', `Ref ${PROC} para 7`, 'drill:order');
+      refuse('Order seal drill', 'OIA observes seal drills and does not order them. Use OIA OBSERVE (PB-5) to enter an observation against a drill once it is ordered.', `Ref ${PROC} para 7`, 'drill:order');
     } else {
       refuse('Order seal drill', 'Seal drills are ordered by a facility commander or deputy commander. This position reports for its own site.', `Ref ${PROC} para 3`, 'drill:order');
     }
@@ -290,7 +291,7 @@ export default function App({ win, route }: AppProps) {
   const issueOrder = (id: string, second: string) => {
     const t = Date.now();
     const iso = isolatedAt(isoSig.peek(), t);
-    const s = createDrill({ canon, frag, inWorldIso: inWorldDateIso(t), orderedAt: t, isolated: iso, id, now: t, by: me, secondOfficer: second });
+    const s = createDrill({ canon, frag, inWorldIso: inWorldDateIso(t), orderedAt: t, isolated: iso, attended: services.account.all().filter((a) => a.tier === 4).map((a) => a.site), id, now: t, by: me, secondOfficer: second });
     services.shared.set(DRILL_KEY, s);
     syncRegister(s);
     services.audit.log('control', 'drill:order', `Operator ${op} ordered network seal drill ${id} from the Seal Drill Coordinator. Second officer: ${second}. Read-back by Network Control confirmed.${iso ? ' Hub circuits were down at the order.' : ''}`, {
@@ -394,7 +395,7 @@ export default function App({ win, route }: AppProps) {
   /* ---------------------------------------------------------------- message log */
   const lines: LogRow[] = useMemo(() => {
     if (!drill) return [];
-    const all = logLines(drill, now, hhmmZ).map((l) => ({ ...l, dtg: dtg(l.at), clock: drillClock(l.t) }));
+    const all = logLines(drill, now, hhmmZ).map((l) => ({ ...l, dtg: dtgSec(l.at), clock: drillClock(l.t) }));
     if (!siteOnly) return all;
     return all
       .filter((l) => (l.facility === siteOnly || (l.facility === null && l.kind !== 'network')))
@@ -605,7 +606,7 @@ export default function App({ win, route }: AppProps) {
     ) : (
       <p class="sd-note sd-pad">Retrieving document from the records server.</p>
     );
-  } else if (view === 'map') main = <MapView {...vp} />;
+  } else if (view === 'map') main = <MapView {...vp} ownSite={def.site} />;
   else if (view === 'mimic') main = <MimicView {...vp} />;
   else if (view === 'timeline') main = <TimelineView {...vp} only={siteOnly} />;
   else if (view === 'log')
@@ -666,7 +667,7 @@ export default function App({ win, route }: AppProps) {
         </PanelFrame>
         <div class="sd-sitenote">
           <p>
-            Status: <strong>{received || siteState?.acknowledged != null ? STATUS_WORD[st] : drill && !ended ? 'NO ORDER RECEIVED' : 'NO DRILL IN PROGRESS'}</strong>
+            Status: <strong>{ended && received ? `STOOD DOWN${st === 'sealed' ? ' (site had reported SEALED)' : ''}` : received || siteState?.acknowledged != null ? STATUS_WORD[st] : drill && !ended ? 'NO ORDER RECEIVED' : 'NO DRILL IN PROGRESS'}</strong>
             {drill ? `  Drill ${drill.id}, ${PHASE_WORD[drill.phase]}.` : ''}
           </p>
           <p>
@@ -735,7 +736,7 @@ export default function App({ win, route }: AppProps) {
         <PanelSection title="DRILL" columns={3}>
           <PushButton legend={['STAND', 'DOWN']} color="green" lit={drill?.phase === 'sealed'} onPress={standDown} tag="PB-3" />
           <PushButton legend={['ABORT']} color="red" lit={drill?.phase === 'propagating'} onPress={askAbort} tag="PB-4" />
-          <PushButton legend={['OIA', 'OBSERVER']} color="white" mode="latching" pressed={!!drill?.observer && active} lit={!!drill?.observer && active} onPress={observe} tag="PB-5" />
+          <PushButton legend={['OIA', 'OBSERVE']} color="white" mode="latching" pressed={!!drill?.observer && active} lit={!!drill?.observer && active} onChange={observe} tag="PB-5" />
         </PanelSection>
         <PanelSection columns={1}>
           <Annunciator

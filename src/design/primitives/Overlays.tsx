@@ -1,6 +1,8 @@
 import type { ComponentChildren, TargetedKeyboardEvent } from 'preact';
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
 import './primitives.css';
+import { activeDef } from '@core/accounts';
+import { closeWorldText } from '@core/closed-world';
 import { cx } from '../util';
 import { Button } from './Button';
 
@@ -99,13 +101,18 @@ export function Dialog({
   title,
   kind = 'info',
   icon,
-  children,
-  reference,
+  children: rawChildren,
+  reference: rawReference,
   buttons = [{ label: 'OK', value: 'ok', isDefault: true, isCancel: true }],
   onClose,
   onOpen,
   scope = 'window',
 }: DialogProps) {
+  // Tier 4 closed world (SPEC-2 §1): a notice shown to a Tier 4 operator names no other facility.
+  const me = activeDef.peek();
+  const close = (c: unknown): unknown => (me.tier !== 4 ? c : typeof c === 'string' ? closeWorldText(c, me.site) : Array.isArray(c) ? c.map(close) : c);
+  const children = close(rawChildren) as ComponentChildren;
+  const reference = close(rawReference) as typeof rawReference;
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const bodyId = useId();

@@ -11,6 +11,14 @@
 .hst > :not(.hst-main) {
   flex: none;
 }
+/* The site select holds a full site name ("ALPHA-02"), not a clipped one. */
+.hst .f-select-wrap {
+  flex: none;
+  min-width: 11ch;
+}
+.hst .f-select {
+  min-width: 11ch;
+}
 .hst-calls,
 .hst-data {
   overflow-x: auto;

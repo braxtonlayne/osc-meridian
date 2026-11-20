@@ -21,7 +21,7 @@ import type { DrillState, IsolationState } from '@core/contracts';
 import { seg04LogLine } from '@narrative/seg04';
 import { isolatedAt, latestInitiation } from '@apps/isolate/state';
 import { SEG04_LABEL, SEG04_NO, seg04BlockId, seg04Phase, type Seg04Window } from './seg04';
-import { hash32, hhmmLocal, hhmmZ, inWorldDateIso, inWorldDay, inWorldWeekday, parseZ, rng, utcDayStart, zAndLocal, zoneForState, type Zone } from './time';
+import { hash32, hhmmLocal, hhmmZ, inWorldDateIso, inWorldDay, inWorldWeekday, parseZ, rng, utcDayStart, zAndLocal, zoneForSite, zoneForState, type Zone } from './time';
 
 /* ------------------------------------------------------------------ model */
 
@@ -165,7 +165,7 @@ export function buildModel(input: ModelInput): SimModel {
     });
   }
   const zones: Record<string, Zone> = {};
-  for (const [id, st] of Object.entries(input.states)) zones[id] = zoneForState(st);
+  for (const [id, st] of Object.entries(input.states)) zones[id] = zoneForSite(id, st);
   return { links, byKey: Object.fromEntries(links.map((l) => [l.key, l])), railSpeed, tramSpeed, zones };
 }
 
@@ -588,10 +588,18 @@ export function boardState(model: SimModel, now: number, opt: BoardOptions): Boa
   const plant = opt.plant ?? NO_PLANT;
   const iso = isolationNow(plant, now);
   const drill = drillNow(plant);
-  /** Instant a booked movement was brought to a stand, or null: isolation holds trains where they stand; a drill holds departures at the platform. */
+  /**
+   * Instant a booked movement was brought to a stand, or null: isolation holds trains where they stand;
+   * a drill holds departures at the platform, and a train already on the line when the drill was ordered
+   * runs on to the sealing portal at its far end and is held at the home signal outside it.
+   */
   const heldAt = (m: Movement): number | null => {
     if (iso && m.depMs <= now && iso.at < m.expArrMs) return Math.max(iso.at, m.depMs);
     if (drill && m.depMs >= drill.at && m.depMs <= now) return m.depMs;
+    if (drill && m.depMs < drill.at && drill.at < m.expArrMs) {
+      const atPortal = m.depMs + (m.expArrMs - m.depMs) * DRILL_PORTAL_FRACTION;
+      return atPortal <= now ? Math.max(atPortal, drill.at) : null;
+    }
     return null;
   };
   for (const m of [...movesPrev, ...movesToday]) {
@@ -880,6 +888,9 @@ export function isolationNow(plant: PlantInput, now: number): { ref: string; at:
   const last = latestInitiation(s);
   return { ref: last?.ref ?? 'ISOLATION', at: last ? (typeof last.ms === 'number' ? last.ms : wallOfInWorld(last.at, now)) : now };
 }
+
+/** Fraction of a run at which a train meets the home signal outside a sealed portal (seal drill hold). */
+export const DRILL_PORTAL_FRACTION = 0.97;
 
 /** The current seal drill, if it holds trains now (propagating or sealed). */
 export function drillNow(plant: PlantInput): { ref: string; at: number } | null {

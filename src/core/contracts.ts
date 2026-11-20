@@ -173,6 +173,10 @@ export interface AccountDef {
   auditReader: boolean;
   /** AppIds on this account's desktop, in icon order (Directory still lists every app). */
   desktop: AppId[];
+  /** Workstation this credential is issued on, at the account's own site (e.g. "A03-5-114"). */
+  workstation: string;
+  /** Print queue serving that workstation's group (e.g. "PRN-A03-5"). */
+  printQueue: string;
 }
 
 /** One cross-account trace (shared store, append-only). */

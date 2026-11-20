@@ -54,7 +54,7 @@ Release notes for 4.1.7 are summarised in :x[KB-0001].
 | Item | Value |
 |---|---|
 | Function | Read-only display of the audit trail of any MERIDIAN workstation account, under :x[OSC-DIR-0301] para 9 |
-| Workstation groups assigned | A03-5 (Records Division, ALPHA-03); A02-7 (Command Section, ALPHA-02); G08-1 (GAMMA-08) |
+| Workstation groups assigned | A03-5 (Records Division, ALPHA-03); A02-7 (Command Section, ALPHA-02); G08-3 (GAMMA-08) |
 | Effect on the account reviewed | None. The reviewed operator is not told. |
 | Own trail | The review itself is written to this workstation's audit trail, which is reviewed by the Director |
 

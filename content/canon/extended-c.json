@@ -65,6 +65,8 @@
       "supervisorPn": "P-2-04-0218",
       "approves": [],
       "auditReader": false,
+      "workstation": "A03-5-114",
+      "printQueue": "PRN-A03-5",
       "desktop": [
         "registry",
         "transit",
@@ -96,6 +98,8 @@
       "supervisorPn": "P-2-06-0343",
       "approves": [],
       "auditReader": false,
+      "workstation": "G08-3-002",
+      "printQueue": "PRN-G08-3",
       "desktop": [
         "environ",
         "doors",
@@ -130,6 +134,8 @@
         "OSC-F-109"
       ],
       "auditReader": false,
+      "workstation": "A02-7-002",
+      "printQueue": "PRN-A02-7",
       "desktop": [
         "registry",
         "transit",
@@ -170,6 +176,8 @@
       "supervisorPn": "P-2-01-0047",
       "approves": [],
       "auditReader": true,
+      "workstation": "A01-4-022",
+      "printQueue": "PRN-A01-4",
       "desktop": [
         "assurance",
         "records",

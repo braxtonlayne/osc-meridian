@@ -178,7 +178,8 @@ export function actionQueue(me: AccountId, all: readonly Trace[]): QueueItem[] {
 /** Disposition line shown on the filer's receipt once a decision is back. */
 export function decisionLine(t: Trace): string {
   const d = t.data ?? {};
-  const who = d[META.decidedRole] || 'the approving officer';
+  // Queue decisions go out in the registry's name: the applicant is not told who certified.
+  const who = d.app === 'isolate' ? d[META.decidedRole] || 'the approving officer' : 'the certifying officer';
   const verb = d.decision === 'approved' ? 'Approved' : 'Not approved';
   const note = d.note ? ` Remarks: ${d.note}` : '';
   const grant = d.grant ? ` Read-in to ${d.grant} under OSC-DIR-0412 para 4(b) is recorded on the next sign-in of the applicant.` : '';

@@ -138,23 +138,35 @@ export interface Delivery {
 /**
  * Headers for a delivered page. `entry` supplies fallbacks before the DocJson is loaded.
  * Traffic that arrives during the session (any arrival rule other than login) is stamped with
- * its delivery time; slot tokens in the subject are filled from the delivery record.
+ * its delivery time; slot tokens in the subject are filled from the delivery record. Mail with no
+ * arrival rule (account narrative and application event mail) counts as event traffic when its
+ * delivery carries slots: login deliveries carry none (docs/CONTRACTS.md, `{date}` slot), so a
+ * reply is never dated before the event that triggered it.
  */
+export function stampedDelivery(doc: Pick<DocJson, 'frontmatter'> | null | undefined, delivery?: Delivery): boolean {
+  if (!delivery?.at) return false;
+  const arrival = arrivalType(doc);
+  if (arrival) return arrival !== 'login';
+  return !!delivery.slots && Object.keys(delivery.slots).length > 0;
+}
+
+/** Headers for a delivered page (see stampedDelivery for the Sent DTG rule). */
 export function readHeaders(entry: RouteEntry, doc?: DocJson | null, delivery?: Delivery, sessionIso: string = inWorldIso()): MsgHeaders {
   const h = doc ? envelope(doc) : {};
-  const arrival = arrivalType(doc);
-  const stamped = delivery?.at && arrival && arrival !== 'login' ? dtgFromIso(delivery.at) : undefined;
+  const stamped = delivery?.at && stampedDelivery(doc, delivery) ? dtgFromIso(delivery.at) : undefined;
   const sent = stamped ?? fallbackSent(strOf(h.sent) ?? strOf(h.dtg), entry.date, sessionIso);
-  const from = strOf(h.from) ?? strOf(h.fm) ?? entry.originator;
   const slots = strArr(h.slots);
+  const addrVals = addressSlots(delivery?.slots ?? {});
+  const addr = (a: string) => fillText(a, addrVals);
+  const from = addr(strOf(h.from) ?? strOf(h.fm) ?? entry.originator);
   const subject = strOf(h.subject) ?? strOf(h.subj) ?? entry.title;
   const atts = Array.isArray(h.attachments)
     ? h.attachments.map((a) => (typeof a === 'string' ? a : isObj(a) ? strOf(a.docNo) : undefined)).filter((x): x is string => !!x)
     : [];
   return {
     from,
-    to: strArr(h.to),
-    cc: strArr(h.cc).concat(strArr(h.info)),
+    to: strArr(h.to).map(addr),
+    cc: strArr(h.cc).concat(strArr(h.info)).map(addr),
     precedence: normPrecedence(h.precedence),
     sent,
     sortKey: dtgKey(sent) ?? `${entry.date}T00:00`,
@@ -170,14 +182,35 @@ export function readHeaders(entry: RouteEntry, doc?: DocJson | null, delivery?: 
 }
 
 /**
+ * Slot values usable in addresses: the delivery slots plus `sitemail`, the mail domain label of
+ * the `site` slot ("GAMMA-08" -> "g08"), so a site-generated report is addressed from its own site.
+ */
+export function addressSlots(slots: Record<string, string>): Record<string, string> {
+  const m = /^([A-Z])[A-Z]*-(\d+)$/.exec(slots.site ?? '');
+  return m && !slots.sitemail ? { ...slots, sitemail: `${m[1]!.toLowerCase()}${m[2]}` } : slots;
+}
+
+/**
  * The same DocJson as DocumentView's templates read it: header block lifted to the top level,
  * slot tokens filled in the body, the subject and the title, and the delivery DTG on `sent`.
  */
 export function forView(doc: DocJson, h: MsgHeaders, delivery?: Delivery): DocJson {
   const vals = delivery?.slots ?? {};
   const html = fillSlots(doc.html, vals, h.slots);
-  const fm = { ...headerBlock(doc), subject: h.subject, sent: h.sent };
-  const stampedDate = delivery?.at && arrivalType(doc) && arrivalType(doc) !== 'login' ? delivery.at.slice(0, 10) : doc.date;
+  const hb = headerBlock(doc);
+  const fm: Record<string, unknown> = { ...hb, subject: h.subject, sent: h.sent };
+  // The message template reads the nested `message:` block: it carries the same Sent DTG as the list.
+  const raw = (doc.frontmatter ?? {}) as Record<string, unknown>;
+  if (isObj(raw.message)) fm.message = { ...raw.message, sent: h.sent, subject: h.subject };
+  // Addresses may carry slot tokens ({sitemail}): show them as resolved for this delivery.
+  const av = addressSlots(vals);
+  if (typeof hb.from === 'string') fm.from = fillText(hb.from, av);
+  for (const k of ['to', 'cc'] as const) {
+    const v = hb[k];
+    if (Array.isArray(v)) fm[k] = v.map((a) => (typeof a === 'string' ? fillText(a, av) : a));
+    else if (typeof v === 'string') fm[k] = fillText(v, av);
+  }
+  const stampedDate = delivery?.at && stampedDelivery(doc, delivery) ? delivery.at.slice(0, 10) : doc.date;
   return { ...doc, html, title: fillText(doc.title, vals, h.slots), date: stampedDate, frontmatter: fm };
 }
 

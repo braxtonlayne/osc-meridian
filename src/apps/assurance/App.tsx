@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AppProps, RouteEntry } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
+import { readableByTier4 } from '@core/docs';
 import { handheldActive, useServices } from '@core/services';
 import { MenuBar, MessageBox, Select, StatusBar, Toolbar, ToolbarButton, ToolbarSeparator, ToolbarSpacer, Tree, type MenuBarMenu, type TreeNode } from '@design/index';
 import { ActivityView, type ActivityScope } from './Activity';
@@ -75,6 +76,8 @@ export default function App({ win, route }: AppProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const ticket = tickets.find((t) => t.id === ticketId) ?? null;
+  /** Tier 4: an Assurance route not issued to Tier 4 is refused without its title, originator or register context. */
+  const t4Closed = tier4 && !!route && !readableByTier4(route);
   const view: Internal | null = route ? null : internal === 'ticket' && !ticket ? 'incidents' : internal;
 
   /* ---------------------------------------------------------- navigation */
@@ -128,7 +131,9 @@ export default function App({ win, route }: AppProps) {
 
   /* ------------------------------------------------- title, marking, status */
 
-  const markingNow: MarkingId = route
+  const markingNow: MarkingId = t4Closed
+    ? highestMarking([], canon.markings)
+    : route
     ? route.marking
     : view === 'ticket' && ticket
       ? ticket.marking
@@ -140,11 +145,13 @@ export default function App({ win, route }: AppProps) {
             ? highestMarking(['UMBRA-C'], canon.markings)
             : highestMarking([], canon.markings);
 
-  const title = route ? route.title : view === 'ticket' && ticket ? ticket.title : INTERNAL_TITLE[view ?? 'incidents'];
+  const title = t4Closed ? 'Assurance' : route ? route.title : view === 'ticket' && ticket ? ticket.title : INTERNAL_TITLE[view ?? 'incidents'];
   const docNo = route ? route.docNo : view === 'ticket' && ticket ? ticket.docNo : undefined;
 
   const entries = services.audit.entries.value.length;
-  const count = route
+  const count = t4Closed
+    ? ''
+    : route
     ? kindOf(route) === 'ctr'
       ? `${canon.contractors.register.length} primes`
       : kindOf(route) === 'cov'
@@ -157,7 +164,9 @@ export default function App({ win, route }: AppProps) {
         : view === 'ticket' && ticket
           ? `Rev ${ticket.revision}`
           : `${entries} entries`;
-  const message = route
+  const message = t4Closed
+    ? 'Access refused.'
+    : route
     ? `${route.docNo} · ${route.originator} · ${markingOf(route.marking)?.label ?? route.marking}`
     : view === 'ticket' && ticket
       ? `${ticket.docNo}: ${ticketSubject(ticket)}`
@@ -202,7 +211,7 @@ export default function App({ win, route }: AppProps) {
 
   /* ------------------------------------------------------------- tree */
 
-  const treeNodes: TreeNode[] = [
+  const treeNodes: TreeNode[] = tier4 ? [{ id: 'v:activity', label: 'Your session activity' }] : [
     {
       id: 'v:incidents',
       label: 'Incident queue',
@@ -268,7 +277,11 @@ export default function App({ win, route }: AppProps) {
     },
     {
       label: '&View',
-      items: [
+      items: tier4 ? [
+        { label: '&Your session activity', radio: true, checked: view === 'activity', onSelect: () => goInternal('activity') },
+        { separator: true },
+        { label: '&Refresh', shortcut: 'F5', onSelect: () => setNonce((n) => n + 1) },
+      ] : [
         { label: '&Incident queue', radio: true, checked: view === 'incidents' || view === 'ticket', onSelect: () => goInternal('incidents') },
         { label: '&Threat register', radio: true, checked: view === 'threats' || (!!route && kindOf(route) === 'threat'), onSelect: () => goInternal('threats') },
         { label: 'C&lassification guide', radio: true, checked: !!route && kindOf(route) === 'cg', onSelect: () => goKind('cg') },
@@ -283,7 +296,7 @@ export default function App({ win, route }: AppProps) {
         { label: '&Refresh', shortcut: 'F5', onSelect: () => setNonce((n) => n + 1) },
       ],
     },
-    {
+    ...(tier4 ? [] : [{
       label: '&Ticket',
       items: [
         {
@@ -307,11 +320,11 @@ export default function App({ win, route }: AppProps) {
             refuse({ title: 'Not available to this operator', body: 'An incident ticket is closed by its action officer when the inquiry is complete. Closure is not made from an operator workstation.', reference: 'OIA' }),
         },
       ],
-    },
+    }]),
     {
       label: '&Help',
       items: [
-        { label: '&Classification guide', onSelect: () => goKind('cg') },
+        ...(tier4 ? [] : [{ label: '&Classification guide', onSelect: () => goKind('cg') }]),
         { label: 'MERIDIAN &Help Desk', onSelect: () => services.openApp('system') },
         { separator: true },
         {
@@ -320,8 +333,10 @@ export default function App({ win, route }: AppProps) {
             setNotice({
               kind: 'info',
               title: 'About Assurance',
-              body: `Assurance, ${canon.meta.environment} release ${canon.meta.release}. Workbench of the Office of Internal Assurance: incident tickets, threat register, security protocols, classification guide, cover identity catalogue, contractor register and the operator's record of activity.`,
-              reference: 'OIA/ALPHA-01',
+              body: tier4
+                ? `Assurance, ${canon.meta.environment} release ${canon.meta.release}. Shows the operator's own record of workstation activity.`
+                : `Assurance, ${canon.meta.environment} release ${canon.meta.release}. Workbench of the Office of Internal Assurance: incident tickets, threat register, security protocols, classification guide, cover identity catalogue, contractor register and the operator's record of activity.`,
+              reference: tier4 ? 'OIA' : 'OIA/ALPHA-01',
             }),
         },
       ],
@@ -333,6 +348,8 @@ export default function App({ win, route }: AppProps) {
   let main;
   if (tier4 && !route && view !== 'activity') {
     main = <Tier4Refusal what={INTERNAL_TITLE[view ?? 'incidents']} />;
+  } else if (t4Closed) {
+    main = <Tier4Refusal what="Assurance record" />;
   } else if (route) {
     main = canRead(services, route) ? <RouteView key={`${route.id}:${nonce}`} entry={route} threats={threats} nav={nav} onActivity={() => goInternal('activity')} /> : <RouteRefusal entry={route} />;
   } else if (view === 'ticket' && ticket) {
@@ -354,11 +371,11 @@ export default function App({ win, route }: AppProps) {
     <div class={compact ? 'asr-app asr-app--compact' : 'asr-app'} ref={rootRef} onKeyDown={onKey}>
       <MenuBar menus={menus} label="Assurance menu" />
       <Toolbar label="Assurance views">
-        {tool('Queue', view === 'incidents' || view === 'ticket', () => goInternal('incidents'), 'Incident queue')}
-        {tool('Threats', view === 'threats' || k === 'threat', () => goInternal('threats'), 'Threat register')}
-        {!compact && tool('Classification', k === 'cg', () => goKind('cg'), 'Classification guide')}
-        {!compact && tool('Contractors', k === 'ctr', () => goKind('ctr'), 'Contractor register and compartment matrix')}
-        {!compact && tool('Covers', k === 'cov', () => goKind('cov'), 'Cover identity catalogue')}
+        {!tier4 && tool('Queue', view === 'incidents' || view === 'ticket', () => goInternal('incidents'), 'Incident queue')}
+        {!tier4 && tool('Threats', view === 'threats' || k === 'threat', () => goInternal('threats'), 'Threat register')}
+        {!compact && !tier4 && tool('Classification', k === 'cg', () => goKind('cg'), 'Classification guide')}
+        {!compact && !tier4 && tool('Contractors', k === 'ctr', () => goKind('ctr'), 'Contractor register and compartment matrix')}
+        {!compact && !tier4 && tool('Covers', k === 'cov', () => goKind('cov'), 'Cover identity catalogue')}
         {tool('Activity', view === 'activity', () => goInternal('activity'), 'Your session activity')}
         {auditor && tool('Review', view === 'review', () => goInternal('review'), 'Audit review of operator trails')}
         <ToolbarSeparator />

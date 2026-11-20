@@ -4,7 +4,7 @@ import canonJson from '@canon';
 import type { Canon, Facility } from '@core/canon-types';
 import type { DrillCanon } from '@core/canon-apps/drill';
 import type { GanttStatus } from '@graphics/drill';
-import { hhmmLocal, hhmmZ, inWorldDay, zoneForState } from '@sim/time';
+import { hhmmLocal, hhmmssZ, hhmmZ, inWorldDay, zoneForState } from '@sim/time';
 import type { SiteCause, SitePlan } from './types';
 
 export const canon = canonJson as unknown as Canon;
@@ -51,11 +51,18 @@ export function causeText(c: SiteCause): string {
       return 'Acknowledgement received on the order wire.';
     case 'cut':
       return 'Order not passed: hub circuits down.';
+    case 'attended':
+      return 'Order position attended at the site workstation. The order waits for the operator to acknowledge; the standby watch answers it late if the position does not.';
   }
 }
 
 /** "191452Z" */
 export const dtg = (ms: number) => `${String(inWorldDay(ms)).padStart(2, '0')}${hhmmZ(ms)}`;
+/**
+ * "191452:07Z": message-log DTG to the second. The drill runs compressed (canon sealDrill.timeScale), so
+ * a whole exercise passes in a few wall minutes; seconds keep the log's times moving with the drill clock.
+ */
+export const dtgSec = (ms: number) => `${String(inWorldDay(ms)).padStart(2, '0')}${hhmmssZ(ms)}`;
 /** "1452Z (1052 EDT)" */
 export const zl = (ms: number) => `${hhmmZ(ms)} (${hhmmLocal(ms, NC_ZONE)})`;
 

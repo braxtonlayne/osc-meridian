@@ -17,7 +17,8 @@ import type { AccountDef, AccountId, AppId, AuditEntry, RouteEntry } from '@core
 import type { Canon, Facility, FacilityId, MarkingId, TierNo } from '@core/canon-types';
 import { readableByTier4 } from '@core/docs';
 import { hasRx, isRx, rxPlain } from '@core/rx';
-import { formatInWorldDate } from '@core/session';
+import { formatInWorldDate, siteLocal } from '@core/session';
+import { activeDef, allAccounts } from '@core/accounts';
 import {
   ACCESSION_HELD,
   DIVISION_UTILITIES,
@@ -26,7 +27,7 @@ import {
   HOST,
   MAN,
   WORK_ORDERS,
-  WORKSTATION,
+  workstation,
   accession,
   accessionNo,
 } from './records';
@@ -143,8 +144,9 @@ export function hostDate(now: Date): string {
   return formatInWorldDate(now);
 }
 export const zulu = (now: Date): string => `${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}Z`;
-/** ALPHA-03 site-local (Eastern Daylight). */
-export const local = (now: Date): string => `${pad2((now.getUTCHours() + 20) % 24)}${pad2(now.getUTCMinutes())} EDT`;
+/** Host site-local: ALPHA-03 (Eastern Daylight) for the records host; a Tier 4 site host keeps its own site's zone. */
+export const local = (now: Date): string =>
+  activeDef.peek().tier === 4 ? siteLocal(now) : `${pad2((now.getUTCHours() + 20) % 24)}${pad2(now.getUTCMinutes())} EDT`;
 export const stamp = (now: Date): string => `${hostDate(now)} ${zulu(now)} (${local(now)})`;
 
 /** "2004-08" -> "AUG 2004" */
@@ -272,7 +274,7 @@ const whoami: Handler = (_p, ctx) => {
   lines.push(
     ...kv('Tier', ctx.acting ? `${ctx.tier} (acting)  baseline ${op.tier}` : String(ctx.tier), ctx.cols),
     ...kv('Site', `${op.site}  ${divisionLabel(ctx.canon, op.divisionId)}`, ctx.cols),
-    ...kv('Workstation', WORKSTATION, ctx.cols),
+    ...kv('Workstation', workstation(), ctx.cols),
     ...kv('Compartments', held.length ? held.join(' ') : 'None', ctx.cols),
   );
   // Accounts with no probation start are not on probation: no row.
@@ -292,10 +294,10 @@ export function resolveAccount(arg: string, accounts: readonly AccountDef[]): Ac
 
 const accounts: Handler = (_p, ctx) => {
   const list = ctx.accounts ?? [];
-  if (!list.length) return out(['No credentials are recorded as issued on this workstation.']);
+  if (!list.length) return out(['No credentials are recorded for this session.']);
   const me = identity(ctx).operatorId;
   const rw = Math.max(16, ctx.cols - 36);
-  const lines = [`CREDENTIALS ISSUED  WS ${WORKSTATION}  ${stamp(ctx.now)}`, `  ${col('OPERATOR', 15)}${col('TIER', 5)}${col('SITE', 10)}POST`];
+  const lines = [`CREDENTIALS HELD  WS ${workstation()}  ${stamp(ctx.now)}`, `  ${col('OPERATOR', 15)}${col('TIER', 5)}${col('SITE', 10)}POST`];
   for (const a of list) lines.push(`${a.operatorId === me ? '*' : ' '} ${col(a.operatorId, 15)}${col(String(a.tier), 5)}${col(a.site, 10)}${col(a.roleTitle, rw)}`.trimEnd());
   lines.push(`${list.length} credentials. * in use. Credentials are presented at the lock screen.`);
   return out(lines);
@@ -466,7 +468,8 @@ export function auditLine(e: AuditEntry, operatorId: string): string {
   const ymd = e.at.slice(2, 10).replace(/-/g, '');
   const valid = !Number.isNaN(d.getTime());
   const t = valid ? `${zulu(d)} (${local(d)})` : '----Z';
-  return `AUD-${ymd}-${String(e.seq).padStart(6, '0')} ${t} ${e.kind.toUpperCase()} ${operatorId} WS ${WORKSTATION} ${e.detail}`;
+  const ws = allAccounts().find((a) => a.operatorId === operatorId)?.workstation ?? workstation();
+  return `AUD-${ymd}-${String(e.seq).padStart(6, '0')} ${t} ${e.kind.toUpperCase()} ${operatorId} WS ${ws} ${e.detail}`;
 }
 
 /** AUDIT TAIL --OPERATOR output, once the trail has been read (read-only copy). */
@@ -608,9 +611,9 @@ const wo: Handler = (p, ctx) => {
   let added = false;
   if (w.readsInto) {
     const holds = ctx.compartments.includes(w.readsInto);
-    if (holds) dist.push(`WS ${WORKSTATION}`);
+    if (holds) dist.push(`WS ${workstation()}`);
     else if (ctx.flags.oriented) {
-      dist.push(`WS ${WORKSTATION} (added ${zulu(ctx.now)} ${hostDate(ctx.now)})`);
+      dist.push(`WS ${workstation()} (added ${zulu(ctx.now)} ${hostDate(ctx.now)})`);
       added = true;
     }
   }
@@ -618,7 +621,7 @@ const wo: Handler = (p, ctx) => {
   if (w.readsInto) {
     lines.push(...wrap(`Distribution holders are read into ${w.readsInto} for the duration of the order (DIR-0412 para 4(e)).`, ctx.cols));
     if (!ctx.compartments.includes(w.readsInto) && !ctx.flags.oriented) {
-      lines.push(...wrap(`Workstation ${WORKSTATION} not added to distribution: no orientation record for this operator (OSC-DIR-0412).`, ctx.cols));
+      lines.push(...wrap(`Workstation ${workstation()} not added to distribution: no orientation record for this operator (OSC-DIR-0412).`, ctx.cols));
     }
   }
   const released = w.readsInto && (ctx.compartments.includes(w.readsInto) || added);
@@ -837,7 +840,21 @@ export function run(line: string, ctx: HostContext): HostResult {
   if (!p.cmd) return out([]);
   const h = HANDLERS[p.cmd];
   if (!h) return out([`${p.cmd.toUpperCase()}: command not recognised. Type HELP for the commands available to this operator.`]);
-  return h(p, ctx);
+  return closeWorld(h(p, ctx), ctx);
+}
+
+const FACILITY_RE = /\b(ALPHA|BETA|GAMMA|DELTA)[- ](\d{1,2})\b/gi;
+
+/**
+ * Tier 4 closed world (SPEC-2 §1): no host output names another facility. Any facility id other
+ * than the operator's own site that reaches a Tier 4 session (help text, manual pages, refusals)
+ * is printed as "another site".
+ */
+export function closeWorld(r: HostResult, ctx: Pick<HostContext, 'account' | 'canon'>): HostResult {
+  if (!isTier4(ctx)) return r;
+  const home = identity(ctx).site;
+  const scrub = (l: string) => l.replace(FACILITY_RE, (m: string, c: string, n: string) => (`${c.toUpperCase()}-${n.padStart(2, '0')}` === home ? m : 'another site'));
+  return { ...r, lines: r.lines.map(scrub) };
 }
 
 /* ------------------------------------------------------------ completion */

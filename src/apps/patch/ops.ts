@@ -380,8 +380,16 @@ export function useOps(env: OpsEnv) {
     }
     services.sound.play('button');
     const digits = cur.digits + digit;
+    clearTimers();
     if (digits.length < PC.calls.dialDigits) {
-      setCall({ ...cur, phase: 'dialling', digits });
+      const left = PC.calls.dialDigits - digits.length;
+      const run = { ...cur, phase: 'dialling' as const, digits, transcript: [...cur.transcript.filter((l) => !l.startsWith('Dialling ')), `Dialling ${digits}: ${left} more digit${left === 1 ? '' : 's'}.`] };
+      setCall(run);
+      // Partial dial: the exchange waits a fixed time for the next digit, then releases the line.
+      later(PC.calls.interdigitS * 1000, () => {
+        const now = callRef.current;
+        if (now && now.phase === 'dialling' && now.digits === digits) settle({ ...now, phase: 'intercept', transcript: [...now.transcript, PC.messages.partialDial] }, 'intercept');
+      });
       return;
     }
     services.sound.play('dtmf');

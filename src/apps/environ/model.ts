@@ -140,7 +140,13 @@ export function readings(plant: EnvironPlant, controls: EnvironControls, filters
     return Math.max(ec.minZoneFlowM3h, (ahu?.ratedM3h ?? 0) * speedFrac(ec, controls.ahu[z.ahu]) * z.flowShare);
   });
   const rate = ec.metabolic.co2M3hPerPerson;
-  const zoneCo2 = ec.zones.map((_, i) => plant.co2Ppm + ((zp[i] ?? 0) * rate * 1e6) / (zoneFlow[i] ?? 1));
+  // Zone sensors read the site (mixed return air) value plus their own zone's load, less the
+  // flow-weighted average load, so the site figure is the flow-weighted mean of the zone readings
+  // and always lies between them (one source of truth for every display of site CO2).
+  const inc = ec.zones.map((_, i) => ((zp[i] ?? 0) * rate * 1e6) / (zoneFlow[i] ?? 1));
+  const totFlow = zoneFlow.reduce((a, b) => a + b, 0) || 1;
+  const meanInc = inc.reduce((a, v, i) => a + v * (zoneFlow[i] ?? 0), 0) / totFlow;
+  const zoneCo2 = inc.map((v) => plant.co2Ppm + v - meanInc);
 
   const scrubAhu = ec.zones[residualZone(ec)]?.ahu ?? '';
   const f = speedFrac(ec, controls.ahu[scrubAhu]);

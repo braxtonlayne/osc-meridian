@@ -34,7 +34,7 @@ This record sets out the procedure for transferring personnel between facilities
 
 ## 2. Requests
 
-2.1. A transfer is requested on OSC-F-122 (:x[OSC-F-122]) by the person or by the losing facility commander, and is approved by the Director, Personnel & Vetting. A transfer directed by Personnel & Vetting needs no request.
+2.1. A transfer is requested on :x[OSC-F-122] by the person or by the losing facility commander, and is approved by the Director, Personnel & Vetting. A transfer directed by Personnel & Vetting needs no request.
 
 2.2. A person on probation may not request a transfer. A request submitted during probation is refused under :x[OSC-DIR-0247] and the refusal is recorded.
 
@@ -89,6 +89,6 @@ This record sets out the procedure for transferring personnel between facilities
 
 6.2. At the final review the supervisor recommends one of: probation completed; probation extended by up to 90 days; return to the losing facility; or reassignment as directed by Personnel & Vetting. Extension, return and reassignment are approved by the Director, Personnel & Vetting.
 
-6.3. Exception. Where the gaining branch has no Tier 2 reviewer available for a duty, the supervisor of record may at an interim review recommend that a person on probation be given an acting designation for that duty. The designation may be issued only where the Deputy Commander of the gaining facility certifies operational necessity under :x[OSC-DIR-0395] para 3(b). Application is made on OSC-F-126 (:x[OSC-F-126]) with the supervisor of record as sponsor, or as provided in :x[OSC-DIR-0395] para 7. The acting designation does not shorten or interrupt probation.
+6.3. Exception. Where the gaining branch has no Tier 2 reviewer available for a duty, the supervisor of record may at an interim review recommend that a person on probation be given an acting designation for that duty. The designation may be issued only where the Deputy Commander of the gaining facility certifies operational necessity under :x[OSC-DIR-0395] para 3(b). Application is made on :x[OSC-F-126] with the supervisor of record as sponsor, or as provided in :x[OSC-DIR-0395] para 7. The acting designation does not shorten or interrupt probation.
 
 6.4. A person whose probation is not completed remains on the pay run in their current category until the outcome is approved.

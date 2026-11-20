@@ -3,6 +3,7 @@
  * (ALPHA hub links, mail, print queue, session timer) and the clock.
  */
 import { signal } from '@preact/signals';
+import { closeWorldText } from '@core/closed-world';
 import { useEffect, useRef } from 'preact/hooks';
 import type { AppId } from '@core/contracts';
 import { APPS, OFFICE_APP_IDS, PLANT_APP_IDS, appById } from '@apps/index';
@@ -73,6 +74,19 @@ export function hubLinks(now: number): { id: string; state: LinkState; note: str
       ? { id, state: 'DEGRADED' as const, note: 'QKD re-key in progress; traffic queued' }
       : { id, state: 'NOMINAL' as const, note: 'Link up; key current' };
   });
+}
+
+/**
+ * Tier 4 closed world (SPEC-2 §1): the operator's tray shows one network link (the worst of the hub
+ * links), not the hubs by name.
+ */
+export function closedLinks(links: { id: string; state: LinkState; note: string }[]): { id: string; state: LinkState; note: string }[] {
+  const rank: Record<string, number> = { DOWN: 3, DEGRADED: 2, BUSY: 1, NOMINAL: 0, LOCAL: -1 };
+  const remote = links.filter((l) => l.state !== 'LOCAL');
+  const worst = remote.reduce<(typeof links)[number] | null>((w, l) => (!w || (rank[l.state] ?? 0) > (rank[w.state] ?? 0) ? l : w), null);
+  if (!worst) return [];
+  const note = worst.state === 'NOMINAL' ? 'Link up; key current' : closeWorldText(worst.note, session.site.value);
+  return [{ id: 'NETWORK', state: worst.state, note }];
 }
 
 const stClass = (s: LinkState) => (s === 'DOWN' ? 'st-fault' : s === 'DEGRADED' || s === 'BUSY' ? 'st-degraded' : 'st-nominal');
@@ -298,7 +312,7 @@ function TaskButton({ w }: { w: Win }) {
 
 function Tray() {
   const now = session.tick.value;
-  const links = hubLinks(now);
+  const links = session.tier.value === 4 ? closedLinks(hubLinks(now)) : hubLinks(now);
   const unread = services.mail.unread.value;
   const pq = printQueue.value;
   const pop = trayPopup.value;
@@ -325,8 +339,8 @@ function Tray() {
       <button
         type="button"
         class="tray-item tray-links"
-        title={`Hub links: ${linkSummary}`}
-        aria-label={`Hub links: ${linkSummary}`}
+        title={`${session.tier.value === 4 ? 'Network link' : 'Hub links'}: ${linkSummary}`}
+        aria-label={`${session.tier.value === 4 ? 'Network link' : 'Hub links'}: ${linkSummary}`}
         aria-expanded={pop === 'links'}
         onClick={() => (trayPopup.value = pop === 'links' ? null : 'links')}
       >
@@ -352,7 +366,7 @@ function Tray() {
       <Clock />
       {pop === 'links' && (
         <div class="tray-pop" role="dialog" aria-label="Hub link state">
-          <div class="tray-pop-h">Hub links from {session.site.value}</div>
+          <div class="tray-pop-h">{session.tier.value === 4 ? 'Network link' : 'Hub links'} from {session.site.value}</div>
           <table class="tray-table">
             <tbody>
               {links.map((l) => (

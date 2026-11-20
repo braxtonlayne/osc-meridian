@@ -29,6 +29,25 @@ export const TILES: Tile[] = [
 ];
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
+/**
+ * "19 MAY 2008 0301Z (18 MAY 2201 CDT)": date and Zulu time of an in-world ISO instant, with the
+ * site local time, which carries its own day when it falls on another date than the Zulu one.
+ */
+export function zlDated(iso: string): string {
+  const DAY = 86_400_000;
+  const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const z = Date.parse(iso);
+  const l = z + EC.local.utcOffsetH * 3_600_000;
+  const word = (ms: number) => {
+    const x = new Date(ms);
+    return `${pad2(x.getUTCDate())} ${MON[x.getUTCMonth()]}`;
+  };
+  const ld = new Date(l);
+  const lh = `${pad2(ld.getUTCHours())}${pad2(ld.getUTCMinutes())} ${EC.local.zone}`;
+  const same = Math.floor(l / DAY) === Math.floor(z / DAY);
+  return `${word(z)} ${new Date(z).getUTCFullYear()} ${session.zulu(new Date(z))} (${same ? '' : `${word(l)} `}${lh})`;
+}
+
 /** "1430Z (0930 CDT)" for a wall time, site local per canon. */
 export function zl(w: number): string {
   const d = new Date(w);

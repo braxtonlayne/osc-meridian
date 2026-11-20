@@ -19,6 +19,7 @@
  *   block   <div class="rx-released rx-block" data-rx="<id>" data-key data-auth data-ref>…</div>
  */
 import type { AccountId, DocJson, ReleaseKey, RouteEntry, Services } from './contracts';
+import { closeDoc, closeRoute } from './closed-world';
 import { asset } from './base';
 import { decodeRelease, releaseFileName } from './release-codec';
 
@@ -54,6 +55,8 @@ export interface DocsDeps {
   fetchJson?: (url: string) => Promise<unknown>;
   /** Active account (pass two). Read on every load(); null/undefined = base documents only. */
   account?: () => AccountId | null | undefined;
+  /** Tier 4 closed world: the operator's own site, or null. Route entries and loaded documents name no other facility (closed-world.ts). */
+  closedSite?: () => string | null | undefined;
 }
 
 /** URL path (before asset()) of a document's JSON, base or an account's variant. */
@@ -142,7 +145,8 @@ export function createDocs(deps: DocsDeps): DocsService {
   const byDocNoMap = new Map<string, RouteEntry>();
   const byIdMap = new Map<string, RouteEntry>();
   const index = (list: RouteEntry[]) => {
-    routes = [...list];
+    const home = deps.closedSite?.();
+    routes = home ? list.map((r) => closeRoute(r, home)) : [...list];
     byRouteMap.clear();
     byDocNoMap.clear();
     byIdMap.clear();
@@ -188,7 +192,9 @@ export function createDocs(deps: DocsDeps): DocsService {
 
   return {
     async load(id: string): Promise<DocJson> {
-      const doc = await getDoc(id);
+      const home = deps.closedSite?.();
+      const raw = await getDoc(id);
+      const doc = home ? closeDoc(raw, home) : raw;
       const keys = [...new Set(doc.redactions.map((r) => r.key))].filter((k) => !isTier1Key(k) && deps.satisfies(k));
       if (!keys.length) return { ...doc };
       const files = await Promise.all(keys.map(getRelease));

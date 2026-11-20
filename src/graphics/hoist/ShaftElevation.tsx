@@ -46,7 +46,7 @@ export function ShaftElevation({ facilityId, tier, cages, selectedLevel = null, 
   const headY = Y(0) - 14;
   return (
     <div class="hg-elev" style={{ aspectRatio: `${width} / ${height}` }}>
-      <DepthSection2D facilityId={facilityId} tier={tier} width={width} height={height} selected={selectedLevel} onSelectLevel={onSelectLevel} />
+      <DepthSection2D facilityId={facilityId} tier={tier} width={width} height={height} selected={selectedLevel} onSelectLevel={onSelectLevel} levelDepth="floor" />
       <svg class="hg-elev__over" viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         {cages.map((c, i) => {
           const xc = X(PLAN.shaftX0 + laneW * (i + 0.5));

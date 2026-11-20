@@ -203,3 +203,64 @@ The principal is unnamed but plainly identifiable as the sitting President. The 
 - **The leaks.** Transit Control and the Assurance tree (H1, H2) undo the closed world in two clicks. Facility names in metadata and refusals (H3) wear it down.
 - **The auditor.** Strong: reading other people's trails and having a finding land in their inbox is the most "MERIDIAN" interaction in the build.
 - **The fiddly parts.** Mail DTGs (H5) and the workstation identity (H4) are the inconsistencies a careful reader will catch first.
+
+---
+
+## Fixes (F3)
+
+Fix agent F3 rebuilt and re-ran the repros with Playwright against `vite preview` on port 5341. Screenshots are in the fix scratch areas `f3/shots/` (H1–H5 and the Tier 4 sweep) and `f3b/shots/` (mediums and lows). `npm run build`, `npm run test` (759 unit tests and verify-dist) and `eslint .` all pass.
+
+### Closed world for Tier 4 (H1–H3)
+**Sweep result.** As OPR-G08-0611 I opened all 24 Directory applications and clicked every tab and toolbar button. I also opened every Tier 4 document route. No other facility id and no other workstation appears anywhere.
+
+**Transit Control (H1)** now opens as the in-world refusal for Tier 4 (`src/apps/transit/acct.tsx`).
+
+**Assurance (H2).** Tier 4 sees only "Your session activity", in the tree, the toolbar and the menus. A refused Assurance record keeps its title, originator and count out of the window. The shell's Tier 4 refusal window is now titled "<App>: access refused" and no longer carries the record's title (`src/core/services.ts`).
+
+**New `src/core/closed-world.ts` (H3).** For a Tier 4 session it removes other facilities from three places:
+- Route originators, applied in `main.tsx` and in the docs layer.
+- Loaded documents: originator, revision history, routing offices, distribution and cross-reference titles.
+- Text in `RefusalState` and `Dialog`.
+
+Office codes keep their division, so "CMS/ALPHA-02" reads "CMS". A trailing ", ALPHA-01" is dropped, and any other site reads "another site".
+
+**Other H3 changes:**
+- **Taskbar.** The taskbar shows one "Network link" in place of the named hubs.
+- **Finding and decision mail.** These name no site, and trace mail is passed through the same filter.
+- **PA.** The all-call refusal and the library footnote no longer name sites.
+- **Facility Registry.** It has a Tier 4 view (`T4View.tsx`): the document plus a site panel, with no depth, network, connections, class buttons, map or command chart.
+- **Personnel.** It shows only the document.
+- **OSC-PER-T4.** The network strengths are gone.
+- **Forms.** Facility fields offer and accept the operator's own site only.
+- **Terminal.** It connects to site host G08SV1, shows site-local time and scrubs other sites from its output.
+- **Credentials.** The view hides other cards' particulars.
+
+### Workstation per account (H4)
+**Canon.** Each account now has `workstation` and `printQueue` in canon, checked by the schema:
+
+| Account | Workstation | Print queue |
+|---|---|---|
+| analyst | A03-5-114 | PRN-A03-5 |
+| lifesupport | G08-3-002 | PRN-G08-3 |
+| deputy | A02-7-002 | PRN-A02-7 |
+| auditor | A01-4-022 | PRN-A01-4 |
+
+**Where it is used.** The following take the active account's values: audit phrasing (`workstationId()` and `printQueueId()`), the lock header (selected card), terminal, About, Assurance, Records, Forms, Isolate, System and Transit. The isolation review notice names the initiating account's workstation. `audit tail --operator` prints the target operator's workstation.
+
+**Content.** The auditor's group G08-1 is now G08-3.
+
+### Mail dates (H5)
+- Event mail with no arrival rule is stamped with its delivery time when the delivery carries slots. Login mail carries no slots and keeps its own DTG.
+- The reading pane now shows the same Sent DTG as the list (the nested `message:` block is updated too).
+- OIA drill mail and plant mail now carry a date slot.
+- Verified: Filter Change Overdue reads 190007Z in both the list and the message.
+
+### Mediums and lows (fork of F3)
+**Mediums.** M1–M6 and M8–M11 are fixed. M7 is partly fixed: the status line clears at the end of travel, but I could not reproduce the "in travel" refusal.
+
+**Lows:**
+- Fixed: L2, L3, L4, L5, L6, L7 (Assurance times use the site zone), L8, L10 and L12.
+- Improved: L11.
+- Not changed:
+  - L1 (markings).
+  - L9, left as is because the off-rota card 4-0611 is part of a secret.

@@ -63,8 +63,10 @@ describe('trace messages', () => {
       ctx('analyst'),
     );
     expect(m.subject).toBe('Decision on OSC-F-126/08-00321');
-    expect(m.from).toBe(acct('deputy').email);
-    expect(m.text).toMatch(/Approved by Deputy Commander, ALPHA-02/);
+    // Written to the applicant in the registry's name; the certifying officer is not named.
+    expect(m.from).toBe('registry@a01.oia.mer');
+    expect(m.text).toMatch(/Approved by the certifying officer/);
+    expect(m.text).not.toMatch(/Deputy Commander/);
     expect(m.text).toMatch(/KESTREL/);
   });
 });

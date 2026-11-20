@@ -14,7 +14,7 @@ import type { AppProps, IsolationState } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
 import * as session from '@core/session';
-import { Dialog, MenuBar, StatusBar, TextArea, TextField, Toolbar, ToolbarButton, ToolbarSeparator, type MenuBarMenu } from '@design/index';
+import { Checkbox, Dialog, formatOscDate, MenuBar, StatusBar, TextArea, TextField, Toolbar, ToolbarButton, ToolbarSeparator, type MenuBarMenu } from '@design/index';
 import { RefusalState } from '@graphics/states';
 import { annunciatorStep, ANN_NORMAL, type AnnPoint } from '@graphics/panel';
 import { EC, POSTED, TIME_SCALE, usePlant } from './plant';
@@ -343,7 +343,7 @@ export default function App({ win, route }: AppProps) {
     const delivered = services.mail.delivered.peek();
     if (overdue.length && !delivered.includes(EC.mail.filterOverdue)) {
       const b = overdue[0]!;
-      services.mail.deliver(EC.mail.filterOverdue, { slots: { date: session.formatInWorldDate(), bank: b, days: String(ages[b]), lastChange: st.filters[b].lastChange } });
+      services.mail.deliver(EC.mail.filterOverdue, { slots: { date: session.formatInWorldDate(), bank: b, days: String(ages[b]), lastChange: formatOscDate(st.filters[b].lastChange) } });
     }
     const lb = balanceRun.current;
     if (lb && !lb.withinTolerance && /occupan|load balance|implied/i.test(remarks) && !delivered.includes(EC.mail.loadBalance)) {
@@ -593,24 +593,38 @@ function OverrideDialog({ latched, onClose }: { latched: boolean; onClose: (reas
 
 function FilterDialog({ bank, age, onClose }: { bank: FilterBankId; age: number; onClose: (lot: string | null) => void }) {
   const [lot, setLot] = useState('');
-  const ok = /^GPB-\d{4}-\d{2}$/.test(lot.trim());
+  const [isolated, setIsolated] = useState(false);
+  const [tried, setTried] = useState(false);
+  const value = lot.trim().toUpperCase();
+  const lotError = !value
+    ? 'Enter the lot number from the stock label.'
+    : !/^GPB-\d{4}-\d{2}$/.test(value)
+      ? `${value} is not a filter set lot number. Lots read GPB-YYMM-NN, for example ${EC.filtration.stock.lot}.`
+      : null;
+  const isoError = isolated ? null : 'Confirm the bank was isolated at the local panel before it was opened.';
   return (
     <Dialog
       open
       title={`Record filter change, bank ${bank}`}
       kind="question"
       reference="DIR-0128"
-      onClose={(v) => onClose(v === 'ok' && ok ? lot.trim() : null)}
+      onClose={(v) => {
+        if (v !== 'ok') return onClose(null);
+        // Validate in place: an invalid entry keeps the dialog open with the reason shown.
+        if (lotError || isoError) return setTried(true);
+        onClose(value);
+      }}
       buttons={[
         { label: 'Record', value: 'ok', isDefault: true },
         { label: 'Cancel', value: 'cancel', isCancel: true },
       ]}
     >
       <p>
-        Bank {bank} pre-filter, final filter check and gas-phase bed. Last change {age} days ago. Record the replacement lot number from the stock label (form GPB-YYMM-NN). Isolate the bank at the local panel
-        before opening it.
+        Bank {bank} pre-filter, final filter check and gas-phase bed. Last change {age} days ago. Record the replacement lot number from the stock label (form GPB-YYMM-NN; the shelf stock in the{' '}
+        {EC.filtration.stock.store.toLowerCase()} is lot {EC.filtration.stock.lot}). Isolate the bank at the local panel before opening it.
       </p>
-      <TextField label="Lot number" value={lot} onInput={setLot} mono upper maxLength={12} />
+      <TextField label="Lot number" value={lot} onInput={setLot} mono upper maxLength={12} error={tried ? lotError : null} />
+      <Checkbox label={`Bank ${bank} isolated at the local panel (dampers shut, fan stopped) before opening`} checked={isolated} onChange={setIsolated} error={tried ? isoError : null} />
     </Dialog>
   );
 }

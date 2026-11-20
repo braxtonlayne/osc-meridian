@@ -92,7 +92,7 @@ export default function App({ win, route }: AppProps) {
   const doReset = (scope: ResetScope) => {
     const op = services.session.operatorId.peek();
     const what = scope === 'profile' ? `the local profile of operator ${op}` : 'every local profile on this workstation and the shared plant record';
-    services.audit.log('control', 'system:reset', `Operator ${op} reinitialised ${what} at workstation A03-5-114 (System Tools).`, { scope, account: account.id });
+    services.audit.log('control', 'system:reset', `Operator ${op} reinitialised ${what} at workstation ${account.workstation} (System Tools).`, { scope, account: account.id });
     const carry = services.audit.entries.peek().at(-1);
     setResetBusy(true);
     win.setBusy(true);

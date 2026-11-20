@@ -50,6 +50,7 @@
       { "id": "A", "lastChange": "2008-03-12", "dpBase": 0.86, "lot": "GPB-0731-14" },
       { "id": "B", "lastChange": "2008-04-23", "dpBase": 0.41, "lot": "GPB-0802-03" }
     ],
+    "stock": { "lot": "GPB-0805-01", "received": "2008-05-09", "store": "Plant store, level 3, bay 2", "sets": 2 },
     "cycleDays": 60,
     "dpChangeAt": 1,
     "dpClean": 0.35,

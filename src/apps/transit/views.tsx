@@ -52,6 +52,9 @@ export function linkTitle(l: SimLink): string {
 export function statusWord(l: SimLink, s: Snapshot | null): { status: 'NOMINAL' | 'DEGRADED' | 'FAULT' | 'OFFLINE'; word: string } {
   if (!l.inService) return { status: 'OFFLINE', word: 'NOT IN REVENUE SERVICE' };
   if (s?.possessions.some((p) => p.status === 'IN FORCE' && p.link === l.key)) return { status: 'DEGRADED', word: 'POSSESSION' };
+  // Network holds (shared plant state): isolation stands trains where they are; a seal drill holds them at the sealing portals.
+  if (s?.holds?.isolation) return { status: 'FAULT', word: 'HELD: ISOLATION' };
+  if (s?.holds?.drill) return { status: 'DEGRADED', word: 'HELD: SEAL DRILL' };
   return { status: 'NOMINAL', word: 'IN REVENUE SERVICE' };
 }
 

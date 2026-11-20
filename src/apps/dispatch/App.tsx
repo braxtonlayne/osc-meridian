@@ -98,6 +98,7 @@ export default function App({ win, route }: AppProps) {
 
   const data = useDeskData(services);
   const { model } = data;
+  const platZone = model.zones[acct.site] ?? NC_ZONE;
   const now = useNow();
   const possessions = useMemo(() => allPossessions(model, now), [model, Math.floor(now / 60_000)]);
   const moves = useMemo(() => (training ? [] : movementsAround(model, data.timetable, now, possessions, DSP.working.lookaheadDays)), [model, data.timetable, training, Math.floor(now / 60_000), possessions]);
@@ -559,8 +560,8 @@ export default function App({ win, route }: AppProps) {
   }, [view, docEntry?.id, training]);
   useEffect(() => {
     const n = recs.filter((r) => r.status !== 'cancelled' && r.status !== 'arrived').length;
-    win.setStatus(`${training ? 'Training simulator' : 'Live desk'}; ${n === 1 ? 'one movement' : `${n} movements`} entered`);
-  }, [training, recs.length]);
+    win.setStatus(mode === 'platform' ? `Tram platform indicator, ${acct.site}; display only` : `${training ? 'Training simulator' : 'Live desk'}; ${n === 1 ? 'one movement' : `${n} movements`} entered`);
+  }, [training, recs.length, mode]);
   useEffect(() => {
     const el = rootRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
@@ -769,7 +770,7 @@ export default function App({ win, route }: AppProps) {
           { id: 'sig', content: `Signal ${signal === 'clear' ? 'PROCEED' : signal === 'stop' ? 'DANGER' : signal === 'release' ? 'AWAITING RELEASE' : 'CLEARING'}`, mono: true },
           { id: 'trains', content: `Movements ${running}`, mono: true },
           { id: 'holds', content: holdWord, label: 'Network holds' },
-          { id: 'clock', content: `${hhmmssZ(now)} (${hhmmLocal(now, NC_ZONE)})`, mono: true, label: 'Network Control time' },
+          { id: 'clock', content: `${hhmmssZ(now)} (${hhmmLocal(now, mode === 'platform' ? platZone : NC_ZONE)})`, mono: true, label: mode === 'platform' ? 'Platform time' : 'Network Control time' },
         ]}
       />
       {notice && (

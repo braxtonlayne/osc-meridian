@@ -15,7 +15,7 @@ import { isRx, rxInfo } from '@core/rx';
 import { MenuBar, MessageBox, Redaction, Select, StatusBar, Toolbar, ToolbarButton, ToolbarSeparator, ToolbarSpacer, type MenuBarMenu } from '@design/index';
 import { ANN_NORMAL, annunciatorStep, type AnnPoint, type AnnunciatorTile, type GuardState } from '@graphics/panel';
 import { MUSTER_NONE, type MusterRun, type MusterState } from './types';
-import { addTally, allRuns, closeoutOf, currentRun, discrepancies, evaluate, nameVisible, reconciliation, runId, siteModel, upsertRun, type Person, type Read, type RunView, type Tally } from './model';
+import { addTally, allRuns, closeoutOf, currentRun, discrepancies, drillEndFor, evaluate, nameVisible, reconciliation, runId, siteModel, upsertRun, type Person, type Read, type RunView, type Tally } from './model';
 import { INPUTS, MC, MUSTER_SITES, PROC, PROC_SHORT, TS, canon, fmt, permsFor, signerLabel, tPlus, zuluOf } from './common';
 import { CloseoutView, NetworkBoard, PointBoard, SiteBoard, siteStatus, type NetRow } from './views';
 import { DocPane, RouteRefusal, routeKey } from './docs';
@@ -59,6 +59,7 @@ export default function App({ win, route }: AppProps) {
   const perms = useMemo(() => permsFor(acct), [acct.id]);
   const state = services.shared.get<MusterState>(KEY, MUSTER_NONE).value;
   const drill = services.shared.get<DrillState | null>('drill', null).value;
+  const drillRegister = services.shared.get<{ id: string; endedAt?: number | null }[]>('drill-register', []).value;
   const iso = services.shared.get<IsolationState>('isolation', ISO_NONE).value;
   const now = tick.value;
   const isolated = isolatedAt(iso, now);
@@ -91,15 +92,15 @@ export default function App({ win, route }: AppProps) {
     const m = new Map<string, RunView | null>();
     for (const s of visibleSites) {
       const r = currentRun(runs, s);
-      m.set(s, r ? evaluate(r, now, INPUTS, TS) : null);
+      m.set(s, r ? evaluate(r, now, INPUTS, TS, drillEndFor(r, drill, drillRegister)) : null);
     }
     return m;
-  }, [runs, now, visibleSites.length]);
+  }, [runs, now, visibleSites.length, drillRegister]);
   const cur = views.get(site) ?? null;
   const siteRuns = runs.filter((r) => r.site === site);
   const coView = useMemo(() => {
     const r = coRun ? siteRuns.find((x) => x.id === coRun) : null;
-    return r ? evaluate(r, now, INPUTS, TS) : cur;
+    return r ? evaluate(r, now, INPUTS, TS, drillEndFor(r, drill, drillRegister)) : cur;
   }, [coRun, siteRuns, now, cur]);
   const canControl = perms.controlSite === site && !offline(site);
 

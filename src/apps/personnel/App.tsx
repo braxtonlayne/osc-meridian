@@ -220,7 +220,13 @@ function PersonnelApp({ win, route }: AppProps) {
 
   const goItems: MenuItem[] = navEntries().map((e) => ({ label: e.group ? `${e.group}: ${e.label}` : e.label, checked: e.path === pathOf(view), radio: true, onSelect: () => go(e.path) }));
 
-  const menus: MenuBarMenu[] = [
+  // Tier 4 closed world (SPEC-2 §1): only the notice issued to Tier 4 opens here, as a document with no
+  // network summary, directory, calculator, org chart or section tree.
+  const t4 = services.session.tier.value === 4;
+  const t4Menus: MenuBarMenu[] = [
+    { label: '&File', items: [{ label: '&Print...', shortcut: 'Ctrl+P', onSelect: print }, { separator: true }, { label: '&Close', shortcut: 'Alt+F4', onSelect: () => win.close() }] },
+  ];
+  const menus: MenuBarMenu[] = t4 ? t4Menus : [
     {
       label: '&File',
       items: [
@@ -315,6 +321,8 @@ function PersonnelApp({ win, route }: AppProps) {
         />
       </div>
     );
+  } else if (t4) {
+    body = <DocPane entry={entry} reloadKey={reloadKey} />;
   } else {
     let inner;
     if (tab === 'doc') inner = <DocPane entry={entry} reloadKey={reloadKey} />;
@@ -377,12 +385,13 @@ function PersonnelApp({ win, route }: AppProps) {
     );
   }
 
-  const showNav = navShown && !narrow;
+  const showNav = navShown && !narrow && !t4;
 
   return (
     <Ctx.Provider value={ctx}>
       <div class="per-app" ref={rootRef} onKeyDown={onKeyDown}>
         <MenuBar menus={menus} label="Personnel System menu" />
+        {t4 ? null : (
         <Toolbar label="Personnel System">
           <ToolbarButton label="&Summary" pressed={view.kind === 'overview'} onClick={() => go(HOME)} />
           <ToolbarButton label="Directory" pressed={view.kind === 'directory'} onClick={() => go('/personnel/directory')} />
@@ -393,7 +402,8 @@ function PersonnelApp({ win, route }: AppProps) {
           <ToolbarButton label="Print" onClick={print} title="Print document (Ctrl+P)" />
           <ToolbarSpacer />
         </Toolbar>
-        {narrow ? (
+        )}
+        {narrow && !t4 ? (
           <div class="per-navsel">
             <Select
               label="Section"

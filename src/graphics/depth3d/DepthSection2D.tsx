@@ -16,6 +16,11 @@ export interface DepthSection2DProps {
   /** Drawing size in px; the SVG scales to its container width. */
   width?: number;
   height?: number;
+  /**
+   * Depth printed beside each level: its top (default; dossiers and the depth register) or its floor,
+   * which is the landing depth a hoist serves (canon hoists stops), so the hoist console reads one figure.
+   */
+  levelDepth?: 'top' | 'floor';
 }
 
 const px = (n: number): number => Math.round(n) + 0.5;
@@ -41,7 +46,7 @@ export function sectionTransform(m: SiteModel, width: number, height: number): {
   return { X: (x) => gL + availW / 2 + (x - cx) * s, Y: (y) => SECTION_PAD_T + availH / 2 - (y - cy) * s, s, gL, gR, availW, availH };
 }
 
-export function DepthSection2D({ facilityId, tier, selected = null, onSelectLevel, width = 760, height = 640 }: DepthSection2DProps): JSX.Element {
+export function DepthSection2D({ facilityId, tier, selected = null, onSelectLevel, width = 760, height = 640, levelDepth = 'top' }: DepthSection2DProps): JSX.Element {
   const m = buildSiteModel(facilityId);
   if (!m) {
     return <p class="d3v-none">No depth section is held for {facilityId}.</p>;
@@ -151,7 +156,7 @@ export function DepthSection2D({ facilityId, tier, selected = null, onSelectLeve
             <text x={labelX} y={ly + 3.5}>
               <tspan class="d3v2-mono">{String(l.n).padStart(2, '0')}</tspan>
               <tspan class="d3v2-mono" x={labelX + 50} text-anchor="end">
-                {fmtFt(l.topFt)}
+                {fmtFt(levelDepth === 'floor' ? l.topFt + l.heightFt : l.topFt)}
               </tspan>
               {!withheld && <tspan x={labelX + 58}>{name}</tspan>}
             </text>

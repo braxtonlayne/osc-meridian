@@ -198,3 +198,24 @@
 .env-mimicwrap .pk-mimic-svg {
   max-width: none;
 }
+/* Handheld: the view tool bar wraps to a second row; it must keep its height in the column. */
+.env-app > .toolbar {
+  flex: 0 0 auto;
+}
+/* Narrow window: the panel frame fits the window and its sections may shrink; the air path
+   mimic scrolls inside its own box instead of widening the frame. */
+@container (width < 720px) {
+  .env-app .pk-panel {
+    display: flex;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .env-app .pk-panel__body,
+  .env-app .pk-panel__body > * {
+    min-width: 0;
+  }
+  .env-app .pk-panel__no {
+    position: static;
+    align-self: flex-end;
+  }
+}

@@ -31,8 +31,12 @@ import { FilterBar, RegisterTable, SelectionSummary } from './RegisterView';
 import { CLASS_IDS, buildRows, cell, classFromRoute, classRoute, dossierRoute, facilityFromRoute, filterRows, isOpen, type RowFilter } from './model';
 import { HOME_SITE, canon, className, facilityById, fmt, useRxAudit, useViewer } from './shared';
 import { seedFor, useTelemetry } from './telemetry';
+import { overlayReading } from './plant-overlay';
+import type { EnvironState } from '@apps/environ/types';
+import type { DoorsState } from '@apps/doors/types';
 import './registry.css';
-import { T4Home, t4Refused, useCanonT2 } from './acct';
+import { T4Home, isTier4, t4Refused, useCanonT2 } from './acct';
+import { T4Registry } from './T4View';
 import { t2RosterNames } from '@core/canon-release';
 
 type HomeTab = 'register' | 'map' | 'document' | 'organisation';
@@ -54,6 +58,8 @@ export default function App(props: AppProps) {
   const services = useServices();
   const entry = props.route ?? services.docs.byRoute(INDEX_ROUTE) ?? null;
   if (t4Refused(services, entry)) return <T4Home win={props.win} services={services} title="Facility Registry" docNo={entry?.docNo ?? 'OSC-FAC-IDX'} />;
+  // Tier 4 closed world: only pages issued to Tier 4 reach here, shown without register, map, class or network navigation.
+  if (isTier4(services) && entry) return <T4Registry win={props.win} entry={entry} />;
   return <RegistryApp {...props} />;
 }
 
@@ -100,7 +106,15 @@ function RegistryApp({ win, route }: AppProps) {
 
   const load = useDoc(services, refused ? null : entry);
   const seed = useMemo(() => (fac && !refused ? seedFor(fac) : null), [fac?.id, refused]);
-  const telemetry = useTelemetry(seed);
+  const simulated = useTelemetry(seed);
+  // Sites with a modelled plant read it from shared plant state (one source of truth).
+  const environ = services.shared.get<EnvironState | null>('environ', null).value;
+  const doorsState = services.shared.get<DoorsState | null>('doors', null).value;
+  const telemetry = useMemo(() => {
+    if (!fac || !simulated.latest) return simulated;
+    const now = Date.now();
+    return { ...simulated, latest: overlayReading(simulated.latest, fac.id, environ, doorsState, now) };
+  }, [simulated, fac?.id, environ, doorsState]);
 
   /* ----------------------------------------------------- window chrome */
   useEffect(() => {

@@ -29,7 +29,7 @@ export const APPS: AppDefinition[] = [
   { id: 'hoist', title: 'Shaft Hoist Control', icon: 'hoist', homeRoute: '/hoist', minSize: { w: 640, h: 440 }, defaultSize: { w: 960, h: 640 }, load: () => import('./hoist/App') },
   { id: 'environ', title: 'Environmental Control', icon: 'environ', homeRoute: '/environ', minSize: { w: 680, h: 440 }, defaultSize: { w: 1040, h: 660 }, load: () => import('./environ/App') },
   { id: 'pa', title: 'Emergency Broadcast and Public Address', icon: 'pa', homeRoute: '/pa', minSize: { w: 600, h: 420 }, defaultSize: { w: 940, h: 620 }, load: () => import('./pa/App') },
-  { id: 'muster', title: 'Muster Board', icon: 'muster', homeRoute: '/muster', minSize: { w: 640, h: 420 }, defaultSize: { w: 1000, h: 640 }, load: () => import('./muster/App') },
+  { id: 'muster', title: 'Muster Board', icon: 'muster', homeRoute: '/muster', minSize: { w: 640, h: 420 }, defaultSize: { w: 1000, h: 760 }, load: () => import('./muster/App') },
   { id: 'patch', title: 'Hub Circuit Patch Panel', icon: 'patch', homeRoute: '/patch', minSize: { w: 680, h: 440 }, defaultSize: { w: 1040, h: 640 }, load: () => import('./patch/App') },
 ];
 

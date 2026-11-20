@@ -12,6 +12,8 @@ import type { AppProps, DocJson, RouteEntry, Trace } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
 import { siteZone, tick } from '@core/session';
+import type { IsolationState } from '@core/contracts';
+import { ISOLATION_NONE, isolatedAt, latestInitiation } from '@apps/isolate/state';
 import { loadCanonT2 } from '@core/canon-release';
 import { applyDecisions } from '@apps/forms/decisions';
 import {
@@ -587,11 +589,26 @@ export default function App({ win, route }: AppProps) {
 
   const send = (m: Outgoing) => {
     const a = sendAudit(operator, m);
-    services.audit.log('mail.send', a.subject, a.detail, a.data);
+    // Network isolation: traffic for another site is queued at the message centre until hub circuits are restored.
+    const iso = services.shared.get<IsolationState>('isolation', ISOLATION_NONE).peek();
+    const holdRef = isolatedAt(iso, Date.now()) ? (latestInitiation(iso)?.ref ?? '') : null;
+    const crossSite = (addr: string) => {
+      const site = services.account.byEmail(addr)?.site ?? dir.find((d) => d.address.toLowerCase() === addr.toLowerCase())?.site;
+      return !!site && site !== account.site && site !== 'DETACHED / UNPOSTED';
+    };
+    const queued = holdRef !== null && [...m.to, ...m.cc].some(crossSite);
+    services.audit.log('mail.send', a.subject, a.detail, queued ? { ...a.data, queued: holdRef } : a.data);
     // traffic for another issued account's mailbox is delivered into that account
-    for (const t of outgoingTraces(m, account, services.account.byEmail)) services.traces.post(t);
+    for (const t of outgoingTraces(m, account, services.account.byEmail)) {
+      const to = services.account.all().find((x) => x.id === t.to);
+      services.traces.post(holdRef !== null && to && to.site !== account.site ? { ...t, data: { ...t.data, queued: holdRef } } : t);
+    }
     setDraft(null);
-    setStatus(`Message dispatched to the message centre ${zuluLocal(new Date().toISOString(), siteZone.peek())}. A copy is filed in Sent Items.`);
+    setStatus(
+      queued
+        ? `Message accepted by the message centre ${zuluLocal(new Date().toISOString(), siteZone.peek())}. Network isolation ${holdRef} is in force: traffic for other sites is queued until hub circuits are restored. A copy is filed in Sent Items.`
+        : `Message dispatched to the message centre ${zuluLocal(new Date().toISOString(), siteZone.peek())}. A copy is filed in Sent Items.`,
+    );
   };
 
   const returnReceipt = (r: Row) => {
@@ -1183,6 +1200,15 @@ function MessagePane({ row, route, doc, delivery, dir, services, receiptPending,
     const s = row.sentItem!;
     const isReport = row.kind === 'report';
     const lines = isReport ? deliveryLines(s, dir) ?? [] : [];
+    // Sent under network isolation: lines for other sites were queued at the message centre.
+    const queuedRef = isReport ? services.audit.entries.peek().find((e) => e.seq === s.seq && e.kind === 'mail.send')?.data?.queued : undefined;
+    const iso = services.shared.get<IsolationState>('isolation', ISOLATION_NONE).value;
+    const stillHeld = queuedRef !== undefined && isolatedAt(iso, Date.now()) && (latestInitiation(iso)?.ref ?? '') === queuedRef;
+    const mySite = services.account.def.value.site;
+    const otherSite = (addr: string) => {
+      const site = services.account.byEmail(addr)?.site ?? dir.find((d) => d.address.toLowerCase() === addr.toLowerCase())?.site;
+      return !!site && site !== mySite;
+    };
     const html = isReport
       ? textToHtml(
           [
@@ -1190,7 +1216,11 @@ function MessagePane({ row, route, doc, delivery, dir, services, receiptPending,
             lines
               .map((l) =>
                 l.outcome === 'delivered'
-                  ? `${l.address}: delivered to the addressee's mailbox.`
+                  ? queuedRef !== undefined && otherSite(l.address)
+                    ? stillHeld
+                      ? `${l.address}: queued at the message centre. Network isolation ${queuedRef} is in force; traffic for other sites is held until hub circuits are restored.`
+                      : `${l.address}: queued under network isolation ${queuedRef}; delivered to the addressee's mailbox when hub circuits were restored.`
+                    : `${l.address}: delivered to the addressee's mailbox.`
                   : `${l.address}: not listed in the MERIDIAN directory. Passed to the message centre for manual routing.`,
               )
               .join('\n'),
@@ -1243,7 +1273,9 @@ function MessagePane({ row, route, doc, delivery, dir, services, receiptPending,
   const entry = row?.route ?? route!;
   if (!doc) return <div class="mt-preview-empty">Retrieving {entry.docNo} from the message centre.</div>;
   const h = readHeaders(entry, doc, delivery);
-  const viewDoc = forView(doc, h, delivery);
+  const shown = forView(doc, h, delivery);
+  // The "read receipt returned" line is true only once the operator has sent the receipt.
+  const viewDoc = h.readReceipt && (receiptPending || declinedReceipts.has(doc.docNo)) ? { ...shown, frontmatter: { ...shown.frontmatter, receipt: undefined } } : shown;
   const atts = [...h.attachments, ...doc.xrefs.map((x) => x.docNo)].filter((d, i, a) => a.indexOf(d) === i);
   return (
     <div class="mt-reader">

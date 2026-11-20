@@ -47,6 +47,8 @@ export const schema = z.strictObject({
   }),
   filtration: z.strictObject({
     banks: z.array(z.strictObject({ id: z.string().min(1), lastChange: isoDay, dpBase: num, lot: z.string().min(1) })).length(2),
+    /** Replacement filter sets on the shelf at the site plant store (the stock label). */
+    stock: z.strictObject({ lot: z.string().regex(/^GPB-\d{4}-\d{2}$/), received: isoDay, store: z.string().min(1), sets: num }),
     cycleDays: num,
     dpChangeAt: num,
     dpClean: num,

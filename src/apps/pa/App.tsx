@@ -7,6 +7,7 @@
  * (./types.ts); seal drills and network isolation add automatic calls to it.
  */
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { closeWorldText } from '@core/closed-world';
 import type { AccountId, AppProps, DrillState, IsolationState, RouteEntry, SoundCue } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { handheldActive, useServices } from '@core/services';
@@ -241,6 +242,7 @@ export default function App({ win, route }: AppProps) {
         { call: r.id, msg: m.no, zones: zs.join(','), site, priority: String(m.priority), airtimeSec: String(Math.round(airtimeMs(m) / 1000)) },
       );
       setSelectedCall(r.id);
+      say(`Call ${r.id}: message ${m.no} to ${zoneWords(zs)}. Logged in the broadcast log.`);
       if (v.note === 'restricted') {
         const lv = restrictedIn(zs, account).map((z) => (z.level != null ? `Level ${z.level}` : z.id));
         deliverOnce('restricted', { zone: zoneWords(zs), level: lv.join(', '), call: r.id });
@@ -331,7 +333,7 @@ export default function App({ win, route }: AppProps) {
 
   const networkLocked = () => {
     services.sound.play('switch');
-    refuse({ title: 'Key not present', reason: `Network all-call is keyed at ${pa.networkKey.heldBy}. Key ${pa.networkKey.keyNo} is not issued to this console.`, reference: `${DIRREF} para 5` }, 'network-all-call');
+    refuse({ title: 'Key not present', reason: `Network all-call is keyed at ${account.tier === 4 ? closeWorldText(pa.networkKey.heldBy, own) : pa.networkKey.heldBy}. Key ${pa.networkKey.keyNo} is not issued to this console.`, reference: `${DIRREF} para 5` }, 'network-all-call');
   };
 
   const toggleZone = (id: string, on: boolean) => {
@@ -381,13 +383,13 @@ export default function App({ win, route }: AppProps) {
         ? `Hub circuits down. Only the ${own} controller can be reached.`
         : drillHere
           ? 'Seal drill in progress at this site. Routine calls and tests suspended.'
-          : `Console ${pa.system.consoleNo}, ${own}. ${site !== own ? `Viewing ${site} controller.` : 'Select zones and a message, then BROADCAST.'}`
+          : `Console ${pa.system.consoleNo}, ${own}. ${site !== own ? `Viewing ${site} controller.` : onAirN || queuedN ? `${onAirN} ${onAirN === 1 ? 'call' : 'calls'} on air, ${queuedN} queued.` : 'Select zones and a message, then BROADCAST.'}`
       : view === 'log'
         ? `${allRows.length} calls on record. Enter shows a call.`
         : `Zone table, ${zoneSite} controller.`);
 
   useEffect(() => {
-    win.setTitle(route ? route.title : VIEW_TITLE[view], route?.docNo ?? '');
+    win.setTitle(route ? route.title : `${VIEW_TITLE[view]}, ${site}`, route?.docNo ?? '');
     win.setMarking(markingNow);
     win.setStatus(message);
   }, [route?.id, view, markingNow, message]);

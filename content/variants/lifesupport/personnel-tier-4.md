@@ -29,9 +29,9 @@ This notice is for Tier 4 personnel. Keep it with your joining papers.
 
 ## Your tier
 
-Tier 4 strength across the Office is :c[tiers.4.count]. The tier is made up of:
+Tier 4 is made up of these functions:
 
-::canon-table{source="tiers.4.composition" cols="role:Function,count:Strength"}
+::canon-table{source="tiers.4.composition" cols="role:Function"}
 
 Your clearance is :c[tiers.4.clearance]. Your knowledge scope is: :c[tiers.4.knowledgeScope] You work at one facility and you are told what you need to know about that facility. You are not told about other facilities and you should not ask.
 

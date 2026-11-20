@@ -128,3 +128,13 @@ All app agents ran as Opus (inherit); graphics they drew in their own src/graphi
 |---|---|---|---|---|
 | I1 | Integration: core, shell, narrative | Opus | src/core, src/shell, src/narrative, targeted app/graphics fixes | Headless reconcilers (lease per account), trace slots, isolatedAt everywhere, shared-key validators, per-account narrative specs, site-local mail times, ringback/allclear/evac, registry + transform exports, org chart T2 names, Lamp contrast. 743 tests; 18/18 cross-account scenario checks. ALPHA-02 position stays SEXTANT-withheld. |
 | I2 | Integration: content | Opus | content/**, docs/canon, manifest, README | 8 renumberings + login mail to 04341..04477, manifest 372 routes, t4 coverage, slot tokens, four deceased members of Congress as continuity readers (papers only, never read in). |
+
+## Pass two: verification and fixes
+| # | Agent | Model | Result |
+|---|---|---|---|
+| PT-A | Playtest analyst + deputy (unaided, no spoilers) | Opus | Cross-account F-126 → KESTREL, mail both ways, restoration certificate; 9 differing documents; 12 set pieces; 11 secrets found; 2 high, 6 medium, 15 low defects (docs/playtest-2/pt-a.md). |
+| PT-B | Playtest lifesupport + auditor | Opus | Environ job satisfying; findings delivered; 11 secrets; Tier 4 world leaks, workstation identity, mail dates (docs/playtest-2/pt-b.md). |
+| V2 | Audit: gates, leaks, budgets, guardrails, a11y, menus | Opus | Network 1,488 requests all local; 334 menu items none dead; §5 real-name audit passes; failures: Tier 1 text in client JS, shell 206.8 KB gz, doors keyboard, colophon, axe (docs/playtest-2/audit.md). |
+| F2 | Fix audit failures | Opus | Sanitiser corpus + verify rule 11 (JS leak scan, 104 → 0), shell 124.7 KB gz + rule 12 budget gate, SVG tabindex sweep + test, colophon, axe 0 serious. |
+| F3 | Fix PT-B defects | Opus | Closed-world filter for Tier 4, workstation per account (A03-5-114, G08-3-002, A02-7-002, A01-4-022), mail dated at delivery, mediums. |
+| F4 | Fix PT-A defects | Opus | In-world chart dates, mail held during isolation, F-126 decisions via registry, drill fixes, hoist depths from canon, drill holds trains, Cc delivery, ALPHA-02 MDT. |

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import './reactor.css';
+import { inWorldDateIsoAt } from '@sim/time';
 
 export interface TelemetrySeries {
   label: string;
@@ -111,13 +112,17 @@ export function TelemetryChart({ series, height, label }: TelemetryChartProps) {
           ticks: { stroke: tick, width: 1, size: 4 },
           border: { show: true, stroke: tick, width: 1 },
           values: (_u, splits) => {
-            let day = -1;
+            let day = '';
+            // Ticks under a minute apart carry seconds, so a short run does not repeat one label.
+            const secs = splits.length > 1 && Math.abs((splits[1] ?? 0) - (splits[0] ?? 0)) < 60;
             return splits.map((t) => {
               const d = new Date(t * 1e3);
-              const hm = `${p2(d.getUTCHours())}${p2(d.getUTCMinutes())}Z`;
-              const first = d.getUTCDate() !== day;
-              day = d.getUTCDate();
-              return first ? `${hm}\n${p2(day)} ${MON[d.getUTCMonth()] ?? ''}` : hm;
+              const hm = `${p2(d.getUTCHours())}${p2(d.getUTCMinutes())}${secs ? `:${p2(d.getUTCSeconds())}` : ''}Z`;
+              // The date line is the in-world calendar date, never the real one.
+              const iso = inWorldDateIsoAt(t * 1e3);
+              const first = iso !== day;
+              day = iso;
+              return first ? `${hm}\n${iso.slice(8, 10)} ${MON[Number(iso.slice(5, 7)) - 1] ?? ''}` : hm;
             });
           },
         },

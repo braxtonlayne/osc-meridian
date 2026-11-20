@@ -4,10 +4,19 @@
  * answers from. Figures shown alongside these come from canon at run time.
  */
 
-/** Host identity. The workstation is the visitor's accredited seat (docs/NARRATIVE.md §0). */
-export const HOST = 'A03RD1';
-export const HOST_TITLE = 'MERIDIAN RECORDS HOST';
-export const WORKSTATION = 'A03-5-114';
+import { workstationId } from '@core/audit';
+import { activeDef } from '@core/accounts';
+
+/**
+ * A Tier 4 credential is connected to its own site's host, never to the ALPHA-03 records host
+ * (closed world, SPEC-2 §1): the host name is the workstation's site prefix (G08-3-002 -> G08SV1).
+ */
+const closed = activeDef.peek().tier === 4;
+
+/** Host identity. The workstation is the active credential's own seat (canon accounts[].workstation). */
+export const HOST = closed ? `${activeDef.peek().workstation.slice(0, 3)}SV1` : 'A03RD1';
+export const HOST_TITLE = closed ? 'MERIDIAN SITE HOST' : 'MERIDIAN RECORDS HOST';
+export const workstation = (): string => workstationId();
 export const PROMPT = `${HOST}> `;
 
 export interface HelpLine {

@@ -76,6 +76,12 @@ export interface PlanInput {
   orderedAt: number;
   /** Hub circuits down at the order. */
   isolated: boolean;
+  /**
+   * Sites whose order position is held by an issued operator account (Tier 4 site operators). The
+   * order waits there for the operator's ACK; the standby watch acknowledges only as a late
+   * fallback, so the site still reports sealed by its deadline if nobody is at the position.
+   */
+  attended?: readonly string[];
 }
 
 /** Sites the origin reaches without a hub circuit: the origin and its own tram network. */
@@ -144,6 +150,10 @@ export function buildPlan(inp: PlanInput): SitePlan[] {
       ack = wire.ackAtMin;
       ackCircuit = wire.circuit;
       causes.push('order-wire');
+    } else if (inp.attended?.includes(step.facility)) {
+      // Standby watch fallback: late enough that the doors still close by the deadline.
+      ack = Math.max(ack, receipt + 2 * k.sealMin - k.doorCycleMin - doorDelay);
+      causes.push('attended');
     }
     const doorsDone: number | null = deferred ? null : ack + k.doorCycleMin + doorDelay;
     let sealed: number | null = deferred || noSealReport ? null : Math.max(receipt + k.sealMin + ackDelay + doorDelay, doorsDone ?? 0);
@@ -320,10 +330,14 @@ export function manualAck(s: DrillStateExt, fac: string, now: number): DrillStat
   const t = minuteAt(s, now);
   if (t < p.receipt || t >= p.ack) return null;
   const shift = t - p.ack;
+  const doorsDone = p.doorsDone === null ? null : p.doorsDone + shift;
   const next: SitePlan = {
     ...p,
     ack: t,
-    doorsDone: p.doorsDone === null ? null : p.doorsDone + shift,
+    doorsDone,
+    // An attended position was planned on the standby watch's late answer: an operator's ACK
+    // brings the seal report back to the class time (or the door cycle, if later).
+    sealed: p.causes.includes('attended') && p.sealed !== null && doorsDone !== null ? Math.min(p.sealed, Math.max(p.receipt + p.sealMin, doorsDone)) : p.sealed,
     manualAck: now,
   };
   return { ...s, plan: { ...s.plan, [fac]: next } };

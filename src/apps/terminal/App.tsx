@@ -16,7 +16,7 @@ import { RefusalState } from '@graphics/states';
 import { loadTableRows, type ReleasedCell } from '../shared/released';
 import { COMPARTMENT_MARKING, CUSTODY_DOCNO, DIRECTORY_DOCNO, complete, divisionLabel, formatAuditOther, formatConsist, formatFind, run, stamp, tier4Visible, zulu } from './host';
 import type { Effect, HostContext } from './host';
-import { HOST, HOST_TITLE, PROMPT, WORKSTATION } from './records';
+import { HOST, HOST_TITLE, PROMPT, workstation } from './records';
 import { mountConsole } from './console';
 import type { ConsoleHandle, ConsoleMode } from './console';
 import './terminal.css';
@@ -169,8 +169,8 @@ export default function App({ win, route }: AppProps) {
       where,
       'Use of this host is recorded. Reference OSC-DIR-0301.',
       '',
-      last ? `Last session ${last} from WS ${WORKSTATION}.` : `No previous session for this operator on ${HOST}.`,
-      `${services.session.operatorId.peek()} connected from WS ${WORKSTATION} at ${stamp(d)}.`,
+      last ? `Last session ${last} from WS ${workstation()}.` : `No previous session for this operator on ${HOST}.`,
+      `${services.session.operatorId.peek()} connected from WS ${workstation()} at ${stamp(d)}.`,
       'Type HELP for commands.',
       '',
     ];
@@ -502,7 +502,7 @@ export default function App({ win, route }: AppProps) {
             ? []
             : [
                 { id: 'op', content: `${services.session.operatorId.value}  ${tierLabel}`, mono: true, width: 190, label: 'Operator' },
-                { id: 'ws', content: `WS ${WORKSTATION}`, mono: true, width: 96, label: 'Workstation' },
+                { id: 'ws', content: `WS ${workstation()}`, mono: true, width: 96, label: 'Workstation' },
                 { id: 'size', content: size || '--', mono: true, width: 60, label: 'Columns by rows' },
               ]),
           { id: 'cmd', content: `CMD ${count}`, mono: true, width: 64, label: 'Commands entered' },

@@ -10254,7 +10254,9 @@
         "forms",
         "terminal",
         "system"
-      ]
+      ],
+      "workstation": "A03-5-114",
+      "printQueue": "PRN-A03-5"
     },
     {
       "id": "lifesupport",
@@ -10283,7 +10285,9 @@
         "mail",
         "directives",
         "system"
-      ]
+      ],
+      "workstation": "G08-3-002",
+      "printQueue": "PRN-G08-3"
     },
     {
       "id": "deputy",
@@ -10326,7 +10330,9 @@
         "mail",
         "directives",
         "system"
-      ]
+      ],
+      "workstation": "A02-7-002",
+      "printQueue": "PRN-A02-7"
     },
     {
       "id": "auditor",
@@ -10359,7 +10365,9 @@
         "registry",
         "terminal",
         "system"
-      ]
+      ],
+      "workstation": "A01-4-022",
+      "printQueue": "PRN-A01-4"
     }
   ],
   "survivability": {
@@ -21126,6 +21134,12 @@
             "lot": "GPB-0802-03"
           }
         ],
+        "stock": {
+          "lot": "GPB-0805-01",
+          "received": "2008-05-09",
+          "store": "Plant store, level 3, bay 2",
+          "sets": 2
+        },
         "cycleDays": 60,
         "dpChangeAt": 1,
         "dpClean": 0.35,
@@ -22237,6 +22251,7 @@
         "ringOffS": 4,
         "maxRings": 6,
         "dialDigits": 4,
+        "interdigitS": 10,
         "replyAfterS": 2,
         "clearAfterS": 3,
         "busyCadenceS": 1
@@ -22389,6 +22404,7 @@
       ],
       "messages": {
         "intercept": "The number you have dialled is not assigned on this exchange.",
+        "partialDial": "Dialling not completed in time. The exchange released the line (partial dial). Replace the handset and seize the line again to redial.",
         "noDialTone": "No dial tone. The circuit is not presenting a line.",
         "dead": "Circuit dead. No loop current, no signal returned.",
         "noReply": "No reply.",

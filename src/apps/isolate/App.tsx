@@ -109,6 +109,7 @@ export default function App({ win, route }: AppProps) {
   const [note, setNote] = useState('');
   const [notice, setNotice] = useState<Notice | null>(null);
   const [confirmSeal, setConfirmSeal] = useState(false);
+  const [confirmCert, setConfirmCert] = useState<string | null>(null);
   const [lampTest, setLampTest] = useState(false);
   const [narrow, setNarrow] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -245,7 +246,7 @@ export default function App({ win, route }: AppProps) {
       return refuse({ title: 'Cover sealed', body: `The cover is held by tamper seal ${s.seal.no}. The seal must be broken before the cover can be lifted (${DIR_REF} para 5.3).`, reference: cfg.panel.procedureDocNo });
     setGuard('lifted');
     services.sound.play('guard');
-    audit('cover-lift', `Operator ${op} lifted the guard cover of control ${cfg.panel.tag} (Network Isolation, Manual Initiate) at workstation A03-5-114.`);
+    audit('cover-lift', `Operator ${op} lifted the guard cover of control ${cfg.panel.tag} (Network Isolation, Manual Initiate) at workstation ${acct.workstation}.`);
   };
   const closeCover = () => {
     if (guard === 'closed') return;
@@ -277,7 +278,7 @@ export default function App({ win, route }: AppProps) {
     const ini = r.initiation;
     audit(
       'initiate',
-      `Operator ${op} initiated network isolation at control ${cfg.panel.tag}, workstation A03-5-114. Reference ${ini.ref}. Escalation level ${r.state.level}. All remote hub circuits dropped. Reported to the Office of Internal Assurance.`,
+      `Operator ${op} initiated network isolation at control ${cfg.panel.tag}, workstation ${acct.workstation}. Reference ${ini.ref}. Escalation level ${r.state.level}. All remote hub circuits dropped. Reported to the Office of Internal Assurance.`,
       {
         ref: ini.ref,
         level: String(r.state.level),
@@ -361,7 +362,7 @@ export default function App({ win, route }: AppProps) {
     if (!next || !c) return;
     services.shared.set(SHARED_KEY, next);
     if (c.trace) services.traces.markSeen(c.trace);
-    if (c.raisedBy !== 'system' && c.raisedBy !== me) services.traces.post({ to: c.raisedBy, kind: 'form.decided', subject: cert, data: { receipt: cert, decision, note: note.trim(), app: 'isolate' } });
+    if (c.raisedBy !== 'system' && c.raisedBy !== me) services.traces.post({ to: c.raisedBy, kind: 'form.decided', subject: cert, data: { receipt: cert, decision, note: note.trim(), app: 'isolate', ...(c.trace ? { routed: c.trace } : {}) } });
     const msg = decision === 'approved' ? cfg.outcomeMail.approved : cfg.outcomeMail.returned;
     if (c.raisedBy !== 'system') {
       if (c.raisedBy === me) services.mail.deliver(msg, { slots: { cert, ref: c.ref, note: note.trim() || 'None.' }, repeat: true });
@@ -531,7 +532,7 @@ export default function App({ win, route }: AppProps) {
     main = <RegisterView s={s} showArchived={showArchived} onToggleArchived={setShowArchived} />;
   } else if (view === 'restoration') {
     main = (
-      <RestorationView s={s} now={now} rights={rights} me={me} statement={statement} onStatement={setStatement} onRaise={raise} note={note} onNote={setNote} onDecide={decide} />
+      <RestorationView s={s} now={now} rights={rights} me={me} statement={statement} onStatement={setStatement} onRaise={raise} note={note} onNote={setNote} onDecide={(cert, d) => (d === 'approved' ? setConfirmCert(cert) : decide(cert, d))} />
     );
   } else if (view === 'links') {
     main = <LinksView s={s} now={now} local={acct.site} links={hubLinks(now)} />;
@@ -605,6 +606,24 @@ export default function App({ win, route }: AppProps) {
       >
         Tamper seal {s.seal?.no} was fitted to this cover by the Resident Assurance Officer. Breaking it is reported to the Office of Internal Assurance at once, whether or not the control is then
         operated. The seal is not refitted from the workstation.
+      </Dialog>
+      <Dialog
+        open={confirmCert !== null}
+        kind="warning"
+        title="Approve restoration certificate"
+        reference={`Ref ${cfg.panel.procedureDocNo}`}
+        buttons={[
+          { label: '&Approve and restore', value: 'approve' },
+          { label: 'Cancel', value: 'cancel', isDefault: true, isCancel: true },
+        ]}
+        onClose={(v) => {
+          const cert = confirmCert;
+          setConfirmCert(null);
+          if (v === 'approve' && cert) decide(cert, 'approved');
+        }}
+      >
+        Approve {cfg.panel.restorationForm} {confirmCert} as certifying officer? The hub circuits are restored at once. The approval is entered in the isolation register under your operator number and
+        cannot be withdrawn. The escalation level is not reduced.
       </Dialog>
     </div>
   );

@@ -41,6 +41,19 @@ export function zoneForState(state: string | null | undefined): Zone {
   return z ? { abbr: z[0], offsetH: z[1] } : { abbr: 'EDT', offsetH: -4 };
 }
 
+/**
+ * Site zones of facilities whose anchor state is withheld in the client canon but whose local time
+ * is documented in play: ALPHA-02 keeps Mountain time (docs/narrative-2/accounts.md).
+ */
+const DOCUMENTED_ZONES: Record<string, Zone> = { 'ALPHA-02': { abbr: 'MDT', offsetH: -6 } };
+
+/** Site zone of a facility: its anchor state's zone, or the documented zone when the state is withheld. */
+export function zoneForSite(facility: string | null | undefined, state: string | null | undefined): Zone {
+  const known = state && ZONE_BY_STATE[state.toUpperCase()];
+  if (known) return { abbr: known[0], offsetH: known[1] };
+  return (facility && DOCUMENTED_ZONES[facility]) || zoneForState(null);
+}
+
 /** "1430Z" */
 export function hhmmZ(ms: number): string {
   const d = new Date(ms);
@@ -77,6 +90,19 @@ export function inWorldDateIso(_ms: number): string {
 /** "19 MAY 2008" */
 export function inWorldDateText(_ms: number): string {
   return `${worldDate.slice(8, 10)} ${MONTHS[Number(worldDate.slice(5, 7)) - 1]} ${worldDate.slice(0, 4)}`;
+}
+
+/**
+ * In-world calendar date ("2008-05-19") of an instant, for chart axes and logs that hold real
+ * clock times. A real instant keeps its offset in days from today's real UTC day (yesterday's
+ * sample reads as 18 MAY); an instant already on the in-world calendar (no later than two days
+ * past the session date) is returned as is.
+ */
+export function inWorldDateIsoAt(ms: number, now: number = Date.now()): string {
+  const DAY = 86_400_000;
+  const world = Date.parse(`${worldDate}T00:00:00Z`);
+  const t = ms < world + 2 * DAY ? ms : world + (Math.floor(ms / DAY) - Math.floor(now / DAY)) * DAY;
+  return new Date(t).toISOString().slice(0, 10);
 }
 
 /** "2008-05-19" -> "19 MAY 2008" (any ISO date; the text as given, no clock involved). */

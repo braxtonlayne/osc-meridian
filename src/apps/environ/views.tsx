@@ -25,7 +25,7 @@ import { Trend } from './Trend';
 import { EC, LEVEL_NAMES, POSTED, TIME_SCALE, type PlantView } from './plant';
 import { plantHours, scrubberEquilibrium, sealedRise, trainRemoval, type LoadBalance } from './model';
 import type { FilterBankId, ScrubberMode } from './types';
-import { TILES, zl, type Role } from './common';
+import { TILES, zl, zlDated, type Role } from './common';
 
 export interface Ctl {
   services: Services;
@@ -280,6 +280,18 @@ export function FiltrationView({ c }: { c: Ctl }) {
             </PanelSection>
           );
         })}
+        <PanelSection title="STOCK LABEL" columns={1}>
+          <dl class="env-dl">
+            <dt>Replacement sets</dt>
+            <dd>
+              {EC.filtration.stock.sets} on the shelf, {EC.filtration.stock.store}
+            </dd>
+            <dt>Lot</dt>
+            <dd class="mono">{EC.filtration.stock.lot}</dd>
+            <dt>Received</dt>
+            <dd>{formatOscDate(EC.filtration.stock.received)}</dd>
+          </dl>
+        </PanelSection>
       </PanelFrame>
     </div>
   );
@@ -407,7 +419,7 @@ export function HandoverView({ c }: { c: Ctl }) {
           {entries.map((e, i) => (
             <tr key={`${e.at}-${i}`}>
               <td class="mono">
-                {formatOscDate(e.at.slice(0, 10))} {zl(Date.parse(e.at))}
+                {zlDated(e.at)}
               </td>
               <td>{e.watch}</td>
               <td>{e.by}</td>

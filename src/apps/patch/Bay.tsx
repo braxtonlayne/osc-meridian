@@ -280,6 +280,15 @@ function OperatorPosition(p: BayProps & { cords: PatchCord[] }) {
           {KEYS.map((k) => (
             <PushButton key={k} legend={k} size="sm" color="black" disabled={!canDial} onPress={() => p.ops.press(k)} ariaLabel={`Key ${k}`} />
           ))}
+          {!canDial && (
+            <p class="pt-keynote">
+              {!on
+                ? `Keys are live only with dial tone. Patch ${p.t4 ? 'the handset' : 'OPR POSN'} to a voice LINE jack first.`
+                : call && call.phase !== 'dial-tone'
+                  ? 'Keys are live only with dial tone. Release the line and seize it again to redial.'
+                  : 'Keys are live only with dial tone.'}
+            </p>
+          )}
         </div>
         <div class="pt-callside">
           <PushButton legend={['REL', '']} label="RELEASE" color="red" size="sm" disabled={!call} onPress={() => p.ops.endCall('abandoned')} />

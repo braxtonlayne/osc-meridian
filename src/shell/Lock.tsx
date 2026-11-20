@@ -44,7 +44,7 @@ function CardChooser({ list, selected, onSelect }: { list: AccountDef[]; selecte
   return (
     <>
       <p class="lock-cards-h" id="lock-cards-h">
-        Issued cards at this workstation. Select the card you are signing in with.
+        Issued cards. Select the card you are signing in with; each card signs in at its own workstation.
       </p>
       <div class="lock-cards" role="radiogroup" aria-labelledby="lock-cards-h" ref={ref} onKeyDown={onKey}>
         {list.map((a) => {
@@ -129,7 +129,7 @@ export function Lock({ onLogin }: { onLogin: (id: AccountId) => void }) {
                 {c.meta.environment}, release {c.meta.release}
               </div>
               <div class="lock-ws">
-                Workstation A03-5-114 &middot; ALPHA-03 &middot; {formatInWorldDate()}
+                Workstation {op.workstation} &middot; {op.site} &middot; {formatInWorldDate()}
               </div>
             </div>
           </div>

@@ -40,7 +40,7 @@ Clearance is :c[tiers.3.clearance]. Knowledge scope: :c[tiers.3.knowledgeScope]
 
 You are told what your duties require. You are not told the location, purpose or connections of installations other than your own, the strength of other installations, or the content of compartments you do not hold. A refusal on your workstation means the item is outside your tier or compartments; it is not a fault and is not to be reported to the Service Desk. Refusals are recorded (:x[OSC-DIR-0412] para 8).
 
-If a duty needs access you do not have, your supervisor of record may sponsor a request on OSC-F-126 (:x[OSC-F-126]) for a compartment they hold. Do not ask colleagues to open or print items for you.
+If a duty needs access you do not have, your supervisor of record may sponsor a request on :x[OSC-F-126] for a compartment they hold. Do not ask colleagues to open or print items for you.
 
 ## Compartments
 

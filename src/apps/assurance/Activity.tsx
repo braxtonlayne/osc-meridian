@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'preact/hooks';
 import type { AuditEntry } from '@core/contracts';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
+import { workstationId } from '@core/audit';
 import { DataTable, GroupBox, PropertyGrid, Select, TextField, formatNumber, type Column } from '@design/index';
 import { EmptyState } from '@graphics/states';
 import { ACTIVITY_FILTERS, actionLabel, auditDate, auditRef, auditTime, currentSession, matchesFilter, summarize, type ActivityFilter } from './logic';
@@ -69,7 +69,7 @@ export function ActivityView({
           columns={gridCols}
           rows={[
             { label: 'Operator', value: services.session.operatorId.value, mono: true },
-            { label: 'Workstation', value: `${WORKSTATION_ID} (${services.account.def.value.site})`, mono: true },
+            { label: 'Workstation', value: `${workstationId()} (${services.account.def.value.site})`, mono: true },
             { label: 'Period', value: from ? `${from} to present` : 'No entries', mono: true },
             { label: 'Access', value: `Tier ${services.session.tier.value}${services.session.actingTier2.value ? ' (acting)' : ''}; ${services.session.compartments.value.join(', ') || 'no compartments'}` },
             { label: 'Actions recorded', value: formatNumber(sum.total), mono: true },

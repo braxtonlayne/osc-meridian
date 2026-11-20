@@ -37,7 +37,9 @@ function reachedOf(drill: DrillStateExt | null, p: SitePlan, now: number): boole
 
 /* ------------------------------------------------------------------ map */
 
-export function MapView({ drill, now, selected, onSelect }: ViewProps) {
+export function MapView({ drill, now, selected, onSelect, ownSite }: ViewProps & { ownSite?: string }) {
+  const own = ownSite ? FAC.get(ownSite) : undefined;
+  const ownPlotted = own?.lon != null && own?.lat != null;
   const [ref, size] = useSize<HTMLDivElement>();
   const sites: MapSite[] = useMemo(
     () =>
@@ -69,16 +71,24 @@ export function MapView({ drill, now, selected, onSelect }: ViewProps) {
           onSelect={(id) => onSelect(id)}
           showLabels="alpha"
           label="Seal drill propagation, geographic"
-          overlay={<MapKey />}
+          overlay={<MapKey ownSite={ownSite} plotted={ownPlotted} />}
         >
-          {(ctx) => <DrillMapLayer ctx={ctx} sites={sites} />}
+          {(ctx) => {
+            const at = ownPlotted ? ctx.project(own!.lon!, own!.lat!) : null;
+            return (
+              <>
+                <DrillMapLayer ctx={ctx} sites={sites} />
+                {at && <rect class="sd-own" x={at[0] - 9} y={at[1] - 9} width={18} height={18} aria-hidden="true" />}
+              </>
+            );
+          }}
         </UsMap>
       )}
     </div>
   );
 }
 
-function MapKey() {
+function MapKey({ ownSite, plotted }: { ownSite?: string; plotted: boolean }) {
   const rows: { g: Parameters<typeof MapRingGlyph>[0]['status']; t: string }[] = [
     { g: 'ordered', t: 'Order received' },
     { g: 'acknowledged', t: 'Acknowledged, seal deferred' },
@@ -114,6 +124,14 @@ function MapKey() {
         </svg>
         <span>Voice circuit call</span>
       </div>
+      {ownSite && (
+        <div class="sd-key-row">
+          <svg width={18} height={18} aria-hidden="true">
+            <rect x={2} y={2} width={14} height={14} class="sd-own" />
+          </svg>
+          <span>{plotted ? `This command, ${ownSite}` : `This command, ${ownSite}: position held under the network geography compartment, not plotted`}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -234,7 +252,7 @@ export interface LogRow extends LogLine {
 
 export function LogView({ lines, selected, onSelect, onActivate, empty }: { lines: LogRow[]; selected: string | null; onSelect: (k: string | null) => void; onActivate: (l: LogRow) => void; empty: string }) {
   const cols: Column<LogRow>[] = [
-    { key: 'dtg', header: 'DTG', width: 64, mono: true },
+    { key: 'dtg', header: 'DTG', width: 84, mono: true },
     { key: 'clock', header: 'Drill', width: 64, mono: true, sortValue: (r) => r.t },
     { key: 'from', header: 'FM', width: 64, mono: true },
     { key: 'to', header: 'TO', width: 92, mono: true },

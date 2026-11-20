@@ -59,6 +59,15 @@ describe('accounts', () => {
     expect(takeSwitchNote('analyst')).toBeNull();
   });
 
+  it('issues each card on its own site workstation, with that group print queue', () => {
+    const ws = Object.fromEntries(allAccounts().map((a) => [a.id, `${a.workstation} ${a.printQueue} ${a.site}`]));
+    expect(ws).toEqual({
+      analyst: 'A03-5-114 PRN-A03-5 ALPHA-03',
+      lifesupport: 'G08-3-002 PRN-G08-3 GAMMA-08',
+      deputy: 'A02-7-002 PRN-A02-7 ALPHA-02',
+      auditor: 'A01-4-022 PRN-A01-4 ALPHA-01',
+    });
+  });
   it('initActive fixes id and def for the page', () => {
     const d = initActive('analyst');
     expect(activeId.value).toBe('analyst');

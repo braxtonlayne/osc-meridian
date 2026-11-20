@@ -53,6 +53,7 @@
     "ringOffS": 4,
     "maxRings": 6,
     "dialDigits": 4,
+    "interdigitS": 10,
     "replyAfterS": 2,
     "clearAfterS": 3,
     "busyCadenceS": 1
@@ -205,6 +206,7 @@
   ],
   "messages": {
     "intercept": "The number you have dialled is not assigned on this exchange.",
+    "partialDial": "Dialling not completed in time. The exchange released the line (partial dial). Replace the handset and seize the line again to redial.",
     "noDialTone": "No dial tone. The circuit is not presenting a line.",
     "dead": "Circuit dead. No loop current, no signal returned.",
     "noReply": "No reply.",

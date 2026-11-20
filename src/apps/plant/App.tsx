@@ -18,7 +18,7 @@ import type { GuardState } from '@graphics/panel';
 import type { AppProps, DocJson, DrillState, IsolationState } from '@core/contracts';
 import type { MarkingId } from '@core/canon-types';
 import { useServices } from '@core/services';
-import { siteLocal, zulu } from '@core/session';
+import { formatInWorldDate, siteLocal, zulu } from '@core/session';
 import { ANN_HORN, ANN_IDS } from './model';
 import type { Action, SimEvent } from './model';
 import { P, canon, defaultUnit, rulesFor, unitById } from './data';
@@ -101,7 +101,8 @@ export default function App({ win, route }: AppProps) {
   /* ---- mail helpers (once per account) */
   const deliverOnce = (id: string, slots?: Record<string, string>) => {
     if (services.mail.delivered.peek().includes(id)) return;
-    services.mail.deliver(id, slots ? { slots } : undefined);
+    // Event mail always carries a delivery slot, so its Sent header is the delivery time (mail/model.ts readHeaders).
+    services.mail.deliver(id, { slots: { date: formatInWorldDate(), ...(slots ?? {}) } });
   };
   const nowLabel = () => {
     const d = new Date();

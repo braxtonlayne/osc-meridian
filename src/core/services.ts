@@ -13,6 +13,7 @@ import { loadSync, saveSync, load, save, loadFrom, flush } from './persist';
 import * as accounts from './accounts';
 import { shared } from './shared';
 import { createTraces, inboundMailTraces, processArrivals, traceMsgNo, traceSubject } from './traces';
+import { isolatedAt, latestInitiation, readIsolation } from '@apps/isolate/state';
 import { hashOf, normalize, pushPath, replacePath } from './router';
 import { heldHits, isHeldEntry } from './search';
 import { readableByTier4 } from './docs';
@@ -121,10 +122,32 @@ function deliverMail(msgId: string, opts: MailDeliverOptions = {}): void {
   mailState.read.value = opts.read ? [...read, msgId] : read;
   mailState.meta.value = { ...mailState.meta.peek(), [msgId]: { at: session.inWorldIso(), ...(opts.slots ? { slots: opts.slots } : {}) } };
   persistMail();
+  if (!already) void copyToCc(msgId, opts.slots);
   if (opts.silent) return;
   cue('mail');
   const entry = byIdMap.get(msgId);
   notify(entry ? `New message: ${fillSlots(entry.title, opts.slots)}` : 'New message received.', { from: 'Message Traffic' });
+}
+
+/**
+ * A content message delivered here whose Cc names another issued account's mailbox is copied to
+ * that account (a `mail.deliver` trace carrying the same slots), once per message and account.
+ */
+async function copyToCc(msgId: string, slots: Record<string, string> | undefined): Promise<void> {
+  try {
+    const doc = await loadDoc(msgId);
+    const msg = (doc.frontmatter as { message?: { cc?: unknown; subject?: unknown } } | undefined)?.message;
+    const cc = Array.isArray(msg?.cc) ? msg.cc.filter((x): x is string => typeof x === 'string') : [];
+    const me = accounts.activeId.peek();
+    for (const addr of cc) {
+      const to = accounts.accountByEmail(addr);
+      if (!to || to.id === me) continue;
+      if (traces.all.peek().some((t) => t.kind === 'mail.deliver' && t.msgId === msgId && t.to === to.id)) continue;
+      traces.post({ to: to.id, kind: 'mail.deliver', msgId, subject: typeof msg?.subject === 'string' ? msg.subject : doc.title, ...(slots ? { data: { ...slots } } : {}) });
+    }
+  } catch {
+    /* the message document could not be read: no copy (the addressee's own delivery stands) */
+  }
 }
 
 export async function initStores(): Promise<void> {
@@ -359,9 +382,10 @@ function openRouteNew(p: string, push: boolean, hash: string): Win | null {
     return w;
   }
   if (entry && t4Blocked(entry)) {
+    // Tier 4 closed world: the refusal carries no title of the withheld record (window, taskbar, status).
     const w = openRefusal(
       p,
-      entry.title,
+      `${appById(entry.app)?.title ?? 'MERIDIAN'}: access refused`,
       {
         authority: 'Classification Control, Office of Internal Assurance',
         ref: T4_REFUSAL_REF,
@@ -567,7 +591,14 @@ async function readAudit(id: AccountId): Promise<AuditEntry[]> {
   return (await loadFrom<AuditEntry[]>(id, 'audit', [])).slice();
 }
 
-const traces = createTraces(shared, () => accounts.activeId.peek(), () => session.inWorldIso());
+/** Reference of the network isolation now in force, or null: cross-site trace mail sent under it is queued (traces.heldInQueue). */
+const isolationRaw = shared.get<unknown>('isolation', null);
+const mailHoldRef = computed<string | null>(() => {
+  const s = readIsolation(isolationRaw.value);
+  return isolatedAt(s, session.tick.value) ? (latestInitiation(s)?.ref ?? '') : null;
+});
+
+const traces = createTraces(shared, () => accounts.activeId.peek(), () => session.inWorldIso(), () => mailHoldRef.value);
 
 /** Forms' decision consumer (lazy: the Forms routing module is not part of the shell chunk). */
 async function runDecisions(): Promise<void> {

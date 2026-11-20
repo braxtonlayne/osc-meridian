@@ -11,8 +11,9 @@
  * Pure functions only (unit-tested in traces.test.ts).
  */
 import type { AccountDef, AccountId, Trace } from '@core/contracts';
+import { closeWorldText } from '@core/closed-world';
 import type { MarkingId } from '@core/canon-types';
-import { traceMsgNo } from '@core/traces';
+import { isMessageTrace, traceMsgNo } from '@core/traces';
 import { decisionLine } from '@apps/forms/routing';
 import { dtgFromIso, normPrecedence, type Outgoing, type Precedence } from './model';
 
@@ -25,11 +26,14 @@ export function isMailTrace(t: Pick<Trace, 'kind'>): t is Trace & { kind: MailTr
 
 /** Traces this account receives as messages: addressed here (or to all) and not posted by itself. */
 export function inboundMailTraces(mine: readonly Trace[], me: AccountId): Trace[] {
-  return mine.filter((t) => isMailTrace(t) && t.from !== me && (t.to === me || t.to === 'all'));
+  return mine.filter((t) => isMailTrace(t) && isMessageTrace(t) && t.from !== me && (t.to === me || t.to === 'all'));
 }
 
 /** In-world message number the transfer system gives a trace: "MSG-08-80007" (series 8xxxx); core counts unread with it too. */
 export { traceMsgNo };
+
+/** The OIA compartment registry's mailbox (content/mail/accounts/msg-08-04341). */
+export const REGISTRY_ADDRESS = 'registry@a01.oia.mer';
 
 const list = (v: string | undefined) => (v ? v.split(/[;,]/).map((x) => x.trim()).filter(Boolean) : []);
 
@@ -57,8 +61,19 @@ export interface TraceCtx {
   lowest: MarkingId;
 }
 
-/** Header and body of a trace rendered as a delivered message. */
+/**
+ * Header and body of a trace rendered as a delivered message. A Tier 4 recipient reads it with no
+ * other facility named (closed world, SPEC-2 §1): originator, subject and body pass through
+ * closeWorldText.
+ */
 export function traceMessage(t: Trace, ctx: TraceCtx): TraceMessage {
+  const m = traceMessageRaw(t, ctx);
+  if (ctx.me.tier !== 4) return m;
+  const home = ctx.me.site;
+  return { ...m, originator: closeWorldText(m.originator, home), subject: closeWorldText(m.subject, home), text: closeWorldText(m.text, home) };
+}
+
+function traceMessageRaw(t: Trace, ctx: TraceCtx): TraceMessage {
   const d = t.data ?? {};
   const sender = ctx.accountById(t.from);
   const senderBox = sender?.email ?? `${t.from}@mts.mer`;
@@ -95,7 +110,7 @@ export function traceMessage(t: Trace, ctx: TraceCtx): TraceMessage {
         d.category ? `Category: ${d.category}.` : '',
         d.basis ? `Basis: ${d.basis}` : '',
         d.text ?? '',
-        `Issued by ${by}${d._by ? ` (${d._by})` : ''}. The finding is held on the operator's assurance record. Representations may be made in writing to the Office of Internal Assurance, ALPHA-01 (OSC-ASR-PSEC).`,
+        `Issued by ${by}${d._by ? ` (${d._by})` : ''}. The finding is held on the operator's assurance record. Representations may be made in writing to the Office of Internal Assurance${ctx.me.tier === 4 ? '' : ', ALPHA-01'} (OSC-ASR-PSEC).`,
       ]
         .filter(Boolean)
         .join('\n\n');
@@ -103,12 +118,28 @@ export function traceMessage(t: Trace, ctx: TraceCtx): TraceMessage {
     }
     case 'form.decided': {
       const receipt = d.receipt || t.subject;
+      // Forms routed through the action queue are certified for the OIA compartment registry, and the
+      // decision is written to the applicant in the registry's name (msg-08-04341 para 3-4); the
+      // applicant is not told who certified. Restoration certificates (app: isolate) are signed for.
+      const viaRegistry = d.app !== 'isolate';
       const text = [
         `Your ${d.form || 'form'}${d._title ? ` ${d._title}` : ''}, receipt ${receipt}, has been decided.`,
         decisionLine(t),
         d.decision === 'approved' ? 'The receipt held at your workstation has been endorsed with the decision.' : 'The form is returned. A fresh request may be made on a new form if circumstances change.',
-      ].join('\n\n');
-      return { ...base, from: senderBox, to: toSelf, cc: [], subject: `Decision on ${receipt}`, precedence: 'ROUTINE', text };
+        viaRegistry ? `Compartment Registry, Office of Internal Assurance${ctx.me.tier === 4 ? '' : ', ALPHA-01'}. Queries to this registry only.` : '',
+      ]
+        .filter(Boolean)
+        .join('\n\n');
+      return {
+        ...base,
+        ...(viaRegistry ? { originator: ctx.me.tier === 4 ? 'OIA' : 'OIA/ALPHA-01' } : {}),
+        from: viaRegistry ? REGISTRY_ADDRESS : senderBox,
+        to: toSelf,
+        cc: [],
+        subject: `Decision on ${receipt}`,
+        precedence: 'ROUTINE',
+        text,
+      };
     }
     default:
       return { ...base, from: senderBox, to: toSelf, cc: [], subject: t.subject || 'Notice', precedence: 'ROUTINE', text: d.text ?? t.subject };

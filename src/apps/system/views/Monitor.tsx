@@ -6,7 +6,7 @@ import { useState } from 'preact/hooks';
 import type { RouteEntry } from '@core/contracts';
 import type { CalendarEvent, Compartment } from '@core/canon-types';
 import canon from '@canon';
-import { WORKSTATION_ID } from '@core/audit';
+import { printQueueId, workstationId } from '@core/audit';
 import { handheldActive, printQueue } from '@core/services';
 import * as session from '@core/session';
 import { DataTable, GroupBox, PropertyGrid, StatusLight, Tabs, formatOscDate, type Column, type OperStatus } from '@design/index';
@@ -28,7 +28,7 @@ const C = canon as unknown as {
 };
 const LINK_WORK = sortEvents(C.calendar.filter((e) => e.category === 'IT'));
 /** Print queue for this workstation, named as the audit trail names it. */
-const QUEUE = `PRN-${WORKSTATION_ID.slice(0, 6).replace(/-+$/, '')}`;
+const queueName = (): string => printQueueId();
 const loadedAt = typeof performance !== 'undefined' ? performance.timeOrigin : Date.now();
 
 export function Monitor({ entry }: { entry: RouteEntry | null }) {
@@ -138,7 +138,7 @@ function ServicesTab() {
     { name: 'Document store', status: 'NOMINAL', word: 'RUNNING', detail: 'Record copies served from the workstation image; releases applied on display' },
     { name: 'Index service', status: 'NOMINAL', word: 'RUNNING', detail: 'Compiled index over baseline text; withheld text is not indexed' },
     { name: 'Message transfer', status: 'NOMINAL', word: 'RUNNING', detail: `${delivered} delivered to this mailbox, ${unread} unread` },
-    { name: 'Print spooler', status: 'NOMINAL', word: jobs ? 'BUSY' : 'IDLE', detail: `${jobs} ${jobs === 1 ? 'job' : 'jobs'} spooling to ${QUEUE}` },
+    { name: 'Print spooler', status: 'NOMINAL', word: jobs ? 'BUSY' : 'IDLE', detail: `${jobs} ${jobs === 1 ? 'job' : 'jobs'} spooling to ${queueName()}` },
     {
       name: 'Audit recorder',
       status: 'NOMINAL',
@@ -159,7 +159,7 @@ function ServicesTab() {
         <PropertyGrid
           columns={narrow ? 1 : 2}
           rows={[
-            { label: 'Workstation', value: WORKSTATION_ID, mono: true },
+            { label: 'Workstation', value: workstationId(), mono: true },
             { label: 'Environment', value: `${C.meta.environment}, release ${C.meta.release}` },
             { label: 'Site', value: session.site.value, mono: true },
             { label: 'Workstation up', value: formatDuration(session.tick.value - loadedAt), mono: true },
@@ -278,12 +278,12 @@ function PrintTab() {
   return (
     <div class="sys-pad sys-fill">
       <p class="sys-note">
-        Queue {QUEUE}. Jobs are released at the device with your token. Jobs not collected are purged after {PRINT_PURGE_MS / 3600000} hours (OSC-DIR-0319).
+        Queue {queueName()}. Jobs are released at the device with your token. Jobs not collected are purged after {PRINT_PURGE_MS / 3600000} hours (OSC-DIR-0319).
       </p>
       {jobs.length ? (
         <DataTable<PrintJob> label="Print queue" columns={cols} rows={jobs} rowKey={(j) => j.job} dense />
       ) : (
-        <EmptyPrintQueue device={QUEUE} />
+        <EmptyPrintQueue device={queueName()} />
       )}
     </div>
   );

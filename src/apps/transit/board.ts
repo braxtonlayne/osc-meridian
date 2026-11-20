@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import type { DocJson, DrillState, IsolationState, Services } from '@core/contracts';
 import { IN_WORLD_DATE_ISO, phase } from '@core/session';
 import { routes, useServices } from '@core/services';
-import { reportTransitBoard, seg04, seg04WatchData, seg04WatchDetail, WORKSTATION } from '@narrative/engine';
+import { reportTransitBoard, seg04, seg04WatchData, seg04WatchDetail } from '@narrative/engine';
+import { workstationId } from '@core/audit';
 import type { Seg04Window } from '@sim/seg04';
 import type { BoardState, DispatchInput, Timetable } from '@sim/transit-model';
 import { parseBlockSheet, parseTimetable, withBlockSheets, type BlockSheet, type SimModel } from '@sim/transit-model';
@@ -235,7 +236,7 @@ function flush(services: Services, w: Seg04Window): void {
   services.audit.log(
     'transit.watch',
     'SEG04',
-    seg04WatchDetail(services.session.operatorId.peek(), WORKSTATION, view, rec.from, rec.to),
+    seg04WatchDetail(services.session.operatorId.peek(), workstationId(), view, rec.from, rec.to),
     seg04WatchData(view, rec.from, rec.to),
   );
 }

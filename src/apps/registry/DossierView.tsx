@@ -19,7 +19,7 @@ type PanelModule = typeof import('./TelemetryPanel');
 let panelPromise: Promise<PanelModule> | null = null;
 
 /** The telemetry/reactor instruments module (uPlot) arrives on first use. */
-function usePanels(): PanelModule | null {
+export function usePanels(): PanelModule | null {
   const [m, setM] = useState<PanelModule | null>(null);
   useEffect(() => {
     let live = true;

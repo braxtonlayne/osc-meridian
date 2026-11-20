@@ -8,7 +8,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { AccountDef, AccountId, AuditEntry, Trace } from '@core/contracts';
 import { useServices } from '@core/services';
-import { WORKSTATION_ID } from '@core/audit';
 import { Button, ButtonRow, DataTable, Dialog, GroupBox, PropertyGrid, Select, Tabs, TextArea, TextField, formatNumber, type Column } from '@design/index';
 import { EmptyState, ErrorState, RefusalState } from '@graphics/states';
 import { ACTION_LABELS, FINDING_CATEGORIES, REVIEW_KINDS, actionLabel, auditDate, auditRef, auditTime, filterTrail, findingRef, trailDates } from './logic';
@@ -59,7 +58,7 @@ function Review() {
       <div class="asr-viewhead">
         <div>
           <div class="asr-h1">Audit review</div>
-          <div class="asr-sub">Workstation audit trails of the issued operator accounts at {WORKSTATION_ID}, read only. Findings opened here are recorded against the operator and delivered to them.</div>
+          <div class="asr-sub">Workstation audit trails of the issued operator accounts, each read from the workstation its credential is issued on. Read only. Findings opened here are recorded against the operator and delivered to them.</div>
         </div>
       </div>
       <Tabs

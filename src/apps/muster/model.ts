@@ -259,13 +259,27 @@ export function sweepDone(run: MusterRun, point: string, cls: ClassModel, timeSc
   return s.length ? Math.min(...s) : null;
 }
 
+/**
+ * Wall ms the drill behind a drill muster stood down or aborted, or null (not a drill muster, or
+ * still running). Read from the live `drill` key, else from the drill register once a later drill replaced it.
+ */
+export function drillEndFor(run: Pick<MusterRun, 'drillId'>, drill: Pick<DrillState, 'id' | 'endedAt'> | null, register: readonly { id: string; endedAt?: number | null }[] = []): number | null {
+  if (!run.drillId) return null;
+  if (drill && drill.id === run.drillId) return typeof drill.endedAt === 'number' ? drill.endedAt : null;
+  const r = Array.isArray(register) ? register.find((x) => x && x.id === run.drillId) : undefined;
+  return typeof r?.endedAt === 'number' ? r.endedAt : null;
+}
+
 /** The board at wall time `now` (a closed run is frozen at its signature). */
-export function evaluate(run: MusterRun, now: number, inp: ModelInputs, timeScale: number): RunView | null {
+export function evaluate(run: MusterRun, now: number, inp: ModelInputs, timeScale: number, drillEndedAt: number | null = null): RunView | null {
   const model = siteModel(run.site, inp);
   if (!model) return null;
-  const t = run.closeout ? Math.min(now, run.closeout.at) : now;
+  // A closed run is frozen at its signature; a drill muster's exercise clock stops at the drill's stand-down or abort.
+  let t = run.closeout ? Math.min(now, run.closeout.at) : now;
+  const drillOver = run.drillId !== null && drillEndedAt !== null && t >= drillEndedAt;
+  if (drillOver) t = Math.max(run.startedAt, drillEndedAt);
   const elapsedMin = Math.max(0, ((t - run.startedAt) / 60000) * timeScale);
-  const reportDue = elapsedMin >= model.cls.reportMin;
+  const reportDue = elapsedMin >= model.cls.reportMin || drillOver;
   const reads: Read[] = [];
   const points: PointView[] = model.points.map((p) => {
     const done = sweepDone(run, p.id, model.cls, timeScale);
